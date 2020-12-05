@@ -1,0 +1,554 @@
+Articuno
+
+Pressure
+Level 70
+Attacks:
+Ice Beam
+Freeze-Dry
+Hurricane
+Mist
+
+Zapdos
+
+Pressure
+Level 70
+Attacks:
+Thunder
+Drill Peck
+Brave Bird
+Agility
+
+Moltres
+
+Pressure
+Level 70
+Attacks:
+Heat Wave
+Heat Wave
+Heat Wave
+Wing Attack
+Leer
+Fire Spin
+
+Mewtwo
+
+Pressure
+Level 70
+Attacks:
+Psychic
+Disable
+Recover
+Blizzard
+Blizzard
+Blizzard
+
+Raikou
+
+Pressure
+Level 70
+Attacks:
+Thunderbolt
+Howl
+Extreme Speed
+Weather Ball
+
+Entei
+
+Pressure
+Level 70
+Attacks:
+Flamethrower
+Scary Face
+Extreme Speed
+Crunch
+
+Suicune
+
+Pressure
+Level 70
+Attacks:
+Liquidation
+Extrasensory
+Extreme Speed
+Calm Mind
+
+Lugia
+Shield Native
+
+Pressure
+Level 70
+Attacks:
+Dragon Pulse
+Extrasensory
+Whirlpool
+Ancient Power
+
+Ho-Oh
+Sword Native
+
+Pressure
+Level 70
+Attacks:
+Flare Blitz
+Extrasensory
+Sunny Day
+Ancient Power
+
+Latias
+Shield Native
+
+Levitate
+Level 70
+Attacks:
+Reflect Type
+Dragon Breath
+Zen Headbutt
+Surf
+Surf
+Surf
+
+Latios
+Sword Native
+
+Levitate
+Level 70
+Attacks:
+Dragon Dance
+Dragon Pulse
+Zen Headbutt
+Aura Sphere
+
+Kyogre
+Shield Native
+
+Drizzle
+Level 70
+Attacks:
+Surf
+Body Slam
+Aqua Ring
+Thunder
+Origin Pulse
+Origin Pulse
+Origin Pulse
+
+Groudon
+Sword Native
+
+Drought
+Level 70
+Attacks:
+Earthquake
+Earthquake
+Earthquake
+Scary Face
+Lava Plume
+Lava Plume
+Lava Plume
+Hammer Arm
+Precipice Blades
+Precipice Blades
+Precipice Blades
+
+Rayquaza
+
+Air Lock
+Level 70
+Attacks:
+Dragon Ascent
+Brutal Swing
+Extreme Speed
+Twister
+
+Uxie
+
+Levitate
+Level 70
+Attacks:
+Psychic
+Future Sight
+Magic Room
+Shadow Ball
+
+Mesprit
+
+Levitate
+Level 70
+Attacks:
+Psychic
+Charm
+Draining Kiss
+Tri Attack
+
+Azelf
+
+Levitate
+Level 70
+Attacks:
+Psychic
+Dazzling Gleam
+Dazzling Gleam
+Dazzling Gleam
+Nasty Plot
+Facade
+Swift
+Swift
+Swift
+
+Dialga
+Sword Native
+
+Pressure
+Level 70
+Attacks:
+Slash
+Ancient Power
+Flash Cannon
+Dragon Claw
+
+Palkia
+Shield Native
+
+Pressure
+Level 70
+Attacks:
+Slash
+Surf
+Surf
+Surf
+Ancient Power
+Dragon Claw
+
+Heatran
+
+Flash Fire
+Level 70
+Attacks:
+Metal Sound
+Lava Plume
+Crunch
+Iron Head
+
+Giratina (Altered Forme)
+
+Pressure
+Level 70
+Attacks:
+Dragon Claw
+Scary Face
+Shadow Ball
+Ancient Power
+
+Cresselia
+
+Levitate
+Level 70
+Attacks:
+Icy Wind
+Icy Wind
+Icy Wind
+Moonblast
+Psycho Cut
+Psyshock
+
+Tornadus (Incarnate Forme)
+Sword Native
+
+Prankster
+Level 70
+Attacks:
+Hurricane
+Agility
+Icy Wind
+Icy Wind
+Icy Wind
+Heat Wave
+Heat Wave
+Heat Wave
+
+Thundurus (Incarnate Forme)
+Shield Native
+
+Prankster
+Level 70
+Attacks:
+Thunder
+Rain Dance
+Weather Ball
+Sludge Wave
+Sludge Wave
+Sludge Wave
+
+Reshiram
+Sword Native
+
+Turboblaze
+Level 70
+Attacks:
+Noble Roar
+Extrasensory
+Fusion Flare
+Dragon Pulse
+
+Zekrom
+Shield Native
+
+Teravolt
+Level 70
+Attacks:
+Noble Roar
+Slash
+Fusion Bolt
+Dragon Claw
+
+Landorus (Incarnate Forme)
+
+Sand Force
+Level 70
+Attacks:
+Sand Tomb
+Rock Slide
+Rock Slide
+Rock Slide
+Bulldoze
+Bulldoze
+Bulldoze
+Focus Blast
+
+Kyurem (Normal Kyurem)
+
+Pressure
+Level 70
+Attacks:
+Ice Beam
+Hyper Voice
+Hyper Voice
+Hyper Voice
+Shadow Ball
+Scary Face
+Glaciate
+Glaciate
+Glaciate
+
+Xerneas
+Sword Native
+
+Fairy Aura
+Level 70
+Attacks:
+Ingrain
+Dazzling Gleam
+Dazzling Gleam
+Dazzling Gleam
+Moonblast
+Horn Leech
+
+Yveltal
+Shield Native
+
+Dark Aura
+Level 70
+Attacks:
+Taunt
+Oblivion Wing
+Dragon Rush
+Sucker Punch
+
+Zygarde (50% Forme)
+
+Power Construct
+Level 70
+Attacks:
+Thousand Arrows
+Thousand Arrows
+Thousand Arrows
+Land's Wrath
+Land's Wrath
+Land's Wrath
+Dragon Pulse
+Bind
+
+Tapu Koko
+
+Electric Surge
+Level 70
+Attacks:
+Thunderbolt
+Quick Attack
+Brave Bird
+Taunt
+
+Tapu Lele
+
+Psychic Surge
+Level 70
+Attacks:
+Psychic
+Play Rough
+Magic Room
+Charm
+
+Tapu Bulu
+
+Grassy Surge
+Level 70
+Attacks:
+Superpower
+Megahorn
+Wood Hammer
+Scary Face
+
+Tapu Fini
+
+Misty Surge
+Level 70
+Attacks:
+Whirlpool
+Water Pulse
+Brine
+Moonblast
+
+Solgaleo
+Sword Native
+
+Full Metal Body
+Level 70
+Attacks:
+Zen Headbutt
+Fire Spin
+Iron Tail
+Noble Roar
+
+Lunala
+Shield Native
+
+Shadow Shield
+Level 70
+Attacks:
+Shadow Ball
+Moonblast
+Magic Coat
+Swift
+Swift
+Swift
+
+Nihilego
+
+Beast Boost
+Level 70
+Attacks:
+Wonder Room
+Sludge Wave
+Sludge Wave
+Sludge Wave
+Brutal Swing
+Brutal Swing
+Brutal Swing
+Acid Spray
+Acid Spray
+Acid Spray
+
+Buzzwole
+
+Beast Boost
+Level 70
+Attacks:
+Power-Up Punch
+Taunt
+Leech Life
+Dynamic Punch
+
+Pheromosa
+
+Beast Boost
+Level 70
+Attacks:
+High Jump Kick
+Swift
+Swift
+Swift
+Throat Chop
+Lunge
+
+Xurkitree
+
+Beast Boost
+Level 70
+Attacks:
+Power Whip
+Discharge
+Discharge
+Discharge
+Eerie Impulse
+Brutal Swing
+Brutal Swing
+Brutal Swing
+
+Celesteela
+
+Beast Boost
+Level 70
+Attacks:
+Leech Seed
+Smack Down
+Gyro Ball
+Earthquake
+Earthquake
+Earthquake
+
+Kartana
+
+Beast Boost
+Level 70
+Attacks:
+Vacuum Wave
+Air Cutter
+Leaf Blade
+Swords Dance
+
+Guzzlord
+
+Beast Boost
+Level 70
+Attacks:
+Dragon Rush
+Stomping Tantrum
+Brutal Swing
+Brutal Swing
+Brutal Swing
+Mega Punch
+
+Necrozma
+
+Prism Armor
+Level 70
+Attacks:
+Psycho Cut
+Charge Beam
+Power Gem
+Autotomize
+
+Stakataka
+
+Beast Boost
+Level 70
+Attacks:
+Rock Slide
+Rock Slide
+Rock Slide
+Double-Edge
+Brutal Swing
+Brutal Swing
+Brutal Swing
+Autotomize
+
+Blacephalon
+
+Beast Boost
+Level 70
+Attacks:
+Shadow Claw
+Taunt
+Fire Blast
+Zen Headbutt
+Mystical Fire
