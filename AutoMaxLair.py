@@ -7,11 +7,12 @@ from datetime import datetime
 from MaxLairInstance import MaxLairInstance
 from Pokemon_Data import matchup_scoring
 
+# Change this section according to your Tesseract installation
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 # Configure this section for each run
-BOSS = 'Blacephalon'
-BALLS = 523
+BOSS = 'Zekrom'
+BALLS = 999
 COM_PORT = 'COM4'
 VIDEO_INDEX = 1
 
@@ -25,11 +26,13 @@ rental_scores = pickle.load(open('Pokemon_Data/Rental_Pokemon_Scores.pickle', 'r
 
 
 def fix_name(text):
+    """Matches OCRed Pokemon names (which are often slightly wrong) to a rental Pokemon"""
     best_match = ''
     match_value = 100
     for name in rental_pokemon.keys():
-        distance = enchant.utils.levenshtein(text, name.split(' (')[0])
+        distance = enchant.utils.levenshtein(text, name.split(' (')[0]) # Note that variants of the same Pokemon (e.g., regional variants and Lycanroc) can not be distinguished
         if distance < match_value:
+            # Record the best match
             match_value = distance
             best_match = name
     if match_value > 3:
@@ -63,14 +66,17 @@ def join(inst):
             #print(step[2])
             inst.substage += 1
     if stage_time > join_sequence[-1][0] and inst.substage == join_sequence[-1][1]+1:
+        # Read Pokemon names from specified regtions
         pokemon_names = inst.read_selectable_pokemon('join')
         pokemon_list = []
         pokemon_scores = []
         for name in pokemon_names:
+            # Match each name to a rental Pokemon object with preconfigured moves, stats, etc.
             name = fix_name(name)
             inst.log(name)
             try:
                 pokemon_list.append(rental_pokemon[name])
+                # Score each Pokemon by its average performance against the remaining path
                 score = (3*rental_scores[name]+2*boss_matchups[name][BOSS]) / 4
                 pokemon_scores.append(score)
                 inst.log('Score for '+name+':\t%0.2f'%score)
@@ -120,7 +126,7 @@ def detect(inst):
     """Detect whether the chosen path has led to a battle, scientist, backpacker, or fork in the path."""
     text = inst.read_text(((0,0.6),(1,1)), invert=True)
     if ' appeared' in text and inst.num_caught < 3 and inst.opponent == None:
-        # Detect which appeared
+        # Detect which boss appeared
         text_split = text.split(' app')
         if 'eared!' in text_split[1]:
             inst.opponent = rental_pokemon[fix_name(text_split[0].strip())]
@@ -162,16 +168,19 @@ def battle(inst):
             return 'select_pokemon'
     elif inst.substage == 2:
         # Fight
-        inst.timer = time.time()-0.5
+        inst.timer = time.time()+0.5
         inst.com.write(b'a')
         if inst.opponent == None:
+            # Try to detect the opponent if it wasn't already detected
             if inst.num_caught < 3:
                 inst.substage = 20
                 return 'battle'
             else:
                 inst.opponent = boss_pokemon[BOSS]
+        # Choose the best move to use
         best_move_index = matchup_scoring.select_best_move(inst.pokemon, inst.opponent)
         inst.log('Best move against '+inst.opponent.name+': '+inst.pokemon.moves[best_move_index].name+' (index '+str(best_move_index)+')')
+        # Reduce PP accordingly
         new_PP = list(inst.pokemon.PP)
         new_PP[best_move_index] -= 1
         inst.pokemon.PP = tuple(new_PP)
@@ -453,10 +462,10 @@ def main_loop():
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
     instance = MaxLairInstance(BOSS, BALLS, com, cap, datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
-    #instance.pokemon = rental_pokemon['Sudowoodo']
-    #instance.num_caught = 2
+    instance.pokemon = rental_pokemon['Lairon']
+    instance.num_caught = 1
     
-    stage = 'initialize'
+    stage = 'detect'
     runs = 0
 
     # Start event loop after initializing the timer
