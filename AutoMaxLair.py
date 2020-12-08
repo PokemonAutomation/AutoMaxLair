@@ -2,7 +2,7 @@
 #       Eric Donders
 #       2020-11-20
 
-import cv2, time, serial, numpy, pytesseract, random, pickle, enchant
+import cv2, time, serial, numpy, pytesseract, random, pickle, enchant, configparser
 from datetime import datetime
 from MaxLairInstance import MaxLairInstance
 from Pokemon_Data import matchup_scoring
@@ -10,11 +10,13 @@ from Pokemon_Data import matchup_scoring
 # Change this section according to your Tesseract installation
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
-# Configure this section for each run
-BOSS = 'Zekrom'
-BALLS = 999
-COM_PORT = 'COM4'
-VIDEO_INDEX = 1
+# Load configuration from config file
+config = configparser.ConfigParser()
+config.read('Config.ini')
+BOSS = config['default']['BOSS']
+BALLS = int(config['default']['BALLS'])
+COM_PORT = config['default']['COM_PORT']
+VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 
 
 # Load precalculated resources for choosing Pokemon and moves
@@ -65,6 +67,8 @@ def join(inst):
             inst.com.write(step[2])
             #print(step[2])
             inst.substage += 1
+
+    # Pokemon selection subroutine
     if stage_time > join_sequence[-1][0] and inst.substage == join_sequence[-1][1]+1:
         # Read Pokemon names from specified regtions
         pokemon_names = inst.read_selectable_pokemon('join')
@@ -125,22 +129,30 @@ def path(inst):
 def detect(inst):
     """Detect whether the chosen path has led to a battle, scientist, backpacker, or fork in the path."""
     text = inst.read_text(((0,0.6),(1,1)), invert=True)
-    if ' appeared' in text and inst.num_caught < 3 and inst.opponent == None:
-        # Detect which boss appeared
-        text_split = text.split(' app')
-        if 'eared!' in text_split[1]:
-            inst.opponent = rental_pokemon[fix_name(text_split[0].strip())]
-            inst.log('Opponent detected: '+inst.opponent.name)    
+    if ' appeared' in text:
+        # Boss appeared so let's read what it is
+        if inst.num_caught < 3 and inst.opponent == None:
+            # Detect which boss appeared
+            text_split = text.split(' app')
+            if 'eared!' in text_split[1]:
+                inst.opponent = rental_pokemon[fix_name(text_split[0].strip())]
+                inst.log('Opponent detected: '+inst.opponent.name)
+        inst.log('Battle starting...')
+        return 'battle'       
     elif 'Fight' in text:
+        # Battle has started and the move selection screen is up
         inst.log('Battle starting...')
         return 'battle'
     elif 'backpacker' in text:
+        # Backpacker encountered so choose an item
         inst.log('Backpacker encountered...')
         return 'backpacker'
     elif 'swapping' in text:
+        # Scientist appeared to deal with that
         inst.log('Scientist encountered...')
         return 'scientist'
     elif 'path' in text:
+        # Fork in the path appeared to choose where to go
         inst.log('Choosing a path...')
         return 'path'
     return 'detect' # If not finished this stage, run it again next loop
@@ -151,21 +163,29 @@ def battle(inst):
     if inst.substage == 0:
         inst.timer = time.time()
         inst.substage += 1
+
+    # Detection subroutine
     elif inst.substage == 1:
         text = inst.read_text(((0,0.6),(1,1)), invert=True) # Read text from the bottom section of the screen
         #print(text)
         if 'Fight' in text:
-            inst.substage = 2
+            inst.substage = 2 # Go to move selection sequence
         elif 'Cheer On' in text:
             inst.substage = 6
+            inst.dmax_timer = -1
         elif 'Catch' in text:
             inst.reset_stage()
             inst.log('Catching boss...')
-            return 'catch'
+            return 'catch' # Go to catch sequence
         elif 'blown' in text:
-            inst.reset_stage()
+            inst.reset_stage() 
             inst.log('You lose :(. Quitting...')
-            return 'select_pokemon'
+            return 'select_pokemon' # Go to quit sequence
+        elif 'gathered around' in text:
+            inst.timer = time.time()
+            inst.substage = 12 # Choose to dynamax, then choose a move as usual
+
+    # Move selection subroutine
     elif inst.substage == 2:
         # Fight
         inst.timer = time.time()+0.5
@@ -183,27 +203,26 @@ def battle(inst):
         # Reduce PP accordingly
         new_PP = list(inst.pokemon.PP)
         new_PP[best_move_index] -= 1
+        if inst.opponent and inst.opponent.ability == 'Pressure':
+            new_PP[best_move_index] -= 1
         inst.pokemon.PP = tuple(new_PP)
+        # Handle the Dynamax timer
+        if inst.dmax_timer == 0:
+            inst.dmax_timer = -1
+            inst.move_index = 0
+        elif inst.dmax_timer > 0:
+            inst.dmax_timer -= 1
+        # Go to the appropriate stage for navigating to the correct move
         to_move = (best_move_index-inst.move_index)
-        if to_move < 0:
+        if to_move < 0: # Cycle back through the bottom to a previous move
             to_move += 4
         inst.substage += 4 - to_move
-         
-    elif inst.substage == 3 and stage_time > 0.5:
+    elif 3 <= inst.substage <= 5 and stage_time > 0.5:
+        # Navigate to the correct move
         inst.com.write(b'v')
         inst.move_index += 1
-        inst.substage += 1
         inst.timer = time.time()
-    elif inst.substage == 4 and stage_time > 0.5:
-        inst.com.write(b'v')
-        inst.move_index += 1
         inst.substage += 1
-        inst.timer = time.time()
-    elif inst.substage == 5 and stage_time > 0.5:
-        inst.com.write(b'v')
-        inst.move_index += 1
-        inst.substage += 1
-        inst.timer = time.time()
     elif inst.substage == 6 and stage_time > 0.5:
         inst.com.write(b'a')
         inst.substage += 1
@@ -220,6 +239,19 @@ def battle(inst):
     elif inst.substage == 10 and stage_time > 5:
         inst.com.write(b'b')
         inst.substage = 1 # Return to substage 1 which will decide what needs to be done next
+
+    # Dynamax initiation subroutine
+    elif inst.substage == 12 and stage_time > 3:
+        inst.com.write(b'a')
+        inst.substage += 1
+    elif inst.substage == 13 and stage_time > 4:
+        inst.com.write(b'<')
+        inst.substage += 1
+    elif inst.substage == 14 and stage_time > 5:
+        inst.dmax_timer = 3
+        inst.substage = 2 # Dynamax and then choose a move as usual
+
+    # Opponent detection subroutine    
     elif inst.substage == 20 and stage_time > 0.5:
         inst.com.write(b'a')
         inst.substage += 1 # Navigate to the target selection screen so the opponent name can be read
@@ -232,52 +264,55 @@ def battle(inst):
         inst.com.write(b'b')
         inst.timer = time.time()
         inst.substage = 1 # Return to substage 1 which will decide what needs to be done next
-    return 'battle' # If not finished this stage, run it again next loop
+
+    # If not finished this stage, run it again next loop
+    return 'battle' 
 
 def catch(inst):
     """Catch each boss after defeating it."""
     stage_time = time.time()-inst.timer
-    if inst.substage == 0:
+    if inst.substage == 0: # Click "Catch"
         inst.timer = time.time()
         inst.com.write(b'a')
         inst.num_caught += 1
         inst.balls -= 1
         inst.substage += 1
-    elif inst.substage == 1 and stage_time > 1:
+    elif inst.substage == 1 and stage_time > 1: # Select the default ball
         inst.com.write(b'a')
         inst.substage += 1
     elif inst.substage == 2 and stage_time > 30:
+        # Choose whether to keep the Pokemon if it's one of the first 3 bosses, or wrap up the run otherwise
         if inst.num_caught < 4:
             pokemon_list = inst.read_selectable_pokemon('catch')
             pokemon_name = fix_name(pokemon_list[-1])
             pokemon=None
-            try:
-                pokemon = rental_pokemon[pokemon_name]
-                score = ((3-inst.num_caught)*rental_scores[pokemon_name]+boss_matchups[pokemon_name][BOSS]) / (1+3-inst.num_caught)
-                existing_score = inst.HP * ((3-inst.num_caught)*rental_scores[inst.pokemon.name]+boss_matchups[inst.pokemon.name][BOSS]) / (1+3-inst.num_caught)
-                inst.log('Score for '+pokemon_name+':\t%0.2f'%score)
-                inst.log('Score for '+inst.pokemon.name+':\t%0.2f'%existing_score)
-                if score > existing_score:
-                    inst.com.write(b'a')
-                    inst.pokemon = pokemon
-                else:
-                    inst.com.write(b'b')
-            except KeyError:
-                inst.log('*****WARNING*****\nPokemon name not found in dictionary: '+pokemon_name)
+            # Match the Pokemon's name to a rental in the dictionary
+            pokemon = rental_pokemon[pokemon_name]
+            # Give the new and existing Pokemon a score based on their performance against the remainder of the run (including the boss)
+            score = ((3-inst.num_caught)*rental_scores[pokemon_name]+boss_matchups[pokemon_name][BOSS]) / (1+3-inst.num_caught)
+            existing_score = inst.HP * ((3-inst.num_caught)*rental_scores[inst.pokemon.name]+boss_matchups[inst.pokemon.name][BOSS]) / (1+3-inst.num_caught)
+            inst.log('Score for '+pokemon_name+':\t%0.2f'%score)
+            inst.log('Score for '+inst.pokemon.name+':\t%0.2f'%existing_score)
+            if score > existing_score:
+                # Choose to swap your existing Pokemon for the new Pokemon
                 inst.com.write(b'a')
-        else:
-            inst.com.write(b'a')
-        inst.substage = 100
-    elif inst.substage == 100 and stage_time > 35:
-        inst.reset_stage()
-        if inst.num_caught < 4:
+                inst.pokemon = pokemon
+            else:
+                # Choose not to take the new Pokemon
+                inst.com.write(b'b')
+            inst.reset_stage()
             inst.log('Detecting where the path led...')
             return 'detect'
         else:
-            inst.log('Congratulations! Checking the haul from this run...')
-            inst.wins += 1
-            inst.reset_stage()
-            return 'select_pokemon'
+            inst.com.write(b'a')
+            inst.substage = 100
+    elif inst.substage == 100 and stage_time > 35:
+        # Run was successful; wrap up and check the caught Pokemon
+        inst.reset_stage()
+        inst.log('Congratulations! Checking the haul from this run...')
+        inst.wins += 1
+        inst.reset_stage()
+        return 'select_pokemon'
     return 'catch' # If not finished this stage, run it again next loop
 
 def backpacker(inst):
@@ -302,7 +337,7 @@ def scientist(inst):
         inst.timer = time.time()
         inst.substage += 1
     elif inst.substage == 1 and stage_time > 3:
-        inst.com.write(b'b')
+        inst.com.write(b'b') # Don't take a new Pokemon for now
         inst.substage += 1
     elif inst.substage == 2 and stage_time > 4:
         inst.reset_stage()
@@ -330,12 +365,14 @@ def select_pokemon(inst):
         inst.timer = time.time()
         inst.substage += (5 - inst.num_caught)
     elif (4 <= inst.substage <=7) and stage_time > 2:
+        # Check for shininess and move to the next Pokemon if not
         if inst.check_shiny():
-            if inst.substage == 4:
-                return 'done' # End whenever a shiny legendary is found
-            inst.substage = 50 # Goto take Pokemon
             inst.timer = time.time()
             inst.log('******************************\n\nShiny found!\n\n******************************')
+            if inst.substage == 4:
+                return 'done' # End whenever a shiny legendary is found
+            else:
+                inst.substage = 50 # Goto take Pokemon
         elif stage_time > 3:
             if inst.substage < 7:
                 inst.com.write(b'^') # Check next Pokemon
@@ -362,8 +399,9 @@ def select_pokemon(inst):
         inst.substage += 1
     elif inst.substage == 14 and stage_time > 22:
         inst.com.write(b'a')
+        # Depending on how well the run went, the dialogue changes. Adjust the stage to account for this behaviour
         if inst.num_caught < 1:
-            return 'done' # Debug
+            return 'done' # Debug; winning 0 battles currently breaks the bot
         if inst.num_caught < 3:
             inst.substage = 100
         elif inst.num_caught < 4:
@@ -384,6 +422,8 @@ def select_pokemon(inst):
         inst.com.write(b'a')
         inst.substage = 100
         inst.timer = time.time()
+
+    # Take selected Pokemon subroutine
     elif inst.substage == 50 and stage_time > 1:
         inst.com.write(b'b')
         inst.substage += 1
@@ -408,6 +448,8 @@ def select_pokemon(inst):
     elif inst.substage == 57 and stage_time > 22:
         inst.substage = 13
         inst.timer = time.time()
+
+    # Wrap up and prepare for the next run (or quit if out of balls)
     elif inst.substage == 100 and stage_time > 2:
         inst.reset_run()
         if inst.balls >=4:
@@ -422,32 +464,44 @@ def select_pokemon(inst):
 
 def display_results(inst, stage, frame_start, runs, log=False):
     """Display video from the Switch alongside some annotations describing the run sequence."""
+    # Calculate some statistics for display
     elapsed_time = time.time()-frame_start
     if elapsed_time > 0:
         fps = '%0.1f' % (1 / (time.time()-frame_start))
     else:
         fps = 'High'
     if inst.runs == 0:
-        win_percent = 0
+        win_percent = None
+        time_per_run = None
     else:
         win_percent = round(100*inst.wins/inst.runs)
+        time_per_run = (datetime.now()-inst.start_date)/inst.runs
+
+    # Expand the image with blank space for writing results
     frame = cv2.copyMakeBorder(inst.get_frame(stage=stage), 0, 0, 0, 200, cv2.BORDER_CONSTANT)
     height, width, channels = frame.shape
 
-    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Balls: ', 'Pokemon caught: ', 'Pokemon: ', 'HP: ', 'Opponent: ', 'Win percentage: ')
-    values = (str(runs), stage, str(inst.substage), fps, str(inst.balls), str(inst.num_caught), str(inst.pokemon), str(inst.HP), str(inst.opponent), str(win_percent)+'%')
+    # Construct arrays of text and values to display
+    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Balls: ', 'Pokemon caught: ', 'Pokemon: ', 'HP: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ')
+    values = (str(runs), stage, str(inst.substage), fps, str(inst.balls), str(inst.num_caught), str(inst.pokemon), str(inst.HP), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
 
     for i in range(len(labels)):
         cv2.putText(frame, labels[i]+values[i], (width-195,25+25*i), cv2.FONT_HERSHEY_PLAIN,1,(255,255,255),2,cv2.LINE_AA)
         if log:
             inst.log(labels[i]+values[i])
+
+    # Display
     cv2.imshow('Output',frame)
+    if log:
+        # Save a copy of the final image
+        cv2.imwrite(inst.filename[:-8]+'_cap.png', frame)
     
 
 def main_loop():
     """Main loop. Runs until a shiny is found or the user manually quits by pressing 'Q'."""
     global rental_pokemon
-    
+
+    # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
     print('Connecting to '+com.port+'...')
     while not com.is_open:
@@ -457,15 +511,16 @@ def main_loop():
             pass
     print('Connected!')
 
+    # Open the video capture
     print('Opening the video connection...')
     cap = cv2.VideoCapture(VIDEO_INDEX)
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
-    instance = MaxLairInstance(BOSS, BALLS, com, cap, datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
-    instance.pokemon = rental_pokemon['Lairon']
-    instance.num_caught = 1
+    instance = MaxLairInstance(BOSS, BALLS, com, cap, datetime.now())
+    #instance.pokemon = rental_pokemon['Nidoking']
+    #instance.num_caught = 1
     
-    stage = 'detect'
+    stage = 'initialize'
     runs = 0
 
     # Start event loop after initializing the timer
