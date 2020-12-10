@@ -7,8 +7,6 @@ from datetime import datetime
 from MaxLairInstance import MaxLairInstance
 from Pokemon_Data import matchup_scoring
 
-# Change this section according to your Tesseract installation
-pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 # Load configuration from config file
 config = configparser.ConfigParser()
@@ -17,6 +15,7 @@ BOSS = config['default']['BOSS']
 BALLS = int(config['default']['BALLS'])
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
+pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
 
 
 # Load precalculated resources for choosing Pokemon and moves
@@ -29,6 +28,7 @@ rental_scores = pickle.load(open('Pokemon_Data/Rental_Pokemon_Scores.pickle', 'r
 
 def fix_name(text):
     """Matches OCRed Pokemon names (which are often slightly wrong) to a rental Pokemon"""
+    text = text.replace('\n','')
     best_match = ''
     match_value = 100
     for name in rental_pokemon.keys():
@@ -78,17 +78,15 @@ def join(inst):
             # Match each name to a rental Pokemon object with preconfigured moves, stats, etc.
             name = fix_name(name)
             inst.log(name)
+            pokemon_list.append(rental_pokemon[name])
             try:
-                pokemon_list.append(rental_pokemon[name])
                 # Score each Pokemon by its average performance against the remaining path
                 score = (3*rental_scores[name]+2*boss_matchups[name][BOSS]) / 4
                 pokemon_scores.append(score)
                 inst.log('Score for '+name+':\t%0.2f'%score)
             except KeyError:
-                inst.log('*****WARNING*****\nPokemon name not found in dictionary: '+name)
-                pokemon_list.append(None)
-                inst.substage = 99
-                return 'join'
+                inst.log('*****ERROR*****\nCould not find pokemon in dictionary: '+name+' or'+BOSS)
+                return 'done'
         selection_index = pokemon_scores.index(max(pokemon_scores))
         inst.pokemon = pokemon_list[selection_index]
         inst.reset_stage()
@@ -251,7 +249,7 @@ def battle(inst):
         inst.dmax_timer = 3
         inst.substage = 2 # Dynamax and then choose a move as usual
 
-    # Opponent detection subroutine    
+    # Opponent detection subroutine (called only when the boss name is not detected at the start of the battle)  
     elif inst.substage == 20 and stage_time > 0.5:
         inst.com.write(b'a')
         inst.substage += 1 # Navigate to the target selection screen so the opponent name can be read
@@ -308,7 +306,6 @@ def catch(inst):
             inst.substage = 100
     elif inst.substage == 100 and stage_time > 35:
         # Run was successful; wrap up and check the caught Pokemon
-        inst.reset_stage()
         inst.log('Congratulations! Checking the haul from this run...')
         inst.wins += 1
         inst.reset_stage()
@@ -350,7 +347,6 @@ def select_pokemon(inst):
     """Check Pokemon caught during the run and keep one if it's shiny."""
     stage_time = time.time() - inst.timer
     if inst.substage == 0 and stage_time > 5:
-        inst.runs += 1
         inst.log('Checking caught Pokemon...')
         inst.com.write(b'^') # Put cursor on last Pokemon
         inst.substage += 1
@@ -451,6 +447,7 @@ def select_pokemon(inst):
 
     # Wrap up and prepare for the next run (or quit if out of balls)
     elif inst.substage == 100 and stage_time > 2:
+        inst.runs += 1
         inst.reset_run()
         if inst.balls >=4:
             inst.log('Preparing for another run...')
@@ -462,7 +459,7 @@ def select_pokemon(inst):
         
 
 
-def display_results(inst, stage, frame_start, runs, log=False):
+def display_results(inst, stage, frame_start, log=False):
     """Display video from the Switch alongside some annotations describing the run sequence."""
     # Calculate some statistics for display
     elapsed_time = time.time()-frame_start
@@ -483,7 +480,7 @@ def display_results(inst, stage, frame_start, runs, log=False):
 
     # Construct arrays of text and values to display
     labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Balls: ', 'Pokemon caught: ', 'Pokemon: ', 'HP: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ')
-    values = (str(runs), stage, str(inst.substage), fps, str(inst.balls), str(inst.num_caught), str(inst.pokemon), str(inst.HP), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
+    values = (str(inst.runs+1), stage, str(inst.substage), fps, str(inst.balls), str(inst.num_caught), str(inst.pokemon), str(inst.HP), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
 
     for i in range(len(labels)):
         cv2.putText(frame, labels[i]+values[i], (width-195,25+25*i), cv2.FONT_HERSHEY_PLAIN,1,(255,255,255),2,cv2.LINE_AA)
@@ -517,43 +514,31 @@ def main_loop():
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
     instance = MaxLairInstance(BOSS, BALLS, com, cap, datetime.now())
-    #instance.pokemon = rental_pokemon['Nidoking']
+    #instance.pokemon = rental_pokemon['Vanillish']
     #instance.num_caught = 1
     
     stage = 'initialize'
-    runs = 0
+
+    # Map stages to the appropriate function to execute when in each stage
+    actions = {'join':join, 'path':path, 'detect':detect, 'battle':battle, 'catch':catch, 'backpacker':backpacker, 'scientist':scientist, 'select_pokemon':select_pokemon}
 
     # Start event loop after initializing the timer
     frame_start = time.time()
     while stage != 'done':
         if stage == 'initialize':
             # Instantiate a new Max Lair instance
-            runs += 1
-            instance.log('Run #'+str(runs)+' started!')
+            instance.log('Run #'+str(instance.runs+1)+' started!')
             time.sleep(1)
             instance.reset_stage()
             rental_pokemon = pickle.load(open('Pokemon_Data/Rental_Pokemon.pickle', 'rb')) # Reload in case previous runs modify some of the Pokemon
             stage = 'join'
-        elif stage == 'join':
-            stage = join(instance)
-        elif stage == 'path':
-            stage = path(instance)
-        elif stage == 'detect':
-            stage = detect(instance)
-        elif stage == 'battle':
-            stage = battle(instance)
-        elif stage == 'catch':
-            stage = catch(instance)
-        elif stage == 'backpacker':
-            stage = backpacker(instance)
-        elif stage == 'scientist':
-            stage = scientist(instance)
-        elif stage == 'select_pokemon':
-            stage = select_pokemon(instance)
+
+        # Execute the appropriate function for the current stage, and store the returned stage for the next loop
+        stage = actions[stage](instance)
 
 
         # Display a frame of the incoming video and some stats after each loop
-        display_results(instance, stage, frame_start, runs)
+        display_results(instance, stage, frame_start)
         frame_start = time.time()
 
         # Quit if the Q key is pressed
@@ -562,7 +547,7 @@ def main_loop():
 
 
     # When finished, clean up video and serial connections
-    display_results(instance, stage, frame_start, runs, log=True)
+    display_results(instance, stage, frame_start, log=True)
     instance.cap.release()
     com.close()
     #input('Press Enter to exit.')
