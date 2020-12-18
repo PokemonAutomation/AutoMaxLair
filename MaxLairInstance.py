@@ -2,11 +2,12 @@
 #       Eric Donders
 #       2020-11-20
 
-import cv2, time, pytesseract, enchant
+import cv2, time, pytesseract, enchant, pickle
 from datetime import datetime
 
 class MaxLairInstance():
-    def __init__(self, boss, balls, com, cap, datetime):
+    def __init__(self, boss, balls, com, cap, datetime, pokemon_data_paths):
+        self.boss_pokemon_path, self.rental_pokemon_path, self.boss_matchups_path, self.rental_matchups_path, self.rental_scores_path = pokemon_data_paths
         self.reset_run()
         
         self.start_date = datetime
@@ -23,20 +24,36 @@ class MaxLairInstance():
         self.resolution = (1280, 720)
 
         # Rectangles for checking shininess and reading specific text
+        # Shiny star rectangle
         self.shiny_rect = ((0.09,0.53), (0.12,0.58))
-        self.sel_rect_1 = ((0.48,0.29), (0.60,0.34))
-        self.sel_rect_2 = ((0.48,0.54), (0.60,0.59))
-        self.sel_rect_3 = ((0.48,0.79), (0.60,0.84))
-        self.sel_rect_4 = ((0.48,0.57), (0.60,0.63))
-        self.sel_rect_5 = ((0.46,0.37), (0.58,0.42))
+        # Selectable Pokemon names rectangles
+        self.sel_rect_1 = ((0.485,0.29), (0.60,0.34))
+        self.sel_rect_2 = ((0.485,0.54), (0.60,0.59))
+        self.sel_rect_3 = ((0.485,0.79), (0.60,0.84))
+        self.sel_rect_4 = ((0.485,0.58), (0.60,0.63))
+        # In-battle Pokemon name & type rectangles
+        self.sel_rect_5 = ((0.21,0.12), (0.40,0.18))
+        self.type_rect_1 = ((0.25,0.18), (0.32,0.23))
+        self.type_rect_2 = ((0.36,0.18), (0.43,0.23))
+        # Selectable Pokemon abilities rectangles
+        self.abil_rect_1 = ((0.485,0.34), (0.60,0.40))
+        self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
+        self.abil_rect_3 = ((0.485,0.84), (0.60,0.92))
+        self.abil_rect_4 = ((0.485,0.64), (0.60,0.70)) 
 
 
     def reset_run(self):
         """Reset in preparation for a new Dynamax Adventure"""
-        self.reset_stage()
         self.pokemon = None
         self.HP = 1 # 1 = 100%
         self.num_caught = 0
+        self.reset_stage()
+        # Load precalculated resources for choosing Pokemon and moves
+        self.boss_pokemon = pickle.load(open(self.boss_pokemon_path, 'rb'))
+        self.rental_pokemon = pickle.load(open(self.rental_pokemon_path, 'rb'))
+        self.boss_matchups = pickle.load(open(self.boss_matchups_path, 'rb'))
+        self.rental_matchups = pickle.load(open(self.rental_matchups_path, 'rb'))
+        self.rental_scores = pickle.load(open(self.rental_scores_path, 'rb'))
         
     def reset_stage(self):
         """Reset to substage 0 and timer at current time."""
@@ -45,6 +62,9 @@ class MaxLairInstance():
         self.move_index = 0
         self.dmax_timer = -1
         self.opponent = None
+        self.dynamax_available = False
+        if self.pokemon is not None:
+            self.pokemon.dynamax = False
         
 
     def get_frame(self, resolution=(1280,720), stage=''):
@@ -64,12 +84,24 @@ class MaxLairInstance():
                           (round(self.sel_rect_2[1][0]*w)+2,round(self.sel_rect_2[1][1]*h)+2), (0,255,0), 2)
             cv2.rectangle(img, (round(self.sel_rect_3[0][0]*w)-2,round(self.sel_rect_3[0][1]*h)-2),
                           (round(self.sel_rect_3[1][0]*w)+2,round(self.sel_rect_3[1][1]*h)+2), (0,255,0), 2)
+            cv2.rectangle(img, (round(self.abil_rect_1[0][0]*w)-2,round(self.abil_rect_1[0][1]*h)-2),
+                          (round(self.abil_rect_1[1][0]*w)+2,round(self.abil_rect_1[1][1]*h)+2), (0,255,255), 2)
+            cv2.rectangle(img, (round(self.abil_rect_2[0][0]*w)-2,round(self.abil_rect_2[0][1]*h)-2),
+                          (round(self.abil_rect_2[1][0]*w)+2,round(self.abil_rect_2[1][1]*h)+2), (0,255,255), 2)
+            cv2.rectangle(img, (round(self.abil_rect_3[0][0]*w)-2,round(self.abil_rect_3[0][1]*h)-2),
+                          (round(self.abil_rect_3[1][0]*w)+2,round(self.abil_rect_3[1][1]*h)+2), (0,255,255), 2)
         elif stage == 'catch':
             cv2.rectangle(img, (round(self.sel_rect_4[0][0]*w)-2,round(self.sel_rect_4[0][1]*h)-2),
                           (round(self.sel_rect_4[1][0]*w)+2,round(self.sel_rect_4[1][1]*h)+2), (0,255,0), 2)
+            cv2.rectangle(img, (round(self.abil_rect_4[0][0]*w)-2,round(self.abil_rect_4[0][1]*h)-2),
+                          (round(self.abil_rect_4[1][0]*w)+2,round(self.abil_rect_4[1][1]*h)+2), (0,255,255), 2)
         elif stage == 'battle':
             cv2.rectangle(img, (round(self.sel_rect_5[0][0]*w)-2,round(self.sel_rect_5[0][1]*h)-2),
                           (round(self.sel_rect_5[1][0]*w)+2,round(self.sel_rect_5[1][1]*h)+2), (0,255,0), 2)
+            cv2.rectangle(img, (round(self.type_rect_1[0][0]*w)-2,round(self.type_rect_1[0][1]*h)-2),
+                          (round(self.type_rect_1[1][0]*w)+2,round(self.type_rect_1[1][1]*h)+2), (255,255,0), 2)
+            cv2.rectangle(img, (round(self.type_rect_2[0][0]*w)-2,round(self.type_rect_2[0][1]*h)-2),
+                          (round(self.type_rect_2[1][0]*w)+2,round(self.type_rect_2[1][1]*h)+2), (255,255,0), 2)
 
         # Return the scaled and annotated image
         return img
@@ -95,6 +127,30 @@ class MaxLairInstance():
         text = pytesseract.image_to_string(img, lang=language, config=segmentation_mode)
         return text
 
+    def identify_pokemon(self, name, ability='', types=''):
+        """Match OCRed Pokemon to a rental Pokemon."""
+        text = name.replace('\n','')+ability.replace('\n','')+types.replace('\n','')
+        matched_text = ''
+        best_match = None
+        match_value = 1000
+        for key in self.rental_pokemon.keys():
+            pokemon = self.rental_pokemon[key]
+            string_to_match = pokemon.name.split(' (')[0]
+            if ability != '':
+                string_to_match += pokemon.ability
+            if types != '':
+                string_to_match += pokemon.types[0] + pokemon.types[1]
+            distance = enchant.utils.levenshtein(text, string_to_match)
+            if distance < match_value:
+                match_value = distance
+                best_match = pokemon
+                matched_text = string_to_match
+        if match_value > len(text)/3:
+            print('WARNING: could not find a good match for Pokemon: "'+text+'"')
+            pass
+        print('OCRed Pokemon '+text+' matched to rental Pokemon '+matched_text+' with distance of '+str(match_value)) # DEBUG
+        return best_match
+
     def read_selectable_pokemon(self, stage):
         """Return a list of available Pokemon names."""
         # Fetch the image from the Switch output
@@ -102,18 +158,36 @@ class MaxLairInstance():
 
         # Get a list of Pokemon names present, depending on stage
         pokemon_names = []
+        abilities = []
+        types = []
+        pokemon_list = []
         if stage == 'join':
             pokemon_names.append(self.read_text(self.sel_rect_1, threshold=False, invert=True, language=None, segmentation_mode='--psm 8', img=image).strip())
             pokemon_names.append(self.read_text(self.sel_rect_2, threshold=False, language=None, segmentation_mode='--psm 8', img=image).strip())
             pokemon_names.append(self.read_text(self.sel_rect_3, threshold=False, language=None, segmentation_mode='--psm 3', img=image).strip()) # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
+            abilities.append(self.read_text(self.abil_rect_1, threshold=False, invert=True, language=None, segmentation_mode='--psm 8', img=image).strip())
+            abilities.append(self.read_text(self.abil_rect_2, threshold=False, language=None, segmentation_mode='--psm 8', img=image).strip())
+            abilities.append(self.read_text(self.abil_rect_3, threshold=False, language=None, segmentation_mode='--psm 3', img=image).strip())
+            types = ['','','']
         elif stage == 'catch':
             pokemon_names.append(self.read_text(self.sel_rect_4, threshold=False, language=None, segmentation_mode='--psm 3', img=image).strip().split('\n')[-1])
+            abilities.append(self.read_text(self.abil_rect_4, threshold=False, language=None, segmentation_mode='--psm 3', img=image).strip())
+            types.append('')
         elif stage == 'battle':
-            pokemon_names.append(self.read_text(self.sel_rect_5, threshold=True, invert=True, segmentation_mode='--psm 8', img=image).strip())
-        print(pokemon_names) # DEBUG
+            pokemon_names.append(self.read_text(self.sel_rect_5, threshold=False, invert=False, segmentation_mode='--psm 8', img=image).strip())
+            abilities.append('')
+            type_1 = self.read_text(self.type_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8', img=image).strip().title()
+            type_2 = self.read_text(self.type_rect_2, threshold=False, invert=True, segmentation_mode='--psm 8', img=image).strip().title()
+            
+            types.append(type_1+type_2)
+        # Identify the Pokemon based on its name and ability/types, where relevant
+        for i in range(len(pokemon_names)):
+            pokemon_list.append(self.identify_pokemon(pokemon_names[i], abilities[i], types[i]))
+        #print(pokemon_names) # DEBUG
+        #print(abilities) # DEBUG
 
-        # Return the list of Pokemon names
-        return pokemon_names
+        # Return the list of Pokemon
+        return pokemon_list
     
     def check_shiny(self):
         """Detect whether a Pokemon is shiny by looking for the icon in the summary screen."""
@@ -126,9 +200,11 @@ class MaxLairInstance():
         measured_value = cv2.inRange(shiny_area, (0,100,0), (180,255,255)).mean()
         #cv2.imshow('Shiny area', cv2.inRange(shiny_area, (0,100,0), (180,255,255)))
         #print(measured_value)
-        if measured_value > 1: # The shiny star results in a measured_value greater than 10
+        if measured_value > 1: # The shiny star results in a measured_value even greater than 10
+            # Shiny detected
             return True
         else:
+            # No shiny detected
             return False
 
     def log(self, string=''):
