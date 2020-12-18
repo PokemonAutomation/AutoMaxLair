@@ -549,6 +549,8 @@ Whimsicott,Grass,Fairy
 Petilil,Grass,
 Lilligant,Grass,
 Basculin,Water,
+Basculin (Red-Striped Form),Water,
+Basculin (Blue-Striped Form),Water,
 Sandile,Ground,Dark
 Krokorok,Ground,Dark
 Krookodile,Ground,Dark
@@ -909,3 +911,40 @@ Regidrago,Dragon,
 Glastrier,Ice,
 Spectrier,Ghost,
 Calyrex,Grass,Psychic
+Rattata (Alolan Form),Dark,Normal
+Raticate (Alolan Form),Dark,Normal
+Raichu (Alolan Form),Electric,Psychic
+Sandshrew (Alolan Form),Ice,Steel
+Sandslash (Alolan Form),Ice,Steel
+Vulpix (Alolan Form),Ice,
+Ninetales (Alolan Form),Ice,Fairy
+Diglett (Alolan Form),Ground,Steel
+Dugtrio (Alolan Form),Ground,Steel
+Meowth (Alolan Form),Dark,
+Persian (Alolan Form),Dark,
+Geodude (Alolan Form),Rock,Electric
+Graveler (Alolan Form),Rock,Electric
+Golem (Alolan Form),Rock,Electric
+Grimer (Alolan Form),Poison,Dark
+Muk (Alolan Form),Poison,Dark
+Exeggutor (Alolan Form),Grass,Dragon
+Marowak (Alolan Form),Fire,Ghost
+Meowth (Galarian Form),Steel,
+Ponyta (Galarian Form),Psychic,
+Rapidash (Galarian Form),Psychic,Fairy
+Slowpoke (Galarian Form),Psychic,
+Slowbro (Galarian Form),Poison,Psychic
+Farfetch'd (Galarian Form),Fighting,
+Weezing (Galarian Form),Poison,Fairy
+Mr. Mime (Galarian Form),Ice,Psychic
+Articuno (Galarian Form),Psychic,Flying
+Zapdos (Galarian Form),Fighting,Flying
+Moltres (Galarian Form),Dark,Flying
+Slowking (Galarian Form),Poison,Psychic
+Corsola (Galarian Form),Ghost,
+Zigzagoon (Galarian Form),Dark,Normal
+Linoone (Galarian Form),Dark,Normal
+Darumaka (Galarian Form),Ice,
+Darmanitan (Galarian Form),Ice,
+Yamask (Galarian Form),Ground,Ghost
+Stunfisk (Galarian Form),Ground,Steel

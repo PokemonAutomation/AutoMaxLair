@@ -1,6 +1,7 @@
 # Matchup Scoring
 #   Eric Donders
 #   2020-11-27
+import copy
 
 def type_damage_multiplier(type1, type2):
     """Return a damage multiplier based on an attack type and target type."""
@@ -35,7 +36,10 @@ def ability_damage_multiplier(attacker, move_index, defender):
 
     move_type = attacker.moves[move_index].type
     if move_type == 'Ground' and defender.ability == 'Levitate':
-        return 0
+        if attacker.moves[move_index].name == 'Thousand Arrows':
+            return 1
+        else:
+            return 0
     elif move_type == 'Water' and defender.ability in ('Water Absorb', 'Storm Drain', 'Dry Skin'):
         return 0
     elif move_type == 'Fire':
@@ -53,14 +57,57 @@ def ability_damage_multiplier(attacker, move_index, defender):
         return 0.5
 
     return 1
+
+
+def get_max_move_power(move):
+    if move.type.title() == 'Fighting' or move.type.title() == 'Poison':
+        if move.base_power < 10:
+            return 0
+        elif move.base_power <= 40:
+            return 70
+        elif move.base_power <= 50:
+            return 75
+        elif move.base_power <= 60:
+            return 80
+        elif move.base_power <= 70:
+            return 85
+        elif move.base_power <= 100:
+            return 90
+        elif move.base_power <= 140:
+            return 95
+        else:
+            return 100
+    else:
+        if move.base_power < 10:
+            return 0
+        elif move.base_power <= 40:
+            return 90
+        elif move.base_power <= 50:
+            return 100
+        elif move.base_power <= 60:
+            return 110
+        elif move.base_power <= 70:
+            return 120
+        elif move.base_power <= 100:
+            return 130
+        elif move.base_power <= 140:
+            return 140
+        else:
+            return 150
     
 
 
-def calculate_damage(attacker, move_index, defender, output_format='Percentage'):
+def calculate_damage(attacker, move_index, defender, output_format='Percentage', multiple_targets=False):
     """Return the damage (default %) of a move used by the attacker against the defender."""
-    move = attacker.moves[move_index]
+    if attacker.dynamax:
+        move = attacker.max_moves[move_index]
+    else:
+        move = attacker.moves[move_index]
+        
     modifier = 0.925 # Random between 0.85 and 1
-    # Ignore # targets for now (partially dealt with in the boss' movesets
+    modifier *= move.accuracy
+    if multiple_targets and move.is_spread:
+        modifier *= 0.75
     # Ignore weather for now
     # Ignore crits
     if move.type in attacker.types: # Apply STAB
@@ -68,11 +115,16 @@ def calculate_damage(attacker, move_index, defender, output_format='Percentage')
             modifier *= 2
         else:
             modifier *= 1.5
-    modifier *= type_damage_multiplier(move.type, defender.types[0]) * type_damage_multiplier(move.type, defender.types[1])
+    # Apply type effectiveness
+    for i in range(len(defender.types)):
+        if move.name != 'Thousand Arrows' or defender.types[i].title() != 'Flying':
+            modifier *= type_damage_multiplier(move.type, defender.types[i])
+    # Apply status effects
     if move.category == 'Physical' and attacker.status == 'Burn':
         modifier *= 0.5
+    # Apply modifiers from abilities
     modifier *= ability_damage_multiplier(attacker, move_index, defender)
-
+    # Apply attacker and defender stats
     if move.category == 'Physical':
         if move.name != 'Body Press':
             numerator = attacker.stats[1]
@@ -88,35 +140,79 @@ def calculate_damage(attacker, move_index, defender, output_format='Percentage')
 
     return ((2/5*attacker.level+2)*move.power*numerator/denominator/50 + 2) * modifier / defender.stats[0]
 
-def calculate_move_score(attacker, move_index, defender):
+def calculate_average_damage(attackers, defenders, output_format='Percentage', multiple_targets=False):
+    """Return the average damage output of a range of attackers against a single defender."""
+    if len(attackers) == 0 or len(defenders) == 0:
+        return 0
+    else:
+        total_damage = 0
+        count = 0
+        for key in attackers:
+            attacker = attackers[key]
+            for key2 in defenders:
+                defender = defenders[key2]
+                subtotal_damage = 0
+                subcount = 0
+                for i in range(len(attacker.moves)):
+                    subtotal_damage += calculate_damage(attacker, i, defender, output_format, multiple_targets)
+                    subcount += 1
+                total_damage += subtotal_damage / subcount
+                count += 1
+            
+        return total_damage / count
+
+def calculate_move_score(attacker, move_index, defender, output_format='Percentage', teammates={}):
     """Return a numerical score of an attacker's move against a defender."""
-    # For now, return a score based on damage alone. Later this function can be modified to give status moves some value
-    return calculate_damage(attacker, move_index, defender)
+    # Calculate contribution of the move itself (assume Dynamaxed boss)
+    score = calculate_damage(attacker, move_index, defender, output_format, False) / 2
 
+    # Estimate contributions by teammates (assume Dynamaxed boss)
+    temp_teammates = copy.deepcopy(teammates)
+    temp_teammates.pop(attacker.name, None) # Don't count the attacker twice
+    temp_teammates.pop(defender.name, None)
+    fudge_factor = 2 # Average damage of teammates is likely undercounted as some status moves are helpful and the AI chooses better than random moves
+    score += 3 * calculate_average_damage(temp_teammates, {defender.name:defender}) / 2 * fudge_factor
 
-def evaluate_matchup(attacker, defender):
-    """Return a matchup score between an attacker and defender, with the attacker using optimal moves and the defender using average moves."""
-    attacker_scores = []
-    defender_scores = []
-    #print('Matchup for '+attacker.name+' vs '+defender.name)
-    for i in range(len(attacker.moves)):
-        attacker_scores.append(calculate_damage(attacker, i, defender))
+    # Estimate contributions from status moves
+    #   TODO: implement status moves besides Wide Guard
+    
+    # Estimate damage received
+    received_damage = 0
     for i in range(len(defender.moves)):
-        defender_scores.append(calculate_damage(defender, i, attacker))
-    try:
-        return max(attacker_scores) / (sum(defender_scores)/len(defender_scores))
-    except ZeroDivisionError:
-        return 10
+        if defender.moves[i].is_spread:
+            if attacker.moves[move_index].name != 'Wide Guard':
+                received_damage += calculate_damage(defender, i, attacker, multiple_targets=True)
+                received_damage += 3* calculate_average_damage({defender.name:defender}, teammates, output_format, multiple_targets=True)
+            else:
+                #print('Wide guard stops '+defender.moves[i].name)
+                pass
+        else:
+            received_damage += 0.25 * calculate_damage(defender, i, attacker, multiple_targets=True)
+            received_damage += 0.75 * calculate_average_damage({defender.name:defender}, teammates, output_format, multiple_targets=True)
+    score -= received_damage / len(defender.moves)
+                
+
+    # Return the score
+    move = attacker.max_moves[move_index] if attacker.dynamax else attacker.moves[move_index]
+    #print('Score for '+attacker.name+' using '+move.name+': '+str(score))
+    return score
 
 
-def select_best_move(attacker, defender):
+def evaluate_matchup(attacker, boss, teammates={}):
+    """Return a matchup score between an attacker and defender, with the attacker using optimal moves and the defender using average moves."""
+    if attacker.name == 'Ditto':
+        attacker = boss
+    return calculate_move_score(attacker, select_best_move(attacker, boss, teammates), boss, teammates)
+
+
+def select_best_move(attacker, defender, teammates={}):
     """Return the index of the move that the attacker should use against the defender."""
-    best_score = -1
+    best_score = -100
     best_index = 0
     for i in range(len(attacker.moves)):
         if attacker.PP[i] > 0:
-            score = calculate_move_score(attacker, i, defender)
-            if score > best_score:
+            score = calculate_move_score(attacker, i, defender, teammates=teammates)
+            if score > best_score or i == 0:
                 best_score = score
                 best_index = i
     return best_index

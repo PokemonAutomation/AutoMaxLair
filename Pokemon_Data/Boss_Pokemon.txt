@@ -7,6 +7,7 @@ Ice Beam
 Freeze-Dry
 Hurricane
 Mist
+Blizzard
 
 Zapdos
 
@@ -17,6 +18,7 @@ Thunder
 Drill Peck
 Brave Bird
 Agility
+Discharge
 
 Moltres
 
@@ -24,11 +26,10 @@ Pressure
 Level 70
 Attacks:
 Heat Wave
-Heat Wave
-Heat Wave
 Wing Attack
 Leer
 Fire Spin
+Heat Wave
 
 Mewtwo
 
@@ -39,8 +40,7 @@ Psychic
 Disable
 Recover
 Blizzard
-Blizzard
-Blizzard
+Psystrike
 
 Raikou
 
@@ -51,6 +51,7 @@ Thunderbolt
 Howl
 Extreme Speed
 Weather Ball
+Spark
 
 Entei
 
@@ -61,6 +62,7 @@ Flamethrower
 Scary Face
 Extreme Speed
 Crunch
+Flame Wheel
 
 Suicune
 
@@ -71,6 +73,7 @@ Liquidation
 Extrasensory
 Extreme Speed
 Calm Mind
+Water Pulse
 
 Lugia
 Shield Native
@@ -82,6 +85,7 @@ Dragon Pulse
 Extrasensory
 Whirlpool
 Ancient Power
+Aeroblast
 
 Ho-Oh
 Sword Native
@@ -93,6 +97,7 @@ Flare Blitz
 Extrasensory
 Sunny Day
 Ancient Power
+Sacred Fire
 
 Latias
 Shield Native
@@ -104,8 +109,7 @@ Reflect Type
 Dragon Breath
 Zen Headbutt
 Surf
-Surf
-Surf
+Mist Ball
 
 Latios
 Sword Native
@@ -117,6 +121,7 @@ Dragon Dance
 Dragon Pulse
 Zen Headbutt
 Aura Sphere
+Luster Purge
 
 Kyogre
 Shield Native
@@ -129,8 +134,6 @@ Body Slam
 Aqua Ring
 Thunder
 Origin Pulse
-Origin Pulse
-Origin Pulse
 
 Groudon
 Sword Native
@@ -139,15 +142,9 @@ Drought
 Level 70
 Attacks:
 Earthquake
-Earthquake
-Earthquake
 Scary Face
 Lava Plume
-Lava Plume
-Lava Plume
 Hammer Arm
-Precipice Blades
-Precipice Blades
 Precipice Blades
 
 Rayquaza
@@ -159,6 +156,7 @@ Dragon Ascent
 Brutal Swing
 Extreme Speed
 Twister
+Dragon Pulse
 
 Uxie
 
@@ -169,6 +167,7 @@ Psychic
 Future Sight
 Magic Room
 Shadow Ball
+Swift
 
 Mesprit
 
@@ -179,6 +178,7 @@ Psychic
 Charm
 Draining Kiss
 Tri Attack
+Swift
 
 Azelf
 
@@ -187,12 +187,8 @@ Level 70
 Attacks:
 Psychic
 Dazzling Gleam
-Dazzling Gleam
-Dazzling Gleam
 Nasty Plot
 Facade
-Swift
-Swift
 Swift
 
 Dialga
@@ -205,6 +201,7 @@ Slash
 Ancient Power
 Flash Cannon
 Dragon Claw
+Iron Tail
 
 Palkia
 Shield Native
@@ -214,10 +211,9 @@ Level 70
 Attacks:
 Slash
 Surf
-Surf
-Surf
 Ancient Power
 Dragon Claw
+Aqua Tail
 
 Heatran
 
@@ -228,6 +224,7 @@ Metal Sound
 Lava Plume
 Crunch
 Iron Head
+Heat Wave
 
 Giratina (Altered Forme)
 
@@ -238,6 +235,7 @@ Dragon Claw
 Scary Face
 Shadow Ball
 Ancient Power
+Shadow Claw
 
 Cresselia
 
@@ -245,11 +243,10 @@ Levitate
 Level 70
 Attacks:
 Icy Wind
-Icy Wind
-Icy Wind
 Moonblast
 Psycho Cut
 Psyshock
+Psychic
 
 Tornadus (Incarnate Forme)
 Sword Native
@@ -260,11 +257,8 @@ Attacks:
 Hurricane
 Agility
 Icy Wind
-Icy Wind
-Icy Wind
 Heat Wave
-Heat Wave
-Heat Wave
+Air Cutter
 
 Thundurus (Incarnate Forme)
 Shield Native
@@ -276,8 +270,7 @@ Thunder
 Rain Dance
 Weather Ball
 Sludge Wave
-Sludge Wave
-Sludge Wave
+Discharge
 
 Reshiram
 Sword Native
@@ -289,6 +282,7 @@ Noble Roar
 Extrasensory
 Fusion Flare
 Dragon Pulse
+Blue Flare
 
 Zekrom
 Shield Native
@@ -300,6 +294,7 @@ Noble Roar
 Slash
 Fusion Bolt
 Dragon Claw
+Bolt Strike
 
 Landorus (Incarnate Forme)
 
@@ -308,12 +303,9 @@ Level 70
 Attacks:
 Sand Tomb
 Rock Slide
-Rock Slide
-Rock Slide
-Bulldoze
-Bulldoze
 Bulldoze
 Focus Blast
+Earthquake
 
 Kyurem (Normal Kyurem)
 
@@ -322,12 +314,8 @@ Level 70
 Attacks:
 Ice Beam
 Hyper Voice
-Hyper Voice
-Hyper Voice
 Shadow Ball
 Scary Face
-Glaciate
-Glaciate
 Glaciate
 
 Xerneas
@@ -338,10 +326,9 @@ Level 70
 Attacks:
 Ingrain
 Dazzling Gleam
-Dazzling Gleam
-Dazzling Gleam
 Moonblast
 Horn Leech
+Moonblast
 
 Yveltal
 Shield Native
@@ -353,6 +340,7 @@ Taunt
 Oblivion Wing
 Dragon Rush
 Sucker Punch
+Snarl
 
 Zygarde (50% Forme)
 
@@ -360,13 +348,10 @@ Power Construct
 Level 70
 Attacks:
 Thousand Arrows
-Thousand Arrows
-Thousand Arrows
-Land's Wrath
-Land's Wrath
 Land's Wrath
 Dragon Pulse
 Bind
+Land's Wrath
 
 Tapu Koko
 
@@ -377,6 +362,7 @@ Thunderbolt
 Quick Attack
 Brave Bird
 Taunt
+Discharge
 
 Tapu Lele
 
@@ -387,6 +373,7 @@ Psychic
 Play Rough
 Magic Room
 Charm
+Psyshock
 
 Tapu Bulu
 
@@ -397,6 +384,7 @@ Superpower
 Megahorn
 Wood Hammer
 Scary Face
+Horn Leech
 
 Tapu Fini
 
@@ -407,6 +395,7 @@ Whirlpool
 Water Pulse
 Brine
 Moonblast
+Surf
 
 Solgaleo
 Sword Native
@@ -418,6 +407,7 @@ Zen Headbutt
 Fire Spin
 Iron Tail
 Noble Roar
+Sunsteel Strike
 
 Lunala
 Shield Native
@@ -429,8 +419,7 @@ Shadow Ball
 Moonblast
 Magic Coat
 Swift
-Swift
-Swift
+Moongeist Beam
 
 Nihilego
 
@@ -439,13 +428,7 @@ Level 70
 Attacks:
 Wonder Room
 Sludge Wave
-Sludge Wave
-Sludge Wave
 Brutal Swing
-Brutal Swing
-Brutal Swing
-Acid Spray
-Acid Spray
 Acid Spray
 
 Buzzwole
@@ -465,8 +448,6 @@ Level 70
 Attacks:
 High Jump Kick
 Swift
-Swift
-Swift
 Throat Chop
 Lunge
 
@@ -477,11 +458,7 @@ Level 70
 Attacks:
 Power Whip
 Discharge
-Discharge
-Discharge
 Eerie Impulse
-Brutal Swing
-Brutal Swing
 Brutal Swing
 
 Celesteela
@@ -492,8 +469,6 @@ Attacks:
 Leech Seed
 Smack Down
 Gyro Ball
-Earthquake
-Earthquake
 Earthquake
 
 Kartana
@@ -514,8 +489,6 @@ Attacks:
 Dragon Rush
 Stomping Tantrum
 Brutal Swing
-Brutal Swing
-Brutal Swing
 Mega Punch
 
 Necrozma
@@ -534,11 +507,7 @@ Beast Boost
 Level 70
 Attacks:
 Rock Slide
-Rock Slide
-Rock Slide
 Double-Edge
-Brutal Swing
-Brutal Swing
 Brutal Swing
 Autotomize
 

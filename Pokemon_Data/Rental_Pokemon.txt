@@ -48,7 +48,7 @@ Speed Swap
 Light Screen
 Focus Blast
 
-Raichu
+Raichu (Alolan Form)
 
 Surge Surfer
 Level 65
@@ -68,7 +68,7 @@ Stomping Tantrum
 Stone Edge
 Leech Life
 
-Sandslash
+Sandslash (Alolan Form)
 
 Snow Cloak
 Level 65
@@ -168,7 +168,7 @@ Substitute
 Mud-Slap
 Rock Slide
 
-Dugtrio
+Dugtrio (Alolan Form)
 
 Sand Veil
 Level 65
@@ -188,7 +188,7 @@ Play Rough
 Feint
 Round
 
-Persian
+Persian (Alolan Form)
 
 Fur Coat
 Level 65
@@ -308,7 +308,7 @@ Throat Chop
 Iron Head
 Screech
 
-Marowak
+Marowak (Alolan Form)
 
 Rock Head
 Level 65
@@ -358,7 +358,7 @@ Heat Wave
 Sludge Bomb
 Dark Pulse
 
-Weezing
+Weezing (Galarian Form)
 
 Misty Surge
 Level 65
@@ -448,7 +448,7 @@ Reflect
 Helping Hand
 Psychic
 
-Mr. Mime
+Mr. Mime (Galarian Form)
 
 Ice Body
 Level 65
@@ -828,7 +828,7 @@ Pin Missile
 Baby-Doll Eyes
 Shadow Claw
 
-Linoone
+Linoone (Galarian Form)
 
 Pickup
 Level 65
@@ -1318,7 +1318,7 @@ Quiver Dance
 Light Screen
 Pollen Puff
 
-Basculin
+Basculin (Red-Striped Form)
 
 Adaptability
 Level 65
@@ -1328,7 +1328,7 @@ Dive
 Psychic Fangs
 Ice Fang
 
-Basculin
+Basculin (Blue-Striped Form)
 
 Adaptability
 Level 65
@@ -1558,7 +1558,7 @@ Thunderbolt
 Earth Power
 Muddy Water
 
-Stunfisk
+Stunfisk (Galarian Form)
 
 Mimicry
 Level 65
