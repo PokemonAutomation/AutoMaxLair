@@ -4,16 +4,29 @@
 
 import cv2, time, pytesseract, enchant, pickle
 from datetime import datetime
+from typing import TypeVar, Dict, List, Tuple
+Pokemon = TypeVar('Pokemon')
+Move = TypeVar('Move')
+Serial = TypeVar('serial.Serial')
+VideoCapture = TypeVar('cv2.VideoCapture')
+DateTime = TypeVar('datetime.datetime')
+Image = TypeVar('cv2 image')
 
 class MaxLairInstance():
-    def __init__(self, boss, balls, com, cap, datetime, pokemon_data_paths):
+    def __init__(self,
+                 boss: str,
+                 balls: int,
+                 com: Serial,
+                 cap: Serial,
+                 datetime: DateTime,
+                 pokemon_data_paths: Tuple[str, str, str, str]) -> None:
         self.boss_pokemon_path, self.rental_pokemon_path, self.boss_matchups_path, self.rental_matchups_path, self.rental_scores_path = pokemon_data_paths
         self.reset_run()
         
         self.start_date = datetime
         self.filename = ''.join(('Logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'))
         self.boss = boss
-        self.balls = balls
+        self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
         self.runs = 0
         self.wins = 0
 
@@ -39,10 +52,12 @@ class MaxLairInstance():
         self.abil_rect_1 = ((0.485,0.34), (0.60,0.40))
         self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
         self.abil_rect_3 = ((0.485,0.84), (0.60,0.92))
-        self.abil_rect_4 = ((0.485,0.64), (0.60,0.70)) 
+        self.abil_rect_4 = ((0.485,0.64), (0.60,0.70))
+        # Poke ball rectangle
+        self.ball_rect = ((0.68,0.62), (0.87,0.67))
 
 
-    def reset_run(self):
+    def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure"""
         self.pokemon = None
         self.HP = 1 # 1 = 100%
@@ -55,7 +70,7 @@ class MaxLairInstance():
         self.rental_matchups = pickle.load(open(self.rental_matchups_path, 'rb'))
         self.rental_scores = pickle.load(open(self.rental_scores_path, 'rb'))
         
-    def reset_stage(self):
+    def reset_stage(self) -> None:
         """Reset to substage 0 and timer at current time."""
         self.timer = time.time()
         self.substage = 0
@@ -67,7 +82,9 @@ class MaxLairInstance():
             self.pokemon.dynamax = False
         
 
-    def get_frame(self, resolution=(1280,720), stage=''):
+    def get_frame(self,
+                  resolution: Tuple[int, int]=(1280,720),
+                  stage: str='') -> Image:
         """Get a scaled and annotated image of the current Switch output"""
         ret, img = self.cap.read()
         img = cv2.resize(img, resolution)
@@ -95,6 +112,8 @@ class MaxLairInstance():
                           (round(self.sel_rect_4[1][0]*w)+2,round(self.sel_rect_4[1][1]*h)+2), (0,255,0), 2)
             cv2.rectangle(img, (round(self.abil_rect_4[0][0]*w)-2,round(self.abil_rect_4[0][1]*h)-2),
                           (round(self.abil_rect_4[1][0]*w)+2,round(self.abil_rect_4[1][1]*h)+2), (0,255,255), 2)
+            cv2.rectangle(img, (round(self.ball_rect[0][0]*w)-2,round(self.ball_rect[0][1]*h)-2),
+                          (round(self.ball_rect[1][0]*w)+2,round(self.ball_rect[1][1]*h)+2), (0,0,255), 2)
         elif stage == 'battle':
             cv2.rectangle(img, (round(self.sel_rect_5[0][0]*w)-2,round(self.sel_rect_5[0][1]*h)-2),
                           (round(self.sel_rect_5[1][0]*w)+2,round(self.sel_rect_5[1][1]*h)+2), (0,255,0), 2)
@@ -107,7 +126,13 @@ class MaxLairInstance():
         return img
 
 
-    def read_text(self, section=((0,0),(1,1)), threshold=True, invert=False, language='eng', segmentation_mode='--psm 11', img=None):
+    def read_text(self,
+                  section: Tuple[Tuple[int, int], Tuple[int, int]]=((0,0),(1,1)),
+                  threshold: bool=True,
+                  invert: bool=False,
+                  language: str='eng',
+                  segmentation_mode: str='--psm 11',
+                  img: Image=None) -> str:
         """Read text from a section (default entirety) of an image using Tesseract."""
         # Image is optionally supplied, usually when multiple text areas must be read so the image only needs to be fetched once
         if img is None:
@@ -127,7 +152,10 @@ class MaxLairInstance():
         text = pytesseract.image_to_string(img, lang=language, config=segmentation_mode)
         return text
 
-    def identify_pokemon(self, name, ability='', types=''):
+    def identify_pokemon(self,
+                         name: str,
+                         ability: str='',
+                         types: str='') -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
         text = name.replace('\n','')+ability.replace('\n','')+types.replace('\n','')
         matched_text = ''
@@ -151,7 +179,8 @@ class MaxLairInstance():
         print('OCRed Pokemon '+text+' matched to rental Pokemon '+matched_text+' with distance of '+str(match_value)) # DEBUG
         return best_match
 
-    def read_selectable_pokemon(self, stage):
+    def read_selectable_pokemon(self,
+                                stage: str) -> List[Pokemon]:
         """Return a list of available Pokemon names."""
         # Fetch the image from the Switch output
         image = self.get_frame()
@@ -178,8 +207,8 @@ class MaxLairInstance():
             abilities.append('')
             type_1 = self.read_text(self.type_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8', img=image).strip().title()
             type_2 = self.read_text(self.type_rect_2, threshold=False, invert=True, segmentation_mode='--psm 8', img=image).strip().title()
-            
             types.append(type_1+type_2)
+
         # Identify the Pokemon based on its name and ability/types, where relevant
         for i in range(len(pokemon_names)):
             pokemon_list.append(self.identify_pokemon(pokemon_names[i], abilities[i], types[i]))
@@ -189,7 +218,7 @@ class MaxLairInstance():
         # Return the list of Pokemon
         return pokemon_list
     
-    def check_shiny(self):
+    def check_shiny(self) -> bool:
         """Detect whether a Pokemon is shiny by looking for the icon in the summary screen."""
         # Fetch, crop, and threshold image so the red shiny star will appear white and everything else appears black
         img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
@@ -198,7 +227,6 @@ class MaxLairInstance():
                          round(self.shiny_rect[0][0]*w):round(self.shiny_rect[1][0]*w)]
         # Measure the average value in the shiny star area
         measured_value = cv2.inRange(shiny_area, (0,100,0), (180,255,255)).mean()
-        #cv2.imshow('Shiny area', cv2.inRange(shiny_area, (0,100,0), (180,255,255)))
         #print(measured_value)
         if measured_value > 1: # The shiny star results in a measured_value even greater than 10
             # Shiny detected
@@ -207,7 +235,39 @@ class MaxLairInstance():
             # No shiny detected
             return False
 
-    def log(self, string=''):
+    def get_target_ball(self) -> str:
+        """Return the name of the Poke Ball needed."""
+        return self.base_ball if self.num_caught < 3 else self.legendary_ball
+
+    def check_ball(self) -> str:
+        """Detect the currently selected Poke Ball during the catch phase of the game."""
+        ball_text = self.read_text(self.ball_rect, threshold=False, invert=True, language='eng', segmentation_mode='--psm 8').strip()
+        return ball_text
+
+    def record_ball_use(self) -> None:
+        """Decrement the number of balls in the inventory and increment the number of pokemon caught."""
+        if self.base_ball == self.legendary_ball:
+            self.base_balls -= 1
+            self.legendary_balls -= 1
+        elif self.num_caught < 3:
+            self.base_balls -= 1
+        else:
+            self.legendary_balls -= 1
+        self.num_caught += 1
+
+    def check_sufficient_balls(self) -> bool:
+        """Calculate whether sufficient balls remain for another run."""
+        if self.base_ball == self.legendary_ball and self.base_balls < 4:
+            return False
+        elif self.base_balls < 3:
+            return False
+        elif self.legendary_balls < 1:
+            return False
+        else:
+            return True
+
+    def log(self,
+            string: str='') -> None:
         """Print a string to the log file with a timestamp."""
         with open(self.filename, 'a') as file:
             file.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'\t'+string+'\n')

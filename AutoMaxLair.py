@@ -13,11 +13,16 @@ from Pokemon_Data import matchup_scoring
 # Load configuration from config file
 config = configparser.ConfigParser()
 config.read('Config.ini')
+
 BOSS = config['default']['BOSS']
-BALLS = int(config['default']['BALLS'])
+BASE_BALL = config['default']['BASE_BALL']
+BASE_BALLS = int(config['default']['BASE_BALLS'])
+LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
+LEGENDARY_BALLS = int(config['default']['LEGENDARY_BALLS'])
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
+
 boss_pokemon_path = config['pokemon_data_paths']['Boss_Pokemon']
 rental_pokemon_path = config['pokemon_data_paths']['Rental_Pokemon']
 boss_matchup_LUT_path = config['pokemon_data_paths']['Boss_Matchup_LUT']
@@ -221,7 +226,7 @@ def battle(inst):
         # Reset timer
         inst.timer = time.time()+0.5
             
-    elif 3 <= inst.substage <= 5 and stage_time > 0.5:
+    elif 3 <= inst.substage <= 5 and stage_time > 0.75:
         # Navigate to the correct move
         inst.com.write(b'v')
         inst.move_index += 1
@@ -294,39 +299,51 @@ def battle(inst):
 def catch(inst):
     """Catch each boss after defeating it."""
     stage_time = time.time()-inst.timer
-    if inst.substage == 0: # Click "Catch"
+    if inst.substage == 0: # Initialize
+        inst.com.write(b'a')
+        inst.timer = time.time()+0.5
+        inst.substage = 20 if inst.get_target_ball()=='DEFAULT' else 10
+
+    # Ball selection subroutine
+    elif inst.substage == 10 and stage_time > 0.5:
+        #print(inst.check_ball()) # DEBUG
+        if inst.get_target_ball() in inst.check_ball():
+            # Target ball reached; go to capture subroutine
+            inst.substage = 20
+        else:
+            # Go to the next ball and check again
+            inst.com.write(b'>')
+            inst.timer = time.time()
+
+    # Capture subroutine
+    if inst.substage == 20 and stage_time > 1:
         inst.timer = time.time()
         inst.com.write(b'a')
-        inst.num_caught += 1
-        inst.balls -= 1
-        inst.substage += 1
-    elif inst.substage == 1 and stage_time > 1: # Select the default ball
-        inst.com.write(b'a')
-        inst.substage += 1
-    elif inst.substage == 2 and stage_time > 30:
+        inst.record_ball_use()
+        inst.substage = 30 if inst.num_caught < 4 else 100
+
+    # Pokemon checking subroutine
+    elif inst.substage == 30 and stage_time > 30:
         # Choose whether to keep the Pokemon if it's one of the first 3 bosses, or wrap up the run otherwise
-        if inst.num_caught < 4:
-            pokemon = inst.read_selectable_pokemon('catch') [0]
-            # Give the new and existing Pokemon a score based on their performance against the remainder of the run (including the boss)
-            rental_weight = 3 - inst.num_caught
-            boss_weight = 2
-            score = (rental_weight*inst.rental_scores[pokemon.name]+boss_weight*inst.boss_matchups[pokemon.name][BOSS]) / (rental_weight+boss_weight)
-            existing_score = inst.HP * (rental_weight*inst.rental_scores[inst.pokemon.name]+boss_weight*inst.boss_matchups[inst.pokemon.name][BOSS]) / (rental_weight+boss_weight)
-            inst.log('Score for '+pokemon.name+':\t%0.2f'%score)
-            inst.log('Score for '+inst.pokemon.name+':\t%0.2f'%existing_score)
-            if score > existing_score:
-                # Choose to swap your existing Pokemon for the new Pokemon
-                inst.com.write(b'a')
-                inst.pokemon = pokemon
-            else:
-                # Choose not to take the new Pokemon
-                inst.com.write(b'b')
-            inst.reset_stage()
-            inst.log('Detecting where the path led...')
-            return 'detect'
+        pokemon = inst.read_selectable_pokemon('catch') [0]
+        # Give the new and existing Pokemon a score based on their performance against the remainder of the run (including the boss)
+        rental_weight = 3 - inst.num_caught
+        boss_weight = 2
+        score = (rental_weight*inst.rental_scores[pokemon.name]+boss_weight*matchup_scoring.evaluate_matchup(inst.pokemon, inst.boss_pokemon[BOSS], inst.rental_pokemon)) / (rental_weight+boss_weight)
+        existing_score = inst.HP * (rental_weight*inst.rental_scores[inst.pokemon.name]+boss_weight*inst.boss_matchups[inst.pokemon.name][BOSS]) / (rental_weight+boss_weight)
+        inst.log('Score for '+pokemon.name+':\t%0.2f'%score)
+        inst.log('Score for '+inst.pokemon.name+':\t%0.2f'%existing_score)
+        if score > existing_score:
+            # Choose to swap your existing Pokemon for the new Pokemon
+            inst.com.write(b'a')
+            inst.pokemon = pokemon
         else:
-            #inst.com.write(b'a')
-            inst.substage = 100
+            # Choose not to take the new Pokemon
+            inst.com.write(b'b')
+        inst.reset_stage()
+        inst.log('Detecting where the path led...')
+        return 'detect'
+        
     elif inst.substage == 100 and stage_time > 35:
         # Run was successful; wrap up and check the caught Pokemon
         inst.log('Congratulations! Checking the haul from this run...')
@@ -473,7 +490,7 @@ def select_pokemon(inst):
             inst.wins += 1
         inst.runs += 1
         inst.reset_run()
-        if inst.balls >=4:
+        if inst.check_sufficient_balls():
             inst.log('Preparing for another run...')
             return 'initialize'
         else:
@@ -503,8 +520,8 @@ def display_results(inst, stage, frame_start, log=False):
     height, width, channels = frame.shape
 
     # Construct arrays of text and values to display
-    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Balls: ', 'Pokemon caught: ', 'Pokemon: ', 'HP: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ')
-    values = (str(inst.runs+1), stage, str(inst.substage), fps, str(inst.balls), str(inst.num_caught), str(inst.pokemon), str(inst.HP), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
+    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Base balls: ', 'Legendary balls: ','Pokemon caught: ', 'Pokemon: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ')
+    values = (str(inst.runs+1), stage, str(inst.substage), fps, str(inst.base_balls), str(inst.legendary_balls), str(inst.num_caught), str(inst.pokemon), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
 
     for i in range(len(labels)):
         cv2.putText(frame, labels[i]+values[i], (width-195,25+25*i), cv2.FONT_HERSHEY_PLAIN,1,(255,255,255),2,cv2.LINE_AA)
@@ -534,16 +551,19 @@ def main_loop():
     # Open the video capture
     print('Opening the video connection...')
     cap = cv2.VideoCapture(VIDEO_INDEX)
+    if str(cap) is None:
+        print('Failed to open the video connection. Check the config file and ensure no other application is using the video input.')
+        return
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
-    instance = MaxLairInstance(BOSS, BALLS, com, cap, datetime.now(), (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path, rental_pokemon_scores_path))
+    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com, cap, datetime.now(), (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path, rental_pokemon_scores_path))
     
     stage = 'initialize'
 
     # DEBUG overrides for starting the script mid-run
-    #instance.pokemon = instance.rental_pokemon['Stoutland']
-    #instance.num_caught = 3
-    #stage = 'detect'
+##    instance.pokemon = instance.rental_pokemon['Swampert']
+##    instance.num_caught = 1
+##    stage = 'detect'
 
     # Map stages to the appropriate function to execute when in each stage
     actions = {'join':join, 'path':path, 'detect':detect, 'battle':battle, 'catch':catch, 'backpacker':backpacker, 'scientist':scientist, 'select_pokemon':select_pokemon}

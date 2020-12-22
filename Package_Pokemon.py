@@ -64,9 +64,9 @@ with open('Pokemon_Data/Max_moves.txt', newline='\n') as tsvfile:
         Type = row[1].title()
         Effect = row[2]
         if Name != 'Max Guard':
-            max_move_list[Type] = Move(Name, Type, 0, 0, 100, None, None, Effect, 100)
+            max_move_list[Type] = Move(Name, Type, 0, 0, 1, None, None, Effect, 100)
         else:
-            status_max_move = Move(Name, Type, 'Status', 0, 100, None, None, Effect, 100)
+            status_max_move = Move(Name, Type, 'Status', 0, 1, None, None, Effect, 100)
 print('Read and processed max move file.')
 
 pokemon_base_stats = {}
@@ -170,11 +170,7 @@ boss_matchup_LUT = {}
 for key, attacker in rental_pokemon.items():
     matchups = {}
     for key, defender in boss_pokemon.items():
-        score_base = matchup_scoring.evaluate_matchup(attacker, defender, rental_pokemon)
-        dmax_attacker = copy(attacker)
-        dmax_attacker.dynamax = True
-        score_dmax = matchup_scoring.evaluate_matchup(dmax_attacker, defender, rental_pokemon)
-        matchups[defender.name] = max(score_base, (score_base+score_dmax)/2)
+        matchups[defender.name] = matchup_scoring.evaluate_matchup(attacker, defender, rental_pokemon)
     boss_matchup_LUT[attacker.name] = matchups
     print('Finished computing matchups for '+str(attacker))
 print('Computed boss matchup LUT.')
@@ -186,11 +182,7 @@ for key, attacker in rental_pokemon.items():
     matchups = {}
     attacker_score = 0
     for key, defender in rental_pokemon.items():
-        score_base = matchup_scoring.evaluate_matchup(attacker, defender, rental_pokemon)
-        dmax_attacker = copy(attacker)
-        dmax_attacker.dynamax = True
-        score_dmax = matchup_scoring.evaluate_matchup(dmax_attacker, defender, rental_pokemon)
-        matchups[defender.name] = max(score_base, (score_base+score_dmax)/2)
+        matchups[defender.name] = matchup_scoring.evaluate_matchup(attacker, defender, rental_pokemon)
         attacker_score += matchups[defender.name]
     rental_matchup_LUT[attacker.name] = matchups
     rental_pokemon_scores[attacker.name] = attacker_score
@@ -200,14 +192,6 @@ for key, attacker in rental_pokemon.items():
 for key in rental_pokemon_scores:
     rental_pokemon_scores[key] /= (total_score/len(rental_pokemon))
 print('Computed rental matchup LUT.')
-
-##average_team_damage = {}
-##for key, defender in boss_pokemon.items():
-##    total_damage = 0
-##    count = 0
-##    for key2, attacker in rental_pokemon.items():
-##        total_damage += matchup_scoring.calculate_damage(attacker, matchup_scoring.select_best_move(attacker, defender), defender)
-##        count += 1
     
     
 
