@@ -412,7 +412,7 @@ def select_pokemon(inst):
             inst.substage += 1
     elif inst.substage == 8 and stage_time > 1:
         # Reset the game if the seed should be preserved
-        if 'strong boss' in inst.mode.lower():
+        if 'strong boss' in inst.mode.lower() and inst.num_caught == 4:
             inst.substage = 420
             inst.timer = time.time()
             return 'select_pokemon'
