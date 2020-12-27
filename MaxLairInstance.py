@@ -19,7 +19,8 @@ class MaxLairInstance():
                  com: Serial,
                  cap: Serial,
                  datetime: DateTime,
-                 pokemon_data_paths: Tuple[str, str, str, str]) -> None:
+                 pokemon_data_paths: Tuple[str, str, str, str],
+                 mode: str) -> None:
         self.boss_pokemon_path, self.rental_pokemon_path, self.boss_matchups_path, self.rental_matchups_path, self.rental_scores_path = pokemon_data_paths
         self.reset_run()
         
@@ -27,34 +28,36 @@ class MaxLairInstance():
         self.filename = ''.join(('Logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'))
         self.boss = boss
         self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
+        self.mode = mode
         self.runs = 0
         self.wins = 0
+        self.shinies_found = 0
 
         # Video capture and serial communication objects
         self.cap = cap
+        self.cap.set(3, 1280)
+        self.cap.set(4, 720)
         self.com = com
-
-        self.resolution = (1280, 720)
 
         # Rectangles for checking shininess and reading specific text
         # Shiny star rectangle
-        self.shiny_rect = ((0.09,0.53), (0.12,0.58))
+        self.shiny_rect = ((0.075,0.53), (0.105,0.58))
         # Selectable Pokemon names rectangles
-        self.sel_rect_1 = ((0.485,0.29), (0.60,0.34))
+        self.sel_rect_1 = ((0.485,0.28), (0.60,0.33))
         self.sel_rect_2 = ((0.485,0.54), (0.60,0.59))
-        self.sel_rect_3 = ((0.485,0.79), (0.60,0.84))
-        self.sel_rect_4 = ((0.485,0.58), (0.60,0.63))
+        self.sel_rect_3 = ((0.485,0.80), (0.60,0.855))
+        self.sel_rect_4 = ((0.485,0.59), (0.60,0.645))
         # In-battle Pokemon name & type rectangles
-        self.sel_rect_5 = ((0.21,0.12), (0.40,0.18))
-        self.type_rect_1 = ((0.25,0.18), (0.32,0.23))
-        self.type_rect_2 = ((0.36,0.18), (0.43,0.23))
+        self.sel_rect_5 = ((0.195,0.11), (0.39,0.16))
+        self.type_rect_1 = ((0.24,0.17), (0.31,0.215))
+        self.type_rect_2 = ((0.35,0.17), (0.425,0.214))
         # Selectable Pokemon abilities rectangles
-        self.abil_rect_1 = ((0.485,0.34), (0.60,0.40))
+        self.abil_rect_1 = ((0.485,0.33), (0.60,0.39))
         self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
-        self.abil_rect_3 = ((0.485,0.84), (0.60,0.92))
-        self.abil_rect_4 = ((0.485,0.64), (0.60,0.70))
+        self.abil_rect_3 = ((0.485,0.85), (0.60,0.91))
+        self.abil_rect_4 = ((0.485,0.645), (0.60,0.69))
         # Poke ball rectangle
-        self.ball_rect = ((0.68,0.62), (0.87,0.67))
+        self.ball_rect = ((0.69,0.63), (0.88,0.68))
 
 
     def reset_run(self) -> None:
@@ -83,11 +86,9 @@ class MaxLairInstance():
         
 
     def get_frame(self,
-                  resolution: Tuple[int, int]=(1280,720),
                   stage: str='') -> Image:
         """Get a scaled and annotated image of the current Switch output"""
         ret, img = self.cap.read()
-        img = cv2.resize(img, resolution)
 
         # Draw rectangles around detection areas
         h, w, channels = img.shape

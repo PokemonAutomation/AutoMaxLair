@@ -114,7 +114,7 @@ with open('Pokemon_Data/Rental_Pokemon.txt', newline='\n') as file:
             moves.append(move)
             if ability == 'Skill Link' and 'Hits 2-5 times' in move.effect:
                 move.power *= 5/2.1575
-            if move.power > 0:
+            if move.base_power > 0:
                 max_move = copy(max_move_list[move.type])
                 max_move.power = matchup_scoring.get_max_move_power(move)
             else:

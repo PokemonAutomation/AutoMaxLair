@@ -1,5 +1,5 @@
 #   AutoMaxLair
-#       v1.0
+#       v0.3-beta
 #       Eric Donders
 #       2020-12-17
 
@@ -19,6 +19,7 @@ BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
 LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
 LEGENDARY_BALLS = int(config['default']['LEGENDARY_BALLS'])
+MODE = config['default']['MODE']
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
@@ -67,7 +68,7 @@ def join(inst):
             # Score each Pokemon by its average performance against the remaining path
             rental_weight = 3
             boss_weight = 2
-            score = (rental_weight*inst.rental_scores[name]+boss_weight*inst.boss_matchups[name][BOSS]) / (rental_weight+boss_weight)
+            score = (rental_weight*inst.rental_scores[name]+boss_weight*inst.boss_matchups[name][inst.boss]) / (rental_weight+boss_weight)
             pokemon_scores.append(score)
             inst.log('Score for '+name+':\t%0.2f'%score)
         selection_index = pokemon_scores.index(max(pokemon_scores))
@@ -110,18 +111,7 @@ def path(inst):
 def detect(inst):
     """Detect whether the chosen path has led to a battle, scientist, backpacker, or fork in the path."""
     text = inst.read_text(((0,0.6),(1,1)), invert=True)
-    if ' appeared' in text:
-        # Boss appeared so let's read what it is
-        if inst.num_caught < 3 and inst.opponent == None:
-            # Detect which boss appeared
-            text_split = text.split(' app')
-            if 'eared!' in text_split[-1]:
-                #inst.opponent = inst.identify_pokemon(text_split[-2].strip())
-                #inst.log('Opponent detected: '+inst.opponent.name)
-                pass
-        inst.log('Battle starting...')
-        return 'battle'       
-    elif 'Fight' in text:
+    if 'Fight' in text or 'appeared' in text:
         # Battle has started and the move selection screen is up
         inst.log('Battle starting...')
         return 'battle'
@@ -180,7 +170,7 @@ def battle(inst):
             inst.dmax_timer = -1
 
     # Move selection subroutine
-    elif inst.substage == 2:
+    elif inst.substage == 2 and stage_time > 1:
         # Fight
         if inst.opponent == None:
             # Try to detect the opponent if it wasn't already detected
@@ -232,7 +222,7 @@ def battle(inst):
         inst.move_index += 1
         inst.timer = time.time()
         inst.substage += 1
-    elif inst.substage == 6 and stage_time > 1:
+    elif inst.substage == 6 and stage_time > 1.5:
         inst.com.write(b'a')
         inst.substage += 1
         inst.timer = time.time()
@@ -305,14 +295,14 @@ def catch(inst):
         inst.substage = 20 if inst.get_target_ball()=='DEFAULT' else 10
 
     # Ball selection subroutine
-    elif inst.substage == 10 and stage_time > 0.5:
+    elif inst.substage == 10 and stage_time > 1:
         #print(inst.check_ball()) # DEBUG
         if inst.get_target_ball() in inst.check_ball():
             # Target ball reached; go to capture subroutine
             inst.substage = 20
         else:
             # Go to the next ball and check again
-            inst.com.write(b'>')
+            inst.com.write(b'<')
             inst.timer = time.time()
 
     # Capture subroutine
@@ -329,8 +319,8 @@ def catch(inst):
         # Give the new and existing Pokemon a score based on their performance against the remainder of the run (including the boss)
         rental_weight = 3 - inst.num_caught
         boss_weight = 2
-        score = (rental_weight*inst.rental_scores[pokemon.name]+boss_weight*matchup_scoring.evaluate_matchup(inst.pokemon, inst.boss_pokemon[BOSS], inst.rental_pokemon)) / (rental_weight+boss_weight)
-        existing_score = inst.HP * (rental_weight*inst.rental_scores[inst.pokemon.name]+boss_weight*inst.boss_matchups[inst.pokemon.name][BOSS]) / (rental_weight+boss_weight)
+        score = (rental_weight*inst.rental_scores[pokemon.name]+boss_weight*inst.boss_matchups[pokemon.name][inst.boss]) / (rental_weight+boss_weight)
+        existing_score = inst.HP * (rental_weight*inst.rental_scores[inst.pokemon.name]+boss_weight*matchup_scoring.evaluate_matchup(inst.pokemon, inst.boss_pokemon[inst.boss], inst.rental_pokemon)) / (rental_weight+boss_weight)
         inst.log('Score for '+pokemon.name+':\t%0.2f'%score)
         inst.log('Score for '+inst.pokemon.name+':\t%0.2f'%existing_score)
         if score > existing_score:
@@ -404,16 +394,28 @@ def select_pokemon(inst):
         if inst.check_shiny():
             inst.timer = time.time()
             inst.log('******************************\n\nShiny found!\n\n******************************')
+            inst.shinies_found += 1
             if inst.substage == 4:
                 return 'done' # End whenever a shiny legendary is found
             else:
                 inst.substage = 50 # Goto take Pokemon
         elif stage_time > 3:
-            if inst.substage < 7:
+            # Is using ball saver mode, reset the game if the legendary was caught and it wasn't shiny
+            if 'ball saver' in inst.mode.lower() and inst.num_caught == 4:
+                inst.substage = 420
+                inst.timer = time.time()
+                return 'select_pokemon'
+            # Otherwise continue to check the other Pokemon
+            elif inst.substage < 7:
                 inst.com.write(b'^') # Check next Pokemon
             inst.timer = time.time()
             inst.substage += 1
     elif inst.substage == 8 and stage_time > 1:
+        # Reset the game if the seed should be preserved
+        if 'strong boss' in inst.mode.lower():
+            inst.substage = 420
+            inst.timer = time.time()
+            return 'select_pokemon'
         # Don't take any Pokemon
         inst.com.write(b'b')
         inst.substage += 1
@@ -455,6 +457,51 @@ def select_pokemon(inst):
         inst.substage += 1
     elif inst.substage == 18 and stage_time > 8:
         inst.com.write(b'a')
+        inst.substage = 100
+        inst.timer = time.time()
+
+    # Reset game suboutine
+    #   Added with the help of user fawress on the Pokemon Automation Discord
+    elif inst.substage == 420 and stage_time > 1:
+        inst.com.write(b'h') # Go Home
+        inst.base_balls += 3
+        inst.legendary_balls += 1
+        inst.substage += 1
+    elif inst.substage == 421 and stage_time > 3:
+        inst.com.write(b'x') # Close game
+        inst.substage += 1
+    elif inst.substage == 422 and stage_time > 5:
+        inst.com.write(b'a') # Close Game, add delay
+        inst.substage += 1
+    elif inst.substage == 423 and stage_time > 8:
+        inst.com.write(b'a') # Start Game
+        inst.substage += 1
+    elif inst.substage == 424 and stage_time > 10:
+        inst.com.write(b'a') # Select Profile
+        inst.substage += 1
+    elif inst.substage == 425 and stage_time > 30:
+        inst.com.write(b'a') # Load Save after a long delay
+        inst.substage += 1
+    elif inst.substage == 426 and stage_time > 40:
+        inst.com.write(b'a') # Interact with scientist, delay before this too
+        inst.substage += 1
+    elif inst.substage == 427 and stage_time > 43:
+        inst.com.write(b'b') # Seems you keep
+        inst.substage += 1
+    elif inst.substage == 428 and stage_time > 46:
+        inst.com.write(b'b') # Hard On Teammates
+        inst.substage += 1
+    elif inst.substage == 429 and stage_time > 49:
+        inst.com.write(b'b') # Before I
+        inst.substage += 1
+    elif inst.substage == 430 and stage_time > 52:
+        inst.com.write(b'b') # Can you do that
+        inst.substage += 1
+    elif inst.substage == 431 and stage_time > 55:
+        inst.com.write(b'a') # Yes/No
+        inst.substage += 1
+    elif inst.substage == 432 and stage_time > 58:
+        inst.com.write(b'b') # To the end
         inst.substage = 100
         inst.timer = time.time()
 
@@ -520,8 +567,8 @@ def display_results(inst, stage, frame_start, log=False):
     height, width, channels = frame.shape
 
     # Construct arrays of text and values to display
-    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Base balls: ', 'Legendary balls: ','Pokemon caught: ', 'Pokemon: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ')
-    values = (str(inst.runs+1), stage, str(inst.substage), fps, str(inst.base_balls), str(inst.legendary_balls), str(inst.num_caught), str(inst.pokemon), str(inst.opponent), str(win_percent)+'%', str(time_per_run))
+    labels = ('Run #','Stage: ', 'Substage: ', 'FPS: ', 'Base balls: ', 'Legendary balls: ','Pokemon caught: ', 'Pokemon: ', 'Opponent: ', 'Win percentage: ', 'Time per run: ', 'Shinies found: ')
+    values = (str(inst.runs+1), stage, str(inst.substage), fps, str(inst.base_balls), str(inst.legendary_balls), str(inst.num_caught), str(inst.pokemon), str(inst.opponent), str(win_percent)+'%', str(time_per_run), str(inst.shinies_found))
 
     for i in range(len(labels)):
         cv2.putText(frame, labels[i]+values[i], (width-195,25+25*i), cv2.FONT_HERSHEY_PLAIN,1,(255,255,255),2,cv2.LINE_AA)
@@ -556,7 +603,7 @@ def main_loop():
         return
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
-    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com, cap, datetime.now(), (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path, rental_pokemon_scores_path))
+    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com, cap, datetime.now(), (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path, rental_pokemon_scores_path), MODE)
     
     stage = 'initialize'
 
