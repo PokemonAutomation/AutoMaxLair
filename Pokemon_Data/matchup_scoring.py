@@ -174,7 +174,7 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon, 
     temp_teammates = copy.deepcopy(teammates)
     temp_teammates.pop(attacker.name, None) # Don't count the attacker twice
     temp_teammates.pop(defender.name, None)
-    fudge_factor = 2 # Average damage of teammates is likely undercounted as some status moves are helpful and the AI chooses better than random moves
+    fudge_factor = 1.5 # Average damage of teammates is likely undercounted as some status moves are helpful and the AI chooses better than random moves
     dealt_damage += 3 * calculate_average_damage(temp_teammates, {defender.name:defender}) / 2 * fudge_factor
 
     # Estimate contributions from status moves
@@ -232,7 +232,7 @@ def print_matchup_summary(attacker: Pokemon, defender: Pokemon, teammates: Dict[
     print(output)
     for i in range(len(attacker.moves)):
         move_list = attacker.max_moves if attacker.dynamax else attacker.moves
-        output = 'Score for '+move_list[i].name+' (BP %i, accuracy %0.2f): ' % (move_list[i].power, move_list[i].accuracy)
+        output = 'Score for '+move_list[i].name+' (Effective BP %i, accuracy %0.2f): ' % (move_list[i].power, move_list[i].accuracy)
         output += '%0.2f' % calculate_move_score(attacker, i, defender, teammates)
         print(output)
     

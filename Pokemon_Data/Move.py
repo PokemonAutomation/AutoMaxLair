@@ -23,4 +23,4 @@ class Move():
         return self.name
 
     def __copy__(self):
-        return type(self)(self.name, self.type, self.category, self.power, self.accuracy, copy.deepcopy(self.PP), self.TM, self.effect, self.probability, self.is_spread, self.correction_factor)
+        return type(self)(self.name, self.type, self.category, self.base_power, self.accuracy, copy.deepcopy(self.PP), self.TM, self.effect, self.probability, self.is_spread, self.correction_factor)
