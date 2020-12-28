@@ -42,6 +42,8 @@ with open('Pokemon_Data/Moves.csv', newline='\n') as csvfile:
         else:
             Probability = int(row[8])
         multiplier = 1
+        if 'the user, the stronger' in Effect:
+            Power = 65  # Applies to Electro Ball, Heavy Slam, Gyro Ball, etc.
         if ('on first turn' in Effect) or ('next turn' in Effect) or ('second turn' in Effect):
             multiplier *= 0.5
         if ('consumed' in Effect) or ('Fails' in Effect) or ('Can only be' in Effect):
@@ -52,6 +54,8 @@ with open('Pokemon_Data/Moves.csv', newline='\n') as csvfile:
             multiplier *= 2.2575
         elif 'Attacks thrice with more power each time.' in Effect:
             multiplier *= 94.14/20/Accuracy
+        elif '2 turns later' in Effect:
+            multiplier *= 1/3
         move_list[Name] = Move(Name, Type, Category, Power, Accuracy, PP, TM, Effect, Probability, is_spread=(Name in spread_move_list), correction_factor=multiplier)
 print('Read and processed move file.')
 

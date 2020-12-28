@@ -20,7 +20,8 @@ class MaxLairInstance():
                  cap: Serial,
                  datetime: DateTime,
                  pokemon_data_paths: Tuple[str, str, str, str],
-                 mode: str) -> None:
+                 mode: str,
+                 dynite_ore: int) -> None:
         self.boss_pokemon_path, self.rental_pokemon_path, self.boss_matchups_path, self.rental_matchups_path, self.rental_scores_path = pokemon_data_paths
         self.reset_run()
         
@@ -29,9 +30,12 @@ class MaxLairInstance():
         self.boss = boss
         self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
         self.mode = mode
+        self.dynite_ore = dynite_ore
+
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
+        self.consecutive_resets = 0
 
         # Video capture and serial communication objects
         self.cap = cap
@@ -128,7 +132,7 @@ class MaxLairInstance():
 
 
     def read_text(self,
-                  section: Tuple[Tuple[int, int], Tuple[int, int]]=((0,0),(1,1)),
+                  section: Tuple[Tuple[float, float], Tuple[float, float]]=((0,0),(1,1)),
                   threshold: bool=True,
                   invert: bool=False,
                   language: str='eng',
@@ -266,6 +270,16 @@ class MaxLairInstance():
             return False
         else:
             return True
+
+    def calculate_ore_cost(self, num_resets: int) -> int:
+        return 0 if num_resets < 3 else min(10, num_resets)
+
+    def check_sufficient_ore(self, num_resets: int) -> bool:
+        """Calculate whether sufficient Dynite Ore remains to quit the run without saving."""
+        if self.dynite_ore >= self.calculate_ore_cost(num_resets):
+            return True
+        else:
+            return False
 
     def log(self,
             string: str='') -> None:
