@@ -205,11 +205,14 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon, 
 def evaluate_matchup(attacker: Pokemon, boss: Pokemon, teammates: Dict[str, Pokemon]={}) -> float:
     """Return a matchup score between an attacker and defender, with the attacker using optimal moves and the defender using average moves."""
     if attacker.name == 'Ditto':
-        attacker = boss
+        HP = attacker.base_stats[0]
+        attacker = copy.copy(boss)
+        attacker.base_stats = (HP, attacker.base_stats[1], attacker.base_stats[2], attacker.base_stats[3], attacker.base_stats[4], attacker.base_stats[5])
+        attacker.recalculate_stats()
     base_version = copy.copy(attacker)
     base_version.dynamax = False
     dmax_version = copy.copy(attacker)
-    dmax_version.dynamax = False
+    dmax_version.dynamax = True
     score = max(calculate_move_score(base_version, select_best_move(base_version, boss, teammates), boss, teammates),
                 (calculate_move_score(base_version, select_best_move(base_version, boss, teammates), boss, teammates)+calculate_move_score(dmax_version, select_best_move(dmax_version, boss, teammates), boss, teammates))/2)
     return score
