@@ -1,13 +1,17 @@
 #   AutoMaxLair
-#       v0.5
+#       v0.5.1
 #       Eric Donders
-#       2020-12-26
+#       Contributions from Miguel Tavera, Discord user fawress, and Discord user denvoros
+#       Last updated 2021-01-01
+#       Created 2020-11-20
 
 import cv2, time, serial, numpy, pytesseract, pickle, enchant, configparser, threading
+import tkinter
 from datetime import datetime
 from copy import copy, deepcopy
 from MaxLairInstance import MaxLairInstance
 from Pokemon_Data import matchup_scoring
+from MaxLairGUI import MaxLairGUI
 
 # Load configuration from config file
 config = configparser.ConfigParser()
@@ -15,6 +19,7 @@ config.read('Config.ini')
 
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
+VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
 BOSS = config['default']['BOSS']
 BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
@@ -29,6 +34,21 @@ rental_pokemon_path = config['pokemon_data_paths']['Rental_Pokemon']
 boss_matchup_LUT_path = config['pokemon_data_paths']['Boss_Matchup_LUT']
 rental_matchup_LUT_path = config['pokemon_data_paths']['Rental_Matchup_LUT']
 rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores']
+
+language = config['language']['LANGUAGE']
+TESSERACT_LANG_NAME = config[language]['TESSERACT_LANG_NAME']
+
+PHRASES = {'FIGHT_1': config[language]['FIGHT_1'],
+            'FIGHT_2': config[language]['FIGHT_2'],
+            'BACKPACKER': config[language]['BACKPACKER'],
+            'SCIENTIST': config[language]['SCIENTIST'],
+            'PATH': config[language]['PATH'],
+            'CHEER': config[language]['CHEER'],
+            'CATCH': config[language]['CATCH'],
+            'CATCH_2': config[language]['CATCH_2'],
+            'LOSS': config[language]['LOSS'],
+            'FAINT': config[language]['FAINT'],
+            'PRESSURE': config[language]['PRESSURE']}
 
 
 
@@ -60,29 +80,28 @@ def join(inst):
 
 def path(inst) -> str:
     """Choose a path to follow."""
+    # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
     print('Detecting where the path led...')
     return 'detect'
 
 
 def detect(inst) -> str:
-    """Detect whether the chosen path has led to a battle, scientist, backpacker, or fork in the path.
-    :type inst: MaxLairInstance
-    """
-    text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
-    if 'Fight' in text or 'appeared' in text:
+    """Detect whether the chosen path has led to a battle, scientist, backpacker, or fork in the path."""
+    text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True, language=inst.tesseract_language)
+    if inst.phrases['FIGHT_1'] in text or inst.phrases['FIGHT_2'] in text:
         # Battle has started and the move selection screen is up
         inst.log('Battle starting...')
         return 'battle'
-    elif 'backpacker' in text:
+    elif inst.phrases['BACKPACKER'] in text:
         # Backpacker encountered so choose an item
         inst.log('Backpacker encountered...')
         return 'backpacker'
-    elif 'swapping' in text:
+    elif inst.phrases['SCIENTIST'] in text:
         # Scientist appeared to deal with that
         inst.log('Scientist encountered...')
         return 'scientist'
-    elif 'path' in text:
+    elif inst.phrases['PATH'] in text:
         # Fork in the path appeared to choose where to go
         inst.log('Choosing a path...')
         return 'path'
@@ -92,54 +111,67 @@ def detect(inst) -> str:
 
 def battle(inst) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
+    # Loop continuously until an event that ends the battle (victory or defeat) is detected.
+    #   This function returns directly when those conditions are found.
     while True:
-        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  # Read text from the bottom section of the screen
+        # Read text from the bottom section of the screen
+        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True, language=inst.tesseract_language)  
         
-        if 'Catch' in text:
+        # then check the text for key phrases that inform the bot what to do next
+        if inst.phrases['CATCH'] in text or inst.phrases['CATCH_2'] in text:
             inst.log('Catching boss...')
             inst.reset_stage()
             return 'catch'
-        elif 'blown' in text:
+        elif inst.phrases['FAINT'] in text:
+            inst.log('Pokemon fainted...')
+            inst.lives -= 1
+            inst.push_buttons((b'0', 1.5))
+        elif inst.phrases['LOSS'] in text:
             inst.log('You lose :(. Quitting...')
             inst.reset_stage()
             inst.push_buttons((b'0', 7))
             return 'select_pokemon'  # Go to quit sequence
-        elif 'gathered around' in text:
-            inst.dynamax_available = True
-            inst.pokemon.dynamax = False
-            inst.dmax_timer = -1
-        elif 'can dynamax now' in text.lower():
-            inst.dynamax_available = False
-            inst.pokemon.dynamax = False
-            inst.dmax_timer = -1
-        elif 'Cheer On' in text:
-            inst.dmax_timer = -1
-            inst.dynamax_available = False
+        elif inst.phrases['CHEER'] in text:
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
-            inst.push_buttons((b'a', 1))
-        elif 'Fight' in text:
-            # Detect or infer opponent
+                inst.dmax_timer = 0
+            inst.push_buttons((b'a', 1.5))
+        elif inst.phrases['FIGHT_1'] in text:
+            # Before the bot makes a decision, it needs to know what the boss is
             if inst.opponent is None:
+                # If we have defeated three oppoenents already we know the opponent is the boss Pokemon
                 if inst.num_caught == 3:
                     inst.opponent = inst.boss_pokemon[BOSS]
+
+                # Otherwise, we identify the boss using its name and types
                 else:
-                    inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 1))
+                    # 
+                    inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
                     inst.opponent = inst.read_selectable_pokemon('battle')[0]
                     inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 1))
+                
+                # If our Pokemon is Ditto, transform it into the boss.
+                # TODO: Ditto's HP does not change when transformed which is not currently reflected.
                 if inst.pokemon.name == 'Ditto':
                     inst.pokemon = copy(inst.opponent)
                     inst.pokemon.name = 'Ditto'
                     inst.pokemon.PP = [5,5,5,5]
+
             # Handle the Dynamax timer
-            if inst.dmax_timer == 0:
-                inst.dmax_timer = -1
+            #   The timer starts at 3 and decreases by 1 after each turn of Dynamax
+            #   A value of -1 indicates a pre-dynamax state (i.e., someone can Dynamax)
+            #   A value of 0 indicates Dynamax has ended and nobody can Dynamax for the remainder of the battle.
+            if inst.dmax_timer == 1:
+                inst.dmax_timer = 0
                 inst.move_index = 0
                 inst.pokemon.dynamax = False
-            elif inst.dmax_timer > 0:
+            elif inst.dmax_timer > 1:
                 inst.dmax_timer -= 1
+
             # Choose the best move to use, and whether or not to Dynamax (if it's available)
+            inst.push_buttons((b'0', 1), (b'a', 2))
+            inst.dynamax_available = inst.dmax_timer == -1 and inst.check_dynamax_available()
             best_move_index = matchup_scoring.select_best_move(inst.pokemon, inst.opponent, inst.rental_pokemon)
             if inst.dynamax_available:
                 default_score = matchup_scoring.calculate_move_score(inst.pokemon, best_move_index, inst.opponent,
@@ -152,12 +184,13 @@ def battle(inst) -> str:
                 else:
                     inst.dynamax_available = False  # Choose not to Dynamax this time
                 inst.pokemon.dynamax = False  # Revert previous temporary change
-            # Navigate to the correct move
-            inst.push_buttons((b'0', 1), (b'a', 1))
+
+            # Navigate to the correct move and use it,
+            #   Note that inst.dynamax_available is set to false if dynamax is available but not optimal.
             if inst.dynamax_available:
                 # Dynamax and then choose a move as usual
                 inst.push_buttons((b'<', 1), (b'a', 1))
-                inst.dmax_timer = 2
+                inst.dmax_timer = 3
                 inst.pokemon.dynamax = True
                 inst.dynamax_available = False
             move = inst.pokemon.max_moves[best_move_index] if inst.pokemon.dynamax else inst.pokemon.moves[best_move_index]
@@ -167,15 +200,20 @@ def battle(inst) -> str:
                 inst.push_buttons((b'v', 1))
                 inst.move_index = (inst.move_index + 1) % 4
             inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'b', 1), (b'b', 1))
-            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != 'Pressure' else 2
+            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != inst.phrases['PRESSURE'] else 2
+        else:
+            # Press B which can speed up dialogue
+            inst.push_buttons((b'b', 0.005))
         
 
 
 def catch(inst):
     """Catch each boss after defeating it."""
-    inst.push_buttons((b'a', 1.5))
+    # Start by navigating to the ball selection screen
+    inst.push_buttons((b'a', 2))
+    # then navigate the the ball specified in the config file
     while inst.get_target_ball() != 'DEFAULT' and inst.get_target_ball() not in inst.check_ball():
-        inst.push_buttons((b'<', 1.5))
+        inst.push_buttons((b'<', 2))
     inst.push_buttons((b'a', 30))
     inst.record_ball_use()
     if inst.num_caught < 4:
@@ -189,7 +227,7 @@ def catch(inst):
         inst.log('Score for ' + pokemon.name + ':\t%0.2f' % score)
         inst.log('Score for ' + inst.pokemon.name + ':\t%0.2f' % existing_score)
         if score > existing_score:
-            # Choose to swap your existing Pokemon for the new Pokemon
+            # Choose to swap your existing Pokemon for the new Pokemon.
             inst.pokemon = pokemon
             inst.push_buttons((b'a', 3))
         else:
@@ -197,7 +235,7 @@ def catch(inst):
         inst.log('Detecting where the path led...')
         return 'detect'
     else:
-        # Run was successful; wrap up and check the caught Pokemon
+        # Run was successful; wrap up and check the caught Pokemon.
         inst.push_buttons((b'0',10))
         inst.log('Congratulations! Checking the haul from this run...')
         return 'select_pokemon'
@@ -205,7 +243,7 @@ def catch(inst):
 
 def backpacker(inst):
     """Choose an item from the backpacker."""
-    inst.push_buttons((b'0', 5), (b'a', 5))
+    inst.push_buttons((b'0', 7), (b'a', 5))
     inst.log('Detecting where the path led...')
     return 'detect'
 
@@ -220,7 +258,7 @@ def scientist(inst):
 def select_pokemon(inst):
     """Check Pokemon caught during the run and keep one if it's shiny."""
     if inst.num_caught == 0:
-        inst.push_buttons((b'o', 10), (b'b', 1))
+        inst.push_buttons((b'0', 10), (b'b', 1))
         return 'done'
 
     inst.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
@@ -232,9 +270,8 @@ def select_pokemon(inst):
         if inst.check_shiny():
             inst.log('******************************\n\nShiny found!\n\n******************************')
             inst.shinies_found += 1
-            inst.display_results(log=True)
+            inst.display_results(screenshot=True)
             if inst.num_caught == 4 and i == 0:
-                inst.display_results(log=True)
                 inst.push_buttons((b'b', 3))
                 return 'done'  # End whenever a shiny legendary is found
             else:
@@ -257,19 +294,17 @@ def select_pokemon(inst):
             inst.push_buttons((b'b', 3), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5), (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2))
         else:
             inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2), (b'a', 11), (b'a', 1), (b'a', 2))
-        inst.consecutive_resets = 0
-        inst.dynite_ore += inst.num_caught + (2 if inst.num_caught == 4 else 0)
+        inst.record_ore_reward()
+        # The button press sequences differ depending on how many Pokemon were defeated
         if inst.num_caught > 1:
             inst.push_buttons((b'a', 2))
             if inst.num_caught == 4:
                 inst.push_buttons((b'a', 2), (b'a', 2), (b'a', 2))
     else:
         inst.log('Resetting game...')
-        inst.base_balls += min(3, inst.num_caught)
-        inst.legendary_balls += 1 if inst.num_caught == 4 else 0
-        inst.consecutive_resets += 1
-        inst.dynite_ore -= inst.calculate_ore_cost(inst.consecutive_resets)
-        inst.push_buttons((b'h', 2), (b'x', 2), (b'a', 3), (b'a', 2), (b'a', 20), (b'a', 10), (b'a', 3), (b'b', 3), (b'b', 3), (b'b', 3), (b'b', 3), (b'a', 3), (b'b', 3))
+        inst.record_game_reset()
+        # Button sequence added with the help of users fawress and Miguel90 on the Pokemon Automation Discord
+        inst.push_buttons((b'h', 2), (b'x', 2), (b'a', 3), (b'a', 2), (b'a', 20), (b'a', 10), (b'a', 3), (b'b', 3), (b'b', 3), (b'b', 3), (b'b', 3), (b'a', 3), (b'b', 3), (b'b', 3), (b'b', 3))
     inst.wins += 1 if inst.num_caught == 4 else 0
     inst.runs += 1
     inst.reset_run()
@@ -285,6 +320,7 @@ def button_control_task(inst, actions):
     while inst.stage != 'done':
         with inst.lock:
             inst.stage = actions[inst.stage](inst)
+    inst.exit_flag.set()
 
 
 def main_loop():
@@ -303,19 +339,19 @@ def main_loop():
     # Open the video capture
     print('Opening the video connection...')
     cap = cv2.VideoCapture(VIDEO_INDEX)
-    if str(cap) is None:
-        print(
-            'Failed to open the video connection. Check the config file and ensure no other application is using the video input.')
+    if not cap.isOpened():
+        print('Failed to open the video connection. Check the config file and ensure no other application is using the video input.')
+        com.close()
         return
 
     # Create a Max Lair Instance object to store information about each run and the entire sequence of runs
-    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com, cap, threading.Lock(),threading.Event(), datetime.now(),
+    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com, cap, VIDEO_SCALE, threading.Lock(),threading.Event(), datetime.now(),
                                (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path,
-                                rental_pokemon_scores_path), MODE, DYNITE_ORE, 'join')
+                                rental_pokemon_scores_path), PHRASES, TESSERACT_LANG_NAME, MODE, DYNITE_ORE, 'join')
 
     # DEBUG overrides for starting the script mid-run
-    # instance.pokemon = instance.rental_pokemon['Electabuzz']
-    ##    instance.num_caught = 1
+    # instance.pokemon = instance.rental_pokemon['Krookodile']
+    # instance.num_caught = 1
     # instance.stage = 'detect'
     ##    instance.consecutive_resets = 1
 
@@ -323,21 +359,28 @@ def main_loop():
     actions = {'join': join, 'path': path, 'detect': detect, 'battle': battle, 'catch': catch, 'backpacker': backpacker,
                'scientist': scientist, 'select_pokemon': select_pokemon}
     
+
+    # Start a thread that will control all the button press sequences
     button_control_thread = threading.Thread(target=button_control_task, args=(instance,actions,))
     button_control_thread.start()
     
 
-    # Start event loop after initializing the timer
     
-    while instance.stage != 'done':
+    # Start event loop which handles the display and checks for the user manually quitting
+    while True:
 
         # Execute the appropriate function for the current stage, and store the returned stage for the next loop
         with instance.lock:
             instance.display_results()
-            # Quit if the Q key is pressed or if the button control thread finishes
-            if cv2.waitKey(1) & 0xFF == ord('q') or not button_control_thread.is_alive():
-                instance.exit_flag.set()
-                break
+
+        # Tell the button control thread to quit if the Q key is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            instance.exit_flag.set()
+            button_control_thread.join()
+
+        # Exit the display loop once the button control thread has quit
+        if not button_control_thread.is_alive():
+            break
 
         # Read responses from microcontroller
         instance.com.read(instance.com.inWaiting())
@@ -346,6 +389,9 @@ def main_loop():
         time.sleep(0.02)
 
     # When finished, clean up video and serial connections
+
+    instance.exit_flag.set()
+    button_control_thread.join()
     instance.display_results(log=True)
     cap.release()
     com.close()
