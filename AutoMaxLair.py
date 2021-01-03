@@ -1,5 +1,5 @@
 #   AutoMaxLair
-#       v0.5.1
+#       v0.5.2
 #       Eric Donders
 #       Contributions from Miguel Tavera, Discord user fawress, and Discord user denvoros
 #       Last updated 2021-01-01
