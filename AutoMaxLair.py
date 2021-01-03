@@ -11,7 +11,6 @@ from datetime import datetime
 from copy import copy, deepcopy
 from MaxLairInstance import MaxLairInstance
 from Pokemon_Data import matchup_scoring
-from MaxLairGUI import MaxLairGUI
 
 # Load configuration from config file
 config = configparser.ConfigParser()
