@@ -381,9 +381,6 @@ def main_loop():
         if not button_control_thread.is_alive():
             break
 
-        # Read responses from microcontroller
-        instance.com.read(instance.com.inWaiting())
-
         
         time.sleep(0.02)
 
