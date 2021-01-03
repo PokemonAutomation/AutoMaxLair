@@ -1,0 +1,841 @@
+"10,000,000 Volt Thunderbolt",ELECTRICO,Special,195,?,1,,Pikachu-exclusive Z-Move. High critical hit ratio.,?
+Absorb,PLANTA,Special,20,100,25,,User recovers half the HP inflicted on opponent.,?
+Accelerock,ROCA,Physical,40,100,20,,User attacks first.,?
+Acid,VENENO,Special,40,100,30,,May lower opponent's Special Defense. Hits all opposing Pokemon.,10
+Acid Armor,VENENO,Status,?,?,20,,Sharply raises user's Defense.,?
+Acid Downpour,VENENO,?,?,?,1,,Poison type Z-Move.,?
+Acid Spray,VENENO,Special,40,100,20,,Sharply lowers opponent's Special Defense.,100
+Acrobatics,VOLADOR,Physical,55,100,15,TM78,Stronger when the user does not have a held item.,?
+Acupressure,NORMAL,Status,?,?,30,,Sharply raises a random stat.,?
+Aerial Ace,VOLADOR,Physical,60,100,20,,Ignores Accuracy and Evasiveness.,?
+Aeroblast,VOLADOR,Special,100,95,5,,High critical hit ratio.,?
+After You,NORMAL,Status,?,?,15,,Gives target priority in the next turn.,?
+Agility,PSIQUICO,Status,?,?,30,,Sharply raises user's Speed.,?
+Air Cutter,VOLADOR,Special,60,95,25,,High critical hit ratio. Hits all opposing Pokemon.,?
+Air Slash,VOLADOR,Special,75,95,15,TM95,May cause flinching.,30
+All-Out Pummeling,LUCHA,?,?,?,1,,Fighting type Z-Move.,?
+Ally Switch,PSIQUICO,Status,?,?,15,,User switches with opposite teammate.,?
+Amnesia,PSIQUICO,Status,?,?,20,,Sharply raises user's Special Defense.,?
+Anchor Shot,ACERO,Physical,80,100,20,,The user entangles the target with its anchor chain while attacking. The target becomes unable to flee.,?
+Ancient Power,ROCA,Special,60,100,5,,May raise all user's stats at once.,10
+Apple Acid,PLANTA,Special,80,100,10,,Lowers target's Special Defense.,100
+Aqua Jet,AGUA,Physical,40,100,20,,User attacks first.,?
+Aqua Ring,AGUA,Status,?,?,20,,Restores a little HP each turn.,?
+Aqua Tail,AGUA,Physical,90,90,10,,,?
+Arm Thrust,LUCHA,Physical,15,100,20,,Hits 2-5 times in one turn.,?
+Aromatherapy,PLANTA,Status,?,?,5,,Cures all status problems in your party.,?
+Aromatic Mist,HADA,Status,?,?,20,,Raises Special Defense of an ally.,?
+Assist,NORMAL,Status,?,?,20,,User performs a move known by its allies at random.,?
+Assurance,SINIESTRO,Physical,60,100,10,TM58,Power doubles if opponent already took damage in the same turn.,?
+Astonish,FANTASMA,Physical,30,100,15,,May cause flinching.,30
+Astral Barrage,FANTASMA,Special,120,100,5,,The user attacks by sending a frightful amount of small ghosts at opposing Pok‚mon.,?
+Attack Order,BICHO,Physical,90,100,15,,High critical hit ratio.,?
+Attract,NORMAL,Status,?,100,15,TM31,"If opponent is the opposite gender, it's less likely to attack.",?
+Aura Sphere,LUCHA,Special,80,100,20,,Ignores Accuracy and Evasiveness.,?
+Aura Wheel,ELECTRICO,Physical,110,100,10,,Changes type based on Morpeko's Mode.,100
+Aurora Beam,HIELO,Special,65,100,20,,May lower opponent's Attack.,10
+Aurora Veil,HIELO,Status,?,?,20,,Halves damage from Physical and Special attacks for five turns.,?
+Autotomize,ACERO,Status,?,?,15,,Reduces weight and sharply raises Speed.,?
+Avalanche,HIELO,Physical,60,100,10,TM64,Power doubles if user took damage first.,?
+Baby-Doll Eyes,HADA,Status,?,100,30,,Always goes first. Lowers the target's attack.,?
+Baddy Bad,SINIESTRO,Special,90,100,15,,Reduces damage from Physical attacks.,?
+Baneful Bunker,VENENO,Status,?,?,10,,Protects the user and poisons opponent on contact.,?
+Barrage,NORMAL,Physical,15,85,20,,Hits 2-5 times in one turn.,?
+Barrier,PSIQUICO,Status,?,?,20,,Sharply raises user's Defense.,?
+Baton Pass,NORMAL,Status,?,?,40,,User switches out and gives stat changes to the incoming Pok‚mon.,?
+Beak Blast,VOLADOR,Physical,100,100,15,,"The user first heats up its beak, and then it attacks the target. Making direct contact with the Pok‚mon while it's heating up its beak results in a burn.",?
+Beat Up,SINIESTRO,Physical,?,100,10,TM37,Each Pok‚mon in your party attacks.,?
+Behemoth Bash,ACERO,Physical,100,100,5,,Damage doubles if user is Dynamaxed.,?
+Behemoth Blade,ACERO,Physical,100,100,5,,Damage doubles if user is Dynamaxed.,?
+Belch,VENENO,Special,120,90,10,,User must have consumed a Berry.,?
+Belly Drum,NORMAL,Status,?,?,10,,"User loses 50% of its max HP, but Attack raises to maximum.",?
+Bestow,NORMAL,Status,?,?,15,,Gives the user's held item to the target.,?
+Bide,NORMAL,Physical,?,?,10,,User takes damage for two turns then strikes back double.,?
+Bind,NORMAL,Physical,15,85,20,,"Traps opponent, damaging them for 4-5 turns.",100
+Bite,SINIESTRO,Physical,60,100,25,,May cause flinching.,30
+Black Hole Eclipse,SINIESTRO,?,?,?,1,,Dark type Z-Move.,?
+Blast Burn,FUEGO,Special,150,90,5,,User must recharge next turn.,?
+Blaze Kick,FUEGO,Physical,85,90,10,,High critical hit ratio. May burn opponent.,10
+Blizzard,HIELO,Special,110,70,5,,May freeze opponent.,10
+Block,NORMAL,Status,?,?,5,,Opponent cannot flee or switch.,?
+Bloom Doom,PLANTA,?,?,?,1,,Grass type Z-Move.,?
+Blue Flare,FUEGO,Special,130,85,5,,May burn opponent.,20
+Body Press,LUCHA,Physical,80,100,10,,"The higher the user's Defense, the stronger the attack.",?
+Body Slam,NORMAL,Physical,85,100,15,,May paralyze opponent.,30
+Bolt Beak,ELECTRICO,Physical,85,100,10,,"If the user attacks before the target, the power of this move is doubled.",?
+Bolt Strike,ELECTRICO,Physical,130,85,5,,May paralyze opponent.,20
+Bone Club,TIERRA,Physical,65,85,20,,May cause flinching.,10
+Bone Rush,TIERRA,Physical,25,90,10,,Hits 2-5 times in one turn.,?
+Bonemerang,TIERRA,Physical,50,90,10,,Hits twice in one turn.,?
+Boomburst,NORMAL,Special,140,100,10,,Hits all adjacent Pok‚mon.,?
+Bounce,VOLADOR,Physical,85,85,5,TM52,"Springs up on first turn, attacks on second. May paralyze opponent.",30
+Bouncy Bubble,AGUA,Special,90,100,15,,User recovers half the HP inflicted on opponent.,?
+Branch Poke,PLANTA,Physical,40,100,40,,,?
+Brave Bird,VOLADOR,Physical,120,100,15,,User receives recoil damage.,?
+Breaking Swipe,DRAGON,Physical,60,100,15,TM99,Hits multiple opponents and lowers their attack.,100
+Breakneck Blitz,NORMAL,?,?,?,1,,Normal type Z-Move.,?
+Brick Break,LUCHA,Physical,75,100,15,TM43,Breaks through Reflect and Light Screen barriers.,?
+Brine,AGUA,Special,65,100,10,TM55,Power doubles if opponent's HP is less than 50%.,?
+Brutal Swing,SINIESTRO,Physical,60,100,20,TM97,The user swings its body around violently to inflict damage on everything in its vicinity.,?
+Bubble,AGUA,Special,40,100,30,,May lower opponent's Speed.,10
+Bubble Beam,AGUA,Special,65,100,20,,May lower opponent's Speed.,10
+Bug Bite,BICHO,Physical,60,100,20,,Receives the effect from the opponent's held berry.,?
+Bug Buzz,BICHO,Special,90,100,10,,May lower opponent's Special Defense.,10
+Bulk Up,LUCHA,Status,?,?,20,,Raises user's Attack and Defense.,?
+Bulldoze,TIERRA,Physical,60,100,20,TM81,Lowers opponent's Speed.,100
+Bullet Punch,ACERO,Physical,40,100,30,,User attacks first.,?
+Bullet Seed,PLANTA,Physical,25,100,30,TM50,Hits 2-5 times in one turn.,?
+Burn Up,FUEGO,Special,130,100,5,,"To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type.",?
+Burning Jealousy,FUEGO,Special,70,100,5,,"Hits all opponents, and burns any that have had their stats boosted.",?
+Buzzy Buzz,ELECTRICO,Special,90,100,15,,Paralyzes the opponent.,100
+Calm Mind,PSIQUICO,Status,?,?,20,,Raises user's Special Attack and Special Defense.,?
+Camouflage,NORMAL,Status,?,?,20,,Changes user's type according to the location.,?
+Captivate,NORMAL,Status,?,100,20,,Sharply lowers opponent's Special Attack if opposite gender.,?
+Catastropika,ELECTRICO,Physical,210,?,1,,Pikachu-exclusive Z-Move.,?
+Celebrate,NORMAL,Status,?,?,40,,The Pok‚mon congratulates you on your special day. No battle effect.,?
+Charge,ELECTRICO,Status,?,?,20,,Raises user's Special Defense and next Electric move's power increases.,?
+Charge Beam,ELECTRICO,Special,50,90,10,,May raise user's Special Attack.,70
+Charm,HADA,Status,?,100,20,TM29,Sharply lowers opponent's Attack.,?
+Chatter,VOLADOR,Special,65,100,20,,Confuses opponent.,100
+Chip Away,NORMAL,Physical,70,100,20,,Ignores opponent's stat changes.,?
+Circle Throw,LUCHA,Physical,60,90,10,,"In battles, the opponent switches. In the wild, the Pok‚mon runs.",?
+Clamp,AGUA,Physical,35,85,15,,"Traps opponent, damaging them for 4-5 turns.",100
+Clanging Scales,DRAGON,Special,110,100,5,,Lowers user's Defense.,100
+Clangorous Soul,DRAGON,Status,?,100,5,,Raises all user's stats but loses HP.,100
+Clangorous Soulblaze,DRAGON,Special,185,?,1,,Kommo-o exclusive Z-Move.,?
+Clear Smog,VENENO,Special,50,?,15,,Removes all of the target's stat changes.,?
+Close Combat,LUCHA,Physical,120,100,5,,Lowers user's Defense and Special Defense.,100
+Coaching,LUCHA,Status,?,?,10,,Boosts Attack and Defense of a teammate.,?
+Coil,VENENO,Status,?,?,20,,"Raises user's Attack, Defense and Accuracy.",?
+Comet Punch,NORMAL,Physical,18,85,15,,Hits 2-5 times in one turn.,?
+Confide,NORMAL,Status,?,?,20,,Lowers opponent's Special Attack.,100
+Confuse Ray,FANTASMA,Status,?,100,10,,Confuses opponent.,?
+Confusion,PSIQUICO,Special,50,100,25,,May confuse opponent.,10
+Constrict,NORMAL,Physical,10,100,35,,May lower opponent's Speed by one stage.,10
+Continental Crush,ROCA,?,?,?,1,,Rock type Z-Move.,?
+Conversion,NORMAL,Status,?,?,30,,Changes user's type to that of its first move.,?
+Conversion 2,NORMAL,Status,?,?,30,,User changes type to become resistant to opponent's last move.,?
+Copycat,NORMAL,Status,?,?,20,,Copies opponent's last move.,?
+Core Enforcer,DRAGON,Special,100,100,10,,Scorches a 'Z' pattern on the ground.,?
+Corkscrew Crash,ACERO,?,?,?,1,,Steel type Z-Move.,?
+Corrosive Gas,VENENO,Status,?,100,40,,Removes opponent's items.,?
+Cosmic Power,PSIQUICO,Status,?,?,20,,Raises user's Defense and Special Defense.,?
+Cotton Guard,PLANTA,Status,?,?,10,,Drastically raises user's Defense.,?
+Cotton Spore,PLANTA,Status,?,100,40,,Sharply lowers opponent's Speed.,?
+Counter,LUCHA,Physical,?,100,20,,"When hit by a Physical Attack, user strikes back with 2x power.",?
+Court Change,NORMAL,Status,?,100,10,,Swaps the effects on either side of the field.,?
+Covet,NORMAL,Physical,60,100,25,,Opponent's item is stolen by the user.,?
+Crabhammer,AGUA,Physical,100,90,10,,High critical hit ratio.,?
+Crafty Shield,HADA,Status,?,?,10,,Protects the Pok‚mon from status moves.,?
+Cross Chop,LUCHA,Physical,100,80,5,,High critical hit ratio.,?
+Cross Poison,VENENO,Physical,70,100,20,TM73,High critical hit ratio. May poison opponent.,10
+Crunch,SINIESTRO,Physical,80,100,15,,May lower opponent's Defense.,20
+Crush Claw,NORMAL,Physical,75,95,10,,May lower opponent's Defense.,50
+Crush Grip,NORMAL,Physical,?,100,5,,More powerful when opponent has higher HP.,?
+Curse,FANTASMA,Status,?,?,10,,"Ghosts lose 50% of max HP and curse the opponent; Non-Ghosts raise Attack, Defense and lower Speed.",?
+Cut,NORMAL,Physical,50,95,30,,,?
+Dark Pulse,SINIESTRO,Special,80,100,15,,May cause flinching.,20
+Dark Void,SINIESTRO,Status,?,50,10,,Puts all adjacent opponents to sleep.,?
+Darkest Lariat,SINIESTRO,Physical,85,100,10,,Ignores opponent's stat changes.,?
+Dazzling Gleam,HADA,Special,80,100,10,,Hits all adjacent opponents.,?
+Decorate,HADA,Status,?,?,15,,Sharply raises target's Attack and Special Attack.,100
+Defend Order,BICHO,Status,?,?,10,,Raises user's Defense and Special Defense.,?
+Defense Curl,NORMAL,Status,?,?,40,,Raises user's Defense.,?
+Defog,VOLADOR,Status,?,?,15,,Lowers opponent's Evasiveness and clears fog.,?
+Destiny Bond,FANTASMA,Status,?,?,5,,"If the user faints, the opponent also faints.",?
+Detect,LUCHA,Status,?,?,5,,"Protects the user, but may fail if used consecutively.",?
+Devastating Drake,DRAGON,?,?,?,1,,Dragon type Z-Move.,?
+Diamond Storm,ROCA,Physical,100,95,5,,May sharply raise user's Defense.,50
+Dig,TIERRA,Physical,80,100,10,TM15,"Digs underground on first turn, attacks on second. Can also escape from caves.",?
+Disable,NORMAL,Status,?,100,20,,Opponent can't use its last attack for a few turns.,?
+Disarming Voice,HADA,Special,40,100,15,,Ignores Accuracy and Evasiveness.,?
+Discharge,ELECTRICO,Special,80,100,15,,May paralyze opponent.,30
+Dive,AGUA,Physical,80,100,10,TM45,"Dives underwater on first turn, attacks on second turn.",?
+Dizzy Punch,NORMAL,Physical,70,100,10,,May confuse opponent.,20
+Doom Desire,ACERO,Special,140,100,5,,Damage occurs 2 turns later.,?
+Double Hit,NORMAL,Physical,35,90,10,,Hits twice in one turn.,?
+Double Iron Bash,ACERO,Physical,60,100,5,,Hits twice in one turn; may cause flinching.,30
+Double Kick,LUCHA,Physical,30,100,30,,Hits twice in one turn.,?
+Double Slap,NORMAL,Physical,15,85,10,,Hits 2-5 times in one turn.,?
+Double Team,NORMAL,Status,?,?,15,,Raises user's Evasiveness.,?
+Double-Edge,NORMAL,Physical,120,100,15,,User receives recoil damage.,?
+Draco Meteor,DRAGON,Special,130,90,5,,Sharply lowers user's Special Attack.,100
+Dragon Ascent,VOLADOR,Physical,120,100,5,,Lowers user's Defense and Special Defense.,100
+Dragon Breath,DRAGON,Special,60,100,20,,May paralyze opponent.,30
+Dragon Claw,DRAGON,Physical,80,100,15,,,?
+Dragon Dance,DRAGON,Status,?,?,20,,Raises user's Attack and Speed.,?
+Dragon Darts,DRAGON,Physical,50,100,10,,User attacks twice in one turn.,?
+Dragon Energy,DRAGON,Special,150,100,5,,"The higher the user's HP, the higher the power.",?
+Dragon Hammer,DRAGON,Physical,90,100,15,,The user uses its body like a hammer to attack the target and inflict damage.,?
+Dragon Pulse,DRAGON,Special,85,100,10,,,?
+Dragon Rage,DRAGON,Special,?,100,10,,Always inflicts 40 HP.,?
+Dragon Rush,DRAGON,Physical,100,75,10,,May cause flinching.,20
+Dragon Tail,DRAGON,Physical,60,90,10,,"In battles, the opponent switches. In the wild, the Pok‚mon runs.",?
+Drain Punch,LUCHA,Physical,75,100,10,TM63,User recovers half the HP inflicted on opponent.,?
+Draining Kiss,HADA,Special,50,100,10,TM87,User recovers most the HP inflicted on opponent.,?
+Dream Eater,PSIQUICO,Special,100,100,15,,User recovers half the HP inflicted on a sleeping opponent.,?
+Drill Peck,VOLADOR,Physical,80,100,20,,,?
+Drill Run,TIERRA,Physical,80,95,10,,High critical hit ratio.,?
+Drum Beating,PLANTA,Physical,80,100,10,,Lowers opponent's Speed.,100
+Dual Chop,DRAGON,Physical,40,90,15,,Hits twice in one turn.,?
+Dual Wingbeat,VOLADOR,Physical,40,90,10,,The user slams the target with its wings. The target is hit twice in a row.,?
+Dynamax Cannon,DRAGON,Special,100,100,5,,Damage doubles if opponent is Dynamaxed.,?
+Dynamic Punch,LUCHA,Physical,100,50,5,,Confuses opponent.,100
+Earth Power,TIERRA,Special,90,100,10,,May lower opponent's Special Defense.,10
+Earthquake,TIERRA,Physical,100,100,10,,Power is doubled if opponent is underground from using Dig.,?
+Echoed Voice,NORMAL,Special,40,100,15,,Power increases each turn.,?
+Eerie Impulse,ELECTRICO,Status,?,100,15,TM93,Sharply lowers opponent's Special Attack.,?
+Eerie Spell,PSIQUICO,Special,80,100,5,,Deals damage and reduces opponent's PP.,?
+Egg Bomb,NORMAL,Physical,100,75,10,,,?
+Electric Terrain,ELECTRICO,Status,?,?,10,TM90,Prevents all Pok‚mon from falling asleep for 5 turns.,?
+Electrify,ELECTRICO,Status,?,?,20,,Changes the target's move to Electric type.,?
+Electro Ball,ELECTRICO,Special,?,100,10,,"The faster the user, the stronger the attack.",?
+Electroweb,ELECTRICO,Special,55,95,15,TM82,Lowers opponent's Speed.,100
+Embargo,SINIESTRO,Status,?,100,15,,Opponent cannot use items.,?
+Ember,FUEGO,Special,40,100,25,,May burn opponent.,10
+Encore,NORMAL,Status,?,100,5,,Forces opponent to keep using its last move for 3 turns.,?
+Endeavor,NORMAL,Physical,?,100,5,,Reduces opponent's HP to same as user's.,?
+Endure,NORMAL,Status,?,?,10,,"Always left with at least 1 HP, but may fail if used consecutively.",?
+Energy Ball,PLANTA,Special,90,100,10,,May lower opponent's Special Defense.,10
+Entrainment,NORMAL,Status,?,100,15,,Makes target's ability same as user's.,?
+Eruption,FUEGO,Special,150,100,5,,Stronger when the user's HP is higher.,?
+Eternabeam,DRAGON,Special,160,90,5,,User can't move on the next turn.,?
+Expanding Force,PSIQUICO,Special,80,100,10,,Increases power and hits all opponents on Psychic Terrain.,?
+Explosion,NORMAL,Physical,250,100,5,,User faints.,?
+Extrasensory,PSIQUICO,Special,80,100,20,,May cause flinching.,10
+Extreme Evoboost,NORMAL,Status,?,?,1,,Eevee-exclusive Z-Move. Sharply raises all stats.,100
+Extreme Speed,NORMAL,Physical,80,100,5,,User attacks first.,?
+Facade,NORMAL,Physical,70,100,20,TM39,"Power doubles if user is burned, poisoned, or paralyzed.",?
+Fairy Lock,HADA,Status,?,?,10,,Prevents fleeing in the next turn.,?
+Fairy Wind,HADA,Special,40,100,30,,,?
+Fake Out,NORMAL,Physical,40,100,10,,"User attacks first, foe flinches. Only usable on first turn.",100
+Fake Tears,SINIESTRO,Status,?,100,20,TM47,Sharply lowers opponent's Special Defense.,?
+False Surrender,SINIESTRO,Physical,80,100,10,,Ignores Accuracy and Evasiveness.,?
+False Swipe,NORMAL,Physical,40,100,40,TM94,Always leaves opponent with at least 1 HP.,?
+Feather Dance,VOLADOR,Status,?,100,15,,Sharply lowers opponent's Attack.,?
+Feint,NORMAL,Physical,30,100,10,,Only hits if opponent uses Protect or Detect in the same turn.,?
+Feint Attack,SINIESTRO,Physical,60,100,20,,Ignores Accuracy and Evasiveness.,?
+Fell Stinger,BICHO,Physical,50,100,25,,Drastically raises user's Attack if target is KO'd.,?
+Fiery Dance,FUEGO,Special,80,100,10,,May raise user's Special Attack.,50
+Fiery Wrath,SINIESTRO,Special,90,100,10,,May cause flinching.,20
+Final Gambit,LUCHA,Special,?,100,5,,Inflicts damage equal to the user's remaining HP. User faints.,?
+Fire Blast,FUEGO,Special,110,85,5,,May burn opponent.,10
+Fire Fang,FUEGO,Physical,65,95,15,TM68,May cause flinching and/or burn opponent.,10
+Fire Lash,FUEGO,Physical,80,100,15,,The user strikes the target with a burning lash. This also lowers the target's Defense stat.,100
+Fire Pledge,FUEGO,Special,80,100,10,,Added effects appear if combined with Grass Pledge or Water Pledge.,?
+Fire Punch,FUEGO,Physical,75,100,15,TM03,May burn opponent.,10
+Fire Spin,FUEGO,Special,35,85,15,TM13,"Traps opponent, damaging them for 4-5 turns.",100
+First Impression,BICHO,Physical,90,100,10,,"Although this move has great power, it only works the first turn the user is in battle.",?
+Fishious Rend,AGUA,Physical,85,100,10,,"If the user attacks before the target, the power of this move is doubled.",?
+Fissure,TIERRA,Physical,?,30,5,,"One-Hit-KO, if it hits.",?
+Flail,NORMAL,Physical,?,100,15,,"The lower the user's HP, the higher the power.",?
+Flame Burst,FUEGO,Special,70,100,15,,May also injure nearby Pok‚mon.,?
+Flame Charge,FUEGO,Physical,50,100,20,,Raises user's Speed.,100
+Flame Wheel,FUEGO,Physical,60,100,25,,May burn opponent.,10
+Flamethrower,FUEGO,Special,90,100,15,,May burn opponent.,10
+Flare Blitz,FUEGO,Physical,120,100,15,,User receives recoil damage. May burn opponent.,10
+Flash,NORMAL,Status,?,100,20,,Lowers opponent's Accuracy.,?
+Flash Cannon,ACERO,Special,80,100,10,,May lower opponent's Special Defense.,10
+Flatter,SINIESTRO,Status,?,100,15,,"Confuses opponent, but raises its Special Attack by two stages.",?
+Fleur Cannon,HADA,Special,130,90,5,,Sharply lowers user's Special Attack.,100
+Fling,SINIESTRO,Physical,?,100,10,TM59,Power depends on held item.,?
+Flip Turn,AGUA,Physical,60,100,20,,"After making its attack, the user rushes back to switch places with a party Pok‚mon in waiting.",?
+Floaty Fall,VOLADOR,Physical,90,95,15,,May cause flinching.,30
+Floral Healing,HADA,Status,?,?,10,,The user restores the target's HP by up to half of its max HP. It restores more HP when the terrain is grass.,?
+Flower Shield,HADA,Status,?,?,10,,Sharply raises Defense of all Grass-type Pok‚mon on the field.,100
+Fly,VOLADOR,Physical,90,95,15,TM06,"Flies up on first turn, attacks on second turn.",?
+Flying Press,LUCHA,Physical,100,95,10,,Deals Fighting and Flying type damage.,?
+Focus Blast,LUCHA,Special,120,70,5,,May lower opponent's Special Defense.,10
+Focus Energy,NORMAL,Status,?,?,30,,Increases critical hit ratio.,?
+Focus Punch,LUCHA,Physical,150,100,20,,"If the user is hit before attacking, it flinches instead.",?
+Follow Me,NORMAL,Status,?,?,20,,"In Double Battle, the user takes all the attacks.",?
+Force Palm,LUCHA,Physical,60,100,10,,May paralyze opponent.,30
+Foresight,NORMAL,Status,?,?,40,,"Resets opponent's Evasiveness, Normal-type and Fighting-type attacks can now hit Ghosts, and Ghost-type attacks hit Normal.",?
+Forest's Curse,PLANTA,Status,?,100,20,,Adds Grass type to opponent.,?
+Foul Play,SINIESTRO,Physical,95,100,15,,Uses the opponent's Attack stat.,?
+Freeze Shock,HIELO,Physical,140,90,5,,"Charges on first turn, attacks on second. May paralyze opponent.",30
+Freeze-Dry,HIELO,Special,70,100,20,,May freeze opponent. Super-effective against Water types.,10
+Freezing Glare,PSIQUICO,Special,90,100,10,,May freeze opponent.,10
+Freezy Frost,HIELO,Special,90,100,15,,Resets all stat changes.,?
+Frenzy Plant,PLANTA,Special,150,90,5,,User must recharge next turn.,?
+Frost Breath,HIELO,Special,60,90,10,,Always results in a critical hit.,100
+Frustration,NORMAL,Physical,?,100,20,,Power decreases with higher Friendship.,?
+Fury Attack,NORMAL,Physical,15,85,20,,Hits 2-5 times in one turn.,?
+Fury Cutter,BICHO,Physical,40,95,20,,Power increases each turn.,?
+Fury Swipes,NORMAL,Physical,18,80,15,,Hits 2-5 times in one turn.,?
+Fusion Bolt,ELECTRICO,Physical,100,100,5,,Power increases if Fusion Flare is used in the same turn.,?
+Fusion Flare,FUEGO,Special,100,100,5,,Power increases if Fusion Bolt is used in the same turn.,?
+Future Sight,PSIQUICO,Special,120,100,10,,Damage occurs 2 turns later.,?
+G-Max Befuddle,BICHO,Physical,?,100,5,,"Butterfree-exclusive G-Max Move. Poisons, paralyzes, or puts opponent to sleep.",100
+G-Max Cannonade,AGUA,Physical,?,100,10,,Blastoise-exclusive G-Max Move. Damages non-Water types for 4 turns.,?
+G-Max Centiferno,FUEGO,Physical,?,100,5,,Centiskorch-exclusive G-Max Move. Traps opponents for 4-5 turns.,100
+G-Max Chi Strike,LUCHA,Physical,?,100,5,,Machamp-exclusive G-Max Move. Increases critical hit ratio.,?
+G-Max Cuddle,NORMAL,Physical,?,100,5,,Eevee-exclusive G-Max Move. Infatuates opponents.,100
+G-Max Depletion,DRAGON,Physical,?,100,5,,Duraludon-exclusive G-Max Move. Reduces opponent's PP.,?
+G-Max Drum Solo,PLANTA,Physical,?,100,5,,Rillaboom-exclusive G-Max Move. Ignores target's ability.,?
+G-Max Finale,HADA,Physical,?,100,5,,Alcremie-exclusive G-Max Move. Heals the user's team.,?
+G-Max Fireball,FUEGO,Physical,?,100,5,,Cinderace-exclusive G-Max Move. Ignores target's ability.,?
+G-Max Foam Burst,AGUA,Physical,?,100,5,,Kingler-exclusive G-Max Move. Harshly lowers opponents' Speed.,100
+G-Max Gold Rush,NORMAL,Physical,?,100,5,,Meowth-exclusive G-Max Move. Confuses opponents and earns more money.,100
+G-Max Gravitas,PSIQUICO,Physical,?,100,5,,Orbeetle-exclusive G-Max Move. Summons Gravity for 5 turns.,?
+G-Max Hydrosnipe,AGUA,Physical,?,100,5,,Inteleon-exclusive G-Max Move. Ignores target's ability.,?
+G-Max Malodor,VENENO,Physical,?,100,5,,Garbodor-exclusive G-Max Move. Poisons opponents.,100
+G-Max Meltdown,ACERO,Physical,?,100,5,,Melmetal-exclusive G-Max Move. Prevents opponents using the same move twice in a row.,?
+G-Max One Blow,SINIESTRO,Physical,?,100,5,,Urshifu Single-Strike Style-exclusive G-Max Move. Strikes through Max Guard and Protect.,?
+G-Max Rapid Flow,AGUA,Physical,?,100,5,,Urshifu Rapid-Strike Style-exclusive G-Max Move. Strikes through Max Guard and Protect.,?
+G-Max Replenish,NORMAL,Physical,?,100,5,,Snorlax-exclusive G-Max Move. Recycles Berries.,?
+G-Max Resonance,HIELO,Physical,?,100,5,,Lapras-exclusive G-Max Move. Reduces damage for 5 turns.,?
+G-Max Sandblast,TIERRA,Physical,?,100,5,,Sandaconda-exclusive G-Max Move. Traps opponents for 4-5 turns.,100
+G-Max Smite,HADA,Physical,?,100,5,,Hatterene-exclusive G-Max Move. Confuses opponents.,100
+G-Max Snooze,SINIESTRO,Physical,?,100,5,,Grimmsnarl-exclusive G-Max Move. Makes opponents drowsy.,?
+G-Max Steelsurge,ACERO,Physical,?,100,5,,Copperajah-exclusive G-Max Move. Sets up Spikes on the field.,?
+G-Max Stonesurge,AGUA,Physical,?,100,5,,Drednaw-exclusive G-Max Move. Sets up Stealth Rock.,?
+G-Max Stun Shock,ELECTRICO,Physical,?,100,10,,Toxtricity-exclusive G-Max Move. Poisons or paralyzes opponents.,100
+G-Max Sweetness,PLANTA,Physical,?,100,10,,Appletun-exclusive G-Max Move. Heals status conditions of user's team.,?
+G-Max Tartness,PLANTA,Physical,?,100,10,,Flapple-exclusive G-Max Move. Reduces opponents' evasiveness.,100
+G-Max Terror,FANTASMA,Physical,?,100,10,,Gengar-exclusive G-Max Move. Prevents opponent from switching out.,?
+G-Max Vine Lash,PLANTA,Physical,?,100,10,,Venusaur-exclusive G-Max Move. Damages non-Grass types for 4 turns.,?
+G-Max Volcalith,ROCA,Physical,?,100,10,,Coalossal-exclusive G-Max Move. Deals damage for 4 turns.,100
+G-Max Volt Crash,ELECTRICO,Physical,?,100,10,,Pikachu-exclusive G-Max Move. Paralyzes opponents.,100
+G-Max Wildfire,FUEGO,Physical,?,100,10,,Charizard-exclusive G-Max Move. Damages non-Fire types for 4 turns.,100
+G-Max Wind Rage,VOLADOR,Physical,?,100,10,,Corviknight-exclusive G-Max Move. Removes battlefield hazards.,?
+Gastro Acid,VENENO,Status,?,100,10,,Cancels out the effect of the opponent's Ability.,?
+Gear Grind,ACERO,Physical,50,85,15,,Hits twice in one turn.,?
+Gear Up,ACERO,Status,?,?,20,,The user engages its gears to raise the Attack and Sp. Atk stats of ally Pok‚mon with the Plus or Minus Ability.,?
+Genesis Supernova,PSIQUICO,Special,185,?,1,,Mew-exclusive Z-Move.,?
+Geomancy,HADA,Status,?,?,10,,"Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second.",?
+Giga Drain,PLANTA,Special,75,100,10,TM28,User recovers half the HP inflicted on opponent.,?
+Giga Impact,NORMAL,Physical,150,90,5,TM09,User must recharge next turn.,?
+Gigavolt Havoc,ELECTRICO,?,?,?,1,,Electric type Z-Move.,?
+Glacial Lance,HIELO,Physical,130,100,5,,The user attacks by hurling a blizzard-cloaked icicle lance at opposing Pok‚mon.,?
+Glaciate,HIELO,Special,65,95,10,,Lowers opponent's Speed.,100
+Glare,NORMAL,Status,?,100,30,,Paralyzes opponent.,?
+Glitzy Glow,PSIQUICO,Special,90,100,15,,Reduces damage from Special attacks.,?
+Grass Knot,PLANTA,Special,?,100,20,,"The heavier the opponent, the stronger the attack.",?
+Grass Pledge,PLANTA,Special,80,100,10,,Added effects appear if preceded by Water Pledge or succeeded by Fire Pledge.,?
+Grass Whistle,PLANTA,Status,?,55,15,,Puts opponent to sleep.,?
+Grassy Glide,PLANTA,Physical,70,100,20,,High priority during Grassy Terrain.,?
+Grassy Terrain,PLANTA,Status,?,?,10,TM88,Restores a little HP of all Pok‚mon for 5 turns.,?
+Grav Apple,PLANTA,Physical,80,100,10,,Lowers the opponent's Defense stat.,100
+Gravity,PSIQUICO,Status,?,?,5,,Prevents moves like Fly and Bounce and the Ability Levitate for 5 turns.,?
+Growl,NORMAL,Status,?,100,40,,Lowers opponent's Attack.,?
+Growth,NORMAL,Status,?,?,20,,Raises user's Attack and Special Attack.,?
+Grudge,FANTASMA,Status,?,?,5,,"If the users faints after using this move, the PP for the opponent's last move is depleted.",?
+Guard Split,PSIQUICO,Status,?,?,10,,Averages Defense and Special Defense with the target.,?
+Guard Swap,PSIQUICO,Status,?,?,10,TM61,User and opponent swap Defense and Special Defense.,?
+Guardian of Alola,HADA,Special,?,?,1,,Tapu-exclusive Z-move. Cuts opponent's HP by 75%.,?
+Guillotine,NORMAL,Physical,?,30,5,,"One-Hit-KO, if it hits.",?
+Gunk Shot,VENENO,Physical,120,80,5,,May poison opponent.,30
+Gust,VOLADOR,Special,40,100,35,,Hits Pok‚mon using Fly/Bounce with double power.,?
+Gyro Ball,ACERO,Physical,?,100,5,,"The slower the user, the stronger the attack.",?
+Hail,HIELO,Status,?,?,10,TM35,Non-Ice types are damaged for 5 turns.,?
+Hammer Arm,LUCHA,Physical,100,90,10,,Lowers user's Speed.,100
+Happy Hour,NORMAL,Status,?,?,30,,Doubles prize money from trainer battles.,?
+Harden,NORMAL,Status,?,?,30,,Raises user's Defense.,?
+Haze,HIELO,Status,?,?,30,,Resets all stat changes.,?
+Head Charge,NORMAL,Physical,120,100,15,,User receives recoil damage.,?
+Head Smash,ROCA,Physical,150,80,5,,User receives recoil damage.,?
+Headbutt,NORMAL,Physical,70,100,15,,May cause flinching.,30
+Heal Bell,NORMAL,Status,?,?,5,,Heals the user's party's status conditions.,?
+Heal Block,PSIQUICO,Status,?,100,15,,Prevents the opponent from restoring HP for 5 turns.,?
+Heal Order,BICHO,Status,?,?,10,,User recovers half its max HP.,?
+Heal Pulse,PSIQUICO,Status,?,?,10,,Restores half the target's max HP.,?
+Healing Wish,PSIQUICO,Status,?,?,10,,The user faints and the next Pok‚mon released is fully healed.,?
+Heart Stamp,PSIQUICO,Physical,60,100,25,,May cause flinching.,30
+Heart Swap,PSIQUICO,Status,?,?,10,,Stat changes are swapped with the opponent.,?
+Heat Crash,FUEGO,Physical,?,100,10,,"The heavier the user, the stronger the attack.",?
+Heat Wave,FUEGO,Special,95,90,10,,May burn opponent.,10
+Heavy Slam,ACERO,Physical,?,100,10,,"The heavier the user, the stronger the attack.",?
+Helping Hand,NORMAL,Status,?,?,20,TM41,"In Double Battles, boosts the power of the partner's move.",?
+Hex,FANTASMA,Special,65,100,10,TM77,Inflicts more damage if the target has a status condition.,?
+Hidden Power,NORMAL,Special,60,100,15,,Type and power depends on user's IVs.,?
+High Horsepower,TIERRA,Physical,95,95,10,,The user fiercely attacks the target using its entire body.,?
+High Jump Kick,LUCHA,Physical,130,90,10,,"If it misses, the user loses half their HP.",?
+Hold Back,NORMAL,Physical,40,100,40,,Always leaves opponent with at least 1 HP.,?
+Hold Hands,NORMAL,Status,?,?,40,,Makes the user and an ally very happy.,?
+Hone Claws,SINIESTRO,Status,?,?,15,,Raises user's Attack and Accuracy.,?
+Horn Attack,NORMAL,Physical,65,100,25,,,?
+Horn Drill,NORMAL,Physical,?,30,5,,"One-Hit-KO, if it hits.",?
+Horn Leech,PLANTA,Physical,75,100,10,,User recovers half the HP inflicted on opponent.,?
+Howl,NORMAL,Status,?,?,40,,Raises Attack of allies.,?
+Hurricane,VOLADOR,Special,110,70,10,,May confuse opponent.,30
+Hydro Cannon,AGUA,Special,150,90,5,,User must recharge next turn.,?
+Hydro Pump,AGUA,Special,110,80,5,,,?
+Hydro Vortex,AGUA,?,?,?,1,,Water type Z-Move.,?
+Hyper Beam,NORMAL,Special,150,90,5,TM08,User must recharge next turn.,?
+Hyper Fang,NORMAL,Physical,80,90,15,,May cause flinching.,10
+Hyper Voice,NORMAL,Special,90,100,10,,,?
+Hyperspace Fury,SINIESTRO,Physical,100,100,5,,Lowers user's Defense. Can strike through Protect/Detect.,100
+Hyperspace Hole,PSIQUICO,Special,80,100,5,,Can strike through Protect/Detect.,?
+Hypnosis,PSIQUICO,Status,?,60,20,,Puts opponent to sleep.,?
+Ice Ball,HIELO,Physical,30,90,20,,Doubles in power each turn for 5 turns.,?
+Ice Beam,HIELO,Special,90,100,10,,May freeze opponent.,10
+Ice Burn,HIELO,Special,140,90,5,,"Charges on first turn, attacks on second. May burn opponent.",30
+Ice Fang,HIELO,Physical,65,95,15,TM67,May cause flinching and/or freeze opponent.,10
+Ice Hammer,HIELO,Physical,100,90,10,,"The user swings and hits with its strong, heavy fist. It lowers the user's Speed, however.",100
+Ice Punch,HIELO,Physical,75,100,15,TM04,May freeze opponent.,10
+Ice Shard,HIELO,Physical,40,100,30,,User attacks first.,?
+Icicle Crash,HIELO,Physical,85,90,10,,May cause flinching.,30
+Icicle Spear,HIELO,Physical,25,100,30,TM51,Hits 2-5 times in one turn.,?
+Icy Wind,HIELO,Special,55,95,15,TM27,Lowers opponent's Speed.,100
+Imprison,PSIQUICO,Status,?,?,10,TM44,Opponent is unable to use moves that the user also knows.,?
+Incinerate,FUEGO,Special,60,100,15,,Destroys the target's held berry.,?
+Inferno,FUEGO,Special,100,50,5,,Burns opponent.,100
+Inferno Overdrive,FUEGO,?,?,?,1,,Fire type Z-Move.,?
+Infestation,BICHO,Special,20,100,20,,"Traps opponent, damaging them for 4-5 turns.",100
+Ingrain,PLANTA,Status,?,?,20,,User restores HP each turn. User cannot escape/switch.,?
+Instruct,PSIQUICO,Status,?,?,15,,Allows an ally to use a move instead.,?
+Ion Deluge,ELECTRICO,Status,?,?,25,,Changes Normal-type moves to Electric-type.,?
+Iron Defense,ACERO,Status,?,?,15,,Sharply raises user's Defense.,?
+Iron Head,ACERO,Physical,80,100,15,,May cause flinching.,30
+Iron Tail,ACERO,Physical,100,75,15,,May lower opponent's Defense.,30
+Jaw Lock,SINIESTRO,Physical,80,100,10,,Prevents user and opponent from switching out.,?
+Judgment,NORMAL,Special,100,100,10,,Type depends on the Arceus Plate being held.,?
+Jump Kick,LUCHA,Physical,100,95,10,,"If it misses, the user loses half their HP.",?
+Jungle Healing,PLANTA,Status,?,?,10,,Restores team's HP and cures status conditions.,?
+Karate Chop,LUCHA,Physical,50,100,25,,High critical hit ratio.,?
+Kinesis,PSIQUICO,Status,?,80,15,,Lowers opponent's Accuracy.,?
+King's Shield,ACERO,Status,?,?,10,,Protects the user and lowers opponent's Attack on contact.,?
+Knock Off,SINIESTRO,Physical,65,100,20,,Removes opponent's held item for the rest of the battle.,?
+Land's Wrath,TIERRA,Physical,90,100,10,,,?
+Laser Focus,NORMAL,Status,?,?,30,,User's next attack is guaranteed to result in a critical hit.,?
+Lash Out,SINIESTRO,Physical,75,100,5,,Double power if stats were lowered during the turn.,?
+Last Resort,NORMAL,Physical,140,100,5,,Can only be used after all other moves are used.,?
+Lava Plume,FUEGO,Special,80,100,15,,May burn opponent.,30
+Leaf Blade,PLANTA,Physical,90,100,15,,High critical hit ratio.,?
+Leaf Storm,PLANTA,Special,130,90,5,,Sharply lowers user's Special Attack.,100
+Leaf Tornado,PLANTA,Special,65,90,10,,May lower opponent's Accuracy.,50
+Leafage,PLANTA,Physical,40,100,40,,Strikes opponent with leaves.,?
+Leech Life,BICHO,Physical,80,100,10,,User recovers half the HP inflicted on opponent.,?
+Leech Seed,PLANTA,Status,?,90,10,,Drains HP from opponent each turn.,?
+Leer,NORMAL,Status,?,100,30,,Lowers opponent's Defense.,100
+Let's Snuggle Forever,HADA,Physical,190,?,1,,Mimikyu-exclusive Z-Move.,?
+Lick,FANTASMA,Physical,30,100,30,,May paralyze opponent.,30
+Life Dew,AGUA,Status,?,?,10,,User and teammates recover HP.,?
+Light of Ruin,HADA,Special,140,90,5,,User receives recoil damage.,?
+Light Screen,PSIQUICO,Status,?,?,30,TM17,Halves damage from Special attacks for 5 turns.,?
+Light That Burns the Sky,PSIQUICO,Special,200,?,1,,Ultra Necrozma-exclusive Z-Move. Ignores target's ability; uses highest Attack stat.,?
+Liquidation,AGUA,Physical,85,100,10,,May lower opponent's Defense.,20
+Lock-On,NORMAL,Status,?,?,5,,User's next attack is guaranteed to hit.,?
+Lovely Kiss,NORMAL,Status,?,75,10,,Puts opponent to sleep.,?
+Low Kick,LUCHA,Physical,?,100,20,,"The heavier the opponent, the stronger the attack.",?
+Low Sweep,LUCHA,Physical,65,100,20,TM75,Lowers opponent's Speed.,100
+Lucky Chant,NORMAL,Status,?,?,30,,Opponent cannot land critical hits for 5 turns.,?
+Lunar Dance,PSIQUICO,Status,?,?,10,,The user faints but the next Pok‚mon released is fully healed.,?
+Lunge,BICHO,Physical,80,100,15,,"The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat.",100
+Luster Purge,PSIQUICO,Special,70,100,5,,May lower opponent's Special Defense.,50
+Mach Punch,LUCHA,Physical,40,100,30,,User attacks first.,?
+Magic Coat,PSIQUICO,Status,?,?,15,,Reflects moves that cause status conditions back to the attacker.,?
+Magic Powder,PSIQUICO,Status,?,100,20,,Changes target's type to Psychic.,?
+Magic Room,PSIQUICO,Status,?,?,10,TM72,Suppresses the effects of held items for five turns.,?
+Magical Leaf,PLANTA,Special,60,100,20,TM10,Ignores Accuracy and Evasiveness.,?
+Magma Storm,FUEGO,Special,100,75,5,,"Traps opponent, damaging them for 4-5 turns.",100
+Magnet Bomb,ACERO,Physical,60,100,20,,Ignores Accuracy and Evasiveness.,?
+Magnet Rise,ELECTRICO,Status,?,?,10,,User becomes immune to Ground-type moves for 5 turns.,?
+Magnetic Flux,ELECTRICO,Status,?,?,20,,Raises Defense and Sp. Defense of Plus/Minus Pok‚mon.,?
+Magnitude,TIERRA,Physical,?,100,30,,Hits with random power.,?
+Malicious Moonsault,SINIESTRO,Physical,180,?,1,,Incineroar-exclusive Z-Move.,?
+Mat Block,LUCHA,Status,?,?,10,,Protects teammates from damaging moves.,?
+Max Airstream,VOLADOR,?,?,?,?,,Flying type Dynamax move. Raises the team's Speed.,100
+Max Darkness,SINIESTRO,?,?,?,?,,Dark type Dynamax move. Lowers the target's Special Defense.,100
+Max Flare,FUEGO,?,?,?,?,,Fire type Dynamax move. Summons harsh sunlight.,?
+Max Flutterby,BICHO,?,?,?,?,,Bug type Dynamax move. Lowers the target's Special Attack.,100
+Max Geyser,AGUA,?,?,?,?,,Water type Dynamax move. Summons heavy rain.,?
+Max Guard,NORMAL,?,?,?,?,,Status category Dynamax move. Protects the user.,?
+Max Hailstorm,HIELO,?,?,?,?,,Ice type Dynamax move. Summons hail.,?
+Max Knuckle,LUCHA,?,?,?,?,,Fighting type Dynamax move. Increases the team's Attack.,100
+Max Lightning,ELECTRICO,?,?,?,?,,Electric type Dynamax move. Summons Electric Terrain.,?
+Max Mindstorm,PSIQUICO,?,?,?,?,,Psychic type Dynamax move. Summons Psychic Terrain.,?
+Max Ooze,VENENO,?,?,?,?,,Poison type Dynamax move. Increases the team's Special Attack.,100
+Max Overgrowth,PLANTA,?,?,?,?,,Grass type Dynamax move. Summons Grassy Terrain.,?
+Max Phantasm,FANTASMA,?,?,?,?,,Ghost type Dynamax move. Lowers the target's Defense.,100
+Max Quake,TIERRA,?,?,?,?,,Ground type Dynamax move. Increases the team's Special Defense.,100
+Max Rockfall,ROCA,?,?,?,?,,Rock type Dynamax move. Summons a sandstorm.,?
+Max Starfall,HADA,?,?,?,?,,Fairy type Dynamax move. Summons Misty Terrain.,?
+Max Steelspike,ACERO,?,?,?,?,,Steel type Dynamax move. Raises the team's Defense.,100
+Max Strike,NORMAL,?,?,?,?,,Normal type Dynamax move. Lowers the target's Speed.,100
+Max Wyrmwind,DRAGON,?,?,?,?,,Dragon type Dynamax move. Lowers the target's Attack.,100
+Me First,NORMAL,Status,?,?,20,,User copies the opponent's attack with 1.5ž power.,?
+Mean Look,NORMAL,Status,?,?,5,,Opponent cannot flee or switch.,?
+Meditate,PSIQUICO,Status,?,?,40,,Raises user's Attack.,?
+Mega Drain,PLANTA,Special,40,100,15,,User recovers half the HP inflicted on opponent.,?
+Mega Kick,NORMAL,Physical,120,75,5,TM01,,?
+Mega Punch,NORMAL,Physical,80,85,20,,,?
+Megahorn,BICHO,Physical,120,85,10,,,?
+Memento,SINIESTRO,Status,?,100,10,,"User faints, sharply lowers opponent's Attack and Special Attack.",?
+Menacing Moonraze Maelstrom,FANTASMA,Special,200,?,1,,Lunala-exclusive Z-Move.,?
+Metal Burst,ACERO,Physical,?,100,10,,Deals damage equal to 1.5x opponent's attack.,?
+Metal Claw,ACERO,Physical,50,95,35,,May raise user's Attack.,10
+Metal Sound,ACERO,Status,?,85,40,,Sharply lowers opponent's Special Defense.,?
+Meteor Assault,LUCHA,Physical,150,100,5,,User must recharge next turn.,?
+Meteor Beam,ROCA,Special,120,90,10,,"User gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn.",?
+Meteor Mash,ACERO,Physical,90,90,10,,May raise user's Attack.,20
+Metronome,NORMAL,Status,?,?,10,,User performs almost any move in the game at random.,?
+Milk Drink,NORMAL,Status,?,?,10,,User recovers half its max HP.,?
+Mimic,NORMAL,Status,?,?,10,,Copies the opponent's last move.,?
+Mind Blown,FUEGO,Special,150,100,5,,User receives recoil damage.,?
+Mind Reader,NORMAL,Status,?,?,5,,User's next attack is guaranteed to hit.,?
+Minimize,NORMAL,Status,?,?,10,,Sharply raises user's Evasiveness.,?
+Miracle Eye,PSIQUICO,Status,?,?,40,,"Resets opponent's Evasiveness, removes Dark's Psychic immunity.",?
+Mirror Coat,PSIQUICO,Special,?,100,20,,"When hit by a Special Attack, user strikes back with 2x power.",?
+Mirror Move,VOLADOR,Status,?,?,20,,User performs the opponent's last move.,?
+Mirror Shot,ACERO,Special,65,85,10,,May lower opponent's Accuracy.,30
+Mist,HIELO,Status,?,?,30,,User's stats cannot be changed for a period of time.,?
+Mist Ball,PSIQUICO,Special,70,100,5,,May lower opponent's Special Attack.,50
+Misty Explosion,HADA,Special,100,100,5,,Power increases on Misty Terrain.,?
+Misty Terrain,HADA,Status,?,?,10,TM89,Protects the field from status conditions for 5 turns.,?
+Moonblast,HADA,Special,95,100,15,,May lower opponent's Special Attack.,30
+Moongeist Beam,FANTASMA,Special,100,100,5,,Ignores the target's ability.,?
+Moonlight,HADA,Status,?,?,5,,User recovers HP. Amount varies with the weather.,?
+Morning Sun,NORMAL,Status,?,?,5,,User recovers HP. Amount varies with the weather.,?
+Mud Bomb,TIERRA,Special,65,85,10,,May lower opponent's Accuracy.,30
+Mud Shot,TIERRA,Special,55,95,15,TM53,Lowers opponent's Speed.,100
+Mud Sport,TIERRA,Status,?,?,15,,Weakens the power of Electric-type moves.,?
+Mud-Slap,TIERRA,Special,20,100,10,,Lowers opponent's Accuracy.,100
+Muddy Water,AGUA,Special,90,85,10,,May lower opponent's Accuracy.,30
+Multi-Attack,NORMAL,Physical,120,100,10,,Type matches Memory item held.,?
+Mystical Fire,FUEGO,Special,75,100,10,TM92,Lowers opponent's Special Attack.,100
+Nasty Plot,SINIESTRO,Status,?,?,20,,Sharply raises user's Special Attack.,?
+Natural Gift,NORMAL,Physical,?,100,15,,Power and type depend on the user's held berry.,?
+Nature Power,NORMAL,Status,?,?,20,,Uses a certain move based on the current terrain.,?
+Nature's Madness,HADA,Special,?,90,10,,Halves the foe's HP.,?
+Needle Arm,PLANTA,Physical,60,100,15,,May cause flinching.,30
+Never-Ending Nightmare,FANTASMA,?,?,?,1,,Ghost type Z-Move.,?
+Night Daze,SINIESTRO,Special,85,95,10,,May lower opponent's Accuracy.,40
+Night Shade,FANTASMA,Special,?,100,15,,Inflicts damage equal to user's level.,?
+Night Slash,SINIESTRO,Physical,70,100,15,,High critical hit ratio.,?
+Nightmare,FANTASMA,Status,?,100,15,,The sleeping opponent loses 25% of its max HP each turn.,?
+No Retreat,LUCHA,Status,?,?,5,,Raises all stats but user cannot switch out.,100
+Noble Roar,NORMAL,Status,?,100,30,,Lowers opponent's Attack and Special Attack.,100
+Nuzzle,ELECTRICO,Physical,20,100,20,,Paralyzes opponent.,100
+Oblivion Wing,VOLADOR,Special,80,100,10,,User recovers most of the HP inflicted on opponent.,?
+Obstruct,SINIESTRO,Status,?,100,10,,Protects the user and sharply lowers Defence on contact.,?
+Oceanic Operetta,AGUA,Special,195,?,1,,Primarina-exclusive Z-Move.,?
+Octazooka,AGUA,Special,65,85,10,,May lower opponent's Accuracy.,50
+Octolock,LUCHA,Status,?,100,15,,"Lowers opponent's Defense and Special Defense every turn, and they cannot flee or switch out.",?
+Odor Sleuth,NORMAL,Status,?,?,40,,"Resets opponent's Evasiveness, Normal-type and Fighting-type attacks can now hit Ghosts, and Ghost-type attacks hit Normal.",?
+Ominous Wind,FANTASMA,Special,60,100,5,,May raise all user's stats at once.,10
+Origin Pulse,AGUA,Special,110,85,10,,Hits all adjacent opponents.,?
+Outrage,DRAGON,Physical,120,100,10,,User attacks for 2-3 turns but then becomes confused.,?
+Overdrive,ELECTRICO,Special,80,100,10,,,?
+Overheat,FUEGO,Special,130,90,5,,Sharply lowers user's Special Attack.,100
+Pain Split,NORMAL,Status,?,?,20,,The user's and opponent's HP becomes the average of both.,?
+Parabolic Charge,ELECTRICO,Special,65,100,20,,User recovers half the HP inflicted on opponent.,?
+Parting Shot,SINIESTRO,Status,?,100,20,,Lowers opponent's Attack and Special Attack then switches out.,100
+Pay Day,NORMAL,Physical,40,100,20,TM02,A small amount of money is gained after the battle resolves.,?
+Payback,SINIESTRO,Physical,50,100,10,TM57,Power doubles if the user was attacked first.,?
+Peck,VOLADOR,Physical,35,100,35,,,?
+Perish Song,NORMAL,Status,?,?,5,,Any Pok‚mon in play when this attack is used faints in 3 turns.,?
+Petal Blizzard,PLANTA,Physical,90,100,15,,Hits all adjacent Pok‚mon.,?
+Petal Dance,PLANTA,Special,120,100,10,,User attacks for 2-3 turns but then becomes confused.,?
+Phantom Force,FANTASMA,Physical,90,100,10,TM86,"Disappears on first turn, attacks on second. Can strike through Protect/Detect.",?
+Photon Geyser,PSIQUICO,Special,100,100,5,,"Uses Attack or Special Attack stat, whichever is higher.",?
+Pika Papow,ELECTRICO,Special,?,100,20,,Power increases when player's bond is stronger.,?
+Pin Missile,BICHO,Physical,25,95,20,TM07,Hits 2-5 times in one turn.,?
+Plasma Fists,ELECTRICO,Physical,100,100,15,,Changes Normal-type moves to Electric-type moves.,?
+Play Nice,NORMAL,Status,?,?,20,,Lowers opponent's Attack. Always hits.,100
+Play Rough,HADA,Physical,90,90,10,,May lower opponent's Attack.,10
+Pluck,VOLADOR,Physical,60,100,20,,"If the opponent is holding a berry, its effect is stolen by user.",?
+Poison Fang,VENENO,Physical,50,100,15,,May badly poison opponent.,50
+Poison Gas,VENENO,Status,?,90,40,,Poisons opponent.,?
+Poison Jab,VENENO,Physical,80,100,20,,May poison the opponent.,30
+Poison Powder,VENENO,Status,?,75,35,,Poisons opponent.,?
+Poison Sting,VENENO,Physical,15,100,35,,May poison the opponent.,30
+Poison Tail,VENENO,Physical,50,100,25,,High critical hit ratio. May poison opponent.,10
+Pollen Puff,BICHO,Special,90,100,15,,Deals damage to opponent or restores HP of teammate.,?
+Poltergeist,FANTASMA,Physical,110,90,5,,Fails if the target doesn?t have an item.,?
+Pound,NORMAL,Physical,40,100,35,,,?
+Powder,BICHO,Status,?,100,20,,Damages Pok‚mon using Fire type moves.,?
+Powder Snow,HIELO,Special,40,100,25,,May freeze opponent.,10
+Power Gem,ROCA,Special,80,100,20,,,?
+Power Split,PSIQUICO,Status,?,?,10,,Averages Attack and Special Attack with the target.,?
+Power Swap,PSIQUICO,Status,?,?,10,TM60,User and opponent swap Attack and Special Attack.,?
+Power Trick,PSIQUICO,Status,?,?,10,,User's own Attack and Defense switch.,?
+Power Trip,SINIESTRO,Physical,20,100,10,,"The user boasts its strength and attacks the target. The more the user's stats are raised, the greater the move's power.",?
+Power Whip,PLANTA,Physical,120,85,10,,,?
+Power-Up Punch,LUCHA,Physical,40,100,20,,Raises Attack.,100
+Precipice Blades,TIERRA,Physical,120,85,10,,Hits all adjacent opponents.,?
+Present,NORMAL,Physical,?,90,15,,Either deals damage or heals.,?
+Prismatic Laser,PSIQUICO,Special,160,100,10,,The user shoots powerful lasers using the power of a prism. The user can't move on the next turn.,?
+Protect,NORMAL,Status,?,?,10,TM25,"Protects the user, but may fail if used consecutively.",?
+Psybeam,PSIQUICO,Special,65,100,20,,May confuse opponent.,10
+Psych Up,NORMAL,Status,?,?,10,,Copies the opponent's stat changes.,?
+Psychic,PSIQUICO,Special,90,100,10,,May lower opponent's Special Defense.,10
+Psychic Fangs,PSIQUICO,Physical,85,100,10,,The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect.,?
+Psychic Terrain,PSIQUICO,Status,?,?,10,TM91,Prevents priority moves from being used for 5 turns.,?
+Psycho Boost,PSIQUICO,Special,140,90,5,,Sharply lowers user's Special Attack.,100
+Psycho Cut,PSIQUICO,Physical,70,100,20,TM69,High critical hit ratio.,?
+Psycho Shift,PSIQUICO,Status,?,100,10,,Transfers user's status condition to the opponent.,?
+Psyshock,PSIQUICO,Special,80,100,10,,"Inflicts damage based on the target's Defense, not Special Defense.",?
+Psystrike,PSIQUICO,Special,100,100,10,,"Inflicts damage based on the target's Defense, not Special Defense.",?
+Psywave,PSIQUICO,Special,?,100,15,,Inflicts damage 50-150% of user's level.,?
+Pulverizing Pancake,NORMAL,Physical,210,?,1,,Snorlax-exclusive Normal type Z-Move.,?
+Punishment,SINIESTRO,Physical,?,100,5,,Power increases when opponent's stats have been raised.,?
+Purify,VENENO,Status,?,?,20,,"The user heals the target's status condition. If the move succeeds, it also restores the user's own HP.",?
+Pursuit,SINIESTRO,Physical,40,100,20,,Double power if the opponent is switching out.,?
+Pyro Ball,FUEGO,Physical,120,90,5,,May burn opponent.,10
+Quash,SINIESTRO,Status,?,100,15,,Makes the target act last this turn.,?
+Quick Attack,NORMAL,Physical,40,100,30,,User attacks first.,?
+Quick Guard,LUCHA,Status,?,?,15,,Protects the user's team from high-priority moves.,?
+Quiver Dance,BICHO,Status,?,?,20,,"Raises user's Special Attack, Special Defense and Speed.",?
+Rage,NORMAL,Physical,20,100,20,,Raises user's Attack when hit.,?
+Rage Powder,BICHO,Status,?,?,20,,"Forces attacks to hit user, not team-mates.",?
+Rain Dance,AGUA,Status,?,?,5,TM33,Makes it rain for 5 turns.,?
+Rapid Spin,NORMAL,Physical,50,100,40,,Raises user's Speed and removes entry hazards and trap move effects.,100
+Razor Leaf,PLANTA,Physical,55,95,25,,High critical hit ratio.,?
+Razor Shell,AGUA,Physical,75,95,10,TM83,May lower opponent's Defense.,50
+Razor Wind,NORMAL,Special,80,100,10,,"Charges on first turn, attacks on second. High critical hit ratio.",?
+Recover,NORMAL,Status,?,?,10,,User recovers half its max HP.,?
+Recycle,NORMAL,Status,?,?,10,,User's used hold item is restored.,?
+Reflect,PSIQUICO,Status,?,?,20,TM18,Halves damage from Physical attacks for 5 turns.,?
+Reflect Type,NORMAL,Status,?,?,15,,User becomes the target's type.,?
+Refresh,NORMAL,Status,?,?,20,,"Cures paralysis, poison, and burns.",?
+Relic Song,NORMAL,Special,75,100,10,,May put the target to sleep.,10
+Rest,PSIQUICO,Status,?,?,10,TM21,"User sleeps for 2 turns, but user is fully healed.",?
+Retaliate,NORMAL,Physical,70,100,5,TM79,Inflicts double damage if a teammate fainted on the last turn.,?
+Return,NORMAL,Physical,?,100,20,,Power increases with higher Friendship.,?
+Revelation Dance,NORMAL,Special,90,100,15,,Type changes based on Oricorio's form.,?
+Revenge,LUCHA,Physical,60,100,10,TM42,Power increases if user was hit first.,?
+Reversal,LUCHA,Physical,?,100,15,,"The lower the user's HP, the higher the power.",?
+Rising Voltage,ELECTRICO,Special,70,100,20,,Power doubles on Electric Terrain.,?
+Roar,NORMAL,Status,?,?,20,,"In battles, the opponent switches. In the wild, the Pok‚mon runs.",?
+Roar of Time,DRAGON,Special,150,90,5,,User must recharge next turn.,?
+Rock Blast,ROCA,Physical,25,90,10,TM54,Hits 2-5 times in one turn.,?
+Rock Climb,NORMAL,Physical,90,85,20,,May confuse opponent.,20
+Rock Polish,ROCA,Status,?,?,20,,Sharply raises user's Speed.,?
+Rock Slide,ROCA,Physical,75,90,10,TM22,May cause flinching. Hits all opposing Pokemon.,30
+Rock Smash,LUCHA,Physical,40,100,15,,May lower opponent's Defense.,50
+Rock Throw,ROCA,Physical,50,90,15,,,?
+Rock Tomb,ROCA,Physical,60,95,15,TM48,Lowers opponent's Speed.,100
+Rock Wrecker,ROCA,Physical,150,90,5,,User must recharge next turn.,?
+Role Play,PSIQUICO,Status,?,?,10,,User copies the opponent's Ability.,?
+Rolling Kick,LUCHA,Physical,60,85,15,,May cause flinching.,30
+Rollout,ROCA,Physical,30,90,20,,Doubles in power each turn for 5 turns.,?
+Roost,VOLADOR,Status,?,?,10,,User recovers half of its max HP and loses the Flying type temporarily.,?
+Rototiller,TIERRA,Status,?,?,10,,Raises Attack and Special Attack of Grass-types.,100
+Round,NORMAL,Special,60,100,15,TM76,Power increases if teammates use it in the same turn.,?
+Sacred Fire,FUEGO,Physical,100,95,5,,May burn opponent.,50
+Sacred Sword,LUCHA,Physical,90,100,15,,Ignores opponent's stat changes.,?
+Safeguard,NORMAL,Status,?,?,25,TM19,The user's party is protected from status conditions.,?
+Sand Attack,TIERRA,Status,?,100,15,,Lowers opponent's Accuracy.,?
+Sand Tomb,TIERRA,Physical,35,85,15,TM49,"Traps opponent, damaging them for 4-5 turns.",100
+Sandstorm,ROCA,Status,?,?,10,TM32,Creates a sandstorm for 5 turns.,?
+Sappy Seed,PLANTA,Physical,90,100,15,,Drains HP from opponent each turn.,100
+Savage Spin-Out,BICHO,?,?,?,1,,Bug type Z-Move.,?
+Scald,AGUA,Special,80,100,15,,May burn opponent.,30
+Scale Shot,DRAGON,Physical,25,90,20,,Hits 2-5 times in one turn. Boosts user's Speed but lowers its Defense.,?
+Scary Face,NORMAL,Status,?,100,10,TM26,Sharply lowers opponent's Speed.,?
+Scorching Sands,TIERRA,Special,70,100,10,,May burn the target.,?
+Scratch,NORMAL,Physical,40,100,35,,,?
+Screech,NORMAL,Status,?,85,40,TM16,Sharply lowers opponent's Defense.,?
+Searing Shot,FUEGO,Special,100,100,5,,May burn opponent.,30
+Searing Sunraze Smash,ACERO,Physical,200,?,1,,Solgaleo-exclusive Z-Move.,?
+Secret Power,NORMAL,Physical,70,100,20,,Effects of the attack vary with the location.,30
+Secret Sword,LUCHA,Special,85,100,10,,"Inflicts damage based on the target's Defense, not Special Defense.",?
+Seed Bomb,PLANTA,Physical,80,100,15,,,?
+Seed Flare,PLANTA,Special,120,85,5,,May lower opponent's Special Defense.,40
+Seismic Toss,LUCHA,Physical,?,100,20,,Inflicts damage equal to user's level.,?
+Self-Destruct,NORMAL,Physical,200,100,5,TM20,User faints.,?
+Shadow Ball,FANTASMA,Special,80,100,15,,May lower opponent's Special Defense.,20
+Shadow Bone,FANTASMA,Physical,85,100,10,,May lower opponent's Defense.,20
+Shadow Claw,FANTASMA,Physical,70,100,15,TM65,High critical hit ratio.,?
+Shadow Force,FANTASMA,Physical,120,100,5,,"Disappears on first turn, attacks on second. Can strike through Protect/Detect.",?
+Shadow Punch,FANTASMA,Physical,60,100,20,,Ignores Accuracy and Evasiveness.,?
+Shadow Sneak,FANTASMA,Physical,40,100,30,,User attacks first.,?
+Sharpen,NORMAL,Status,?,?,30,,Raises user's Attack.,?
+Shattered Psyche,PSIQUICO,?,?,?,1,,Psychic type Z-Move.,?
+Sheer Cold,HIELO,Special,?,30,5,,"One-Hit-KO, if it hits.",?
+Shell Side Arm,VENENO,Special,90,100,10,,"May poison opponent. Inflicts either Special or Physical damage, whichever is better.",?
+Shell Smash,NORMAL,Status,?,?,15,,"Sharply raises user's Attack, Special Attack and Speed but lowers Defense and Special Defense.",?
+Shell Trap,FUEGO,Special,150,100,5,,Deals more damage to opponent if hit by a Physical move.,?
+Shift Gear,ACERO,Status,?,?,10,,Raises user's Attack and sharply raises Speed.,?
+Shock Wave,ELECTRICO,Special,60,100,20,,Ignores Accuracy and Evasiveness.,?
+Shore Up,TIERRA,Status,?,?,10,,The user regains up to half of its max HP. It restores more HP in a sandstorm.,?
+Signal Beam,BICHO,Special,75,100,15,,May confuse opponent.,10
+Silver Wind,BICHO,Special,60,100,5,,May raise all stats of user at once.,10
+Simple Beam,NORMAL,Status,?,100,15,,Changes target's ability to Simple.,?
+Sing,NORMAL,Status,?,55,15,,Puts opponent to sleep.,?
+Sinister Arrow Raid,FANTASMA,Physical,180,?,1,,Decidueye-exclusive Z-Move.,?
+Sizzly Slide,FUEGO,Physical,90,100,15,,Burns the opponent.,100
+Sketch,NORMAL,Status,?,?,1,,Permanently copies the opponent's last move.,?
+Skill Swap,PSIQUICO,Status,?,?,10,,The user swaps Abilities with the opponent.,?
+Skitter Smack,BICHO,Physical,70,90,10,,Lowers opponent's Sp. Attack.,?
+Skull Bash,NORMAL,Physical,130,100,10,,"Raises Defense on first turn, attacks on second.",100
+Sky Attack,VOLADOR,Physical,140,90,5,,"Charges on first turn, attacks on second. May cause flinching. High critical hit ratio.",30
+Sky Drop,VOLADOR,Physical,60,100,10,,"Takes opponent into the air on first turn, drops them on second turn.",?
+Sky Uppercut,LUCHA,Physical,85,90,15,,"Hits the opponent, even during Fly.",?
+Slack Off,NORMAL,Status,?,?,10,,User recovers half its max HP.,?
+Slam,NORMAL,Physical,80,75,20,,,?
+Slash,NORMAL,Physical,70,100,20,,High critical hit ratio.,?
+Sleep Powder,PLANTA,Status,?,75,15,,Puts opponent to sleep.,?
+Sleep Talk,NORMAL,Status,?,?,10,,User performs one of its own moves while sleeping.,?
+Sludge,VENENO,Special,65,100,20,,May poison opponent.,30
+Sludge Bomb,VENENO,Special,90,100,10,,May poison opponent.,30
+Sludge Wave,VENENO,Special,95,100,10,,May poison opponent.,10
+Smack Down,ROCA,Physical,50,100,15,,Makes Flying-type Pok‚mon vulnerable to Ground moves.,100
+Smart Strike,ACERO,Physical,70,?,10,TM96,The user stabs the target with a sharp horn. This attack never misses.,?
+Smelling Salts,NORMAL,Physical,70,100,10,,"Power doubles if opponent is paralyzed, but cures it.",?
+Smog,VENENO,Special,30,70,20,,May poison opponent.,40
+Smokescreen,NORMAL,Status,?,100,20,,Lowers opponent's Accuracy.,?
+Snap Trap,PLANTA,Physical,35,100,15,,"Traps opponent, damaging them for 4-5 turns.",100
+Snarl,SINIESTRO,Special,55,95,15,TM85,Lowers opponent's Special Attack.,100
+Snatch,SINIESTRO,Status,?,?,10,,Steals the effects of the opponent's next move.,?
+Snipe Shot,AGUA,Special,80,100,15,,Ignores moves and abilities that draw in moves. High critical hit ratio.,?
+Snore,NORMAL,Special,50,100,15,TM24,Can only be used if asleep. May cause flinching.,30
+Soak,AGUA,Status,?,100,20,,Changes the target's type to water.,?
+Soft-Boiled,NORMAL,Status,?,?,10,,User recovers half its max HP.,?
+Solar Beam,PLANTA,Special,120,100,10,TM11,"Charges on first turn, attacks on second.",?
+Solar Blade,PLANTA,Physical,125,100,10,TM12,"Charges on first turn, attacks on second.",?
+Sonic Boom,NORMAL,Special,?,90,20,,Always inflicts 20 HP.,?
+Soul-Stealing 7-Star Strike,FANTASMA,Physical,195,?,1,,Marshadow-exclusive Z-Move.,?
+Spacial Rend,DRAGON,Special,100,95,5,,High critical hit ratio.,?
+Spark,ELECTRICO,Physical,65,100,20,,May paralyze opponent.,30
+Sparkling Aria,AGUA,Special,90,100,10,,Heals the burns of its target.,?
+Sparkly Swirl,HADA,Special,90,100,15,,Cures all status problems in the party Pok‚mon.,?
+Spectral Thief,FANTASMA,Physical,90,100,10,,"The user hides in the target's shadow, steals the target's stat boosts, and then attacks.",?
+Speed Swap,PSIQUICO,Status,?,?,10,TM62,The user exchanges Speed stats with the target.,?
+Spider Web,BICHO,Status,?,?,10,,Opponent cannot escape/switch.,?
+Spike Cannon,NORMAL,Physical,20,100,15,,Hits 2-5 times in one turn.,?
+Spikes,TIERRA,Status,?,?,20,,Hurts opponents when they switch into battle.,?
+Spiky Shield,PLANTA,Status,?,?,10,,Protects the user and inflicts damage on contact.,?
+Spirit Break,HADA,Physical,75,100,15,,Lowers opponent's Special Attack.,100
+Spirit Shackle,FANTASMA,Physical,80,100,10,,Prevents the opponent from switching out.,?
+Spit Up,NORMAL,Special,?,100,10,,Power depends on how many times the user performed Stockpile.,?
+Spite,FANTASMA,Status,?,100,10,,The opponent's last move loses 2-5 PP.,?
+Splash,NORMAL,Status,?,?,40,,Doesn't do ANYTHING.,?
+Splintered Stormshards,ROCA,Physical,190,?,1,,Lycanroc-exclusive Z-Move.,?
+Splishy Splash,AGUA,Special,90,100,15,,May paralyze opponent.,30
+Spore,PLANTA,Status,?,100,15,,Puts opponent to sleep.,?
+Spotlight,NORMAL,Status,?,?,15,,The user shines a spotlight on the target so that only the target will be attacked during the turn.,?
+Stealth Rock,ROCA,Status,?,?,20,,Damages opponent switching into battle.,?
+Steam Eruption,AGUA,Special,110,95,5,,May burn opponent.,30
+Steamroller,BICHO,Physical,65,100,20,,May cause flinching.,30
+Steel Beam,ACERO,Special,140,95,5,,User loses 50% of its HP.,?
+Steel Roller,ACERO,Physical,130,100,5,,Fails if no Terrain in effect.,?
+Steel Wing,ACERO,Physical,70,90,25,TM30,May raise user's Defense.,10
+Sticky Web,BICHO,Status,?,?,20,,Lowers opponent's Speed when switching into battle.,?
+Stockpile,NORMAL,Status,?,?,20,,Stores energy for use with Spit Up and Swallow.,?
+Stoked Sparksurfer,ELECTRICO,Special,175,?,1,,Alolan Raichu-exclusive Electric type Z-Move.,100
+Stomp,NORMAL,Physical,65,100,20,,May cause flinching.,30
+Stomping Tantrum,TIERRA,Physical,75,100,10,TM98,"Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles.",?
+Stone Edge,ROCA,Physical,100,80,5,,High critical hit ratio.,?
+Stored Power,PSIQUICO,Special,20,100,10,,Power increases when user's stats have been raised.,?
+Storm Throw,LUCHA,Physical,60,100,10,,Always results in a critical hit.,100
+Strange Steam,HADA,Special,90,95,10,,May confuse opponent.,20
+Strength,NORMAL,Physical,80,100,15,,,?
+Strength Sap,PLANTA,Status,?,100,10,,The user restores its HP by the same amount as the target's Attack stat. It also lowers the target's Attack stat.,100
+String Shot,BICHO,Status,?,95,40,,Sharply lowers opponent's Speed.,?
+Struggle,NORMAL,Physical,50,?,?,,Only usable when all PP are gone. Hurts the user.,?
+Struggle Bug,BICHO,Special,50,100,20,,Lowers opponent's Special Attack.,100
+Stuff Cheeks,NORMAL,Status,?,?,10,,"The user eats its held Berry, then sharply raises its Defense stat.",100
+Stun Spore,PLANTA,Status,?,75,30,,Paralyzes opponent.,?
+Submission,LUCHA,Physical,80,80,20,,User receives recoil damage.,?
+Substitute,NORMAL,Status,?,?,10,,Uses HP to creates a decoy that takes hits.,?
+Subzero Slammer,HIELO,?,?,?,1,,Ice type Z-Move.,?
+Sucker Punch,SINIESTRO,Physical,70,100,5,,"User attacks first, but only works if opponent is readying an attack.",?
+Sunny Day,FUEGO,Status,?,?,5,TM34,Makes it sunny for 5 turns.,?
+Sunsteel Strike,ACERO,Physical,100,100,5,,Ignores the target's ability.,?
+Super Fang,NORMAL,Physical,?,90,10,,Always takes off half of the opponent's HP.,?
+Superpower,LUCHA,Physical,120,100,5,,Lowers user's Attack and Defense.,100
+Supersonic,NORMAL,Status,?,55,20,,Confuses opponent.,?
+Supersonic Skystrike,VOLADOR,?,?,?,1,,Flying type Z-Move.,?
+Surf,AGUA,Special,90,100,15,,Hits all adjacent Pok‚mon.,?
+Surging Strikes,AGUA,Physical,25,100,5,,Always results in a critical hit and ignores stat changes.,?
+Swagger,NORMAL,Status,?,85,15,,"Opponent becomes confused, but its Attack is sharply raised.",?
+Swallow,NORMAL,Status,?,?,10,,"The more times the user has performed Stockpile, the more HP is recovered.",?
+Sweet Kiss,HADA,Status,?,75,10,,Confuses opponent.,?
+Sweet Scent,NORMAL,Status,?,100,20,,Lowers opponent's Evasiveness.,?
+Swift,NORMAL,Special,60,100,20,TM40,Ignores Accuracy and Evasiveness.,?
+Switcheroo,SINIESTRO,Status,?,100,10,,Swaps held items with the opponent.,?
+Swords Dance,NORMAL,Status,?,?,20,,Sharply raises user's Attack.,?
+Synchronoise,PSIQUICO,Special,120,100,10,,Hits any Pok‚mon that shares a type with the user.,?
+Synthesis,PLANTA,Status,?,?,5,,User recovers HP. Amount varies with the weather.,?
+Tackle,NORMAL,Physical,40,100,35,,,?
+Tail Glow,BICHO,Status,?,?,20,,Drastically raises user's Special Attack.,?
+Tail Slap,NORMAL,Physical,25,85,10,TM84,Hits 2-5 times in one turn.,?
+Tail Whip,NORMAL,Status,?,100,30,,Lowers opponent's Defense.,?
+Tailwind,VOLADOR,Status,?,?,15,,Doubles Speed for 4 turns.,?
+Take Down,NORMAL,Physical,90,85,20,,User receives recoil damage.,?
+Tar Shot,ROCA,Status,?,100,15,,Lowers the opponent's Speed and makes them weaker to Fire-type moves.,100
+Taunt,SINIESTRO,Status,?,100,20,,Opponent can only use moves that attack.,?
+Tearful Look,NORMAL,Status,?,?,20,,The user gets teary eyed to make the target lose its combative spirit. This lowers the target's Attack and Sp. Atk stats.,100
+Teatime,NORMAL,Status,?,?,10,,Forces all Pok‚mon on the field to eat their berries.,?
+Techno Blast,NORMAL,Special,120,100,5,,Type depends on the Drive being held.,?
+Tectonic Rage,TIERRA,?,?,?,1,,Ground type Z-Move.,?
+Teeter Dance,NORMAL,Status,?,100,20,,Confuses all Pok‚mon.,?
+Telekinesis,PSIQUICO,Status,?,?,15,,"Ignores opponent's Evasiveness for three turns, add Ground immunity.",?
+Teleport,PSIQUICO,Status,?,?,20,,Allows user to flee wild battles; also warps player to last Pok‚Center.,?
+Terrain Pulse,NORMAL,Special,50,100,10,,Type and power change depending on the Terrain in effect.,?
+Thief,SINIESTRO,Physical,60,100,25,TM23,Also steals opponent's held item.,?
+Thousand Arrows,TIERRA,Physical,90,100,10,,Makes Flying-type Pok‚mon vulnerable to Ground moves.,?
+Thousand Waves,TIERRA,Physical,90,100,10,,Opponent cannot flee or switch.,?
+Thrash,NORMAL,Physical,120,100,10,,User attacks for 2-3 turns but then becomes confused.,?
+Throat Chop,SINIESTRO,Physical,80,100,15,,Prevents use of sound moves for two turns.,100
+Thunder,ELECTRICO,Special,110,70,10,,May paralyze opponent.,30
+Thunder Cage,ELECTRICO,Special,80,90,15,,"Deals damage and traps opponent, damaging them for 4-5 turns.",?
+Thunder Fang,ELECTRICO,Physical,65,95,15,TM66,May cause flinching and/or paralyze opponent.,10
+Thunder Punch,ELECTRICO,Physical,75,100,15,TM05,May paralyze opponent.,10
+Thunder Shock,ELECTRICO,Special,40,100,30,,May paralyze opponent.,10
+Thunder Wave,ELECTRICO,Status,?,90,20,TM14,Paralyzes opponent.,?
+Thunderbolt,ELECTRICO,Special,90,100,15,,May paralyze opponent.,10
+Thunderous Kick,LUCHA,Physical,90,100,10,,Lowers opponent's Defense.,100
+Tickle,NORMAL,Status,?,100,20,,Lowers opponent's Attack and Defense.,?
+Topsy-Turvy,SINIESTRO,Status,?,?,20,,Reverses stat changes of opponent.,?
+Torment,SINIESTRO,Status,?,100,15,,Opponent cannot use the same move in a row.,?
+Toxic,VENENO,Status,?,90,10,,Badly poisons opponent.,?
+Toxic Spikes,VENENO,Status,?,?,20,,Poisons opponents when they switch into battle.,?
+Toxic Thread,VENENO,Status,?,100,20,,Lowers target's Speed.,100
+Transform,NORMAL,Status,?,?,10,,User takes on the form and attacks of the opponent.,?
+Tri Attack,NORMAL,Special,80,100,10,,"May paralyze, burn or freeze opponent.",20
+Trick,PSIQUICO,Status,?,100,10,,Swaps held items with the opponent.,?
+Trick Room,PSIQUICO,Status,?,?,5,TM70,Slower Pok‚mon move first in the turn for 5 turns.,?
+Trick-or-Treat,FANTASMA,Status,?,100,20,,Adds Ghost type to opponent.,?
+Triple Axel,HIELO,Physical,20,90,10,,Attacks thrice with more power each time.,?
+Triple Kick,LUCHA,Physical,10,90,10,,Hits thrice in one turn at increasing power.,?
+Trop Kick,PLANTA,Physical,70,100,15,,Lowers opponent's Attack.,100
+Trump Card,NORMAL,Special,?,100,5,,"The lower the PP, the higher the power.",?
+Twineedle,BICHO,Physical,25,100,20,,Hits twice in one turn. May poison opponent.,20
+Twinkle Tackle,HADA,?,?,?,1,,Fairy type Z-Move.,?
+Twister,DRAGON,Special,40,100,20,,May cause flinching. Hits Pok‚mon using Fly/Bounce with double power.,20
+U-turn,BICHO,Physical,70,100,20,TM56,User switches out immediately after attacking.,?
+Uproar,NORMAL,Special,90,100,10,,User attacks for 3 turns and prevents sleep.,?
+V-create,FUEGO,Physical,180,95,5,,"Lowers user's Defense, Special Defense and Speed.",100
+Vacuum Wave,LUCHA,Special,40,100,30,,User attacks first.,?
+Veevee Volley,NORMAL,Physical,?,100,20,,Power increases when player's bond is stronger.,?
+Venom Drench,VENENO,Status,?,100,20,,Lowers poisoned opponent's Special Attack and Speed.,100
+Venoshock,VENENO,Special,65,100,10,TM74,Inflicts double damage if the target is poisoned.,?
+Vine Whip,PLANTA,Physical,45,100,25,,,?
+Vise Grip,NORMAL,Physical,55,100,30,,,?
+Vital Throw,LUCHA,Physical,70,100,10,,"User attacks last, but ignores Accuracy and Evasiveness.",?
+Volt Switch,ELECTRICO,Special,70,100,20,TM80,User must switch out after attacking.,?
+Volt Tackle,ELECTRICO,Physical,120,100,15,,User receives recoil damage. May paralyze opponent.,10
+Wake-Up Slap,LUCHA,Physical,70,100,10,,"Power doubles if opponent is asleep, but wakes it up.",?
+Water Gun,AGUA,Special,40,100,25,,,?
+Water Pledge,AGUA,Special,80,100,10,,Added effects appear if preceded by Fire Pledge or succeeded by Grass Pledge.,?
+Water Pulse,AGUA,Special,60,100,20,,May confuse opponent.,20
+Water Shuriken,AGUA,Special,15,100,20,,Hits 2-5 times in one turn.,?
+Water Sport,AGUA,Status,?,?,15,,Weakens the power of Fire-type moves.,?
+Water Spout,AGUA,Special,150,100,5,,"The higher the user's HP, the higher the damage caused.",?
+Waterfall,AGUA,Physical,80,100,15,,May cause flinching.,20
+Weather Ball,NORMAL,Special,50,100,10,TM46,Move's power and type changes with the weather.,?
+Whirlpool,AGUA,Special,35,85,15,TM36,"Traps opponent, damaging them for 4-5 turns.",100
+Whirlwind,NORMAL,Status,?,?,20,,"In battles, the opponent switches. In the wild, the Pok‚mon runs.",?
+Wicked Blow,SINIESTRO,Physical,80,100,5,,Always results in a critical hit and ignores stat changes.,?
+Wide Guard,ROCA,Status,?,?,10,,Protects the user's team from multi-target attacks.,?
+Wild Charge,ELECTRICO,Physical,90,100,15,,User receives recoil damage.,?
+Will-O-Wisp,FUEGO,Status,?,85,15,TM38,Burns opponent.,?
+Wing Attack,VOLADOR,Physical,60,100,35,,,?
+Wish,NORMAL,Status,?,?,10,,The user recovers HP in the following turn.,?
+Withdraw,AGUA,Status,?,?,40,,Raises user's Defense.,?
+Wonder Room,PSIQUICO,Status,?,?,10,TM71,Swaps every Pok‚mon's Defense and Special Defense for 5 turns.,?
+Wood Hammer,PLANTA,Physical,120,100,15,,User receives recoil damage.,?
+Work Up,NORMAL,Status,?,?,30,,Raises user's Attack and Special Attack.,?
+Worry Seed,PLANTA,Status,?,100,10,,Changes the opponent's Ability to Insomnia.,?
+Wrap,NORMAL,Physical,15,90,20,,"Traps opponent, damaging them for 4-5 turns.",100
+Wring Out,NORMAL,Special,?,100,5,,"The higher the opponent's HP, the higher the damage.",?
+X-Scissor,BICHO,Physical,80,100,15,,,?
+Yawn,NORMAL,Status,?,?,10,,Puts opponent to sleep in the next turn.,?
+Zap Cannon,ELECTRICO,Special,120,50,5,,Paralyzes opponent.,100
+Zen Headbutt,PSIQUICO,Physical,80,90,15,,May cause flinching.,20
+Zing Zap,ELECTRICO,Physical,80,100,10,,May cause flinching.,30
+Zippy Zap,ELECTRICO,Physical,50,100,15,,Always results in a critical hit.,100
