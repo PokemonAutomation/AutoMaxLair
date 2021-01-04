@@ -361,6 +361,9 @@ class MaxLairInstance():
             # then we release the lock so the display thread can run while we complete the button press and subsequent delay
             self.lock.release()
 
+            # Clear extra characters from the serial buffer
+            self.com.reset_input_buffer()
+            
             # then we send the command to the microcontroller using the serial port
             self.com.write(character)
 
