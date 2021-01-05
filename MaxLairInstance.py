@@ -242,7 +242,7 @@ class MaxLairInstance():
                 if language == 'Spanish':#for now spanish is using english
                     string_to_match += pokemon.types[0] + pokemon.types[1]
                 if language == 'French':
-                    string_to_match += french_translation.translate_type[pokemon.types[0]] + french_translation.english_to_french_type[pokemon.types[1]]
+                    string_to_match += french_translation.translate_type[pokemon.types[0]] + french_translation.translate_type[pokemon.types[1]]
 
             # after building the identifying string, calculate how different it is from the OCRed string
             distance = enchant.utils.levenshtein(text, string_to_match)
