@@ -273,7 +273,7 @@ english_to_french_pokemon_name = {
     "Perrserker"    : "Berserkatt"  ,
     "Alcremie"      : "Charmilly"   ,
     "Falinks"       : "Hexadron"    ,
-    "Hexadron"      : "Wattapik"    ,
+    "Pincurchin"    : "Wattapik"    ,
     "Frosmoth"      : "Beldeneige"  ,
     "Indeedee"      : "Wimessir"    ,
     "Morpeko"       : "Morpeko"     ,
@@ -442,7 +442,8 @@ english_to_french_type = {
     "Steel"     : "Acier"       ,
     "Fairy"     : "Fee"         ,
     "Normal"    : "Normal"      ,
-    "Fire"      : "Feu"
+    "Fire"      : "Feu"         ,
+    ""          : ""
 }
 
 class MaxLairInstance():
