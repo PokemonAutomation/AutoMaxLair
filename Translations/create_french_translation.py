@@ -17,7 +17,7 @@ species_french_file = open("text_Species_fr.txt", "r")
 species_english_lines = species_english_file.readlines()
 species_french_lines = species_french_file.readlines()
 
-output_file.write("english_to_french_pokemon_name = {\n")
+output_file.write("translate_pokemon = {\n")
 for i in range(0, len(species_english_lines)):
     output_file.write('\t"{english_string}" : "{french_string}",\n'.format(english_string=species_english_lines[i].rstrip("\n"),french_string=species_french_lines[i].rstrip("\n")))
 output_file.write("}\n\n")
@@ -41,7 +41,7 @@ abilities_french_file = open("text_Abilities_fr.txt", "r")
 abilities_english_lines = abilities_english_file.readlines()
 abilities_french_lines = abilities_french_file.readlines()
 
-output_file.write("english_to_french_ability = {\n")
+output_file.write("translate_ability = {\n")
 for i in range(0, len(abilities_english_lines)):
     output_file.write('\t"{english_string}" : "{french_string}",\n'.format(english_string=abilities_english_lines[i].rstrip("\n"),french_string=abilities_french_lines[i].rstrip("\n")))
 # todo hack
@@ -68,7 +68,7 @@ types_french_file = open("text_Types_fr.txt", "r")
 types_english_lines = types_english_file.readlines()
 types_french_lines = types_french_file.readlines()
 
-output_file.write("english_to_french_types = {\n")
+output_file.write("translate_type = {\n")
 for i in range(0, len(types_english_lines)):
     output_file.write('\t"{english_string}" : "{french_string}",\n'.format(english_string=types_english_lines[i].rstrip("\n"),french_string=types_french_lines[i].rstrip("\n")))
 output_file.write('\t"" : ""\n')

@@ -204,6 +204,7 @@ class MaxLairInstance():
 
     def identify_pokemon(self,
                          name: str,
+                         language: str,
                          ability: str='',
                          types: str='') -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
@@ -221,9 +222,13 @@ class MaxLairInstance():
         for pokemon in self.rental_pokemon.values():
             # Build the composite identifying string with the same format as the OCRed text
             #   Note that some OCR strings omit the ability and others omit the types so don't include these identifiers in these cases
-            string_to_match = french_translation.english_to_french_pokemon_name[pokemon.name.split(' (')[0]]
+            if language == 'English':
+                string_to_match = pokemon.name.split(' (')[0]
+            if language == 'Spanish':#for now spanish is using english
+            if language == 'French':
+                string_to_match = french_translation.translate_pokemon[pokemon.name.split(' (')[0]]
+
             if ability != '':
-                string_to_match += french_translation.english_to_french_ability[pokemon.ability]
             if types != '':
                 string_to_match += french_translation.english_to_french_type[pokemon.types[0]] + french_translation.english_to_french_type[pokemon.types[1]]
 

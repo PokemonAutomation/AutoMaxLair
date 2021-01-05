@@ -56,7 +56,7 @@ def join(inst):
     inst.log('Run #' + str(inst.runs + 1) + ' started!')
     inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
     # Read Pokemon names from specified regions
-    pokemon_list = inst.read_selectable_pokemon('join')
+    pokemon_list = inst.read_selectable_pokemon('join', language)
     pokemon_scores = []
     for pokemon in pokemon_list:
         # Match each name to a rental Pokemon object with preconfigured moves, stats, etc.
@@ -147,7 +147,7 @@ def battle(inst) -> str:
                 else:
                     # 
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
-                    inst.opponent = inst.read_selectable_pokemon('battle')[0]
+                    inst.opponent = inst.read_selectable_pokemon('battle', language)[0]
                     inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 1))
                 
                 # If our Pokemon is Ditto, transform it into the boss.
@@ -217,7 +217,7 @@ def catch(inst):
     inst.record_ball_use()
     if inst.num_caught < 4:
         # Check caught rental Pokemon and decide whether to swap for it
-        pokemon = inst.read_selectable_pokemon('catch')[0]
+        pokemon = inst.read_selectable_pokemon('catch', language)[0]
         # Give the new and existing Pokemon a score based on their performance against the remainder of the run (including the boss)
         rental_weight = 3 - inst.num_caught
         boss_weight = 2
