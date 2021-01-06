@@ -45,7 +45,7 @@ output_file.write("translate_ability = {\n")
 for i in range(0, len(abilities_english_lines)):
     output_file.write('\t"{english_string}" : "{spanish_string}",\n'.format(english_string=abilities_english_lines[i].rstrip("\n"),spanish_string=abilities_spanish_lines[i].rstrip("\n")))
 # todo hack
-output_file.write('\t"Compoundeyes" : "Oeil Compose"\n')
+output_file.write('\t"Compoundeyes" : "Ojo Compuesto"\n')
 # todo hack
 output_file.write("}\n\n")
 
