@@ -20,6 +20,7 @@ COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
 BOSS = config['default']['BOSS']
+PATH_INDEX = int(config['default']['PATH_INDEX'])
 BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
 LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
@@ -54,7 +55,13 @@ PHRASES = {'FIGHT_1': config[language]['FIGHT_1'],
 def join(inst):
     """Join a Dynamax Adventure and choose a Pokemon."""
     inst.log('Run #' + str(inst.runs + 1) + ' started!')
-    inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
+    inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
+
+    # select the right path
+    for x in range(PATH_INDEX):
+        inst.push_buttons((b'v', 1))
+  
+    inst.push_buttons((b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
     # Read Pokemon names from specified regions
     pokemon_list = inst.read_selectable_pokemon('join', language)
     pokemon_scores = []
@@ -292,7 +299,10 @@ def select_pokemon(inst):
         if take_pokemon:
             inst.push_buttons((b'b', 3), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5), (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2))
         else:
-            inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2), (b'a', 11), (b'a', 1), (b'a', 2))
+            inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2))
+            if language == 'French':# one more line in french translation
+                inst.push_buttons((b'a', 2))
+            inst.push_buttons((b'a', 11), (b'a', 1), (b'a', 2))
         inst.record_ore_reward()
         # The button press sequences differ depending on how many Pokemon were defeated
         if inst.num_caught > 1:
