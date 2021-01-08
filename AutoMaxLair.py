@@ -55,7 +55,7 @@ PHRASES = {'FIGHT_1': config[language]['FIGHT_1'],
 def join(inst):
     """Join a Dynamax Adventure and choose a Pokemon."""
     inst.log('Run #' + str(inst.runs + 1) + ' started!')
-    inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
+    inst.push_buttons((b'b', 2), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
 
     # select the right path
     for x in range(PATH_INDEX):
@@ -297,7 +297,10 @@ def select_pokemon(inst):
     # Wrap up at the end of the run        
     if not reset_game:
         if take_pokemon:
-            inst.push_buttons((b'b', 3), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5), (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2))
+            inst.push_buttons((b'b', 3), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5))
+            if language == 'French':# one more line in french translation
+                inst.push_buttons((b'a', 2))
+            inst.push_buttons((b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2))
         else:
             inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2))
             if language == 'French':# one more line in french translation
@@ -306,7 +309,8 @@ def select_pokemon(inst):
         inst.record_ore_reward()
         # The button press sequences differ depending on how many Pokemon were defeated
         if inst.num_caught > 1:
-            inst.push_buttons((b'a', 2))
+            if language != 'French':# one less line in french translation
+                inst.push_buttons((b'a', 2))
             if inst.num_caught == 4:
                 inst.push_buttons((b'a', 2), (b'a', 2), (b'a', 2))
     else:
