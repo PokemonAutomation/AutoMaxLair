@@ -1171,7 +1171,7 @@ translate_ability = {
 	"Grim Neigh" : "Relincho Negro",
 	"As One" : "Unidad Ecuestre",
 	"As One" : "Unidad Ecuestre",
-	"Compoundeyes" : "Oeil Compose"
+	"Compoundeyes" : "Ojo Compuesto"
 }
 
 translate_type = {
