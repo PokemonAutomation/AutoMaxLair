@@ -6,7 +6,7 @@
 import cv2, time, pytesseract, enchant, pickle, sys
 from datetime import datetime
 from typing import TypeVar, Dict, List, Tuple
-from Translations import french_translation
+from Translations import french_translation, spanish_translation
 Pokemon = TypeVar('Pokemon')
 Move = TypeVar('Move')
 Serial = TypeVar('serial.Serial')
@@ -225,7 +225,7 @@ class MaxLairInstance():
             if language == 'English':
                 string_to_match = pokemon.name.split(' (')[0]
             if language == 'Spanish':#for now spanish is using english
-                string_to_match = pokemon.name.split(' (')[0]
+                string_to_match = spanish_translation.translate_pokemon[pokemon.name.split(' (')[0]]
             if language == 'French':
                 string_to_match = french_translation.translate_pokemon[pokemon.name.split(' (')[0]]
 
@@ -233,14 +233,14 @@ class MaxLairInstance():
                 if language == 'English':
                     string_to_match += pokemon.ability
                 if language == 'Spanish':#for now spanish is using english
-                    string_to_match += pokemon.ability
+                    string_to_match += spanish_translation.translate_pokemon[pokemon.ability]
                 if language == 'French':
                     string_to_match += french_translation.translate_ability[pokemon.ability]
             if types != '':
                 if language == 'English':
                     string_to_match += pokemon.types[0] + pokemon.types[1]
                 if language == 'Spanish':#for now spanish is using english
-                    string_to_match += pokemon.types[0] + pokemon.types[1]
+                    string_to_match += spanish_translation.translate_pokemon[pokemon.types[0]] + spanish_translation.translate_pokemon[pokemon.types[1]]
                 if language == 'French':
                     string_to_match += french_translation.translate_type[pokemon.types[0]] + french_translation.translate_type[pokemon.types[1]]
 

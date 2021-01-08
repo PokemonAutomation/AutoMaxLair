@@ -47,8 +47,7 @@ PHRASES = {'FIGHT_1': config[language]['FIGHT_1'],
             'CATCH': config[language]['CATCH'],
             'CATCH_2': config[language]['CATCH_2'],
             'LOSS': config[language]['LOSS'],
-            'FAINT': config[language]['FAINT'],
-            'PRESSURE': config[language]['PRESSURE']}
+            'FAINT': config[language]['FAINT']}
 
 
 
@@ -161,6 +160,8 @@ def battle(inst) -> str:
                 # TODO: Ditto's HP does not change when transformed which is not currently reflected.
                 if inst.pokemon.name == 'Ditto':
                     inst.pokemon = copy(inst.opponent)
+                    inst.pokemon.moves = inst.pokemon.moves[0:4]
+                    inst.pokemon.max_moves = inst.pokemon.max_moves[0:4]
                     inst.pokemon.name = 'Ditto'
                     inst.pokemon.PP = [5,5,5,5]
 
@@ -206,7 +207,7 @@ def battle(inst) -> str:
                 inst.push_buttons((b'v', 1))
                 inst.move_index = (inst.move_index + 1) % 4
             inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'b', 1), (b'b', 1))
-            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != inst.phrases['PRESSURE'] else 2
+            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != 'Pressure' else 2
         else:
             # Press B which can speed up dialogue
             inst.push_buttons((b'b', 0.005))
