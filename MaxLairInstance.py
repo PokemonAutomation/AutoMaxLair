@@ -1,9 +1,15 @@
 #   MaxLairInstance
 #       Eric Donders
-#       Contributions from Miguel Tavera and Discord user denvoros
-#       2020-11-20
+#       Contributions from Miguel Tavera and Discord users denvoros and pirofpi
+#       Last updated 2021-01-08
+#       Created 2020-11-20
 
-import cv2, time, pytesseract, enchant, pickle, sys
+import cv2
+import time
+import pytesseract
+import enchant
+import pickle
+import sys
 from datetime import datetime
 from typing import TypeVar, Dict, List, Tuple
 Pokemon = TypeVar('Pokemon')
@@ -13,7 +19,11 @@ VideoCapture = TypeVar('cv2.VideoCapture')
 DateTime = TypeVar('datetime.datetime')
 Image = TypeVar('cv2 image')
 
+
 class MaxLairInstance():
+    """An object for storing and processing information related to a Dynamax
+    Adventure in Pokemon Sword and Shield: the Crown Tundra.
+    """
     def __init__(self,
                  boss: str,
                  balls: int,
@@ -87,11 +97,10 @@ class MaxLairInstance():
         self.item_rect_4 = ((0.549,0.3565), (0.745,0.4065))
         self.item_rect_5 = ((0.549,0.4330), (0.745,0.4830))
 
-
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
         self.pokemon = None
-        self.HP = 1 # 1 = 100%
+        self.HP = 1  # 1 = 100%
         self.num_caught = 0
         self.lives = 4
         self.reset_stage()
@@ -113,7 +122,6 @@ class MaxLairInstance():
                 self.pokemon = self.rental_pokemon['Ditto']
             self.pokemon.dynamax = False
         
-
     def get_frame(self,
                   stage: str='') -> Image:
         """Get an annotated image of the current Switch output."""
@@ -167,9 +175,8 @@ class MaxLairInstance():
             cv2.rectangle(img, (round(self.item_rect_5[0][0]*w)-2,round(self.item_rect_5[0][1]*h)-2),
                           (round(self.item_rect_5[1][0]*w)+2,round(self.item_rect_5[1][1]*h)+2), (0,255,0), 2)
 
-        # Return the scaled and annotated image
+        # Return and annotated image.
         return img
-
 
     def read_text(self,
                   img: Image,
@@ -189,16 +196,17 @@ class MaxLairInstance():
                   round(section[0][0]*w):round(section[1][0]*w)]
         #cv2.imshow('Text Area', img) # DEBUG
 
-        # then, read text using Tesseract
-        #   Note that we need to check for the main thread exiting here
+        # Then, read text using Tesseract.
+        # Note that we need to check for the main thread exiting here.
         if self.exit_flag.is_set():
             sys.exit()
-        # we release the lock so that the display thread can continue while Tesseract processes the image
+        # We release the lock so that the display thread can continue while
+        # Tesseract processes the image.
         self.lock.release()
         text = pytesseract.image_to_string(img, lang=language, config=segmentation_mode)
         self.lock.acquire()
 
-        # finally, return the OCRed text
+        # Finally, return the OCRed text.
         return text
 
     def identify_pokemon(self,
@@ -206,36 +214,45 @@ class MaxLairInstance():
                          ability: str='',
                          types: str='') -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
-        # Strip line breaks from OCRed text and combine name, ability, and types to make a composite identifying string
+        # Strip line breaks from OCRed text and combine name, ability, and types
+        # to make a composite identifying string.
         text = name.replace('\n','')+ability.replace('\n','')+types.replace('\n','')
 
-        # then initialize the matched text variable in case it is somehow not assigned later
+        # Then, initialize the matched text variable in case it is somehow not
+        # assigned later.
         matched_text = ''
 
-        # then initialize values that will store the best match of the OCRed text
+        # Thenn initialize values that will store the best match of the OCRed
+        # text.
         best_match = None
         match_value = 1000
 
-        # then loop through all the possible rental pokemon looking for the best match with the OCRed text
+        # Then, loop through all the possible rental pokemon looking for the
+        # best match with the OCRed text.
         for pokemon in self.rental_pokemon.values():
-            # Build the composite identifying string with the same format as the OCRed text
-            #   Note that some OCR strings omit the ability and others omit the types so don't include these identifiers in these cases
+            # Build the composite identifying string with the same format as the
+            # OCRed text.
+            # Note that some OCR strings omit the ability and others omit the
+            # types so don't include these identifiers in these cases.
             string_to_match = pokemon.name.split(' (')[0]
             if ability != '':
                 string_to_match += pokemon.ability
             if types != '':
                 string_to_match += pokemon.types[0] + pokemon.types[1]
 
-            # after building the identifying string, calculate how different it is from the OCRed string
+            # After building the identifying string, calculate how different it
+            # is from the OCRed string.
             distance = enchant.utils.levenshtein(text, string_to_match)
 
-            # then update the best match values if the match is better than the previous best match
+            # Then, update the best match values if the match is better than the
+            # previous best match.
             if distance < match_value:
                 match_value = distance
                 best_match = pokemon
                 matched_text = string_to_match
 
-        # raise a warning if the OCRed text didn't closely match any stored value
+        # Raise a warning if the OCRed text didn't closely match any stored
+        # value.
         if match_value > len(text)/3:
             self.log('WARNING: could not find a good match for Pokemon: "'+text+'"')
 
@@ -248,10 +265,10 @@ class MaxLairInstance():
     def read_selectable_pokemon(self,
                                 stage: str) -> List[Pokemon]:
         """Return a list of available Pokemon names."""
-        # Fetch the image from the Switch output
+        # Fetch the image from the Switch output.
         image = self.get_frame()
 
-        # Get a list of Pokemon names present, depending on stage
+        # Get a list of Pokemon names present, depending on stage.
         pokemon_names = []
         abilities = []
         types = []
@@ -274,12 +291,15 @@ class MaxLairInstance():
             type_2 = self.read_text(image, self.type_rect_2, threshold=False, invert=True, language=self.tesseract_language, segmentation_mode='--psm 8').strip().title()
             types.append(type_1+type_2)
 
-        # Identify the Pokemon based on its name and ability/types, where relevant
+        # Identify the Pokemon based on its name and ability/types, where
+        # relevant.
         pokemon_list = []
         for i in range(len(pokemon_names)):
-            pokemon_list.append(self.identify_pokemon(pokemon_names[i], abilities[i], types[i]))
+            pokemon_list.append(self.identify_pokemon(pokemon_names[i],
+                abilities[i], types[i])
+            )
 
-        # Return the list of Pokemon
+        # Return the list of Pokemon.
         return pokemon_list
 
     def check_rect_HSV_match(self,
@@ -288,23 +308,29 @@ class MaxLairInstance():
                             upper_threshold: Tuple[int, int, int],
                             mean_value_threshold: int) -> bool:
         """Check a specified section of the screen for values within a certain HSV range."""
-        # Fetch, convert, crop, and threshold image so the feature of interest is white (value 255) and everything else appears black (0)
+        # Fetch, convert, crop, and threshold image so the feature of interest
+        # is white (value 255) and everything else appears black (0)
         img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1]*h):round(rect[1][1]*h),
                          round(rect[0][0]*w):round(rect[1][0]*w)]
-        measured_value = cv2.inRange(cropped_area, lower_threshold, upper_threshold).mean()
+        measured_value = cv2.inRange(cropped_area, lower_threshold,
+            upper_threshold).mean()
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
     
     def check_shiny(self) -> bool:
         """Detect whether a Pokemon is shiny by looking for the icon in the summary screen."""
-        return self.check_rect_HSV_match(self.shiny_rect, (0,100,0), (180,255,255), 5)
+        return self.check_rect_HSV_match(self.shiny_rect, (0,100,0),
+            (180,255,255), 5
+        )
 
     def check_dynamax_available(self) -> bool:
         """Detect whether Dynamax is available for the player."""
-        return self.check_rect_HSV_match(self.dmax_symbol_rect, (0, 0, 200), (180, 50, 255), 10)
+        return self.check_rect_HSV_match(self.dmax_symbol_rect, (0, 0, 200),
+            (180, 50, 255), 10
+        )
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
@@ -312,7 +338,8 @@ class MaxLairInstance():
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of the game."""
-        return self.read_text(self.get_frame(), self.ball_rect, threshold=False, invert=True, language='eng', segmentation_mode='--psm 8').strip()
+        return self.read_text(self.get_frame(), self.ball_rect, threshold=False,
+            invert=True, language='eng', segmentation_mode='--psm 8').strip()
         
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the number of pokemon caught."""
@@ -327,12 +354,16 @@ class MaxLairInstance():
 
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
-        return False if (self.base_ball == self.legendary_ball and self.base_balls < 4) or (self.base_balls < 3) or (self.legendary_balls < 1) else True
+        return not ((self.base_ball == self.legendary_ball and self.base_balls
+            < 4) or (self.base_balls < 3) or (self.legendary_balls < 1)
+        )
 
     def record_ore_reward(self) -> None:
         """Award Dynite Ore depending on how the run went."""
         self.consecutive_resets = 0
-        self.dynite_ore += self.num_caught + (2 if self.num_caught == 4 else 0) + (2 if self.lives == 4 else 0)
+        self.dynite_ore += (self.num_caught + (2 if self.num_caught == 4 else 0)
+            + (2 if self.lives == 4 else 0)
+        )
         self.dynite_ore = min(self.dynite_ore, 999)
 
     def calculate_ore_cost(self, num_resets: int) -> int:
@@ -416,4 +447,3 @@ class MaxLairInstance():
             # Save a screenshot
             self.num_saved_images += 1
             cv2.imwrite(self.filename[:-8] + '_cap_'+str(self.num_saved_images)+'.png', frame)
-
