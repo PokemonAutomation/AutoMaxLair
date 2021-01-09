@@ -406,27 +406,19 @@ def select_pokemon(inst) -> str:
                 (b'a', 11), (b'a', 1), (b'a', 2)
             )
         inst.record_ore_reward()
-        # The button press sequences differ depending on how many Pokemon were
-        # defeated and are further modified by the language.
-        # Therefore, press A until the final dialogue appears.
-        while inst.phrases['END_PHRASE'] not in inst.read_text(inst.get_frame(),
-            ((0, 0.6), (1, 1)), threshold=False):
-            inst.push_buttons((b'a', 1.5))
-        inst.push_buttons((b'a', 1.5))
     else:
         inst.log('Resetting game...')
         inst.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
         inst.push_buttons((b'h', 2), (b'x', 2))
-        # Dialogue changes a lot depending on the number of resets as well as
-        # the language.
-        # Therefore, press A until the starting dialogue is detected, then back
-        # out.
-        while inst.phrases['START_PHRASE'] not in inst.read_text(inst.get_frame(),
-            ((0, 0.6), (1, 1)), threshold=False):
-            inst.push_buttons((b'a', 1.5))
-        inst.push_buttons((b'b', 1.5), (b'b', 1.5))
+    # The button press sequences differ depending on how many Pokemon were
+    # defeated and are further modified by the language.
+    # Therefore, press A until the starting dialogue appears, then back out.
+    while inst.phrases['START_PHRASE'] not in inst.read_text(inst.get_frame(),
+        ((0, 0.6), (1, 1)), threshold=False):
+        inst.push_buttons((b'a', 1.5))
+    inst.push_buttons((b'b', 1.5), (b'b', 1.5))
     
     # Update statistics and reset stored information about the complete run.
     inst.wins += 1 if inst.num_caught == 4 else 0
