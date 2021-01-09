@@ -1171,7 +1171,7 @@ translate_ability = {
 	"Grim Neigh" : "흑의울음",
 	"As One" : "혼연일체",
 	"As One" : "혼연일체",
-	"Compoundeyes" : "Oeil Compose"
+	"Compoundeyes" : "복안"
 }
 
 translate_type = {

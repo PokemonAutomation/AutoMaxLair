@@ -71,7 +71,7 @@ def join(inst) -> str:
     # Next, read what rental Pokemon are available to choose.
     # Note that pokemon_list contains preconfigured Pokemon objects with types,
     # abilities, stats, moves, et cetera.
-    pokemon_list = inst.read_selectable_pokemon('join')
+    pokemon_list = inst.read_selectable_pokemon('join', language)
     pokemon_scores = []
 
     # Then, assign a score to each of the Pokemon based on how it is estimated
@@ -266,7 +266,7 @@ def battle(inst) -> str:
             inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1),
                 (b'a', 0.5), (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
             )
-            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != inst.phrases['PRESSURE'] else 2
+            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != 'Pressure' else 2
         else:
             # Press B which can speed up dialogue
             inst.push_buttons((b'b', 0.005))
@@ -402,31 +402,21 @@ def select_pokemon(inst) -> str:
                 (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2)
             )
         else:
-            inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2),
-                (b'a', 11), (b'a', 1), (b'a', 2)
-            )
+            inst.push_buttons((b'b', 3), (b'b', 1))
         inst.record_ore_reward()
-        # The button press sequences differ depending on how many Pokemon were
-        # defeated and are further modified by the language.
-        # Therefore, press A until the final dialogue appears.
-        while inst.phrases['END_PHRASE'] not in inst.read_text(inst.get_frame(),
-            ((0, 0.6), (1, 1)), threshold=False):
-            inst.push_buttons((b'a', 1.5))
-        inst.push_buttons((b'a', 1.5))
     else:
         inst.log('Resetting game...')
         inst.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
         inst.push_buttons((b'h', 2), (b'x', 2))
-        # Dialogue changes a lot depending on the number of resets as well as
-        # the language.
-        # Therefore, press A until the starting dialogue is detected, then back
-        # out.
-        while inst.phrases['START_PHRASE'] not in inst.read_text(inst.get_frame(),
-            ((0, 0.6), (1, 1)), threshold=False):
-            inst.push_buttons((b'a', 1.5))
-        inst.push_buttons((b'b', 1.5), (b'b', 1.5))
+    # The button press sequences differ depending on how many Pokemon were
+    # defeated and are further modified by the language.
+    # Therefore, press A until the starting dialogue appears, then back out.
+    while inst.phrases['START_PHRASE'] not in inst.read_text(inst.get_frame(),
+        ((0, 0.6), (1, 1)), threshold=False):
+        inst.push_buttons((b'a', 1.5))
+    inst.push_buttons((b'b', 1.5), (b'b', 1.5))
     
     # Update statistics and reset stored information about the complete run.
     inst.wins += 1 if inst.num_caught == 4 else 0
