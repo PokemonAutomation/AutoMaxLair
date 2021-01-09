@@ -222,7 +222,7 @@ def select_best_move(attacker: Pokemon, defender: Pokemon, teammates: Dict[str, 
     """Return the index of the move that the attacker should use against the defender."""
     best_score = -100
     best_index = 0
-    for i in range(3):
+    for i in range(len(attacker.moves)):
         if attacker.PP[i] > 0:
             score = calculate_move_score(attacker, i, defender, teammates=teammates)
             if score > best_score or i == 0:
