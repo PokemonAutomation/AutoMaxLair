@@ -34,6 +34,7 @@ COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
 BOSS = config['default']['BOSS']
+PATH_INDEX = int(config['default']['PATH_INDEX'])
 BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
 LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
@@ -53,17 +54,19 @@ TESSERACT_LANG_NAME = config[language]['TESSERACT_LANG_NAME']
 
 PHRASES = config[language]
 
-
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
     # Start a new Dynamax Adventure.
     # 
     # First, start a new run by talking to the scientist in the Max Lair.
     inst.log('Run #' + str(inst.runs + 1) + ' started!')
-    inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1.5), (b'a', 1.5),
-        (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5),
-        (b'a', 4), (b'v', 1.5), (b'a', 5)
-    )
+    inst.push_buttons((b'b', 2), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
+
+    # select the right path
+    for __ in range(PATH_INDEX):
+        inst.push_buttons((b'v', 1))
+  
+    inst.push_buttons((b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
 
     # Next, read what rental Pokemon are available to choose.
     # Note that pokemon_list contains preconfigured Pokemon objects with types,
@@ -183,7 +186,7 @@ def battle(inst) -> str:
                 else:
                     # 
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
-                    inst.opponent = inst.read_selectable_pokemon('battle')[0]
+                    inst.opponent = inst.read_selectable_pokemon('battle', language)[0]
                     inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 2))
                 
                 # If our Pokemon is Ditto, transform it into the boss.
@@ -259,6 +262,7 @@ def battle(inst) -> str:
             for _ in range((best_move_index - inst.move_index + 4) % 4):
                 inst.push_buttons((b'v', 1))
                 inst.move_index = (inst.move_index + 1) % 4
+
             inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1),
                 (b'a', 0.5), (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
             )
@@ -287,7 +291,7 @@ def catch(inst) -> str:
         # Pokemon objects with types, abilities, stats, moves, et cetera.
         # 
         # In this stage the list contains only 1 item.
-        pokemon = inst.read_selectable_pokemon('catch')[0]
+        pokemon = inst.read_selectable_pokemon('catch', language)[0]
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more

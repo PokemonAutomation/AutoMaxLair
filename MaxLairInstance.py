@@ -12,6 +12,7 @@ import pickle
 import sys
 from datetime import datetime
 from typing import TypeVar, Dict, List, Tuple
+from Translations import french_translation, spanish_translation
 Pokemon = TypeVar('Pokemon')
 Move = TypeVar('Move')
 Serial = TypeVar('serial.Serial')
@@ -211,6 +212,7 @@ class MaxLairInstance():
 
     def identify_pokemon(self,
                          name: str,
+                         language: str,
                          ability: str='',
                          types: str='') -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
@@ -234,11 +236,27 @@ class MaxLairInstance():
             # OCRed text.
             # Note that some OCR strings omit the ability and others omit the
             # types so don't include these identifiers in these cases.
-            string_to_match = pokemon.name.split(' (')[0]
+            if language == 'English':
+                string_to_match = pokemon.name.split(' (')[0]
+            if language == 'Spanish':#for now spanish is using english
+                string_to_match = spanish_translation.translate_pokemon[pokemon.name.split(' (')[0]]
+            if language == 'French':
+                string_to_match = french_translation.translate_pokemon[pokemon.name.split(' (')[0]]
+
             if ability != '':
-                string_to_match += pokemon.ability
+                if language == 'English':
+                    string_to_match += pokemon.ability
+                if language == 'Spanish':#for now spanish is using english
+                    string_to_match += spanish_translation.translate_pokemon[pokemon.ability]
+                if language == 'French':
+                    string_to_match += french_translation.translate_ability[pokemon.ability]
             if types != '':
-                string_to_match += pokemon.types[0] + pokemon.types[1]
+                if language == 'English':
+                    string_to_match += pokemon.types[0] + pokemon.types[1]
+                if language == 'Spanish':#for now spanish is using english
+                    string_to_match += spanish_translation.translate_pokemon[pokemon.types[0]] + spanish_translation.translate_pokemon[pokemon.types[1]]
+                if language == 'French':
+                    string_to_match += french_translation.translate_type[pokemon.types[0]] + french_translation.translate_type[pokemon.types[1]]
 
             # After building the identifying string, calculate how different it
             # is from the OCRed string.
@@ -263,7 +281,8 @@ class MaxLairInstance():
         return best_match
 
     def read_selectable_pokemon(self,
-                                stage: str) -> List[Pokemon]:
+                                stage: str,
+                                language: str) -> List[Pokemon]:
         """Return a list of available Pokemon names."""
         # Fetch the image from the Switch output.
         image = self.get_frame()
@@ -295,6 +314,7 @@ class MaxLairInstance():
         # relevant.
         pokemon_list = []
         for i in range(len(pokemon_names)):
+            pokemon_list.append(self.identify_pokemon(pokemon_names[i], language, abilities[i], types[i]))
             pokemon_list.append(self.identify_pokemon(pokemon_names[i],
                 abilities[i], types[i])
             )
