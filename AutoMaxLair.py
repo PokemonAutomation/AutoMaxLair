@@ -15,6 +15,7 @@ import pickle
 import enchant
 import configparser
 import threading
+import re
 from datetime import datetime
 from copy import copy, deepcopy
 from MaxLairInstance import MaxLairInstance
@@ -122,19 +123,19 @@ def detect(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True,
             language=inst.tesseract_language
         )
-        if inst.phrases['FIGHT_1'] in text or inst.phrases['FIGHT_2'] in text:
+        if re.search(inst.phrases['FIGHT'], text) != None:
             # Battle has started and the move selection screen is up
             inst.log('Battle starting...')
             return 'battle'
-        elif inst.phrases['BACKPACKER'] in text:
+        elif re.search(inst.phrases['BACKPACKER'], text) != None:
             # Backpacker encountered so choose an item
             inst.log('Backpacker encountered...')
             return 'backpacker'
-        elif inst.phrases['SCIENTIST'] in text:
+        elif re.search(inst.phrases['SCIENTIST'], text) != None:
             # Scientist appeared to deal with that
             inst.log('Scientist encountered...')
             return 'scientist'
-        elif inst.phrases['PATH'] in text:
+        elif re.search(inst.phrases['PATH'], text) != None:
             # Fork in the path appeared to choose where to go
             inst.log('Choosing a path...')
             return 'path'
@@ -154,26 +155,26 @@ def battle(inst) -> str:
         )  
         
         # then check the text for key phrases that inform the bot what to do next
-        if inst.phrases['CATCH'] in text or inst.phrases['CATCH_2'] in text:
+        if re.search(inst.phrases['CATCH'], text) != None:
             inst.log('Catching boss...')
             inst.reset_stage()
             return 'catch'
-        elif inst.phrases['FAINT'] in text:
+        elif re.search(inst.phrases['FAINT'], text) != None:
             inst.log('Pokemon fainted...')
             inst.lives -= 1
             inst.push_buttons((b'0', 4))
-        elif inst.phrases['LOSS'] in text:
+        elif re.search(inst.phrases['LOSS'], text) != None:
             inst.log('You lose :(. Quitting...')
             inst.reset_stage()
             inst.push_buttons((b'0', 7))
             return 'select_pokemon'  # Go to quit sequence
-        elif inst.phrases['CHEER'] in text:
+        elif re.search(inst.phrases['CHEER'], text) != None:
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
                 inst.dmax_timer = 0
             inst.push_buttons((b'a', 1.5))
-        elif inst.phrases['FIGHT_1'] in text:
+        elif re.search(inst.phrases['FIGHT'], text) != None:
             # Before the bot makes a decision, it needs to know what the boss
             # is.
             if inst.opponent is None:
