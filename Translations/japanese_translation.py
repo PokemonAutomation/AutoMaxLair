@@ -1171,7 +1171,7 @@ translate_ability = {
 	"Grim Neigh" : "くろのいななき",
 	"As One" : "じんばいったい",
 	"As One" : "じんばいったい",
-	"Compoundeyes" : "Oeil Compose"
+	"Compoundeyes" : "ふくがん"
 }
 
 translate_type = {

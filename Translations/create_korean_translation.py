@@ -45,7 +45,7 @@ output_file.write("translate_ability = {\n")
 for i in range(0, len(abilities_english_lines)):
     output_file.write('\t"{english_string}" : "{korean_string}",\n'.format(english_string=abilities_english_lines[i].rstrip("\n"),korean_string=abilities_korean_lines[i].rstrip("\n")))
 # todo hack
-output_file.write('\t"Compoundeyes" : "Oeil Compose"\n')
+output_file.write('\t"Compoundeyes" : "복안"\n')
 # todo hack
 output_file.write("}\n\n")
 

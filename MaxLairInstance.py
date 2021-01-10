@@ -27,14 +27,14 @@ class MaxLairInstance():
     """
     def __init__(self,
                  boss: str,
-                 balls: int,
+                 balls: Tuple[str, int, str, int],
                  com: Serial,
                  cap: Serial,
                  video_scale: float,
                  lock,
                  exit_flag,
                  datetime: DateTime,
-                 pokemon_data_paths: Tuple[str, str, str, str],
+                 pokemon_data_paths: Tuple[str, str, str, str, str],
                  phrases,
                  tesseract_language: str,
                  mode: str,
@@ -314,9 +314,8 @@ class MaxLairInstance():
         # relevant.
         pokemon_list = []
         for i in range(len(pokemon_names)):
-            pokemon_list.append(self.identify_pokemon(pokemon_names[i], language, abilities[i], types[i]))
             pokemon_list.append(self.identify_pokemon(pokemon_names[i],
-                abilities[i], types[i])
+                language, abilities[i], types[i])
             )
 
         # Return the list of Pokemon.
