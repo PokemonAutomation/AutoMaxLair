@@ -98,6 +98,9 @@ def join(inst) -> str:
     inst.pokemon = pokemon_list[selection_index]
     inst.push_buttons((b'a',27))
     inst.log('Choosing a path...')
+
+    inst.caught_pokemon = []
+
     return 'path'
 
 
@@ -315,6 +318,8 @@ def catch(inst) -> str:
         inst.log('Score for ' + pokemon.name + ':\t%0.2f' % score)
         inst.log('Score for ' + inst.pokemon.name + ':\t%0.2f' % existing_score)
 
+        inst.caught_pokemon.append(pokemon.name)
+
         # Compare the scores for the two options and choose the best one.
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
@@ -330,6 +335,7 @@ def catch(inst) -> str:
     # If the final boss was the caught Pokemon, wrap up the run and check the
     # Pokemon caught along the way.
     else:
+        inst.caught_pokemon.append(inst.boss)
         inst.push_buttons((b'0',10))
         inst.log('Congratulations! Checking the haul from this run...')
         return 'select_pokemon'
@@ -374,7 +380,9 @@ def select_pokemon(inst) -> str:
             inst.log('''******************************
                 \n\nShiny found!\n\n******************************'''
             )
+            inst.log('Shiny ' + inst.caught_pokemon[i] + ' will be kept')
             inst.shinies_found += 1
+            inst.caught_shinies.append(inst.caught_pokemon[i])
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if inst.num_caught == 4 and i == 0:

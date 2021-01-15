@@ -57,6 +57,7 @@ class MaxLairInstance():
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
+        self.caught_shinies = []
         self.consecutive_resets = 0
 
         # Video capture and serial communication objects
@@ -446,12 +447,19 @@ class MaxLairInstance():
         width = frame.shape[1]
 
         # Construct arrays of text and values to display
-        labels = (
-        'Run #', 'Stage: ', 'Base balls: ', 'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
-        'Opponent: ', 'Win percentage: ', 'Time per run: ', 'Shinies found: ', 'Dynite Ore: ')
-        values = (str(self.runs + 1), self.stage, str(self.base_balls), str(self.legendary_balls),
+        labels_as_list = [
+        'Run #', 'Hunting for: ', 'Stage: ', 'Base balls: ', 'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
+        'Opponent: ', 'Win percentage: ', 'Time per run: ', 'Shinies found: ', 'Dynite Ore: ']
+        values_as_list = [str(self.runs + 1), self.boss, self.stage, str(self.base_balls), str(self.legendary_balls),
                 str(self.num_caught), str(self.lives), str(self.pokemon), str(self.opponent), str(win_percent) + '%', time_per_run,
-                str(self.shinies_found), str(self.dynite_ore))
+                str(self.shinies_found), str(self.dynite_ore)]
+
+        for i in range(len(self.caught_shinies)):
+            labels_as_list.append('shiny #' + str(i) + ': ')
+            values_as_list.append(self.caught_shinies[i])
+
+        labels = tuple(labels_as_list)
+        values = tuple(values_as_list)
 
         for i in range(len(labels)):
             cv2.putText(frame, labels[i] + values[i], (width - 245, 25 + 25 * i), cv2.FONT_HERSHEY_PLAIN, 1,
