@@ -447,9 +447,9 @@ class MaxLairInstance():
 
         # Construct arrays of text and values to display
         labels = (
-        'Run #', 'Stage: ', 'Base balls: ', 'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
+        'Run #', 'Hunting for: ', 'Stage: ', 'Base balls: ', 'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
         'Opponent: ', 'Win percentage: ', 'Time per run: ', 'Shinies found: ', 'Dynite Ore: ')
-        values = (str(self.runs + 1), self.stage, str(self.base_balls), str(self.legendary_balls),
+        values = (str(self.runs + 1), self.boss, self.stage, str(self.base_balls), str(self.legendary_balls),
                 str(self.num_caught), str(self.lives), str(self.pokemon), str(self.opponent), str(win_percent) + '%', time_per_run,
                 str(self.shinies_found), str(self.dynite_ore))
 
