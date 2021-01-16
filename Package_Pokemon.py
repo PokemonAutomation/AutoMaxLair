@@ -51,7 +51,7 @@ with open('Pokemon_Data/Moves.csv', newline='\n') as csvfile:
         if ('twice in one turn' in Effect) or ('twice in a row' in Effect):
             multiplier *= 2
         elif 'Hits 2-5 times' in Effect:
-            multiplier *= 2.2575
+            multiplier *= 3.167
         elif 'Attacks thrice with more power each time.' in Effect:
             multiplier *= 94.14/20/Accuracy
         elif '2 turns later' in Effect:
@@ -117,7 +117,7 @@ with open('Pokemon_Data/Rental_Pokemon.txt', newline='\n') as file:
             move = copy(move_list[dump[i][0]])
             moves.append(move)
             if ability == 'Skill Link' and 'Hits 2-5 times' in move.effect:
-                move.power *= 5/2.1575
+                move.power *= 5/3.167
             if move.base_power > 0:
                 max_move = copy(max_move_list[move.type])
                 max_move.power = matchup_scoring.get_max_move_power(move)
