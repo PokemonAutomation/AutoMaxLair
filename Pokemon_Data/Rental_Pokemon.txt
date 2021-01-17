@@ -1460,7 +1460,7 @@ Icy Wind
 
 Galvantula
 
-Compoundeyes
+Compound Eyes
 Level 65
 Attacks:
 Thunder

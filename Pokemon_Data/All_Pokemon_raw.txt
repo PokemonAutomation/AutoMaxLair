@@ -43,7 +43,7 @@ Run Away	45	30	35	20	20	45
 Metapod		Shed Skin	50	20	55	25	25	30
 #012	
 
-Butterfree	 	Compoundeyes
+Butterfree	 	Compound Eyes
 Tinted Lens	60	45	50	90	80	70
 #013	
 
@@ -205,7 +205,7 @@ Dry Skin
 Damp	60	95	80	60	80	30
 #048	
 
-Venonat	 	Compoundeyes
+Venonat	 	Compound Eyes
 Tinted Lens
 Run Away	60	55	50	40	55	45
 #049	
@@ -888,7 +888,7 @@ Early Bird	75	75	55	105	85	30
 #193	
 
 Yanma	 	Speed Boost
-Compoundeyes
+Compound Eyes
 Frisk	65	65	45	75	45	95
 #194	
 
@@ -1229,7 +1229,7 @@ Cascoon		Shed Skin	50	35	55	25	25	15
 #269	
 
 Dustox	 	Shield Dust
-Compoundeyes	60	50	70	50	90	65
+Compound Eyes	60	50	70	50	90	65
 #270	
 
 Lotad	 	Swift Swim
@@ -1322,7 +1322,7 @@ Vigoroth		Vital Spirit	80	80	80	55	55	90
 Slaking		Truant	150	160	100	95	65	100
 #290	
 
-Nincada	 	Compoundeyes
+Nincada	 	Compound Eyes
 Run Away	31	45	90	30	30	40
 #291	
 
@@ -2666,12 +2666,12 @@ Hydration
 Regenerator	165	75	80	40	45	65
 #595	
 
-Joltik	 	Compoundeyes
+Joltik	 	Compound Eyes
 Unnerve
 Swarm	50	47	50	57	50	65
 #596	
 
-Galvantula	 	Compoundeyes
+Galvantula	 	Compound Eyes
 Unnerve
 Swarm	70	77	60	97	60	108
 #597	
@@ -2960,7 +2960,7 @@ Gale Wings	78	81	71	74	69	126
 #664	
 
 Scatterbug		Shield Dust
-Compoundeyes
+Compound Eyes
 Friend Guard	38	35	40	27	25	35
 #665	
 
@@ -2969,7 +2969,7 @@ Friend Guard	45	22	60	27	30	29
 #666	
 
 Vivillon	 	Shield Dust
-Compoundeyes
+Compound Eyes
 Friend Guard	80	52	50	90	50	89
 #667	
 
@@ -3615,12 +3615,12 @@ Mirror Armor	98	87	105	53	85	67
 #824	
 
 Blipbug		Swarm
-Compoundeyes
+Compound Eyes
 Telepathy	25	20	20	25	45	45
 #825	
 
 Dottler	 	Swarm
-Compoundeyes
+Compound Eyes
 Telepathy	50	35	80	50	90	30
 #826	
 

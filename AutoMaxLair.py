@@ -192,6 +192,11 @@ def battle(inst) -> str:
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
                     inst.opponent = inst.read_selectable_pokemon('battle', language)[0]
                     inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 2))
+
+                    # When we fight a Ditto, he will always copy your pokemon
+                    if inst.opponent.name == 'Ditto':
+                        inst.opponent = copy(inst.pokemon)
+
                 
                 # If our Pokemon is Ditto, transform it into the boss.
                 # TODO: Ditto's HP does not change when transformed which is not
@@ -380,9 +385,9 @@ def select_pokemon(inst) -> str:
             inst.log('''******************************
                 \n\nShiny found!\n\n******************************'''
             )
-            inst.log('Shiny ' + inst.caught_pokemon[i] + ' will be kept')
+            inst.log('Shiny ' + inst.caught_pokemon[inst.num_caught - 1 - i] + ' will be kept')
             inst.shinies_found += 1
-            inst.caught_shinies.append(inst.caught_pokemon[i])
+            inst.caught_shinies.append(inst.caught_pokemon[inst.num_caught - 1 - i])
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if inst.num_caught == 4 and i == 0:
