@@ -5,3 +5,4 @@ pyserial==3.3
 pytesseract==0.3.6
 python-dateutil==2.6.0
 requests
+pokebase
