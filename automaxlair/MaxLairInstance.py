@@ -354,14 +354,14 @@ class MaxLairInstance():
 
     def check_defeated(self) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
-        if not self.check_rect_HSV_match(((0,0), (1,1)), (0,0,5),
+        if not self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
             (180,255,10), 250
         ):
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
         self.push_buttons((b'0', 0.2))
-        return self.check_rect_HSV_match(((0,0), (1,1)), (0,0,5),
+        return self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
             (180,255,10), 250
         )
 
@@ -415,8 +415,12 @@ class MaxLairInstance():
     
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
-        self.base_balls += min(3, self.num_caught)
-        self.legendary_balls += 1 if self.num_caught == 4 else 0
+        if self.base_ball != self.legendary_ball:
+            self.base_balls += min(3, self.num_caught)
+            self.legendary_balls += 1 if self.num_caught == 4 else 0
+        else:
+            self.base_balls += self.num_caught
+            self.legendary_balls += self.num_caught
         self.consecutive_resets += 1
         self.dynite_ore -= self.calculate_ore_cost(self.consecutive_resets)
 
