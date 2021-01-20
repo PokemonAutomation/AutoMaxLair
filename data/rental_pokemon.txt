@@ -33,6 +33,7 @@ marowak-alola,rock-head,flare-blitz,shadow-bone,will-o-wisp,iron-head
 hitmonlee,limber,close-combat,wide-guard,blaze-kick,low-sweep
 hitmonchan,iron-fist,power-up-punch,fire-punch,thunder-punch,ice-punch
 lickitung,oblivious,round,blizzard,thunder,muddy-water
+weezing,neutralizing-gas,clear-smog,heat-wave,sludge-bomb,dark-pulse
 weezing-galar,misty-surge,strange-steam,clear-smog,flamethrower,taunt
 rhydon,rock-head,drill-run,smack-down,smart-strike,scary-face
 chansey,healer,round,heal-pulse,helping-hand,light-screen
