@@ -154,12 +154,12 @@ def battle(inst) -> str:
         elif inst.phrases['FAINT'] in text:
             inst.log('Pokemon fainted...')
             inst.lives -= 1
-            inst.push_buttons((b'0', 4))
+            inst.push_button(None, 4)
         elif inst.check_defeated():
             inst.log('You lose :(. Quitting...')
             inst.lives -= 1
             inst.reset_stage()
-            inst.push_buttons((b'0', 7))
+            inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
         elif inst.phrases['CHEER'] in text:
             if inst.pokemon.dynamax:
@@ -181,7 +181,7 @@ def battle(inst) -> str:
                     # 
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
                     inst.opponent = inst.read_selectable_pokemon('battle')[0]
-                    inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 2))
+                    inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
                 
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
@@ -209,7 +209,7 @@ def battle(inst) -> str:
                 inst.dmax_timer -= 1
 
             # Navitage to the move selection screen.
-            inst.push_buttons((b'0', 2), (b'a', 2))
+            inst.push_buttons((b'b', 2), (b'a', 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -319,14 +319,14 @@ def catch(inst) -> str:
     # If the final boss was the caught Pokemon, wrap up the run and check the
     # Pokemon caught along the way.
     else:
-        inst.push_buttons((b'0',10))
+        inst.push_button(None,10)
         inst.log('Congratulations! Checking the haul from this run...')
         return 'select_pokemon'
 
 
 def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
-    inst.push_buttons((b'0', 7), (b'a', 5))
+    inst.push_buttons((None, 7), (b'a', 5))
     inst.log('Detecting where the path led...')
     return 'detect'
 
@@ -334,7 +334,7 @@ def backpacker(inst) -> str:
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
     # TODO: decide to take a Pokemon if the current one is worse than average.
-    inst.push_buttons((b'0', 3), (b'b', 1))  # Don't take a Pokemon for now
+    inst.push_buttons((None, 3), (b'b', 1))  # Don't take a Pokemon for now
     inst.log('Detecting where the path led...')
     return 'detect'
 
@@ -348,7 +348,7 @@ def select_pokemon(inst) -> str:
     # If the bot lost against the first boss, skip the checking process since
     # there are no Pokemon to check.
     if inst.num_caught == 0:
-        inst.push_buttons((b'0', 10), (b'b', 1))
+        inst.push_buttons((None, 10), (b'b', 1))
         return 'join'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
