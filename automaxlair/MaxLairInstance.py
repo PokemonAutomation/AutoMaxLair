@@ -49,7 +49,7 @@ class MaxLairInstance():
         
         self.start_date = datetime
         self.filename = ''.join(('logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'))
-        self.boss = boss
+        self.boss = boss.lower().replace(' ', '-')
         self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
         self.mode = mode
         self.dynite_ore = dynite_ore
