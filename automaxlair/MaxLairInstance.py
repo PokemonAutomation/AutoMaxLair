@@ -29,21 +29,20 @@ class MaxLairInstance():
         boss: str,
         balls: int,
         com: Serial,
-        cap: Serial,
+        cap: VideoCapture,
         video_scale: float,
         lock,
         exit_flag,
         datetime: DateTime,
-        data_paths: Tuple[str, str, str, str],
-        phrases,
-        tesseract_language: str,
+        data_paths: Tuple[str],
+        phrases: Dict[str, str],
         mode: str,
         dynite_ore: int,
         stage: str='join'
      ) -> None:
         self.data_paths = data_paths
         self.phrases = phrases
-        self.tesseract_language = tesseract_language
+        self.tesseract_language = phrases['TESSERACT_LANG_NAME']
         self.lang = phrases['DATA_LANG_NAME']
         self.reset_run()
         
