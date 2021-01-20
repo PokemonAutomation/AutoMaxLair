@@ -47,8 +47,6 @@ rental_matchup_LUT_path = config['pokemon_data_paths']['Rental_Matchup_LUT']
 rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores']
 
 language = config['language']['LANGUAGE']
-TESSERACT_LANG_NAME = config[language]['TESSERACT_LANG_NAME']
-
 PHRASES = config[language]
 
 
@@ -471,7 +469,7 @@ def main_loop():
         cap, VIDEO_SCALE, threading.Lock(), threading.Event(), datetime.now(),
         (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path,
         rental_matchup_LUT_path, rental_pokemon_scores_path), PHRASES,
-        TESSERACT_LANG_NAME, MODE, DYNITE_ORE, 'join'
+        MODE, DYNITE_ORE, 'join'
     )
 
     # DEBUG overrides for starting the script mid-run
