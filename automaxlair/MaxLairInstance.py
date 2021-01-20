@@ -424,33 +424,50 @@ class MaxLairInstance():
         self.consecutive_resets += 1
         self.dynite_ore -= self.calculate_ore_cost(self.consecutive_resets)
 
-    def push_buttons(self, *commands: Tuple[str, float]) -> None:
-        """Send messages to the microcontroller telling it to press buttons on the Switch."""
-        # Commands are supplied as tuples consisting of a character corresponding to a button push and a delay that follows the push
-        for character, duration in commands:
-            # Check whether the main thread has called for the button pushing thread to terminate
-            if self.exit_flag.is_set():
-                sys.exit()
+    def push_button(self, character: str, duration: float) -> None:
+        """Send a message to the microcontroller telling it to press buttons on
+        the Switch.
+        """
 
-            # then we release the lock so the display thread can run while we complete the button press and subsequent delay
-            self.lock.release()
+        # Check whether the main thread has called for the button pushing
+        # thread to terminate.
+        if self.exit_flag.is_set():
+            sys.exit()
 
-            # Clear extra characters from the serial buffer
-            self.com.reset_input_buffer()
-            
-            # then we send the command to the microcontroller using the serial port
+        # Then we release the lock so the display thread can run while we
+        # complete the button press and subsequent delay.
+        self.lock.release()
+
+        # Clear extra characters from the serial buffer.
+        self.com.reset_input_buffer()
+        
+        if character is not None:
+            # Send the command to the microcontroller using the serial port.
             self.com.write(character)
-
-            # then we check whether the microcontroller successfully echoed back the command, and raise a warning if it did not
+            # Check whether the microcontroller successfully echoed back the
+            # command, and raise a warning if it did not.
             if self.com.read() != character:
-                self.log('WARNING: Sent command was not echoed back successfully.')
+                self.log(
+                    'WARNING: Sent command was not echoed back successfully.'
+                )
 
-            # then we delay for the specified time
-            time.sleep(duration)
+        # Delay for the specified time.
+        time.sleep(duration)
 
-            # then we reacquire the lock before the next iteration
-            #   This step is needed here because calling sys.exit() in a subsequent iteration will attempt to release the lock.
-            self.lock.acquire()
+        # Reacquire the lock before the next iteration.
+        # This step is needed here because calling sys.exit() in a
+        # subsequent command will attempt to release the lock.
+        self.lock.acquire()
+
+    def push_buttons(self, *commands: Tuple[str, float]) -> None:
+        """Send a sequence of messages to the microcontroller telling it to
+        press buttons on the Switch.
+        """
+
+        # Commands are supplied as tuples consisting of a character
+        # corresponding to a button push and a delay that follows the push.
+        for character, duration in commands:
+            self.push_button(character, duration)
 
     def log(self,
             string: str='') -> None:
