@@ -1,9 +1,7 @@
 #   AutoMaxLair
-#       v0.5.3
 #       Eric Donders
 #       Contributions from Miguel Tavera, Discord user fawress, 
 #           Discord user pifopi, and Discord user denvoros
-#       Last updated 2021-01-08
 #       Created 2020-11-20
 
 import cv2
