@@ -85,7 +85,7 @@ Ball Saver|Higher win rate. Wastes no balls used to catch the legendary.|Can rap
   *	Bosses use their 5th move only when at low HP with boss-dependent frequency and timing.
 *	Items are not chosen intelligently
 ## Contributors
-AutoMaxLair was initially written by @ercdndrs. It has been supported by code contributions from [pifopi](https://github.com/pifopi) and [denvoros](https://github.com/denvoros), as well as advice and testing by multiple users in the [Pokemon Automation Discord](https://discord.gg/PokemonAutomation) and extra code contributions from users Miguel90 and fawress. The microcontroller code is based on the [AutoController](https://github.com/brianuuu/AutoController_swsh) program family published by [brianuuu](https://github.com/brianuuu).
+AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It has been supported by code contributions from [pifopi](https://github.com/pifopi) and [denvoros](https://github.com/denvoros), as well as advice and testing by multiple users in the [Pokemon Automation Discord](https://discord.gg/PokemonAutomation) and extra code contributions from users Miguel90 and fawress. The microcontroller code is based on the [AutoController](https://github.com/brianuuu/AutoController_swsh) program family published by [brianuuu](https://github.com/brianuuu).
 ## Changelog
 ### v0.2-beta
 *	Initial stable public release.
