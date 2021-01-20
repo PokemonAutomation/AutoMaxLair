@@ -455,7 +455,7 @@ class MaxLairInstance():
     def log(self,
             string: str='') -> None:
         """Print a string to the log file with a timestamp."""
-        with open(self.filename, 'a') as file:
+        with open(self.filename, 'a', encoding='utf-8') as file:
             file.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'\t'+string+'\n')
         print(string)
         
