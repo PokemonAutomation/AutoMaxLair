@@ -279,7 +279,7 @@ def main():
     """Build Pokemon dictionaries from the text files and pickle the results."""
 
     rental_pokemon = pokemon_from_txt(base_dir+'/data/rental_pokemon.txt', 65)
-    boss_pokemon = pokemon_from_txt(base_dir+'/data/boss_pokemon.txt', 75)
+    boss_pokemon = pokemon_from_txt(base_dir+'/data/boss_pokemon.txt', 70)
 
     # Pickle the Pokemon dictionaries for later use.
     with open(base_dir+'/data/rental_pokemon.pickle', 'wb') as file:
