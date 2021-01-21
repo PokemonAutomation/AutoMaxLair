@@ -95,9 +95,6 @@ def join(inst) -> str:
     inst.pokemon = pokemon_list[selection_index]
     inst.push_buttons((b'a',27))
     inst.log('Choosing a path...')
-
-    inst.caught_pokemon = []
-
     return 'path'
 
 
@@ -121,19 +118,19 @@ def detect(inst) -> str:
     # This function returns directly when those conditions are found.
     while True:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
-        if re.search(inst.phrases['FIGHT'], text) != None:
+        if re.search(inst.phrases['FIGHT'], text):
             # Battle has started and the move selection screen is up
             inst.log('Battle starting...')
             return 'battle'
-        elif re.search(inst.phrases['BACKPACKER'], text) != None:
+        elif re.search(inst.phrases['BACKPACKER'], text):
             # Backpacker encountered so choose an item
             inst.log('Backpacker encountered...')
             return 'backpacker'
-        elif re.search(inst.phrases['SCIENTIST'], text) != None:
+        elif re.search(inst.phrases['SCIENTIST'], text):
             # Scientist appeared to deal with that
             inst.log('Scientist encountered...')
             return 'scientist'
-        elif re.search(inst.phrases['PATH'], text) != None:
+        elif re.search(inst.phrases['PATH'], text):
             # Fork in the path appeared to choose where to go
             inst.log('Choosing a path...')
             return 'path'
@@ -151,11 +148,11 @@ def battle(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  
             
         # then check the text for key phrases that inform the bot what to do next
-        if re.search(inst.phrases['CATCH'], text) != None:
+        if re.search(inst.phrases['CATCH'], text):
             inst.log('Catching boss...')
             inst.reset_stage()
             return 'catch'
-        elif re.search(inst.phrases['FAINT'], text) != None:
+        elif re.search(inst.phrases['FAINT'], text):
             inst.log('Pokemon fainted...')
             inst.lives -= 1
             inst.push_button(None, 4)
@@ -165,13 +162,13 @@ def battle(inst) -> str:
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
-        elif re.search(inst.phrases['CHEER'], text) != None:
+        elif re.search(inst.phrases['CHEER'], text):
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
                 inst.dmax_timer = 0
             inst.push_buttons((b'a', 1.5))
-        elif re.search(inst.phrases['FIGHT'], text) != None:
+        elif re.search(inst.phrases['FIGHT'], text):
             # If we got the pokemon from the scientist, we don't know what
             # is our current pokemon, check it first
             if inst.pokemon is None:

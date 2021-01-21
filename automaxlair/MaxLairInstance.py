@@ -105,6 +105,7 @@ class MaxLairInstance():
         self.pokemon = None
         self.HP = 1  # 1 = 100%
         self.num_caught = 0
+        self.caught_pokemon = []
         self.lives = 4
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
