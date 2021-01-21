@@ -13,6 +13,7 @@ import pickle
 import enchant
 import configparser
 import threading
+import re
 from datetime import datetime
 from copy import copy, deepcopy
 
@@ -24,7 +25,7 @@ config = configparser.ConfigParser()
 
 # Configparser doesn't complain if it can't find the config file,
 # so manually raise an error if the file was not read.
-if not config.read('Config.ini'):
+if not config.read('Config.ini', 'utf8'):
     raise FileNotFoundError('Failed to locate the Config.ini file.')
     
 
@@ -32,6 +33,7 @@ COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
 BOSS = config['default']['BOSS']
+PATH_INDEX = int(config['default']['PATH_INDEX'])
 BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
 LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
@@ -56,10 +58,13 @@ def join(inst) -> str:
     # 
     # First, start a new run by talking to the scientist in the Max Lair.
     inst.log('Run #' + str(inst.runs + 1) + ' started!')
-    inst.push_buttons((b'b', 2), (b'a', 0.5), (b'a', 1.5), (b'a', 1.5),
-        (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5),
-        (b'a', 4), (b'v', 1.5), (b'a', 5)
-    )
+    inst.push_buttons((b'b', 2), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
+
+    # select the right path
+    for __ in range(PATH_INDEX):
+        inst.push_buttons((b'v', 1))
+
+    inst.push_buttons((b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
 
     # Next, read what rental Pokemon are available to choose.
     # Note that pokemon_list contains preconfigured Pokemon objects with types,
@@ -90,6 +95,9 @@ def join(inst) -> str:
     inst.pokemon = pokemon_list[selection_index]
     inst.push_buttons((b'a',27))
     inst.log('Choosing a path...')
+
+    inst.caught_pokemon = []
+
     return 'path'
 
 
@@ -113,19 +121,19 @@ def detect(inst) -> str:
     # This function returns directly when those conditions are found.
     while True:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
-        if inst.phrases['FIGHT'] in text:
+        if re.search(inst.phrases['FIGHT'], text) != None:
             # Battle has started and the move selection screen is up
             inst.log('Battle starting...')
             return 'battle'
-        elif inst.phrases['BACKPACKER'] in text:
+        elif re.search(inst.phrases['BACKPACKER'], text) != None:
             # Backpacker encountered so choose an item
             inst.log('Backpacker encountered...')
             return 'backpacker'
-        elif inst.phrases['SCIENTIST'] in text:
+        elif re.search(inst.phrases['SCIENTIST'], text) != None:
             # Scientist appeared to deal with that
             inst.log('Scientist encountered...')
             return 'scientist'
-        elif inst.phrases['PATH'] in text:
+        elif re.search(inst.phrases['PATH'], text) != None:
             # Fork in the path appeared to choose where to go
             inst.log('Choosing a path...')
             return 'path'
@@ -143,11 +151,11 @@ def battle(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  
             
         # then check the text for key phrases that inform the bot what to do next
-        if inst.phrases['CATCH'] in text or inst.phrases['CATCH_2'] in text:
+        if re.search(inst.phrases['CATCH'], text) != None:
             inst.log('Catching boss...')
             inst.reset_stage()
             return 'catch'
-        elif inst.phrases['FAINT'] in text:
+        elif re.search(inst.phrases['FAINT'], text) != None:
             inst.log('Pokemon fainted...')
             inst.lives -= 1
             inst.push_button(None, 4)
@@ -157,13 +165,21 @@ def battle(inst) -> str:
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
-        elif inst.phrases['CHEER'] in text:
+        elif re.search(inst.phrases['CHEER'], text) != None:
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
                 inst.dmax_timer = 0
             inst.push_buttons((b'a', 1.5))
-        elif inst.phrases['FIGHT'] in text:
+        elif re.search(inst.phrases['FIGHT'], text) != None:
+            # If we got the pokemon from the scientist, we don't know what
+            # is our current pokemon, check it first
+            if inst.pokemon is None:
+                inst.push_buttons((b'y', 1), (b'a', 1))
+                inst.pokemon = inst.read_selectable_pokemon('battle')[0]
+                inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
+                inst.log('We got ' + inst.pokemon.name_id + ' at the scientist')
+
             # Before the bot makes a decision, it needs to know what the boss
             # is.
             if inst.opponent is None:
@@ -204,7 +220,7 @@ def battle(inst) -> str:
             elif inst.dmax_timer > 1:
                 inst.dmax_timer -= 1
 
-            # Navitage to the move selection screen.
+            # Navigate to the move selection screen.
             inst.push_buttons((b'b', 2), (b'a', 2))
 
             # Then, check whether Dynamax is available.
@@ -300,6 +316,8 @@ def catch(inst) -> str:
         inst.log('Score for ' + pokemon.name_id + ':\t%0.2f' % score)
         inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
 
+        inst.caught_pokemon.append(pokemon.name_id)
+
         # Compare the scores for the two options and choose the best one.
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
@@ -315,6 +333,7 @@ def catch(inst) -> str:
     # If the final boss was the caught Pokemon, wrap up the run and check the
     # Pokemon caught along the way.
     else:
+        inst.caught_pokemon.append(inst.boss)
         inst.push_button(None,10)
         inst.log('Congratulations! Checking the haul from this run...')
         return 'select_pokemon'
@@ -329,8 +348,39 @@ def backpacker(inst) -> str:
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
-    # TODO: decide to take a Pokemon if the current one is worse than average.
-    inst.push_buttons((None, 3), (b'b', 1))  # Don't take a Pokemon for now
+    # Consider the amount of remaining minibosses when scoring each rental
+    # Pokemon, at the start of the run, there are 3 - num_caught minibosses
+    # and 1 final boss. We weigh the boss more heavily because it is more
+    # difficult than the other bosses.
+    rental_weight = 3 - inst.num_caught
+    boss_weight = 2
+
+    # Calculate scores for an average and existing Pokemon.
+    pokemon_scores = []
+    for pokemon in inst.rental_pokemon:
+        score = ((rental_weight * inst.rental_scores[pokemon] + boss_weight
+            * inst.boss_matchups[pokemon][inst.boss])
+            / (rental_weight+boss_weight)
+        )
+        pokemon_scores.append(score)
+    average_score = sum(pokemon_scores) / len(pokemon_scores)
+
+    # TODO: actually read the current Pokemon's health so the bot can decide
+    # to switch if it's low.
+    existing_score = inst.HP * ((rental_weight
+        * inst.rental_scores[inst.pokemon.name_id] + boss_weight
+        * matchup_scoring.evaluate_matchup(inst.pokemon,
+        inst.boss_pokemon[inst.boss],inst.rental_pokemon))
+        / (rental_weight+boss_weight)
+    )
+    inst.log('Score for average pokemon :\t%0.2f' % average_score)
+    inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
+
+    if average_score > existing_score:
+        inst.push_buttons((None, 3), (b'a', 5))
+        inst.pokemon = None
+    else:
+        inst.push_buttons((None, 3), (b'b', 5))
     inst.log('Detecting where the path led...')
     return 'detect'
 
@@ -359,6 +409,8 @@ def select_pokemon(inst) -> str:
             inst.log('''******************************
                 \n\nShiny found!\n\n******************************'''
             )
+            inst.log('Shiny ' + inst.caught_pokemon[inst.num_caught - 1 - i] + ' will be kept')
+            inst.caught_shinies.append(inst.caught_pokemon[inst.num_caught - 1 - i])
             inst.shinies_found += 1
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
@@ -388,9 +440,7 @@ def select_pokemon(inst) -> str:
                 (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2)
             )
         else:
-            inst.push_buttons((b'b', 3), (b'b', 1), (b'a', 2), (b'a', 2),
-                (b'a', 11), (b'a', 1), (b'a', 2)
-            )
+            inst.push_buttons((b'b', 3), (b'b', 1))
         inst.record_ore_reward()
     else:
         inst.log('Resetting game...')

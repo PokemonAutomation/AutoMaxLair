@@ -134,10 +134,12 @@ def calculate_damage(attacker: Pokemon, move_index: int, defender: Pokemon,
     modifier *= ability_damage_multiplier(attacker, move_index, defender)
     # Apply attacker and defender stats
     if move.category == 'physical':
-        if move.name_id != 'body-press':
-            numerator = attacker.stats[1]
-        else:
+        if move.name_id == 'body-press':
             numerator = attacker.stats[2]
+        elif move.name_id == 'foul-play':
+            numerator = defender.stats[1]
+        else:
+            numerator = attacker.stats[1]
         denominator = defender.stats[2]
     else:
         numerator = attacker.stats[3]

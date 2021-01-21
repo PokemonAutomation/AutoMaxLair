@@ -72,7 +72,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         'icicle-spear', 'pin-missile', 'rock-blast', 'scale-shot',
         'spike-cannon', 'tail-slap', 'water-shuriken'
     ):
-        factor = 2.2575 
+        factor = 3.167
     elif name_id is 'triple-axel':
         factor = 5.23
 
