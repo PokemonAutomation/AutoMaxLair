@@ -132,6 +132,11 @@ def calculate_damage(attacker: Pokemon, move_index: int, defender: Pokemon,
         modifier *= 0.5
     # Apply modifiers from abilities
     modifier *= ability_damage_multiplier(attacker, move_index, defender)
+    # Apply boosts from auras
+    if move.type_id == 'fairy' and (attacker.ability_name_id == 'fairy-aura' or defender.ability_name_id == 'fairy-aura'):
+        modifier *= 1.33
+    if move.type_id == 'dark' and (attacker.ability_name_id == 'dark-aura' or defender.ability_name_id == 'dark-aura'):
+        modifier *= 1.33
     # Apply attacker and defender stats
     if move.category == 'physical':
         if move.name_id == 'body-press':
