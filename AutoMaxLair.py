@@ -1,9 +1,7 @@
 #   AutoMaxLair
-#       v0.5.3
 #       Eric Donders
 #       Contributions from Miguel Tavera, Discord user fawress, 
 #           Discord user pifopi, and Discord user denvoros
-#       Last updated 2021-01-08
 #       Created 2020-11-20
 
 import cv2
@@ -18,16 +16,16 @@ import threading
 import re
 from datetime import datetime
 from copy import copy, deepcopy
-from MaxLairInstance import MaxLairInstance
-from Pokemon_Data import matchup_scoring
+
+from automaxlair import MaxLairInstance, matchup_scoring
 
 
 # Load configuration from config file
 config = configparser.ConfigParser()
 
 # Configparser doesn't complain if it can't find the config file,
-# so manually raise an error if a value can't be
-if not config.read('Config.ini'):
+# so manually raise an error if the file was not read.
+if not config.read('Config.ini', 'utf8'):
     raise FileNotFoundError('Failed to locate the Config.ini file.')
     
 
@@ -51,9 +49,8 @@ rental_matchup_LUT_path = config['pokemon_data_paths']['Rental_Matchup_LUT']
 rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores']
 
 language = config['language']['LANGUAGE']
-TESSERACT_LANG_NAME = config[language]['TESSERACT_LANG_NAME']
-
 PHRASES = config[language]
+
 
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
@@ -66,41 +63,38 @@ def join(inst) -> str:
     # select the right path
     for __ in range(PATH_INDEX):
         inst.push_buttons((b'v', 1))
-  
+
     inst.push_buttons((b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
 
     # Next, read what rental Pokemon are available to choose.
     # Note that pokemon_list contains preconfigured Pokemon objects with types,
     # abilities, stats, moves, et cetera.
-    pokemon_list = inst.read_selectable_pokemon('join', language)
+    pokemon_list = inst.read_selectable_pokemon('join')
     pokemon_scores = []
 
     # Then, assign a score to each of the Pokemon based on how it is estimated
     # to perform against the minibosses (other rental Pokemon) and the final
     # boss.
     for pokemon in pokemon_list:
-        name = pokemon.name
+        name_id = pokemon.name_id
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 minibosses and 1 final
         # boss. We weigh the boss more heavily because it is more difficult than
         # the other bosses.
         rental_weight = 3
         boss_weight = 2
-        score = ((rental_weight * inst.rental_scores[name] + boss_weight
-            * inst.boss_matchups[name][inst.boss])
+        score = ((rental_weight * inst.rental_scores[name_id] + boss_weight
+            * inst.boss_matchups[name_id][inst.boss])
             / (rental_weight + boss_weight)
         )
         pokemon_scores.append(score)
-        inst.log('Score for ' + name + ':\t%0.2f' % score)
+        inst.log('Score for ' + name_id + ':\t%0.2f' % score)
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
         inst.push_buttons((b'v', 1))
     inst.pokemon = pokemon_list[selection_index]
     inst.push_buttons((b'a',27))
     inst.log('Choosing a path...')
-
-    inst.caught_pokemon = []
-
     return 'path'
 
 
@@ -123,22 +117,20 @@ def detect(inst) -> str:
     #
     # This function returns directly when those conditions are found.
     while True:
-        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True,
-            language=inst.tesseract_language
-        )
-        if re.search(inst.phrases['FIGHT'], text) != None:
+        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
+        if re.search(inst.phrases['FIGHT'], text):
             # Battle has started and the move selection screen is up
             inst.log('Battle starting...')
             return 'battle'
-        elif re.search(inst.phrases['BACKPACKER'], text) != None:
+        elif re.search(inst.phrases['BACKPACKER'], text):
             # Backpacker encountered so choose an item
             inst.log('Backpacker encountered...')
             return 'backpacker'
-        elif re.search(inst.phrases['SCIENTIST'], text) != None:
+        elif re.search(inst.phrases['SCIENTIST'], text):
             # Scientist appeared to deal with that
             inst.log('Scientist encountered...')
             return 'scientist'
-        elif re.search(inst.phrases['PATH'], text) != None:
+        elif re.search(inst.phrases['PATH'], text):
             # Fork in the path appeared to choose where to go
             inst.log('Choosing a path...')
             return 'path'
@@ -153,31 +145,38 @@ def battle(inst) -> str:
     # This function returns directly when those conditions are found.
     while True:
         # Read text from the bottom section of the screen.
-        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True,
-            language=inst.tesseract_language
-        )  
-        
+        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  
+            
         # then check the text for key phrases that inform the bot what to do next
-        if re.search(inst.phrases['CATCH'], text) != None:
+        if re.search(inst.phrases['CATCH'], text):
             inst.log('Catching boss...')
             inst.reset_stage()
             return 'catch'
-        elif re.search(inst.phrases['FAINT'], text) != None:
+        elif re.search(inst.phrases['FAINT'], text):
             inst.log('Pokemon fainted...')
             inst.lives -= 1
-            inst.push_buttons((b'0', 4))
-        elif re.search(inst.phrases['LOSS'], text) != None:
+            inst.push_button(None, 4)
+        elif inst.check_defeated():
             inst.log('You lose :(. Quitting...')
+            inst.lives -= 1
             inst.reset_stage()
-            inst.push_buttons((b'0', 7))
+            inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
-        elif re.search(inst.phrases['CHEER'], text) != None:
+        elif re.search(inst.phrases['CHEER'], text):
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
                 inst.dmax_timer = 0
             inst.push_buttons((b'a', 1.5))
-        elif re.search(inst.phrases['FIGHT'], text) != None:
+        elif re.search(inst.phrases['FIGHT'], text):
+            # If we got the pokemon from the scientist, we don't know what
+            # is our current pokemon, check it first
+            if inst.pokemon is None:
+                inst.push_buttons((b'y', 1), (b'a', 1))
+                inst.pokemon = inst.read_selectable_pokemon('battle')[0]
+                inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
+                inst.log('We got ' + inst.pokemon.name_id + ' at the scientist')
+
             # Before the bot makes a decision, it needs to know what the boss
             # is.
             if inst.opponent is None:
@@ -190,23 +189,19 @@ def battle(inst) -> str:
                 else:
                     # 
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
-                    inst.opponent = inst.read_selectable_pokemon('battle', language)[0]
-                    inst.push_buttons((b'0', 1), (b'b', 1.5), (b'b', 2))
-
-                    # When we fight a Ditto, he will always copy your pokemon
-                    if inst.opponent.name == 'Ditto':
-                        inst.opponent = copy(inst.pokemon)
-
+                    inst.opponent = inst.read_selectable_pokemon('battle')[0]
+                    inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
                 
-                # If our Pokemon is Ditto, transform it into the boss.
-                # TODO: Ditto's HP does not change when transformed which is not
-                # currently reflected.
-                if inst.pokemon.name == 'Ditto':
-                    inst.pokemon = copy(inst.opponent)
-                    inst.pokemon.moves = inst.pokemon.moves[:4]
-                    inst.pokemon.max_moves = inst.pokemon.max_moves[:4]
-                    inst.pokemon.name = 'Ditto'
-                    inst.pokemon.PP = [5,5,5,5]
+                # If our Pokemon is Ditto, transform it into the boss (or vice
+                # versa).
+                if inst.pokemon.name_id == 'ditto':
+                    inst.pokemon = matchup_scoring.transform_ditto(
+                        inst.pokemon, inst.opponent
+                    )
+                elif inst.opponent.name_id == 'ditto':
+                    inst.opponent = matchup_scoring.transform_ditto(
+                        inst.opponent, inst.pokemon
+                    )
 
             # Handle the Dynamax timer
             # The timer starts at 3 and decreases by 1 after each turn of
@@ -222,8 +217,8 @@ def battle(inst) -> str:
             elif inst.dmax_timer > 1:
                 inst.dmax_timer -= 1
 
-            # Navitage to the move selection screen.
-            inst.push_buttons((b'0', 2), (b'a', 2))
+            # Navigate to the move selection screen.
+            inst.push_buttons((b'b', 2), (b'a', 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -234,21 +229,16 @@ def battle(inst) -> str:
             # Choose the best move to use against the boss
             # TODO: use the actual teammates instead of the average of all
             # rental Pokemon.
-            best_move_index = matchup_scoring.select_best_move(inst.pokemon,
-                inst.opponent, inst.rental_pokemon
+            best_move_index, __, best_move_score = matchup_scoring.select_best_move(inst.pokemon,
+                inst.opponent, teammates=inst.rental_pokemon
             )
             if inst.dynamax_available:
-                default_score = matchup_scoring.calculate_move_score(
-                    inst.pokemon, best_move_index, inst.opponent,
-                    teammates=inst.rental_pokemon
-                )
+                default_score = best_move_score
                 inst.pokemon.dynamax = True  # Temporary
-                best_max_move_index = matchup_scoring.select_best_move(
+                best_max_move_index, __, best_dmax_move_score = matchup_scoring.select_best_move(
                     inst.pokemon, inst.opponent, inst.rental_pokemon
                     )
-                if matchup_scoring.calculate_move_score(inst.pokemon,
-                        best_max_move_index, inst.opponent,
-                        teammates=inst.rental_pokemon) > default_score:
+                if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
                 else:
                     # Choose not to Dynamax this time by making the following
@@ -266,16 +256,16 @@ def battle(inst) -> str:
                 inst.pokemon.dynamax = True
                 inst.dynamax_available = False
             move = inst.pokemon.max_moves[best_move_index] if inst.pokemon.dynamax else inst.pokemon.moves[best_move_index]
-            inst.log('Best move against ' + inst.opponent.name + ': ' + move.name + ' (index ' + str(best_move_index) + ')')
+            inst.log('Best move against ' + inst.opponent.name_id + ': ' + move.name_id + ' (index ' + str(best_move_index) + ')')
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
-            for _ in range((best_move_index - inst.move_index + 4) % 4):
+            for __ in range((best_move_index - inst.move_index + 4) % 4):
                 inst.push_buttons((b'v', 1))
                 inst.move_index = (inst.move_index + 1) % 4
-
-            inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1),
-                (b'a', 0.5), (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
+            inst.push_buttons(
+                (b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1), (b'a', 0.5),
+                (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
             )
-            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability != 'Pressure' else 2
+            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability_name_id != 'pressure' else 2
         else:
             # Press B which can speed up dialogue
             inst.push_buttons((b'b', 0.005))
@@ -300,7 +290,7 @@ def catch(inst) -> str:
         # Pokemon objects with types, abilities, stats, moves, et cetera.
         # 
         # In this stage the list contains only 1 item.
-        pokemon = inst.read_selectable_pokemon('catch', language)[0]
+        pokemon = inst.read_selectable_pokemon('catch')[0]
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
@@ -310,20 +300,20 @@ def catch(inst) -> str:
         # Calculate scores for the new and existing Pokemon.
         # TODO: actually read the current Pokemon's health so the bot can decide
         # to switch if it's low.
-        score = ((rental_weight * inst.rental_scores[pokemon.name] + boss_weight
-            * inst.boss_matchups[pokemon.name][inst.boss])
+        score = ((rental_weight * inst.rental_scores[pokemon.name_id] + boss_weight
+            * inst.boss_matchups[pokemon.name_id][inst.boss])
             / (rental_weight+boss_weight)
         )
         existing_score = inst.HP * ((rental_weight
-            * inst.rental_scores[inst.pokemon.name] + boss_weight
+            * inst.rental_scores[inst.pokemon.name_id] + boss_weight
             * matchup_scoring.evaluate_matchup(inst.pokemon,
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log('Score for ' + pokemon.name + ':\t%0.2f' % score)
-        inst.log('Score for ' + inst.pokemon.name + ':\t%0.2f' % existing_score)
+        inst.log('Score for ' + pokemon.name_id + ':\t%0.2f' % score)
+        inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
 
-        inst.caught_pokemon.append(pokemon.name)
+        inst.caught_pokemon.append(pokemon.name_id)
 
         # Compare the scores for the two options and choose the best one.
         if score > existing_score:
@@ -341,22 +331,53 @@ def catch(inst) -> str:
     # Pokemon caught along the way.
     else:
         inst.caught_pokemon.append(inst.boss)
-        inst.push_buttons((b'0',10))
+        inst.push_button(None,10)
         inst.log('Congratulations! Checking the haul from this run...')
         return 'select_pokemon'
 
 
 def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
-    inst.push_buttons((b'0', 7), (b'a', 5))
+    inst.push_buttons((None, 7), (b'a', 5))
     inst.log('Detecting where the path led...')
     return 'detect'
 
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
-    # TODO: decide to take a Pokemon if the current one is worse than average.
-    inst.push_buttons((b'0', 3), (b'b', 1))  # Don't take a Pokemon for now
+    # Consider the amount of remaining minibosses when scoring each rental
+    # Pokemon, at the start of the run, there are 3 - num_caught minibosses
+    # and 1 final boss. We weigh the boss more heavily because it is more
+    # difficult than the other bosses.
+    rental_weight = 3 - inst.num_caught
+    boss_weight = 2
+
+    # Calculate scores for an average and existing Pokemon.
+    pokemon_scores = []
+    for pokemon in inst.rental_pokemon:
+        score = ((rental_weight * inst.rental_scores[pokemon] + boss_weight
+            * inst.boss_matchups[pokemon][inst.boss])
+            / (rental_weight+boss_weight)
+        )
+        pokemon_scores.append(score)
+    average_score = sum(pokemon_scores) / len(pokemon_scores)
+
+    # TODO: actually read the current Pokemon's health so the bot can decide
+    # to switch if it's low.
+    existing_score = inst.HP * ((rental_weight
+        * inst.rental_scores[inst.pokemon.name_id] + boss_weight
+        * matchup_scoring.evaluate_matchup(inst.pokemon,
+        inst.boss_pokemon[inst.boss],inst.rental_pokemon))
+        / (rental_weight+boss_weight)
+    )
+    inst.log('Score for average pokemon :\t%0.2f' % average_score)
+    inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
+
+    if average_score > existing_score:
+        inst.push_buttons((None, 3), (b'a', 5))
+        inst.pokemon = None
+    else:
+        inst.push_buttons((None, 3), (b'b', 5))
     inst.log('Detecting where the path led...')
     return 'detect'
 
@@ -370,7 +391,7 @@ def select_pokemon(inst) -> str:
     # If the bot lost against the first boss, skip the checking process since
     # there are no Pokemon to check.
     if inst.num_caught == 0:
-        inst.push_buttons((b'0', 10), (b'b', 1))
+        inst.push_buttons((None, 10), (b'b', 1))
         return 'join'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -386,8 +407,8 @@ def select_pokemon(inst) -> str:
                 \n\nShiny found!\n\n******************************'''
             )
             inst.log('Shiny ' + inst.caught_pokemon[inst.num_caught - 1 - i] + ' will be kept')
-            inst.shinies_found += 1
             inst.caught_shinies.append(inst.caught_pokemon[inst.num_caught - 1 - i])
+            inst.shinies_found += 1
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if inst.num_caught == 4 and i == 0:
@@ -424,6 +445,10 @@ def select_pokemon(inst) -> str:
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
         inst.push_buttons((b'h', 2), (b'x', 2))
+        # Dialogue changes a lot depending on the number of resets as well as
+        # the language.
+        # Therefore, press A until the starting dialogue is detected, then back
+        # out.
     # The button press sequences differ depending on how many Pokemon were
     # defeated and are further modified by the language.
     # Therefore, press A until the starting dialogue appears, then back out.
@@ -466,7 +491,7 @@ def main_loop():
 
     # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
-    print('Connecting to ' + com.port + '...')
+    print(f'Connecting to {com.port}...')
     while not com.is_open:
         try:
             com.open()
@@ -486,12 +511,12 @@ def main_loop():
 
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
-    instance = MaxLairInstance(BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL,
-        LEGENDARY_BALLS), com, cap, VIDEO_SCALE, threading.Lock(),
-        threading.Event(), datetime.now(), (boss_pokemon_path,
-        rental_pokemon_path, boss_matchup_LUT_path, rental_matchup_LUT_path,
-        rental_pokemon_scores_path), PHRASES, TESSERACT_LANG_NAME, MODE,
-        DYNITE_ORE, 'join'
+    instance = MaxLairInstance(
+        BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com,
+        cap, VIDEO_SCALE, threading.Lock(), threading.Event(), datetime.now(),
+        (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path,
+        rental_matchup_LUT_path, rental_pokemon_scores_path), PHRASES,
+        MODE, DYNITE_ORE, 'join'
     )
 
     # DEBUG overrides for starting the script mid-run
@@ -525,6 +550,10 @@ def main_loop():
         # idle time to update the graphical display.
         with instance.lock:
             instance.display_results()
+        
+        # Add a brief delay between each frame so the button control thread has
+        # some time to acquire the lock.
+        time.sleep(0.01)
 
         # Tell the button control thread to quit if the Q key is pressed.
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -534,15 +563,12 @@ def main_loop():
             # start of a new button push or OCR call.
             button_control_thread.join()
 
-        # Add a brief delay between each frame so the button control thread has
-        # some time to acquire the lock.
-        time.sleep(0.01)
 
     # When finished, clean up video and serial connections
     instance.display_results(log=True)
     cap.release()
     com.close()
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
