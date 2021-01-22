@@ -410,9 +410,9 @@ class MaxLairInstance():
         """Calculate the prospective Dynite Ore cost of resetting the game."""
         return 0 if num_resets < 3 else min(10, num_resets)
 
-    def check_sufficient_ore(self, num_resets: int) -> bool:
+    def check_sufficient_ore(self, needed_ore: int) -> bool:
         """Calculate whether sufficient Dynite Ore remains to quit the run without saving."""
-        return self.dynite_ore >= self.calculate_ore_cost(num_resets)
+        return self.dynite_ore >= needed_ore
     
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
