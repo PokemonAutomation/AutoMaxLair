@@ -440,16 +440,18 @@ class MaxLairInstance():
         self.lock.release()
 
         # Clear extra characters from the serial buffer.
-        self.com.reset_input_buffer()
+        while self.com.in_waiting > 1:
+            self.log(f'WARNING: Unexpected byte received: "{self.com.read()}"')
         
         if character is not None:
             # Send the command to the microcontroller using the serial port.
             self.com.write(character)
             # Check whether the microcontroller successfully echoed back the
             # command, and raise a warning if it did not.
-            if self.com.read() != character:
+            response = self.com.read()
+            if response != character:
                 self.log(
-                    'WARNING: Sent command was not echoed back successfully.'
+                    f'WARNING: Received "{response}" instead of sent command "{character}".'
                 )
 
         # Delay for the specified time.
