@@ -447,7 +447,7 @@ class MaxLairInstance():
         self.lock.release()
 
         # Clear extra characters from the serial buffer.
-        while self.com.in_waiting > 1:
+        while self.com.in_waiting > 0:
             self.log(f'WARNING: Unexpected byte received: "{self.com.read()}"')
         
         if character is not None:
