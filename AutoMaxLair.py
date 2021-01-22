@@ -32,7 +32,7 @@ if not config.read('Config.ini', 'utf8'):
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
-BOSS = config['default']['BOSS']
+BOSS = config['default']['BOSS'].lower().replace(' ', '-')
 PATH_INDEX = int(config['default']['PATH_INDEX'])
 BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
