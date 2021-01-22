@@ -435,6 +435,13 @@ class MaxLairInstance():
         if self.exit_flag.is_set():
             sys.exit()
 
+        # DEBUG: check for interruption of video feed while trying to send a
+        # command.
+        if self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
+            (180,255,10), 250
+        ):
+            self.log('WARNING: Loss of video detected while sending command.')
+
         # Then we release the lock so the display thread can run while we
         # complete the button press and subsequent delay.
         self.lock.release()
