@@ -20,7 +20,7 @@ for boss in bosses:
         # Note that early versions capitalize the boss name whereas others do
         # not. Therefore convert all the text to lower case.
         if boss.lower() in fn.lower() and '.txt' in fn:
-            with open(os.path.join(log_path, fn), newline='\n') as log_file:
+            with open(os.path.join(log_path, fn), newline='\n', encoding='utf-8') as log_file:
                 num_losses = 0
                 num_wins = 0
                 for row in log_file.readlines():
