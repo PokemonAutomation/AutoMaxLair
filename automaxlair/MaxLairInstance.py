@@ -415,7 +415,7 @@ class MaxLairInstance():
         ore_after_resets = self.dynite_ore
         for i in range(aditionnal_reset_count):
             ore_after_resets -= self.calculate_ore_cost(current_resets_count + i)
-        return ore_after_resets > 0
+        return ore_after_resets >= 0
     
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
