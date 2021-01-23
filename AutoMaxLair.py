@@ -417,7 +417,7 @@ def select_pokemon(inst) -> str:
                 take_pokemon = True
                 break
         elif inst.num_caught == 4 and 'ball saver' in inst.mode.lower():
-            if inst.check_sufficient_ore(inst.consecutive_resets, 2):
+            if inst.check_sufficient_ore(2):
                 reset_game = True
                 break
             else:
@@ -425,7 +425,7 @@ def select_pokemon(inst) -> str:
         elif i < inst.num_caught - 1:
             inst.push_buttons((b'^',3))
         elif ('strong boss' in inst.mode.lower() and inst.num_caught == 4 and
-                inst.check_sufficient_ore(inst.consecutive_resets, 1)
+                inst.check_sufficient_ore(1)
             ):
             reset_game = True
 
