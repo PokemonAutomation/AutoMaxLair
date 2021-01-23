@@ -167,7 +167,7 @@ def battle(inst) -> str:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
                 inst.dmax_timer = 0
-            inst.push_buttons((b'a', 1.5))
+            inst.push_buttons((b'a', 1.5), (b'b', 1))
         elif re.search(inst.phrases['FIGHT'], text):
             # If we got the pokemon from the scientist, we don't know what
             # is our current pokemon, check it first
