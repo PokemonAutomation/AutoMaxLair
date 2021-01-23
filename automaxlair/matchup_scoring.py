@@ -189,9 +189,8 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
     teammates: Dict[str, Pokemon]=None, team_contribution: float = None
 ) -> float:
     """Return a numerical score of an attacker's move against a defender."""
-    dealt_damage = 0
     # Calculate contribution of the move itself (assume Dynamaxed boss)
-    dealt_damage += calculate_damage(attacker, move_index, defender, False) / 2
+    dealt_damage = calculate_damage(attacker, move_index, defender, False) / 2
 
     # Estimate contributions by teammates (assume Dynamaxed boss).
     # Don't count the attacker or defender as teammates.
@@ -225,7 +224,7 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
                 pass
         else:
             received_damage += 0.25 * calculate_damage(defender, i, attacker,
-                multiple_targets=True) / (2 if attacker.dynamax else 1)
+                multiple_targets=False) / (2 if attacker.dynamax else 1)
             received_damage += (0.75 * calculate_average_damage(
                 {defender.name_id:defender}, teammates, multiple_targets=False)
             )

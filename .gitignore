@@ -1,0 +1,4 @@
+*.pyc
+Config.ini
+.vscode/*
+logs/*
