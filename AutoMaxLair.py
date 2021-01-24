@@ -387,7 +387,7 @@ def scientist(inst) -> str:
         inst.boss_pokemon[inst.boss],inst.rental_pokemon))
         / (rental_weight+boss_weight)
     )
-    inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}')
+    inst.log(f'Score for average pokemon:\t{average_score:.2f}')
     inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
 
     if average_score > existing_score:
