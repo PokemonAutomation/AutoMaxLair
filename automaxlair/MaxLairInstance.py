@@ -380,7 +380,7 @@ class MaxLairInstance():
             type_1 = self.read_text(image, self.type_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip().title()
             type_2 = self.read_text(image, self.type_rect_2, threshold=False, invert=True, segmentation_mode='--psm 8').strip().title()
             types.append(type_1 + type_2)
-            moves = ['','','']
+            moves.append('')
 
         # Identify the Pokemon based on its name and ability/types, where
         # relevant.
