@@ -57,14 +57,18 @@ def join(inst) -> str:
     # Start a new Dynamax Adventure.
     # 
     # First, start a new run by talking to the scientist in the Max Lair.
-    inst.log('Run #' + str(inst.runs + 1) + ' started!')
-    inst.push_buttons((b'b', 2), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1))
+    inst.log(f'Run #{inst.runs + 1} started!')
+    inst.push_buttons(
+        (b'b', 2), (b'a', 1), (b'a', 1.5), (b'a', 1.5), (b'a', 1.5), (b'b', 1)
+    )
 
     # select the right path
     for __ in range(PATH_INDEX):
-        inst.push_buttons((b'v', 1))
+        inst.push_button(b'v', 1)
 
-    inst.push_buttons((b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5))
+    inst.push_buttons(
+        (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5)
+    )
 
     # Next, read what rental Pokemon are available to choose.
     # Note that pokemon_list contains preconfigured Pokemon objects with types,
@@ -88,12 +92,12 @@ def join(inst) -> str:
             / (rental_weight + boss_weight)
         )
         pokemon_scores.append(score)
-        inst.log('Score for ' + name_id + ':\t%0.2f' % score)
+        inst.log(f'Score for {name_id}:\t{score:.2f}')
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
-        inst.push_buttons((b'v', 1))
+        inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
-    inst.push_buttons((b'a',27))
+    inst.push_button(b'a',27)
     inst.log('Choosing a path...')
     return 'path'
 
@@ -147,7 +151,7 @@ def battle(inst) -> str:
         # Read text from the bottom section of the screen.
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  
             
-        # then check the text for key phrases that inform the bot what to do next
+        # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
             inst.log('Catching boss...')
             inst.reset_stage()
@@ -170,12 +174,12 @@ def battle(inst) -> str:
             inst.push_buttons((b'a', 1.5), (b'b', 1))
         elif re.search(inst.phrases['FIGHT'], text):
             # If we got the pokemon from the scientist, we don't know what
-            # is our current pokemon, check it first
+            # our current pokemon is, so check it first.
             if inst.pokemon is None:
                 inst.push_buttons((b'y', 1), (b'a', 1))
                 inst.pokemon = inst.read_selectable_pokemon('battle')[0]
                 inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                inst.log('We got ' + inst.pokemon.name_id + ' at the scientist')
+                inst.log(f'Received {inst.pokemon.name_id} from the scientist')
 
             # Before the bot makes a decision, it needs to know what the boss
             # is.
@@ -225,19 +229,23 @@ def battle(inst) -> str:
             # Pokemon has not Dynamaxed yet.
             # If no Pokemon has Dynamaxed yet, check_dynamax_available visually
             # detects if the player can Dynamax by observing the icon.
-            inst.dynamax_available = inst.dmax_timer == -1 and inst.check_dynamax_available()
+            inst.dynamax_available = (
+                inst.dmax_timer == -1 and inst.check_dynamax_available()
+            )
             # Choose the best move to use against the boss
             # TODO: use the actual teammates instead of the average of all
             # rental Pokemon.
-            best_move_index, __, best_move_score = matchup_scoring.select_best_move(inst.pokemon,
-                inst.opponent, teammates=inst.rental_pokemon
+            best_move_index, __, best_move_score = (
+                matchup_scoring.select_best_move(inst.pokemon,
+                inst.opponent, teammates=inst.rental_pokemon)
             )
             if inst.dynamax_available:
                 default_score = best_move_score
                 inst.pokemon.dynamax = True  # Temporary
-                best_max_move_index, __, best_dmax_move_score = matchup_scoring.select_best_move(
-                    inst.pokemon, inst.opponent, inst.rental_pokemon
-                    )
+                best_max_move_index, __, best_dmax_move_score = (
+                    matchup_scoring.select_best_move(
+                    inst.pokemon, inst.opponent, inst.rental_pokemon)
+                )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
                 else:
@@ -255,32 +263,40 @@ def battle(inst) -> str:
                 inst.dmax_timer = 3
                 inst.pokemon.dynamax = True
                 inst.dynamax_available = False
-            move = inst.pokemon.max_moves[best_move_index] if inst.pokemon.dynamax else inst.pokemon.moves[best_move_index]
-            inst.log('Best move against ' + inst.opponent.name_id + ': ' + move.name_id + ' (index ' + str(best_move_index) + ')')
+            move = (
+                inst.pokemon.max_moves[best_move_index] if inst.pokemon.dynamax
+                else inst.pokemon.moves[best_move_index]
+            )
+            inst.log(
+                f'''Best move against {inst.opponent.name_id}: {move.name_id} 
+                (index {best_move_index})'''
+            )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - inst.move_index + 4) % 4):
-                inst.push_buttons((b'v', 1))
+                inst.push_button(b'v', 1)
                 inst.move_index = (inst.move_index + 1) % 4
             inst.push_buttons(
                 (b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1), (b'a', 0.5),
                 (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
             )
-            inst.pokemon.PP[inst.move_index] -= 1 if inst.opponent.ability_name_id != 'pressure' else 2
+            inst.pokemon.PP[inst.move_index] -= (
+                1 if inst.opponent.ability_name_id != 'pressure' else 2
+            )
         else:
             # Press B which can speed up dialogue
-            inst.push_buttons((b'b', 0.005))
+            inst.push_button(b'b', 0.005)
         
 
 def catch(inst) -> str:
     """Catch each boss after defeating it."""
     # Start by navigating to the ball selection screen
-    inst.push_buttons((b'a', 2))
+    inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
     while (inst.get_target_ball() != 'DEFAULT'
         and inst.get_target_ball() not in inst.check_ball()
     ):
-        inst.push_buttons((b'<', 2))
-    inst.push_buttons((b'a', 30))
+        inst.push_button(b'<', 2)
+    inst.push_button(b'a', 30)
     inst.record_ball_use()
 
     # If the caught Pokemon was not the final boss, check out the Pokemon and
@@ -300,7 +316,8 @@ def catch(inst) -> str:
         # Calculate scores for the new and existing Pokemon.
         # TODO: actually read the current Pokemon's health so the bot can decide
         # to switch if it's low.
-        score = ((rental_weight * inst.rental_scores[pokemon.name_id] + boss_weight
+        score = (
+            (rental_weight * inst.rental_scores[pokemon.name_id] + boss_weight
             * inst.boss_matchups[pokemon.name_id][inst.boss])
             / (rental_weight+boss_weight)
         )
@@ -310,8 +327,8 @@ def catch(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log('Score for ' + pokemon.name_id + ':\t%0.2f' % score)
-        inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
+        inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}')
+        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
 
         inst.caught_pokemon.append(pokemon.name_id)
 
@@ -319,9 +336,9 @@ def catch(inst) -> str:
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
             inst.pokemon = pokemon
-            inst.push_buttons((b'a', 3))
+            inst.push_button(b'a', 3)
         else:
-            inst.push_buttons((b'b', 3))
+            inst.push_button(b'b', 3)
 
         # Move on to the detect stage.
         inst.log('Detecting where the path led...')
@@ -370,8 +387,8 @@ def scientist(inst) -> str:
         inst.boss_pokemon[inst.boss],inst.rental_pokemon))
         / (rental_weight+boss_weight)
     )
-    inst.log('Score for average pokemon :\t%0.2f' % average_score)
-    inst.log('Score for ' + inst.pokemon.name_id + ':\t%0.2f' % existing_score)
+    inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}')
+    inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
 
     if average_score > existing_score:
         inst.push_buttons((None, 3), (b'a', 5))
@@ -406,8 +423,13 @@ def select_pokemon(inst) -> str:
             inst.log('''******************************
                 \n\nShiny found!\n\n******************************'''
             )
-            inst.log('Shiny ' + inst.caught_pokemon[inst.num_caught - 1 - i] + ' will be kept')
-            inst.caught_shinies.append(inst.caught_pokemon[inst.num_caught - 1 - i])
+            inst.log(
+                f'''Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be
+                 kept'''
+            )
+            inst.caught_shinies.append(
+                inst.caught_pokemon[inst.num_caught - 1 - i]
+            )
             inst.shinies_found += 1
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
@@ -423,17 +445,19 @@ def select_pokemon(inst) -> str:
             else:
                 return 'done' # End if there isn't enough ore to keep resetting
         elif i < inst.num_caught - 1:
-            inst.push_buttons((b'^',3))
-        elif ('strong boss' in inst.mode.lower() and inst.num_caught == 4 and
-                inst.check_sufficient_ore(1)
-            ):
+            inst.push_button(b'^',3)
+        elif (
+            'strong boss' in inst.mode.lower() and inst.num_caught == 4 and
+            inst.check_sufficient_ore(1)
+        ):
             reset_game = True
 
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).     
     if not reset_game:
         if take_pokemon:
-            inst.push_buttons((b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5),
+            inst.push_buttons(
+                (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1.5),
                 (b'a', 3), (b'b', 2), (b'b', 10), (b'a', 2)
             )
         else:
@@ -452,9 +476,11 @@ def select_pokemon(inst) -> str:
     # The button press sequences differ depending on how many Pokemon were
     # defeated and are further modified by the language.
     # Therefore, press A until the starting dialogue appears, then back out.
-    while inst.phrases['START_PHRASE'] not in inst.read_text(inst.get_frame(),
-        ((0, 0.6), (1, 1)), threshold=False):
-        inst.push_buttons((b'a', 1.5))
+    while inst.phrases['START_PHRASE'] not in inst.read_text(
+        inst.get_frame(),
+        ((0, 0.6), (1, 1)), threshold=False
+    ):
+        inst.push_button(b'a', 1.5)
     inst.push_buttons((b'b', 1.5), (b'b', 1.5))
     
     # Update statistics and reset stored information about the complete run.
