@@ -47,14 +47,24 @@ class MaxLairInstance():
         self.reset_run()
         
         self.start_date = datetime
-        self.filename = ''.join(('logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'))
+        self.filename = ''.join((
+            'logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'
+        ))
         self.boss = boss.lower().replace(' ', '-')
         self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
         self.mode = mode
         self.dynite_ore = dynite_ore
         self.stage = stage
-        self.num_saved_images = 0
 
+        if self.mode.lower() not in (
+            'default', 'strong boss', 'ball saver'
+        ):
+            self.log(
+                f'''WARNING: supplied mode {self.mode} not understood; 
+                using default mode.'''
+            )
+        
+        self.num_saved_images = 0
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
@@ -64,7 +74,9 @@ class MaxLairInstance():
         # Video capture and serial communication objects
         self.cap = cap
         self.base_resolution = (1920, 1080)
-        self.display_resolution = (round(1920*video_scale), round(1080*video_scale))
+        self.display_resolution = (
+            round(1920*video_scale), round(1080*video_scale)
+        )
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
         self.com = com
@@ -142,6 +154,24 @@ class MaxLairInstance():
             if self.pokemon.name_id == 'ditto':
                 self.pokemon = self.rental_pokemon['ditto']
             self.pokemon.dynamax = False
+
+    def outline_region(
+        self,
+        image: Image,
+        rect: Tuple[Tuple[float, float], Tuple[float, float]],
+        bgr: Tuple[int, int, int]=(255,255,255),
+        thickness: int=2
+    ) -> None:
+        """Draw a rectangle around a detection area for debug purposes."""
+        h, w = image.shape[:2]
+        top_left =  (round(rect[0][0]*w)-1, round(rect[0][1]*h)-1)
+        bottom_right = (round(rect[1][0]*w)+1, round(rect[1][1]*h)+1)
+        cv2.rectangle(image, top_left, bottom_right, bgr, thickness)
+
+    def outline_regions(self, image, rects, bgr=(255,255,255), thickness=2):
+        """Draw multiple rectangles around detection areas."""
+        for rect in rects:
+            self.outline_region(image, rect, bgr, thickness)
         
     def get_frame(self, stage: str='') -> Image:
         """Get an annotated image of the current Switch output."""
@@ -149,88 +179,50 @@ class MaxLairInstance():
 
         if not ret:
             self.log('ERROR: failed to read frame from VideoCapture.')
+            return
 
         # Draw rectangles around detection areas
-        h, w = img.shape[:2]
         if stage == 'select_pokemon':
-            cv2.rectangle(img, (round(self.shiny_rect[0][0]*w)-2,round(self.shiny_rect[0][1]*h)-2),
-                          (round(self.shiny_rect[1][0]*w)+2,round(self.shiny_rect[1][1]*h)+2), (0,255,0), 2)
+            self.outline_region(img, self.shiny_rect, (0,255,0))
         elif stage == 'join':
-            cv2.rectangle(img, (round(self.sel_rect_1[0][0]*w)-2,round(self.sel_rect_1[0][1]*h)-2),
-                          (round(self.sel_rect_1[1][0]*w)+2,round(self.sel_rect_1[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.sel_rect_2[0][0]*w)-2,round(self.sel_rect_2[0][1]*h)-2),
-                          (round(self.sel_rect_2[1][0]*w)+2,round(self.sel_rect_2[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.sel_rect_3[0][0]*w)-2,round(self.sel_rect_3[0][1]*h)-2),
-                          (round(self.sel_rect_3[1][0]*w)+2,round(self.sel_rect_3[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.abil_rect_1[0][0]*w)-2,round(self.abil_rect_1[0][1]*h)-2),
-                          (round(self.abil_rect_1[1][0]*w)+2,round(self.abil_rect_1[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.abil_rect_2[0][0]*w)-2,round(self.abil_rect_2[0][1]*h)-2),
-                          (round(self.abil_rect_2[1][0]*w)+2,round(self.abil_rect_2[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.abil_rect_3[0][0]*w)-2,round(self.abil_rect_3[0][1]*h)-2),
-                          (round(self.abil_rect_3[1][0]*w)+2,round(self.abil_rect_3[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_1[0][0]*w)-2,round(self.move_rect_1[0][1]*h)-2),
-                          (round(self.move_rect_1[1][0]*w)+2,round(self.move_rect_1[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_2[0][0]*w)-2,round(self.move_rect_2[0][1]*h)-2),
-                          (round(self.move_rect_2[1][0]*w)+2,round(self.move_rect_2[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_3[0][0]*w)-2,round(self.move_rect_3[0][1]*h)-2),
-                          (round(self.move_rect_3[1][0]*w)+2,round(self.move_rect_3[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_4[0][0]*w)-2,round(self.move_rect_4[0][1]*h)-2),
-                          (round(self.move_rect_4[1][0]*w)+2,round(self.move_rect_4[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_5[0][0]*w)-2,round(self.move_rect_5[0][1]*h)-2),
-                          (round(self.move_rect_5[1][0]*w)+2,round(self.move_rect_5[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_6[0][0]*w)-2,round(self.move_rect_6[0][1]*h)-2),
-                          (round(self.move_rect_6[1][0]*w)+2,round(self.move_rect_6[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_7[0][0]*w)-2,round(self.move_rect_7[0][1]*h)-2),
-                          (round(self.move_rect_7[1][0]*w)+2,round(self.move_rect_7[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_8[0][0]*w)-2,round(self.move_rect_8[0][1]*h)-2),
-                          (round(self.move_rect_8[1][0]*w)+2,round(self.move_rect_8[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_9[0][0]*w)-2,round(self.move_rect_9[0][1]*h)-2),
-                          (round(self.move_rect_9[1][0]*w)+2,round(self.move_rect_9[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_10[0][0]*w)-2,round(self.move_rect_10[0][1]*h)-2),
-                          (round(self.move_rect_10[1][0]*w)+2,round(self.move_rect_10[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_11[0][0]*w)-2,round(self.move_rect_11[0][1]*h)-2),
-                          (round(self.move_rect_11[1][0]*w)+2,round(self.move_rect_11[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_12[0][0]*w)-2,round(self.move_rect_12[0][1]*h)-2),
-                          (round(self.move_rect_12[1][0]*w)+2,round(self.move_rect_12[1][1]*h)+2), (0,255,255), 2)
+            self.outline_regions(
+                img, (self.sel_rect_2, self.sel_rect_2, self.sel_rect_3,
+                self.sel_rect_4), (0,255,0)
+            )
+            self.outline_regions(
+                img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
+                self.abil_rect_4), (0,255,255)
+            )
+            self.outline_regions(
+                img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
+                self.move_rect_4, self.move_rect_5, self.move_rect_6,
+                self.move_rect_7, self.move_rect_8, self.move_rect_9,
+                self.move_rect_10, self.move_rect_11, self.move_rect_12),
+                (255,255,0)
+            )
         elif stage == 'catch':
-            cv2.rectangle(img, (round(self.sel_rect_4[0][0]*w)-2,round(self.sel_rect_4[0][1]*h)-2),
-                          (round(self.sel_rect_4[1][0]*w)+2,round(self.sel_rect_4[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.abil_rect_4[0][0]*w)-2,round(self.abil_rect_4[0][1]*h)-2),
-                          (round(self.abil_rect_4[1][0]*w)+2,round(self.abil_rect_4[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_13[0][0]*w)-2,round(self.move_rect_13[0][1]*h)-2),
-                          (round(self.move_rect_13[1][0]*w)+2,round(self.move_rect_13[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_14[0][0]*w)-2,round(self.move_rect_14[0][1]*h)-2),
-                          (round(self.move_rect_14[1][0]*w)+2,round(self.move_rect_14[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.move_rect_15[0][0]*w)-2,round(self.move_rect_15[0][1]*h)-2),
-                          (round(self.move_rect_15[1][0]*w)+2,round(self.move_rect_15[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.move_rect_16[0][0]*w)-2,round(self.move_rect_16[0][1]*h)-2),
-                          (round(self.move_rect_16[1][0]*w)+2,round(self.move_rect_16[1][1]*h)+2), (0,255,255), 2)
-            cv2.rectangle(img, (round(self.ball_rect[0][0]*w)-2,round(self.ball_rect[0][1]*h)-2),
-                          (round(self.ball_rect[1][0]*w)+2,round(self.ball_rect[1][1]*h)+2), (0,0,255), 2)
-            cv2.rectangle(img, (round(self.ball_num_rect[0][0]*w)-2,round(self.ball_num_rect[0][1]*h)-2),
-                          (round(self.ball_num_rect[1][0]*w)+2,round(self.ball_num_rect[1][1]*h)+2), (0,0,255), 2)
+            self.outline_region(img, self.sel_rect_4, (0,255,0))
+            self.outline_region(img, self.abil_rect_4, (0,255,255))
+            self.outline_regions(
+                img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
+                self.move_rect_16), (255,255,0)
+            )
+            self.outline_regions(
+                img, (self.ball_rect, self.ball_num_rect), (0,0,255)
+            )
         elif stage == 'battle':
-            cv2.rectangle(img, (round(self.sel_rect_5[0][0]*w)-2,round(self.sel_rect_5[0][1]*h)-2),
-                          (round(self.sel_rect_5[1][0]*w)+2,round(self.sel_rect_5[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.type_rect_1[0][0]*w)-2,round(self.type_rect_1[0][1]*h)-2),
-                          (round(self.type_rect_1[1][0]*w)+2,round(self.type_rect_1[1][1]*h)+2), (255,255,0), 2)
-            cv2.rectangle(img, (round(self.type_rect_2[0][0]*w)-2,round(self.type_rect_2[0][1]*h)-2),
-                          (round(self.type_rect_2[1][0]*w)+2,round(self.type_rect_2[1][1]*h)+2), (255,255,0), 2)
-            cv2.rectangle(img, (round(self.dmax_symbol_rect[0][0]*w)-2,round(self.dmax_symbol_rect[0][1]*h)-2),
-                          (round(self.dmax_symbol_rect[1][0]*w)+2,round(self.dmax_symbol_rect[1][1]*h)+2), (255,255,0), 2)
+            self.outline_region(img, self.sel_rect_5, (0,255,0))
+            self.outline_regions(
+                img, (self.type_rect_1, self.type_rect_2,
+                self.dmax_symbol_rect), (255,255,0)
+            )
         elif stage == 'backpacker':
-            cv2.rectangle(img, (round(self.item_rect_1[0][0]*w)-2,round(self.item_rect_1[0][1]*h)-2),
-                          (round(self.item_rect_1[1][0]*w)+2,round(self.item_rect_1[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.item_rect_2[0][0]*w)-2,round(self.item_rect_2[0][1]*h)-2),
-                          (round(self.item_rect_2[1][0]*w)+2,round(self.item_rect_2[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.item_rect_3[0][0]*w)-2,round(self.item_rect_3[0][1]*h)-2),
-                          (round(self.item_rect_3[1][0]*w)+2,round(self.item_rect_3[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.item_rect_4[0][0]*w)-2,round(self.item_rect_4[0][1]*h)-2),
-                          (round(self.item_rect_4[1][0]*w)+2,round(self.item_rect_4[1][1]*h)+2), (0,255,0), 2)
-            cv2.rectangle(img, (round(self.item_rect_5[0][0]*w)-2,round(self.item_rect_5[0][1]*h)-2),
-                          (round(self.item_rect_5[1][0]*w)+2,round(self.item_rect_5[1][1]*h)+2), (0,255,0), 2)
+            self.outline_regions(
+                img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
+                self.item_rect_4, self.item_rect_5), (0,255,0)
+            )
 
-        # Return and annotated image.
+        # Return annotated image.
         return img
 
     def read_text(
