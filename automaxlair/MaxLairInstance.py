@@ -56,8 +56,8 @@ class MaxLairInstance():
         self.dynite_ore = dynite_ore
         self.stage = stage
 
-        if self.mode.lower() not in (
-            'default', 'strong boss', 'ball saver'
+        if self.mode not in (
+            'default', 'strong boss', 'ball saver', 'keep path'
         ):
             self.log(
                 f'''WARNING: supplied mode {self.mode} not understood; 

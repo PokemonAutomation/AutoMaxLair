@@ -38,7 +38,7 @@ BASE_BALL = config['default']['BASE_BALL']
 BASE_BALLS = int(config['default']['BASE_BALLS'])
 LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
 LEGENDARY_BALLS = int(config['default']['LEGENDARY_BALLS'])
-MODE = config['default']['MODE']
+MODE = config['default']['MODE'].lower()
 DYNITE_ORE = int(config['default']['DYNITE_ORE'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
 
@@ -409,6 +409,9 @@ def select_pokemon(inst) -> str:
     # there are no Pokemon to check.
     if inst.num_caught == 0:
         inst.push_buttons((None, 10), (b'b', 1))
+        # No Pokemon to review, so go back to the beginning.
+        # Note that the "keep path" mode is meant to be used on a good path, so
+        # although the path would be lost that situation should never arise.
         return 'join'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -416,10 +419,22 @@ def select_pokemon(inst) -> str:
     inst.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
 
     # Check all Pokemon for shininess
-    take_pokemon = False # Set to True if a non-legendary shiny is found
-    reset_game = False # Set to True in some cases in non-default modes
+    take_pokemon = False  # Set to True if a non-legendary shiny is found
+    reset_game = False  # Set to True in some cases in non-default modes
     for i in range(inst.num_caught):
-        if inst.check_shiny():
+        # First check if we need to reset immediately.
+        # Note that "keep path" mode resets always unless a shiny legendary
+        # is found, and "ball saver" resets if a non-shiny legendary was caught.
+        if (
+            (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
+            or (inst.mode == 'ball saver' and inst.num_caught == 4 and i > 0)
+        ):
+            if inst.check_sufficient_ore(2):
+                reset_game = True
+                break
+            else:
+                return 'done'  # End if there isn't enough ore to keep resetting
+        elif inst.check_shiny():
             inst.log('''******************************
                 \n\nShiny found!\n\n******************************'''
             )
@@ -438,19 +453,14 @@ def select_pokemon(inst) -> str:
             else:
                 take_pokemon = True
                 break
-        elif inst.num_caught == 4 and 'ball saver' in inst.mode.lower():
-            if inst.check_sufficient_ore(2):
-                reset_game = True
-                break
-            else:
-                return 'done' # End if there isn't enough ore to keep resetting
         elif i < inst.num_caught - 1:
             inst.push_button(b'^',3)
-        elif (
-            'strong boss' in inst.mode.lower() and inst.num_caught == 4 and
-            inst.check_sufficient_ore(1)
-        ):
-            reset_game = True
+    
+    if (
+        not take_pokemon and inst.mode == 'strong boss' and inst.num_caught == 4
+        and inst.check_sufficient_ore(1)
+    ):
+        reset_game = True
 
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).     
@@ -469,10 +479,7 @@ def select_pokemon(inst) -> str:
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
         inst.push_buttons((b'h', 2), (b'x', 2))
-        # Dialogue changes a lot depending on the number of resets as well as
-        # the language.
-        # Therefore, press A until the starting dialogue is detected, then back
-        # out.
+
     # The button press sequences differ depending on how many Pokemon were
     # defeated and are further modified by the language.
     # Therefore, press A until the starting dialogue appears, then back out.
