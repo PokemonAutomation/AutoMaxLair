@@ -53,13 +53,13 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         'hyper-beam', 'giga-impact', 'meteor-beam', 'razor-wind')
     ):
         factor = 0.5
-    elif name_id is 'future-sight':
+    elif name_id == 'future-sight':
         factor = 0.3
     # Account for conditional moves that require certain conditions
     # (Steel Roller, Dream Eater, Belch, etc.).
     elif name_id in ('steel-roller', 'dream-eater', 'belch'):
         factor = 0
-    elif name_id is 'focus-punch':
+    elif name_id == 'focus-punch':
         factor = 0.75
     # Account for multi-strike moves.
     elif name_id in ('bonemerang', 'double-hit', 'double-iron-bash',
@@ -73,7 +73,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         'spike-cannon', 'tail-slap', 'water-shuriken'
     ):
         factor = 3.167
-    elif name_id is 'triple-axel':
+    elif name_id == 'triple-axel':
         factor = 5.23
 
     return base_power, factor
