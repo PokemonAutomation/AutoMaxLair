@@ -186,7 +186,7 @@ class MaxLairInstance():
             self.outline_region(img, self.shiny_rect, (0,255,0))
         elif stage == 'join':
             self.outline_regions(
-                img, (self.sel_rect_2, self.sel_rect_2, self.sel_rect_3,
+                img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
                 self.sel_rect_4), (0,255,0)
             )
             self.outline_regions(
