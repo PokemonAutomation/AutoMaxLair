@@ -355,7 +355,24 @@ def catch(inst) -> str:
 
 def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
-    inst.push_buttons((None, 7), (b'a', 5))
+    inst.push_button(None, 4)
+
+    inst.log('Reading backpacker items ...')
+
+    f = open("itemsList.txt", "a", encoding='utf8')
+    items = []
+    items.append(inst.read_text(inst.get_frame(), inst.item_rect_1, threshold=False, invert=True, segmentation_mode='--psm 7').strip())
+    items.append(inst.read_text(inst.get_frame(), inst.item_rect_2, threshold=False, segmentation_mode='--psm 7').strip())
+    items.append(inst.read_text(inst.get_frame(), inst.item_rect_3, threshold=False, segmentation_mode='--psm 7').strip())
+    items.append(inst.read_text(inst.get_frame(), inst.item_rect_4, threshold=False, segmentation_mode='--psm 7').strip())
+    items.append(inst.read_text(inst.get_frame(), inst.item_rect_5, threshold=False, segmentation_mode='--psm 7').strip())
+    for item in items:
+        f.write(f'{item}\n')
+        inst.log(f'There is {item}')
+    f.close()
+
+    inst.push_button(b'a', 5)
+
     inst.log('Detecting where the path led...')
     return 'detect'
 
