@@ -123,11 +123,11 @@ class MaxLairInstance():
         self.ball_rect = ((0.69,0.63), (0.88,0.68))
         self.ball_num_rect = ((0.915,0.63), (0.95,0.68))
         # Backpacker
-        self.item_rect_1 = ((0.549,0.1270), (0.745,0.1770)) 
-        self.item_rect_2 = ((0.549,0.2035), (0.745,0.2535))
-        self.item_rect_3 = ((0.549,0.2800), (0.745,0.3300))
-        self.item_rect_4 = ((0.549,0.3565), (0.745,0.4065))
-        self.item_rect_5 = ((0.549,0.4330), (0.745,0.4830))
+        self.item_rect_1 = ((0.549,0.11), (0.745,0.16)) 
+        self.item_rect_2 = ((0.549,0.19), (0.745,0.24))
+        self.item_rect_3 = ((0.549,0.27), (0.745,0.32))
+        self.item_rect_4 = ((0.549,0.35), (0.745,0.40))
+        self.item_rect_5 = ((0.549,0.43), (0.745,0.48))
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
