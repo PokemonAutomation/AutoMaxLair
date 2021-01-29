@@ -4,21 +4,21 @@
 #           Discord user pifopi, and Discord user denvoros
 #       Created 2020-11-20
 
-import cv2
+import configparser
+import pickle
+import re
+import threading
 import time
-import serial
+from copy import copy, deepcopy
+from datetime import datetime
+
+import cv2
+import enchant
 import numpy
 import pytesseract
-import pickle
-import enchant
-import configparser
-import threading
-import re
-from datetime import datetime
-from copy import copy, deepcopy
+import serial
 
 from automaxlair import MaxLairInstance, matchup_scoring
-
 
 # Load configuration from config file
 config = configparser.ConfigParser()
@@ -222,7 +222,7 @@ def battle(inst) -> str:
                 inst.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            inst.push_buttons((b'b', 2), (b'a', 2))
+            inst.push_buttons((b'b', 2), (b'a', 0.05), (b'a', 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's

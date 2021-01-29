@@ -4,14 +4,16 @@
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
-import cv2
-import time
-import pytesseract
-import enchant
 import pickle
 import sys
+import time
 from datetime import datetime
-from typing import TypeVar, Dict, List, Tuple
+from typing import Dict, List, Tuple, TypeVar
+
+import cv2
+import enchant
+import pytesseract
+
 Pokemon = TypeVar('Pokemon')
 Move = TypeVar('Move')
 Serial = TypeVar('serial.Serial')
@@ -138,11 +140,16 @@ class MaxLairInstance():
         self.lives = 4
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
-        self.boss_pokemon = pickle.load(open(self.data_paths[0], 'rb'))
-        self.rental_pokemon = pickle.load(open(self.data_paths[1], 'rb'))
-        self.boss_matchups = pickle.load(open(self.data_paths[2], 'rb'))
-        self.rental_matchups = pickle.load(open(self.data_paths[3], 'rb'))
-        self.rental_scores = pickle.load(open(self.data_paths[4], 'rb'))
+        with open(self.data_paths[0], 'rb') as boss_file:
+            self.boss_pokemon = pickle.load(boss_file)
+        with open(self.data_paths[1], 'rb') as rental_file:
+            self.rental_pokemon = pickle.load(rental_file)
+        with open(self.data_paths[2], 'rb') as boss_matchup_file:
+            self.rental_pokemon = pickle.load(boss_matchup_file)
+        with open(self.data_paths[3], 'rb') as rental_matchup_file:
+            self.rental_pokemon = pickle.load(rental_matchup_file)
+        with open(self.data_paths[4], 'rb') as rental_score_file:
+            self.rental_pokemon = pickle.load(rental_score_file)
         
     def reset_stage(self) -> None:
         """Reset after a battle."""
