@@ -17,9 +17,9 @@ class Pokemon():
         moves,
         max_moves,
         level: int=100,
-        IVs: Tuple[int]=(15,15,15,15,15,15),
-        EVs: Tuple[int]=(0,0,0,0,0,0),
-        nature: Tuple[int]=(1,1,1,1,1,1)
+        IVs: Tuple[int, int, int, int, int, int]=(15,15,15,15,15,15),
+        EVs: Tuple[int, int, int, int, int, int]=(0,0,0,0,0,0),
+        nature: Tuple[int, int, int, int, int, int]=(1,1,1,1,1,1)
     ):
         self.id_num = id_num
         self.name_id = name_id
@@ -129,9 +129,9 @@ class Pokemon():
         Returns the ability ID if no value exists for the supplied language.
         """
 
-        return self.abilities.get(language, self.ability_id)
+        return self.abilities.get(language, self.ability_name_id)
 
-    def get_types(self, language: str) -> str:
+    def get_types(self, language: str) -> List[str]:
         """Return the types of the Pokemon in a given language.
         Returns the type IDs if no value exists for the supplied language.
         """

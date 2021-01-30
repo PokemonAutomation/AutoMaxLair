@@ -29,7 +29,7 @@ class MaxLairInstance():
     def __init__(
         self,
         boss: str,
-        balls: int,
+        balls: Tuple[str, int, str, int],
         com: Serial,
         cap: VideoCapture,
         video_scale: float,
@@ -145,11 +145,11 @@ class MaxLairInstance():
         with open(self.data_paths[1], 'rb') as rental_file:
             self.rental_pokemon = pickle.load(rental_file)
         with open(self.data_paths[2], 'rb') as boss_matchup_file:
-            self.rental_pokemon = pickle.load(boss_matchup_file)
+            self.boss_matchups = pickle.load(boss_matchup_file)
         with open(self.data_paths[3], 'rb') as rental_matchup_file:
-            self.rental_pokemon = pickle.load(rental_matchup_file)
+            self.rental_matchups = pickle.load(rental_matchup_file)
         with open(self.data_paths[4], 'rb') as rental_score_file:
-            self.rental_pokemon = pickle.load(rental_score_file)
+            self.rental_scores = pickle.load(rental_score_file)
         
     def reset_stage(self) -> None:
         """Reset after a battle."""
