@@ -553,7 +553,7 @@ def main_loop():
     """
 
     # Set up the logger
-    log_name = ''.join((BOSS,'_',datetime.strftime('%Y-%m-%d %H-%M-%S')))
+    log_name = ''.join((BOSS,'_',datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
     # Configure the logger.
     logger = logging.getLogger(log_name)
     logger.setLevel(

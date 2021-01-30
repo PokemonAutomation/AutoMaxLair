@@ -38,7 +38,7 @@ class MaxLairInstance():
         lock: Lock,
         exit_flag: Event,
         log_name: str,
-        enabble_debug_logs: bool=False
+        enable_debug_logs: bool=False
      ) -> None:
         # Read values from the config.
         vid_scale = float(config['default']['VIDEO_SCALE'])
@@ -61,6 +61,7 @@ class MaxLairInstance():
         self.phrases = config[config['language']['LANGUAGE']]
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
+        self.enable_debug_logs = enable_debug_logs
         
         
         # Zero the start time and fetch the logger.
@@ -158,11 +159,11 @@ class MaxLairInstance():
         with open(self.data_paths[1], 'rb') as rental_file:
             self.rental_pokemon = pickle.load(rental_file)
         with open(self.data_paths[2], 'rb') as boss_matchup_file:
-            self.rental_pokemon = pickle.load(boss_matchup_file)
+            self.boss_matchups = pickle.load(boss_matchup_file)
         with open(self.data_paths[3], 'rb') as rental_matchup_file:
-            self.rental_pokemon = pickle.load(rental_matchup_file)
+            self.rental_matchups = pickle.load(rental_matchup_file)
         with open(self.data_paths[4], 'rb') as rental_score_file:
-            self.rental_pokemon = pickle.load(rental_score_file)
+            self.rental_scores = pickle.load(rental_score_file)
         
     def reset_stage(self) -> None:
         """Reset after a battle."""
@@ -193,7 +194,7 @@ class MaxLairInstance():
         for rect in rects:
             self.outline_region(image, rect, bgr, thickness)
         
-    def get_frame(self, stage: str='') -> Image:
+    def get_frame(self, rectangle_set: str='') -> Image:
         """Get an annotated image of the current Switch output."""
         ret, img = self.cap.read()
 
@@ -201,10 +202,12 @@ class MaxLairInstance():
             self.log('failed to read frame from VideoCapture.', 'ERROR')
             return
 
-        # Draw rectangles around detection areas
-        if stage == 'select_pokemon':
+        # Draw rectangles around detection areas if debug logs are on.
+        if not self.enable_debug_logs:
+            pass
+        elif rectangle_set == 'select_pokemon':
             self.outline_region(img, self.shiny_rect, (0,255,0))
-        elif stage == 'join':
+        elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
                 self.sel_rect_4), (0,255,0)
@@ -220,7 +223,7 @@ class MaxLairInstance():
                 self.move_rect_10, self.move_rect_11, self.move_rect_12),
                 (255,255,0)
             )
-        elif stage == 'catch':
+        elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0,255,0))
             self.outline_region(img, self.abil_rect_4, (0,255,255))
             self.outline_regions(
@@ -230,13 +233,13 @@ class MaxLairInstance():
             self.outline_regions(
                 img, (self.ball_rect, self.ball_num_rect), (0,0,255)
             )
-        elif stage == 'battle':
+        elif rectangle_set == 'battle':
             self.outline_region(img, self.sel_rect_5, (0,255,0))
             self.outline_regions(
                 img, (self.type_rect_1, self.type_rect_2,
                 self.dmax_symbol_rect), (255,255,0)
             )
-        elif stage == 'backpacker':
+        elif rectangle_set == 'backpacker':
             self.outline_regions(
                 img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
                 self.item_rect_4, self.item_rect_5), (0,255,0)
