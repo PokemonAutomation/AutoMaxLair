@@ -29,7 +29,7 @@ class MaxLairInstance():
     def __init__(
         self,
         boss: str,
-        balls: int,
+        balls: Tuple[str, int, str, int],
         com: Serial,
         cap: VideoCapture,
         video_scale: float,
