@@ -141,8 +141,8 @@ class MaxLairInstance():
             'default', 'strong boss', 'ball saver', 'keep path'
         ):
             self.log(
-                f'''Supplied mode {self.mode} not understood; 
-                using default mode.''', 'WARNING'
+                f'Supplied mode {self.mode} not understood; '
+                'using default mode.', 'WARNING'
             )
 
     def reset_run(self) -> None:
@@ -342,8 +342,8 @@ class MaxLairInstance():
 
 
         self.log(
-            f'''OCRed Pokemon {text} matched to rental Pokemon {matched_text} 
-            with distance of {match_value}''', 'DEBUG'
+            f'OCRed Pokemon {text} matched to rental Pokemon {matched_text} '
+            f'with distance of {match_value}', 'DEBUG'
         ) 
 
         # finally, return the Pokemon that matched best with the OCRed text

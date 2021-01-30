@@ -111,7 +111,7 @@ def path(inst) -> str:
     """Choose a path to follow."""
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
-    print('Finished choosing a path. Now detecting where the path led.')
+    inst.log('Finished choosing a path. Now detecting where the path led.')
     return 'detect'
 
 
@@ -273,8 +273,8 @@ def battle(inst) -> str:
                 else inst.pokemon.moves[best_move_index]
             )
             inst.log(
-                f'''Best move against {inst.opponent.name_id}: {move.name_id} 
-                (index {best_move_index})''', 'DEBUG'
+                f'Best move against {inst.opponent.name_id}: {move.name_id} '
+                '(index {best_move_index})', 'DEBUG'
             )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - inst.move_index + 4) % 4):
@@ -350,8 +350,8 @@ def catch(inst) -> str:
 
         # Move on to the detect stage.
         inst.log(
-            f'''Decided to take {inst.pokemon.name_id}.
-            Now detecting where the path led.'''
+            f'Decided to take {inst.pokemon.name_id}. '
+            'Now detecting where the path led.'
         )
         return 'detect'
 
@@ -465,12 +465,12 @@ def select_pokemon(inst) -> str:
             else:
                 return 'done'  # End if there isn't enough ore to keep resetting
         elif inst.check_shiny():
-            inst.log('''******************************
-                \n\nShiny found!\n\n******************************'''
+            inst.log('******************************'
+                '\n\nShiny found!\n\n******************************'
             )
             inst.log(
-                f'''Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be
-                 kept.'''
+                f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
+                 'kept.'
             )
             inst.caught_shinies.append(
                 inst.caught_pokemon[inst.num_caught - 1 - i]
@@ -599,8 +599,8 @@ def main_loop():
     cap = cv2.VideoCapture(VIDEO_INDEX)
     if not cap.isOpened():
         logger.error(
-            '''Failed to open the video connection. Check the config file and
-            ensure no other application is using the video input.'''
+            'Failed to open the video connection. Check the config file and '
+            'ensure no other application is using the video input.'
         )
         com.close()
         return
