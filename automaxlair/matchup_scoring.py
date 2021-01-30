@@ -109,11 +109,11 @@ def calculate_damage(attacker: Pokemon, move_index: int, defender: Pokemon,
     """Return the damage (default %) of a move used by the attacker against the
     defender.
     """
-
-    if attacker.dynamax:
-        move = attacker.max_moves[move_index]
-    else:
-        move = attacker.moves[move_index]
+    
+    move = (
+        attacker.max_moves[move_index] if attacker.dynamax
+        else attacker.moves[move_index]
+    )
         
     modifier = 0.925 # Random between 0.85 and 1
     modifier *= move.accuracy
@@ -207,15 +207,21 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
     
     # Estimate damage received.
     received_damage = 0
+    received_regular_damage = 0
+    received_max_move_damage = 0
+    max_move_probability = 0.3  # Estimate!
+    original_dynamax_state = defender.dynamax
+    # Calculate damage from regular moves.
+    defender.dynamax = False
     for i in range(len(defender.moves)):
         if defender.moves[i].is_spread and not defender.dynamax:
             if (attacker.moves[move_index].name_id != 'wide-guard'
                 or attacker.dynamax
             ):
-                received_damage += calculate_damage(defender, i, attacker,
+                received_regular_damage += calculate_damage(defender, i, attacker,
                     multiple_targets=True
                 )
-                received_damage += 3* calculate_average_damage(
+                received_regular_damage += 3* calculate_average_damage(
                     {defender.name_id:defender}, teammates, 
                     multiple_targets=True
                 )
@@ -223,12 +229,37 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
                 #print('Wide guard stops '+defender.moves[i].name) # DEBUG
                 pass
         else:
-            received_damage += 0.25 * calculate_damage(defender, i, attacker,
-                multiple_targets=False) / (2 if attacker.dynamax else 1)
-            received_damage += (0.75 * calculate_average_damage(
-                {defender.name_id:defender}, teammates, multiple_targets=False)
+            received_regular_damage += (
+                0.25 * calculate_damage(defender, i, attacker)
+                / (2 if attacker.dynamax else 1)
             )
+            received_regular_damage += (
+                0.75 * calculate_average_damage({defender.name_id:defender},
+                teammates)
+            )
+    # Calculate damage from Max Moves.
+    # Note that bosses never seem to use Max Guard. It is assumed that the move
+    # index is selected first, followed by the choice of whether or not to use
+    # the max version.
+    defender.dynamax = True
+    for i in range(len(defender.max_moves)):
+        received_max_move_damage += (
+            0.25 * calculate_damage(defender, i, attacker)
+            / (2 if attacker.dynamax else 1)
+        )
+        received_max_move_damage += (
+            0.75 * calculate_average_damage({defender.name_id:defender},
+            teammates)
+        )
+    # Return the defender to its original dynamax state.
+    defender.dynamax = original_dynamax_state
 
+    # Calculate the incoming damage as a weighted average of regular and max
+    # moves.    
+    received_damage = (
+        received_regular_damage * (1-max_move_probability)  
+        + received_max_move_damage * max_move_probability
+    )
     average_received_damage = received_damage / len(defender.moves)
 
     # Re-add Pokemon temporaily removed from the dictionaries.

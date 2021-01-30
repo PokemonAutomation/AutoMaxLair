@@ -4,6 +4,7 @@
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
+import logging
 import pickle
 import sys
 import time
@@ -20,6 +21,9 @@ Serial = TypeVar('serial.Serial')
 VideoCapture = TypeVar('cv2.VideoCapture')
 DateTime = TypeVar('datetime.datetime')
 Image = TypeVar('cv2 image')
+Configparser = TypeVar('configparser.Configparser')
+Lock = TypeVar('threading.Lock')
+Event = TypeVar('threading.Event')
 
 
 class MaxLairInstance():
@@ -28,83 +32,83 @@ class MaxLairInstance():
     """
     def __init__(
         self,
-        boss: str,
-        balls: int,
+        config: Configparser,
         com: Serial,
         cap: VideoCapture,
-        video_scale: float,
-        lock,
-        exit_flag,
-        datetime: DateTime,
-        data_paths: Tuple[str],
-        phrases: Dict[str, str],
-        mode: str,
-        dynite_ore: int,
-        stage: str='join'
+        lock: Lock,
+        exit_flag: Event,
+        log_name: str,
+        enabble_debug_logs: bool=False
      ) -> None:
-        self.data_paths = data_paths
-        self.phrases = phrases
-        self.tesseract_language = phrases['TESSERACT_LANG_NAME']
-        self.lang = phrases['DATA_LANG_NAME']
-        self.reset_run()
+        # Read values from the config.
+        vid_scale = float(config['default']['VIDEO_SCALE'])
+        self.boss = config['default']['BOSS'].lower().replace(' ', '-')
         
-        self.start_date = datetime
-        self.filename = ''.join((
-            'logs//',boss,'_',datetime.strftime('%Y-%m-%d %H-%M-%S'),'_log.txt'
-        ))
-        self.boss = boss.lower().replace(' ', '-')
-        self.base_ball, self.base_balls, self.legendary_ball, self.legendary_balls = balls
-        self.mode = mode
-        self.dynite_ore = dynite_ore
-        self.stage = stage
+        self.base_ball = config['default']['BASE_BALL']
+        self.base_balls = int(config['default']['BASE_BALLS'])
+        self.legendary_ball = config['default']['LEGENDARY_BALL']
+        self.legendary_balls = int(config['default']['LEGENDARY_BALLS'])
+        self.mode = config['default']['MODE'].lower()
+        self.dynite_ore = int(config['default']['DYNITE_ORE'])
+        self.data_paths = (
+            config['pokemon_data_paths']['Boss_Pokemon'],
+            config['pokemon_data_paths']['Rental_Pokemon'],
+            config['pokemon_data_paths']['Boss_Matchup_LUT'],
+            config['pokemon_data_paths']['Rental_Matchup_LUT'],
+            config['pokemon_data_paths']['Rental_Pokemon_Scores']
+        )
 
-        if self.mode not in (
-            'default', 'strong boss', 'ball saver', 'keep path'
-        ):
-            self.log(
-                f'''WARNING: supplied mode {self.mode} not understood; 
-                using default mode.'''
-            )
+        self.phrases = config[config['language']['LANGUAGE']]
+        self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
+        self.lang = self.phrases['DATA_LANG_NAME']
         
+        
+        # Zero the start time and fetch the logger.
+        self.start_date = datetime.now()
+        self.log_name = log_name
+        self.logger = logging.getLogger(self.log_name)
+        
+        # Initialize starting values.
         self.num_saved_images = 0
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
         self.caught_shinies = []
         self.consecutive_resets = 0
+        self.reset_run()  # Some values are initialized in here.
+        self.stage = 'join'
 
-        # Video capture and serial communication objects
+        # Store references to the video capture, serial communication, and lock
+        # objects used.
         self.cap = cap
         self.base_resolution = (1920, 1080)
-        self.display_resolution = (
-            round(1920*video_scale), round(1080*video_scale)
-        )
+        self.display_resolution = (round(1920*vid_scale), round(1080*vid_scale))
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
         self.com = com
         self.lock = lock
         self.exit_flag = exit_flag
 
-        # Rectangles for checking shininess and reading specific text
-        # Shiny star rectangle
+        # Define rectangles for checking shininess and reading specific text.
+        # Shiny star rectangle.
         self.shiny_rect = ((0.075,0.53), (0.105,0.58))
-        # Selectable Pokemon names rectangles
+        # Selectable Pokemon names rectangles.
         self.sel_rect_1 = ((0.485,0.28), (0.60,0.33))
         self.sel_rect_2 = ((0.485,0.54), (0.60,0.59))
         self.sel_rect_3 = ((0.485,0.80), (0.60,0.855))
         self.sel_rect_4 = ((0.485,0.59), (0.60,0.645))
-        # In-battle Pokemon name & type rectangles
+        # In-battle Pokemon name & type rectangles.
         self.sel_rect_5 = ((0.195,0.11), (0.39,0.165))
         self.type_rect_1 = ((0.24,0.175), (0.31,0.21))
         self.type_rect_2 = ((0.35,0.175), (0.425,0.21))
-        # Dynamax icon rectangle
+        # Dynamax icon rectangle.
         self.dmax_symbol_rect = ((0.58, 0.80), (0.61 ,0.84))
-        # Selectable Pokemon abilities rectangles
+        # Selectable Pokemon abilities rectangles.
         self.abil_rect_1 = ((0.485,0.33), (0.60,0.39))
         self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
         self.abil_rect_3 = ((0.485,0.85), (0.60,0.91))
         self.abil_rect_4 = ((0.485,0.645), (0.60,0.69))
-        # Selectable Pokemon abilities rectangles
+        # Selectable Pokemon abilities rectangles.
         self.move_rect_1 = ((0.71,0.15), (0.91,0.20))
         self.move_rect_2 = ((0.71,0.21), (0.91,0.26))
         self.move_rect_3 = ((0.71,0.27), (0.91,0.32))
@@ -121,15 +125,24 @@ class MaxLairInstance():
         self.move_rect_14 = ((0.71,0.52), (0.91,0.57))
         self.move_rect_15 = ((0.71,0.58), (0.91,0.63))
         self.move_rect_16 = ((0.71,0.64), (0.91,0.69))
-        # Poke ball rectangle
+        # Poke ball rectangles.
         self.ball_rect = ((0.69,0.63), (0.88,0.68))
         self.ball_num_rect = ((0.915,0.63), (0.95,0.68))
-        # Backpacker
+        # Backpacker item rectangles.
         self.item_rect_1 = ((0.549,0.11), (0.745,0.16)) 
         self.item_rect_2 = ((0.549,0.19), (0.745,0.24))
         self.item_rect_3 = ((0.549,0.27), (0.745,0.32))
         self.item_rect_4 = ((0.549,0.35), (0.745,0.40))
         self.item_rect_5 = ((0.549,0.43), (0.745,0.48))
+
+        # Validate starting values.
+        if self.mode not in (
+            'default', 'strong boss', 'ball saver', 'keep path'
+        ):
+            self.log(
+                f'''Supplied mode {self.mode} not understood; 
+                using default mode.''', 'WARNING'
+            )
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
@@ -185,7 +198,7 @@ class MaxLairInstance():
         ret, img = self.cap.read()
 
         if not ret:
-            self.log('ERROR: failed to read frame from VideoCapture.')
+            self.log('failed to read frame from VideoCapture.', 'ERROR')
             return
 
         # Draw rectangles around detection areas
@@ -320,10 +333,15 @@ class MaxLairInstance():
         # Raise a warning if the OCRed text didn't closely match any stored
         # value.
         if match_value > len(text)/3:
-            self.log(f'WARNING: could not find a good match for Pokemon: "{text}"')
+            self.log(
+                f'Could not find a good match for Pokemon: "{text}"', 'WARNING'
+            )
 
 
-        self.log(f'OCRed Pokemon {text} matched to rental Pokemon {matched_text} with distance of {match_value}')  # DEBUG
+        self.log(
+            f'''OCRed Pokemon {text} matched to rental Pokemon {matched_text} 
+            with distance of {match_value}''', 'DEBUG'
+        ) 
 
         # finally, return the Pokemon that matched best with the OCRed text
         return best_match
@@ -487,7 +505,10 @@ class MaxLairInstance():
         return 0 if num_resets < 3 else min(10, num_resets)
 
     def check_sufficient_ore(self, aditionnal_reset_count: int) -> bool:
-        """Calculate whether sufficient Dynite Ore remains to quit the run without saving."""
+        """Calculate whether sufficient Dynite Ore remains to quit the run
+        without saving.
+        """
+
         ore_after_resets = self.dynite_ore
         for i in range(aditionnal_reset_count):
             ore_after_resets -= self.calculate_ore_cost(self.consecutive_resets + 1 + i)
@@ -504,7 +525,7 @@ class MaxLairInstance():
         self.consecutive_resets += 1
         self.dynite_ore -= self.calculate_ore_cost(self.consecutive_resets)
 
-    def push_button(self, character: str, duration: float) -> None:
+    def push_button(self, char: str, duration: float) -> None:
         """Send a message to the microcontroller telling it to press buttons on
         the Switch.
         """
@@ -519,7 +540,7 @@ class MaxLairInstance():
         if self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
             (180,255,10), 250
         ):
-            self.log('DEBUG: Loss of video detected while sending command.')
+            self.log('Loss of video detected while sending command.', 'DEBUG')
 
         # Then we release the lock so the display thread can run while we
         # complete the button press and subsequent delay.
@@ -527,17 +548,20 @@ class MaxLairInstance():
 
         # Clear extra characters from the serial buffer.
         while self.com.in_waiting > 0:
-            self.log(f'WARNING: Unexpected byte received: "{self.com.read()}"')
+            self.log(
+                f'Unexpected byte received: "{self.com.read()}"', 'WARNING'
+            )
         
-        if character is not None:
+        if char is not None:
             # Send the command to the microcontroller using the serial port.
-            self.com.write(character)
+            self.com.write(char)
             # Check whether the microcontroller successfully echoed back the
             # command, and raise a warning if it did not.
             response = self.com.read()
-            if response != character:
+            if response != char:
                 self.log(
-                    f'WARNING: Received "{response}" instead of sent command "{character}".'
+                    f'Received "{response}" instead of sent command "{char}".',
+                    'WARNING'
                 )
 
         # Delay for the specified time.
@@ -559,11 +583,10 @@ class MaxLairInstance():
             self.push_button(character, duration)
 
     def log(self,
-            string: str='') -> None:
-        """Print a string to the log file with a timestamp."""
-        with open(self.filename, 'a', encoding='utf-8') as file:
-            file.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'\t'+string+'\n')
-        print(string)
+            text: str,
+            level: str= 'INFO') -> None:
+        """Print a string to the console and log file with a timestamp."""
+        self.logger.log(getattr(logging, level), text)
         
     def display_results(self, log=False, screenshot=False):
         """Display video from the Switch alongside some annotations describing the run sequence."""
@@ -584,7 +607,7 @@ class MaxLairInstance():
                 str(self.shinies_found), str(self.dynite_ore)]
 
         for i in range(len(self.caught_shinies)):
-            labels.append('shiny #' + str(i) + ': ')
+            labels.append('shiny #' + str(i+1) + ': ')
             values.append(self.caught_shinies[i])
 
         for i in range(len(labels)):
@@ -599,4 +622,4 @@ class MaxLairInstance():
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
-            cv2.imwrite(self.filename[:-8] + '_cap_'+str(self.num_saved_images)+'.png', frame)
+            cv2.imwrite('logs//'+self.log_name + '_cap_'+str(self.num_saved_images)+'.png', frame)

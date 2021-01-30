@@ -5,6 +5,9 @@
 #       Created 2020-11-20
 
 import configparser
+import logging
+import logging.handlers
+import os
 import pickle
 import re
 import threading
@@ -50,6 +53,8 @@ rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores
 
 language = config['language']['LANGUAGE']
 PHRASES = config[language]
+
+ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'] == 'True'
 
 
 def join(inst) -> str:
@@ -98,7 +103,7 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a',27)
-    inst.log('Choosing a path...')
+    inst.log('Finished joining. Now choosing a path.')
     return 'path'
 
 
@@ -106,7 +111,7 @@ def path(inst) -> str:
     """Choose a path to follow."""
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
-    print('Detecting where the path led...')
+    print('Finished choosing a path. Now detecting where the path led.')
     return 'detect'
 
 
@@ -124,19 +129,19 @@ def detect(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
         if re.search(inst.phrases['FIGHT'], text):
             # Battle has started and the move selection screen is up
-            inst.log('Battle starting...')
+            inst.log('Battle starting.')
             return 'battle'
         elif re.search(inst.phrases['BACKPACKER'], text):
             # Backpacker encountered so choose an item
-            inst.log('Backpacker encountered...')
+            inst.log('Backpacker encountered.')
             return 'backpacker'
         elif re.search(inst.phrases['SCIENTIST'], text):
             # Scientist appeared to deal with that
-            inst.log('Scientist encountered...')
+            inst.log('Scientist encountered.')
             return 'scientist'
         elif re.search(inst.phrases['PATH'], text):
             # Fork in the path appeared to choose where to go
-            inst.log('Choosing a path...')
+            inst.log('Choosing a path.')
             return 'path'
 
 
@@ -153,15 +158,15 @@ def battle(inst) -> str:
             
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
-            inst.log('Catching boss...')
+            inst.log('Battle finished. Now catching the boss.')
             inst.reset_stage()
             return 'catch'
         elif re.search(inst.phrases['FAINT'], text):
-            inst.log('Pokemon fainted...')
+            inst.log('Pokemon fainted.')
             inst.lives -= 1
             inst.push_button(None, 4)
         elif inst.check_defeated():
-            inst.log('You lose :(. Quitting...')
+            inst.log('You lose and the battle is finished. Now quitting.')
             inst.lives -= 1
             inst.reset_stage()
             inst.push_button(None, 7)
@@ -179,7 +184,7 @@ def battle(inst) -> str:
                 inst.push_buttons((b'y', 1), (b'a', 1))
                 inst.pokemon = inst.read_selectable_pokemon('battle')[0]
                 inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                inst.log(f'Received {inst.pokemon.name_id} from the scientist')
+                inst.log(f'Received {inst.pokemon.name_id} from the scientist.')
 
             # Before the bot makes a decision, it needs to know what the boss
             # is.
@@ -269,7 +274,7 @@ def battle(inst) -> str:
             )
             inst.log(
                 f'''Best move against {inst.opponent.name_id}: {move.name_id} 
-                (index {best_move_index})'''
+                (index {best_move_index})''', 'DEBUG'
             )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - inst.move_index + 4) % 4):
@@ -327,8 +332,10 @@ def catch(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}')
-        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
+        inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}', 'DEBUG')
+        inst.log(
+            f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG'
+        )
 
         inst.caught_pokemon.append(pokemon.name_id)
 
@@ -337,11 +344,15 @@ def catch(inst) -> str:
             # Choose to swap your existing Pokemon for the new Pokemon.
             inst.pokemon = pokemon
             inst.push_button(b'a', 3)
+            
         else:
             inst.push_button(b'b', 3)
 
         # Move on to the detect stage.
-        inst.log('Detecting where the path led...')
+        inst.log(
+            f'''Decided to take {inst.pokemon.name_id}.
+            Now detecting where the path led.'''
+        )
         return 'detect'
 
     # If the final boss was the caught Pokemon, wrap up the run and check the
@@ -349,7 +360,7 @@ def catch(inst) -> str:
     else:
         inst.caught_pokemon.append(inst.boss)
         inst.push_button(None,10)
-        inst.log('Congratulations! Checking the haul from this run...')
+        inst.log('Congratulations! Checking the haul from this run.')
         return 'select_pokemon'
 
 
@@ -357,7 +368,7 @@ def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
     inst.push_button(None, 4)
 
-    inst.log('Reading backpacker items ...')
+    inst.log("Reading the backpacker's items.")
 
     f = open("itemsList.txt", "a", encoding='utf8')
     items = []
@@ -368,12 +379,12 @@ def backpacker(inst) -> str:
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_5, threshold=False, segmentation_mode='--psm 7').strip())
     for item in items:
         f.write(f'{item}\n')
-        inst.log(f'There is {item}')
+        inst.log(f'Detected item: {item}', 'DEBUG')
     f.close()
 
     inst.push_button(b'a', 5)
 
-    inst.log('Detecting where the path led...')
+    inst.log('Finished choosing an item. Now detecting where the path led.')
     return 'detect'
 
 
@@ -404,15 +415,17 @@ def scientist(inst) -> str:
         inst.boss_pokemon[inst.boss],inst.rental_pokemon))
         / (rental_weight+boss_weight)
     )
-    inst.log(f'Score for average pokemon:\t{average_score:.2f}')
-    inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
+    inst.log(f'Score for average pokemon:\t{average_score:.2f}', 'DEBUG')
+    inst.log(
+        f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG'
+    )
 
     if average_score > existing_score:
         inst.push_buttons((None, 3), (b'a', 5))
         inst.pokemon = None
     else:
         inst.push_buttons((None, 3), (b'b', 5))
-    inst.log('Detecting where the path led...')
+    inst.log('Finished with the scientist. Now detecting where the path led.')
     return 'detect'
 
 
@@ -457,7 +470,7 @@ def select_pokemon(inst) -> str:
             )
             inst.log(
                 f'''Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be
-                 kept'''
+                 kept.'''
             )
             inst.caught_shinies.append(
                 inst.caught_pokemon[inst.num_caught - 1 - i]
@@ -491,7 +504,7 @@ def select_pokemon(inst) -> str:
             inst.push_buttons((b'b', 3), (b'b', 1))
         inst.record_ore_reward()
     else:
-        inst.log('Resetting game...')
+        inst.log('Resetting the game to preserve a winning seed.')
         inst.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
@@ -514,10 +527,10 @@ def select_pokemon(inst) -> str:
 
     # Start another run if there are sufficient Poke balls to do so.
     if inst.check_sufficient_balls():
-        inst.log('Preparing for another run...')
+        inst.log('Preparing for another run.')
         return 'join'
     else:
-        inst.log('Out of balls. Quitting...')
+        inst.log('Out of balls. Quitting.')
         return 'done'
 
     
@@ -539,21 +552,54 @@ def main_loop():
     pressing 'Q'.
     """
 
+    # Set up the logger
+    log_name = ''.join((BOSS,'_',datetime.strftime('%Y-%m-%d %H-%M-%S')))
+    # Configure the logger.
+    logger = logging.getLogger(log_name)
+    logger.setLevel(
+        logging.DEBUG if config['default']['ENABLE_DEBUG_LOGS'] == 'True'
+        else logging.INFO
+    )
+    formatter = logging.Formatter(
+        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
+    )
+    
+    # Configure the console, which will print logged information.
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(formatter)
+
+    # Configure the file handler, which will save logged information.
+    fileHandler = logging.handlers.TimedRotatingFileHandler(
+        filename=os.path.join('logs', log_name+'.log'),
+        when='midnight',
+        backupCount=30
+    )
+    fileHandler.setFormatter(formatter)
+    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+
+    # Add the handlers to the logger so that it will both print messages to
+    # the console as well as save them to a log file.
+    logger.addHandler(console)
+    logger.addHandler(fileHandler)
+    logger.info(f'Starting new series: {log_name}.')
+
     # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
-    print(f'Connecting to {com.port}...')
+    logger.info(f'Attempting to connect to {com.port}.')
     while not com.is_open:
         try:
             com.open()
         except serial.SerialException:
             pass
-    print('Connected!')
+    logger.info('Connected to the serial device successfully.')
 
     # Open the video capture
-    print('Opening the video connection...')
+    logger.info('Attempting to open the video connection.')
     cap = cv2.VideoCapture(VIDEO_INDEX)
     if not cap.isOpened():
-        print('''Failed to open the video connection. Check the config file and
+        logger.error(
+            '''Failed to open the video connection. Check the config file and
             ensure no other application is using the video input.'''
         )
         com.close()
@@ -562,18 +608,9 @@ def main_loop():
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
     instance = MaxLairInstance(
-        BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com,
-        cap, VIDEO_SCALE, threading.Lock(), threading.Event(), datetime.now(),
-        (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path,
-        rental_matchup_LUT_path, rental_pokemon_scores_path), PHRASES,
-        MODE, DYNITE_ORE, 'join'
+        config, com, cap, threading.Lock(), threading.Event(), log_name,
+        ENABLE_DEBUG_LOGS   
     )
-
-    # DEBUG overrides for starting the script mid-run
-    # instance.pokemon = instance.rental_pokemon['Krookodile']
-    # instance.num_caught = 1
-    # instance.stage = 'detect'
-    ##    instance.consecutive_resets = 1
 
     # Map stages to the appropriate function to execute when in each stage
     actions = {'join': join, 'path': path, 'detect': detect, 'battle': battle,
@@ -583,8 +620,8 @@ def main_loop():
     
 
     # Start a thread that will control all the button press sequences
-    button_control_thread = threading.Thread(target=button_control_task,
-        args=(instance,actions,)
+    button_control_thread = threading.Thread(
+        target=button_control_task, args=(instance,actions,)
     )
     button_control_thread.start()
     
