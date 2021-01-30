@@ -390,41 +390,45 @@ def backpacker(inst) -> str:
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
-    # Consider the amount of remaining minibosses when scoring each rental
-    # Pokemon, at the start of the run, there are 3 - num_caught minibosses
-    # and 1 final boss. We weigh the boss more heavily because it is more
-    # difficult than the other bosses.
-    rental_weight = 3 - inst.num_caught
-    boss_weight = 2
 
-    # Calculate scores for an average and existing Pokemon.
-    pokemon_scores = []
-    for pokemon in inst.rental_pokemon:
-        score = ((rental_weight * inst.rental_scores[pokemon] + boss_weight
-            * inst.boss_matchups[pokemon][inst.boss])
+    if inst.pokemon is not None:
+        # Consider the amount of remaining minibosses when scoring each rental
+        # Pokemon, at the start of the run, there are 3 - num_caught minibosses
+        # and 1 final boss. We weigh the boss more heavily because it is more
+        # difficult than the other bosses.
+        rental_weight = 3 - inst.num_caught
+        boss_weight = 2
+
+        # Calculate scores for an average and existing Pokemon.
+        pokemon_scores = []
+        for pokemon in inst.rental_pokemon:
+            score = ((rental_weight * inst.rental_scores[pokemon] + boss_weight
+                * inst.boss_matchups[pokemon][inst.boss])
+                / (rental_weight+boss_weight)
+            )
+            pokemon_scores.append(score)
+        average_score = sum(pokemon_scores) / len(pokemon_scores)
+
+        # TODO: actually read the current Pokemon's health so the bot can decide
+        # to switch if it's low.
+        existing_score = inst.HP * ((rental_weight
+            * inst.rental_scores[inst.pokemon.name_id] + boss_weight
+            * matchup_scoring.evaluate_matchup(inst.pokemon,
+            inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        pokemon_scores.append(score)
-    average_score = sum(pokemon_scores) / len(pokemon_scores)
+        inst.log(f'Score for average pokemon:\t{average_score:.2f}', 'DEBUG')
+        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG')
 
-    # TODO: actually read the current Pokemon's health so the bot can decide
-    # to switch if it's low.
-    existing_score = inst.HP * ((rental_weight
-        * inst.rental_scores[inst.pokemon.name_id] + boss_weight
-        * matchup_scoring.evaluate_matchup(inst.pokemon,
-        inst.boss_pokemon[inst.boss],inst.rental_pokemon))
-        / (rental_weight+boss_weight)
-    )
-    inst.log(f'Score for average pokemon:\t{average_score:.2f}', 'DEBUG')
-    inst.log(
-        f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG'
-    )
 
-    if average_score > existing_score:
-        inst.push_buttons((None, 3), (b'a', 5))
+    # If current pokemon is None, it means we just already talked to scientist
+    # Also it means we took the pokemon from scientist.
+    # So let's try to pick it up again
+    if inst.pokemon is None or average_score > existing_score:
+        inst.push_buttons((None, 3), (b'a', 1))
         inst.pokemon = None
     else:
-        inst.push_buttons((None, 3), (b'b', 5))
+        inst.push_buttons((None, 3), (b'b', 1))
     inst.log('Finished with the scientist. Now detecting where the path led.')
     return 'detect'
 

@@ -2,7 +2,7 @@
 #   Eric Donders
 #   2020-11-27
 import copy
-from typing import TypeVar, Dict, List
+from typing import Dict, List, Tuple, TypeVar
 Pokemon = TypeVar('Pokemon')
 Move = TypeVar('Move')
 
@@ -35,7 +35,7 @@ def type_damage_multiplier_single(type1: str, type2: str) -> float:
 
 def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
     """Return a damage multiplier based on an attack type and target types."""
-    factor = 1
+    factor = 1.0
     for defender_type in defender_types:
         factor *= type_damage_multiplier_single(move_type, defender_type)
     return factor
@@ -50,32 +50,32 @@ def ability_damage_multiplier(attacker: Pokemon, move_index: int,
     move_name_id = (attacker.moves[move_index].name_id if not attacker.dynamax
         else attacker.max_moves[move_index].name_id)
     
-    return_val = 1
+    return_val = 1.0
 
     # Account for abilities that affect the damage of certain move types.
     if attacker.ability_name_id not in ('mold-breaker', 'turboblaze', 'teravolt'):
         if move_type == 'ground' and defender.ability_name_id == 'levitate':
             if move_name_id == 'thousand-arrows':
-                return_val = 1
+                return_val = 1.0
             else:
-                return_val = 0
+                return_val = 0.0
         elif move_type == 'water' and defender.ability_name_id in ('water-absorb',
             'storm-drain', 'dry-skin'
         ):
-            return_val = 0
+            return_val = 0.0
         elif move_type == 'fire':
             if defender.ability_name_id == 'flash-fire':
-                return_val = 0
+                return_val = 0.0
             elif defender.ability_name_id in ('fluffy', 'dry-skin'):
-                return_val = 2
+                return_val = 2.0
             elif defender.ability_name_id in ('thick-fat', 'heatproof'):
                 return_val = 0.5
         elif move_type == 'grass' and defender.ability_name_id == 'sap-sipper':
-            return_val = 0
+            return_val = 0.0
         elif move_type == 'electric' and defender.ability_name_id in ('lightning-rod',
             'motor-drive', 'volt-absorb'
         ):
-            return_val = 0
+            return_val = 0.0
         elif move_type == 'ice' and defender.ability_name_id == 'thick-fat':
             return_val = 0.5
     elif attacker.ability_name_id == 'tinted-lens' and type_damage_multiplier(
@@ -167,13 +167,13 @@ def calculate_average_damage(attackers: List[Pokemon], defenders: List[Pokemon],
     if len(attackers) == 0 or len(defenders) == 0:
         return 0
     else:
-        total_damage = 0
+        total_damage = 0.0
         count = 0
         for key in attackers:
             attacker = attackers[key]
             for key2 in defenders:
                 defender = defenders[key2]
-                subtotal_damage = 0
+                subtotal_damage = 0.0
                 subcount = 0
                 for i in range(len(attacker.moves)):
                     subtotal_damage += calculate_damage(attacker, i, defender,
@@ -206,9 +206,9 @@ def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
     #   TODO: implement status moves besides Wide Guard.
     
     # Estimate damage received.
-    received_damage = 0
-    received_regular_damage = 0
-    received_max_move_damage = 0
+    received_damage = 0.0
+    received_regular_damage = 0.0
+    received_max_move_damage = 0.0
     max_move_probability = 0.3  # Estimate!
     original_dynamax_state = defender.dynamax
     # Calculate damage from regular moves.
@@ -301,12 +301,12 @@ def evaluate_matchup(attacker: Pokemon, boss: Pokemon,
 
 def select_best_move(attacker: Pokemon, defender: Pokemon,
     teammates: Dict[str, Pokemon]={}
-) -> int:
+) -> Tuple[int, str, float]:
     """Return the index of the move that the attacker should use against the
     defender.
     """
 
-    best_score = -100
+    best_score = -100.0
     best_index = 0
     best_move_name_id = ''
     for i in range(len(attacker.moves)):
