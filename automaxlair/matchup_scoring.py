@@ -3,8 +3,7 @@
 #   2020-11-27
 import copy
 from typing import Dict, List, Tuple, TypeVar
-Pokemon = TypeVar('Pokemon')
-Move = TypeVar('Move')
+from automaxlair.pokemon_classes import Pokemon, Move
 
 def type_damage_multiplier_single(type1: str, type2: str) -> float:
     """Return a damage multiplier based on an attack type and target type."""
@@ -157,7 +156,7 @@ def calculate_damage(attacker: Pokemon, move_index: int, defender: Pokemon,
         * modifier / defender.stats[0]
     )
 
-def calculate_average_damage(attackers: List[Pokemon], defenders: List[Pokemon],
+def calculate_average_damage(attackers: Dict[str, Pokemon], defenders: Dict[str, Pokemon],
     multiple_targets: bool=False
 ) -> float:
     """Return the average damage output of a range of attackers against a single
@@ -186,7 +185,7 @@ def calculate_average_damage(attackers: List[Pokemon], defenders: List[Pokemon],
         return total_damage / count
 
 def calculate_move_score(attacker: Pokemon, move_index: int, defender: Pokemon,
-    teammates: Dict[str, Pokemon]=None, team_contribution: float = None
+    teammates: Dict[str, Pokemon], team_contribution: float = None
 ) -> float:
     """Return a numerical score of an attacker's move against a defender."""
     # Calculate contribution of the move itself (assume Dynamaxed boss)

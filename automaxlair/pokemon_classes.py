@@ -12,8 +12,8 @@ class Pokemon():
         ability_name_id: str,
         abilities: Dict[str, str],
         type_ids: List[str],
-        types: Dict[str, str],
-        base_stats: List[int],
+        types: List[Dict[str, str]],
+        base_stats: Tuple[int, int, int, int, int, int],
         moves,
         max_moves,
         level: int=100,
@@ -138,7 +138,7 @@ class Pokemon():
 
         types = []
         for i in range(len(self.types)):
-            types.append(self.types.get(language, self.type_ids[i])) 
+            types.append(self.types[i].get(language, self.type_ids[i])) 
         return types
 
 

@@ -9,20 +9,18 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, TypeVar, Container
+from typing import Dict, List, Tuple, TypeVar, Iterable
 
 import cv2
 import enchant
 import pytesseract
 
-Pokemon = TypeVar('Pokemon')
-Move = TypeVar('Move')
-Serial = TypeVar('serial.Serial')
-VideoCapture = TypeVar('cv2.VideoCapture')
+from automaxlair.pokemon_classes import Pokemon, Move
+from serial import Serial
+from cv2 import VideoCapture
+from configparser import ConfigParser
+from threading import Lock, Event
 Image = TypeVar('cv2 image')
-Configparser = TypeVar('configparser.Configparser')
-Lock = TypeVar('threading.Lock')
-Event = TypeVar('threading.Event')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
 
@@ -32,7 +30,7 @@ class MaxLairInstance():
     """
     def __init__(
         self,
-        config: Configparser,
+        config: ConfigParser,
         com: Serial,
         cap: VideoCapture,
         lock: Lock,
@@ -74,7 +72,8 @@ class MaxLairInstance():
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
-        self.caught_shinies = []
+        self.caught_pokemon: List[str] = []
+        self.caught_shinies: List[str] = []
         self.consecutive_resets = 0
         self.reset_run()  # Some values are initialized in here.
         self.stage = 'join'
@@ -192,7 +191,7 @@ class MaxLairInstance():
     def outline_regions(
         self,
         image: Image,
-        rects: Container[Rectangle],
+        rects: Iterable[Rectangle],
         bgr: Tuple[int, int, int] = (255,255,255),
         thickness: int = 2
     ):
@@ -306,7 +305,6 @@ class MaxLairInstance():
 
         # Thenn initialize values that will store the best match of the OCRed
         # text.
-        best_match = None
         match_value = 1000
 
         # Then, loop through all the possible rental pokemon looking for the
@@ -532,7 +530,9 @@ class MaxLairInstance():
             self.base_balls += self.num_caught
             self.legendary_balls += self.num_caught
         self.consecutive_resets += 1
-        self.dynite_ore -= self.calculate_ore_cost(self.consecutive_resets)
+        ore_cost = self.calculate_ore_cost(self.consecutive_resets)
+        self.dynite_ore -= ore_cost
+        self.log(f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
 
     def push_button(self, char: str, duration: float) -> None:
         """Send a message to the microcontroller telling it to press buttons on
