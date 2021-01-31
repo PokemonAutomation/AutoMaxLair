@@ -9,7 +9,7 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, TypeVar, Container
+from typing import Dict, List, Tuple, TypeVar, Iterable
 
 import cv2
 import enchant
@@ -191,7 +191,7 @@ class MaxLairInstance():
     def outline_regions(
         self,
         image: Image,
-        rects: List[Rectangle],
+        rects: Iterable[Rectangle],
         bgr: Tuple[int, int, int] = (255,255,255),
         thickness: int = 2
     ):
@@ -214,40 +214,40 @@ class MaxLairInstance():
             self.outline_region(img, self.shiny_rect, (0,255,0))
         elif rectangle_set == 'join':
             self.outline_regions(
-                img, [self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
-                self.sel_rect_4], (0,255,0)
+                img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
+                self.sel_rect_4), (0,255,0)
             )
             self.outline_regions(
-                img, [self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
-                self.abil_rect_4], (0,255,255)
+                img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
+                self.abil_rect_4), (0,255,255)
             )
             self.outline_regions(
-                img, [self.move_rect_1, self.move_rect_2, self.move_rect_3,
+                img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
                 self.move_rect_4, self.move_rect_5, self.move_rect_6,
                 self.move_rect_7, self.move_rect_8, self.move_rect_9,
-                self.move_rect_10, self.move_rect_11, self.move_rect_12],
+                self.move_rect_10, self.move_rect_11, self.move_rect_12),
                 (255,255,0)
             )
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0,255,0))
             self.outline_region(img, self.abil_rect_4, (0,255,255))
             self.outline_regions(
-                img, [self.move_rect_13, self.move_rect_14, self.move_rect_15,
-                self.move_rect_16], (255,255,0)
+                img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
+                self.move_rect_16), (255,255,0)
             )
             self.outline_regions(
-                img, [self.ball_rect, self.ball_num_rect], (0,0,255)
+                img, (self.ball_rect, self.ball_num_rect), (0,0,255)
             )
         elif rectangle_set == 'battle':
             self.outline_region(img, self.sel_rect_5, (0,255,0))
             self.outline_regions(
-                img, [self.type_rect_1, self.type_rect_2,
-                self.dmax_symbol_rect], (255,255,0)
+                img, (self.type_rect_1, self.type_rect_2,
+                self.dmax_symbol_rect), (255,255,0)
             )
         elif rectangle_set == 'backpacker':
             self.outline_regions(
-                img, [self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                self.item_rect_4, self.item_rect_5], (0,255,0)
+                img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
+                self.item_rect_4, self.item_rect_5), (0,255,0)
             )
 
         # Return annotated image.
@@ -530,7 +530,9 @@ class MaxLairInstance():
             self.base_balls += self.num_caught
             self.legendary_balls += self.num_caught
         self.consecutive_resets += 1
-        self.dynite_ore -= self.calculate_ore_cost(self.consecutive_resets)
+        ore_cost = self.calculate_ore_cost(self.consecutive_resets)
+        self.dynite_ore -= ore_cost
+        self.log(f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
 
     def push_button(self, char: str, duration: float) -> None:
         """Send a message to the microcontroller telling it to press buttons on

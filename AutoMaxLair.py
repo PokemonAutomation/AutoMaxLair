@@ -97,7 +97,7 @@ def join(inst) -> str:
             / (rental_weight + boss_weight)
         )
         pokemon_scores.append(score)
-        inst.log(f'Score for {name_id}: {score:.2f}')
+        inst.log(f'Score for {name_id}: {score:.2f}', 'DEBUG')
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
         inst.push_button(b'v', 1)
@@ -161,12 +161,14 @@ def battle(inst) -> str:
             inst.reset_stage()
             return 'catch'
         elif re.search(inst.phrases['FAINT'], text):
-            inst.log('Pokemon fainted.')
             inst.lives -= 1
+            inst.log(f'Pokemon fainted. {inst.lives} lives remaining.')
             inst.push_button(None, 4)
         elif inst.check_defeated():
             inst.log('You lose and the battle is finished.')
             inst.lives -= 1
+            if inst.lives != 0:
+                inst.log('The lives counter was not 0.', 'WARNING')
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
