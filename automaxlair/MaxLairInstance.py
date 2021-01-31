@@ -17,9 +17,10 @@ import pytesseract
 
 from automaxlair.pokemon_classes import Pokemon, Move
 from serial import Serial
-from cv2 import VideoCapture, Image
+from cv2 import VideoCapture
 from configparser import ConfigParser
 from threading import Lock, Event
+Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
 

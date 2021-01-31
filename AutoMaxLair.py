@@ -274,7 +274,7 @@ def battle(inst) -> str:
             )
             inst.log(
                 f'Best move against {inst.opponent.name_id}: {move.name_id} '
-                '(index {best_move_index})', 'DEBUG'
+                f'(index {best_move_index})', 'DEBUG'
             )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - inst.move_index + 4) % 4):
@@ -593,7 +593,8 @@ def main_loop():
     fileHandler = logging.handlers.TimedRotatingFileHandler(
         filename=os.path.join('logs', log_name+'.log'),
         when='midnight',
-        backupCount=30
+        backupCount=30,
+        encoding = "UTF-8"
     )
     fileHandler.setFormatter(formatter)
     fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
