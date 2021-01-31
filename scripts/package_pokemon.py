@@ -47,7 +47,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         base_power = 0
 
     # Calculate correction factor based on matching strings in the effect.
-    factor = 1
+    factor = 1.0
     # Account for multi-turn moves.
     if (name_id in ('fly', 'dive', 'dig', 'bounce', 'sky-attack', 'solar-beam',
         'hyper-beam', 'giga-impact', 'meteor-beam', 'razor-wind')
@@ -238,10 +238,10 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
 
             # Load the Pokemon's base stats into a list.
             stats = variant_resource.stats
-            base_stats = [stats[0].base_stat, stats[1].base_stat,
+            base_stats = (stats[0].base_stat, stats[1].base_stat,
                 stats[2].base_stat, stats[3].base_stat, stats[4].base_stat,
                 stats[5].base_stat
-            ]
+            )
 
             # Load all of the Pokemon's names into a dict with the language as
             # the key.

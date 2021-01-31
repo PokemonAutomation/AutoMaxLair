@@ -15,14 +15,11 @@ import cv2
 import enchant
 import pytesseract
 
-Pokemon = TypeVar('Pokemon')
-Move = TypeVar('Move')
-Serial = TypeVar('serial.Serial')
-VideoCapture = TypeVar('cv2.VideoCapture')
-Image = TypeVar('cv2 image')
-Configparser = TypeVar('configparser.Configparser')
-Lock = TypeVar('threading.Lock')
-Event = TypeVar('threading.Event')
+from automaxlair.pokemon_classes import Pokemon, Move
+from serial import Serial
+from cv2 import VideoCapture, Image
+from configparser import ConfigParser
+from threading import Lock, Event
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
 
@@ -32,7 +29,7 @@ class MaxLairInstance():
     """
     def __init__(
         self,
-        config: Configparser,
+        config: ConfigParser,
         com: Serial,
         cap: VideoCapture,
         lock: Lock,
@@ -74,7 +71,8 @@ class MaxLairInstance():
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
-        self.caught_shinies = []
+        self.caught_pokemon: List[str] = []
+        self.caught_shinies: List[str] = []
         self.consecutive_resets = 0
         self.reset_run()  # Some values are initialized in here.
         self.stage = 'join'
@@ -192,7 +190,7 @@ class MaxLairInstance():
     def outline_regions(
         self,
         image: Image,
-        rects: Container[Rectangle],
+        rects: List[Rectangle],
         bgr: Tuple[int, int, int] = (255,255,255),
         thickness: int = 2
     ):
@@ -215,40 +213,40 @@ class MaxLairInstance():
             self.outline_region(img, self.shiny_rect, (0,255,0))
         elif rectangle_set == 'join':
             self.outline_regions(
-                img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
-                self.sel_rect_4), (0,255,0)
+                img, [self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
+                self.sel_rect_4], (0,255,0)
             )
             self.outline_regions(
-                img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
-                self.abil_rect_4), (0,255,255)
+                img, [self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
+                self.abil_rect_4], (0,255,255)
             )
             self.outline_regions(
-                img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
+                img, [self.move_rect_1, self.move_rect_2, self.move_rect_3,
                 self.move_rect_4, self.move_rect_5, self.move_rect_6,
                 self.move_rect_7, self.move_rect_8, self.move_rect_9,
-                self.move_rect_10, self.move_rect_11, self.move_rect_12),
+                self.move_rect_10, self.move_rect_11, self.move_rect_12],
                 (255,255,0)
             )
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0,255,0))
             self.outline_region(img, self.abil_rect_4, (0,255,255))
             self.outline_regions(
-                img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
-                self.move_rect_16), (255,255,0)
+                img, [self.move_rect_13, self.move_rect_14, self.move_rect_15,
+                self.move_rect_16], (255,255,0)
             )
             self.outline_regions(
-                img, (self.ball_rect, self.ball_num_rect), (0,0,255)
+                img, [self.ball_rect, self.ball_num_rect], (0,0,255)
             )
         elif rectangle_set == 'battle':
             self.outline_region(img, self.sel_rect_5, (0,255,0))
             self.outline_regions(
-                img, (self.type_rect_1, self.type_rect_2,
-                self.dmax_symbol_rect), (255,255,0)
+                img, [self.type_rect_1, self.type_rect_2,
+                self.dmax_symbol_rect], (255,255,0)
             )
         elif rectangle_set == 'backpacker':
             self.outline_regions(
-                img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                self.item_rect_4, self.item_rect_5), (0,255,0)
+                img, [self.item_rect_1, self.item_rect_2, self.item_rect_3,
+                self.item_rect_4, self.item_rect_5], (0,255,0)
             )
 
         # Return annotated image.
@@ -306,7 +304,6 @@ class MaxLairInstance():
 
         # Thenn initialize values that will store the best match of the OCRed
         # text.
-        best_match = None
         match_value = 1000
 
         # Then, loop through all the possible rental pokemon looking for the
