@@ -97,7 +97,7 @@ def join(inst) -> str:
             / (rental_weight + boss_weight)
         )
         pokemon_scores.append(score)
-        inst.log(f'Score for {name_id}:\t{score:.2f}')
+        inst.log(f'Score for {name_id}: {score:.2f}')
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
         inst.push_button(b'v', 1)
@@ -109,7 +109,7 @@ def join(inst) -> str:
 
 def path(inst) -> str:
     """Choose a path to follow."""
-    inst.lot('Choosing a path to follow.')
+    inst.log('Choosing a path to follow.')
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
     inst.log('Finished choosing a path.')
@@ -294,7 +294,22 @@ def battle(inst) -> str:
 
 def catch(inst) -> str:
     """Catch each boss after defeating it."""
-    inst.log('Catching the boss.')
+
+    # TODO: finish implementing
+    # Check if we need to skip catching a the final boss.
+    # This scenario is used by Ball Saver mode when it can't afford to reset
+    # the game.
+    if (
+        inst.num_caught == 3 and inst.mode == 'ball saver'
+        and not inst.check_sufficient_ore(1)
+    ):
+        inst.log('Finishing the run without wasting a ball on the boss.')
+        inst.push_buttons((b'b', 2), (b'a', 40))
+        inst.log('Congratulations!')
+        return 'select_pokemon'
+
+    # Catch the boss in almost all cases.
+    inst.log(f'Catching boss #{inst.num_caught + 1}.')
     # Start by navigating to the ball selection screen
     inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
@@ -333,9 +348,9 @@ def catch(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}', 'DEBUG')
+        inst.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
         inst.log(
-            f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG'
+            f'Score for {inst.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
         )
 
         inst.caught_pokemon.append(pokemon.name_id)
@@ -417,8 +432,8 @@ def scientist(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log(f'Score for average pokemon:\t{average_score:.2f}', 'DEBUG')
-        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}', 'DEBUG')
+        inst.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
+        inst.log(f'Score for {inst.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
 
 
     # If current pokemon is None, it means we just already talked to scientist

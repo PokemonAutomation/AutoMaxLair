@@ -636,7 +636,7 @@ class MaxLairInstance():
         # Place the text on the newly created black space in the image.
         for i in range(len(labels)):
             cv2.putText(
-                frame, labels[i] + values[i], (width - 245, 25 + 25 * i),
+                frame, labels[i] + str(values[i]), (width - 245, 25 + 25 * i),
                 cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA
             )
             if log:
