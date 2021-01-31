@@ -5,6 +5,9 @@
 #       Created 2020-11-20
 
 import configparser
+import logging
+import logging.handlers
+import os
 import pickle
 import re
 import threading
@@ -51,6 +54,8 @@ rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores
 language = config['language']['LANGUAGE']
 PHRASES = config[language]
 
+ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'] == 'True'
+
 
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
@@ -92,21 +97,22 @@ def join(inst) -> str:
             / (rental_weight + boss_weight)
         )
         pokemon_scores.append(score)
-        inst.log(f'Score for {name_id}:\t{score:.2f}')
+        inst.log(f'Score for {name_id}: {score:.2f}')
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a',27)
-    inst.log('Choosing a path...')
+    inst.log('Finished joining.')
     return 'path'
 
 
 def path(inst) -> str:
     """Choose a path to follow."""
+    inst.log('Choosing a path to follow.')
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
-    print('Detecting where the path led...')
+    inst.log('Finished choosing a path.')
     return 'detect'
 
 
@@ -115,6 +121,7 @@ def detect(inst) -> str:
     backpacker, or fork in the path.
     """
 
+    inst.log('Detecting where the path led.')
     # Loop continually until an event is detected.
     # Relevant events include a battle starting, a backpacker encountered,
     # a scientist encountered, or a fork in the path.
@@ -124,24 +131,21 @@ def detect(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
         if re.search(inst.phrases['FIGHT'], text):
             # Battle has started and the move selection screen is up
-            inst.log('Battle starting...')
             return 'battle'
         elif re.search(inst.phrases['BACKPACKER'], text):
             # Backpacker encountered so choose an item
-            inst.log('Backpacker encountered...')
             return 'backpacker'
         elif re.search(inst.phrases['SCIENTIST'], text):
             # Scientist appeared to deal with that
-            inst.log('Scientist encountered...')
             return 'scientist'
         elif re.search(inst.phrases['PATH'], text):
             # Fork in the path appeared to choose where to go
-            inst.log('Choosing a path...')
             return 'path'
 
 
 def battle(inst) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
+    inst.log(f'Battle {inst.num_caught+1} starting.')
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by "X was blown out of the den!").
@@ -153,20 +157,21 @@ def battle(inst) -> str:
             
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
-            inst.log('Catching boss...')
+            inst.log('Battle finished.')
             inst.reset_stage()
             return 'catch'
         elif re.search(inst.phrases['FAINT'], text):
-            inst.log('Pokemon fainted...')
+            inst.log('Pokemon fainted.')
             inst.lives -= 1
             inst.push_button(None, 4)
         elif inst.check_defeated():
-            inst.log('You lose :(. Quitting...')
+            inst.log('You lose and the battle is finished.')
             inst.lives -= 1
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
         elif re.search(inst.phrases['CHEER'], text):
+            inst.log('Cheering for your teammates.')
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
@@ -179,7 +184,7 @@ def battle(inst) -> str:
                 inst.push_buttons((b'y', 1), (b'a', 1))
                 inst.pokemon = inst.read_selectable_pokemon('battle')[0]
                 inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                inst.log(f'Received {inst.pokemon.name_id} from the scientist')
+                inst.log(f'Received {inst.pokemon.name_id} from the scientist.')
 
             # Before the bot makes a decision, it needs to know what the boss
             # is.
@@ -268,8 +273,8 @@ def battle(inst) -> str:
                 else inst.pokemon.moves[best_move_index]
             )
             inst.log(
-                f'''Best move against {inst.opponent.name_id}: {move.name_id} 
-                (index {best_move_index})'''
+                f'Best move against {inst.opponent.name_id}: {move.name_id} '
+                '(index {best_move_index})', 'DEBUG'
             )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - inst.move_index + 4) % 4):
@@ -289,6 +294,22 @@ def battle(inst) -> str:
 
 def catch(inst) -> str:
     """Catch each boss after defeating it."""
+
+    # TODO: finish implementing
+    # Check if we need to skip catching a the final boss.
+    # This scenario is used by Ball Saver mode when it can't afford to reset
+    # the game.
+    if (
+        inst.num_caught == 3 and inst.mode == 'ball saver'
+        and not inst.check_sufficient_ore(1)
+    ):
+        inst.log('Finishing the run without wasting a ball on the boss.')
+        inst.push_buttons((b'b', 2), (b'a', 40))
+        inst.log('Congratulations!')
+        return 'select_pokemon'
+
+    # Catch the boss in almost all cases.
+    inst.log(f'Catching boss #{inst.num_caught + 1}.')
     # Start by navigating to the ball selection screen
     inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
@@ -327,8 +348,10 @@ def catch(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log(f'Score for {pokemon.name_id}:\t{score:.2f}')
-        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
+        inst.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
+        inst.log(
+            f'Score for {inst.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
+        )
 
         inst.caught_pokemon.append(pokemon.name_id)
 
@@ -337,11 +360,12 @@ def catch(inst) -> str:
             # Choose to swap your existing Pokemon for the new Pokemon.
             inst.pokemon = pokemon
             inst.push_button(b'a', 3)
+            inst.log(f'Decided to swap for {inst.pokemon.name_id}.')
         else:
             inst.push_button(b'b', 3)
+            inst.log(f'Decided to keep going with {inst.pokemon.name_id}.')
 
         # Move on to the detect stage.
-        inst.log('Detecting where the path led...')
         return 'detect'
 
     # If the final boss was the caught Pokemon, wrap up the run and check the
@@ -349,7 +373,7 @@ def catch(inst) -> str:
     else:
         inst.caught_pokemon.append(inst.boss)
         inst.push_button(None,10)
-        inst.log('Congratulations! Checking the haul from this run...')
+        inst.log('Congratulations!')
         return 'select_pokemon'
 
 
@@ -357,9 +381,9 @@ def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
     inst.push_button(None, 4)
 
-    inst.log('Reading backpacker items ...')
+    inst.log("Reading the backpacker's items.")
 
-    f = open("itemsList.txt", "a", encoding='utf8')
+    f = open('itemsList.txt', 'a', encoding='utf8')
     items = []
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_1, threshold=False, invert=True, segmentation_mode='--psm 7').strip())
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_2, threshold=False, segmentation_mode='--psm 7').strip())
@@ -368,17 +392,19 @@ def backpacker(inst) -> str:
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_5, threshold=False, segmentation_mode='--psm 7').strip())
     for item in items:
         f.write(f'{item}\n')
-        inst.log(f'There is {item}')
+        inst.log(f'Detected item: {item}', 'DEBUG')
     f.close()
 
     inst.push_button(b'a', 5)
 
-    inst.log('Detecting where the path led...')
+    inst.log('Finished choosing an item.')
     return 'detect'
 
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
+
+    inst.log('Scientist encountered.')
 
     if inst.pokemon is not None:
         # Consider the amount of remaining minibosses when scoring each rental
@@ -406,18 +432,20 @@ def scientist(inst) -> str:
             inst.boss_pokemon[inst.boss],inst.rental_pokemon))
             / (rental_weight+boss_weight)
         )
-        inst.log(f'Score for average pokemon:\t{average_score:.2f}')
-        inst.log(f'Score for {inst.pokemon.name_id}:\t{existing_score:.2f}')
+        inst.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
+        inst.log(f'Score for {inst.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
+
 
     # If current pokemon is None, it means we just already talked to scientist
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
-    if average_score > existing_score or inst.pokemon is None:
+    if inst.pokemon is None or average_score > existing_score:
         inst.push_buttons((None, 3), (b'a', 1))
         inst.pokemon = None
+        inst.log('Took a Pokemon from the scientist.')
     else:
         inst.push_buttons((None, 3), (b'b', 1))
-    inst.log('Detecting where the path led...')
+        inst.log(f'Decided to keep going with {inst.pokemon.name_id}')
     return 'detect'
 
 
@@ -427,9 +455,11 @@ def select_pokemon(inst) -> str:
     Note that this function returns 'done', causing the program to quit, if a
     shiny legendary Pokemon is found.
     """
+
     # If the bot lost against the first boss, skip the checking process since
     # there are no Pokemon to check.
     if inst.num_caught == 0:
+        inst.log('No Pokemon caught.')
         inst.push_buttons((None, 10), (b'b', 1))
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
@@ -438,14 +468,15 @@ def select_pokemon(inst) -> str:
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
+    inst.log('Checking the haul from this run.')
     inst.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
 
-    # Check all Pokemon for shininess
-    take_pokemon = False  # Set to True if a non-legendary shiny is found
-    reset_game = False  # Set to True in some cases in non-default modes
+    # Check all Pokemon for shininess.
+    take_pokemon = False  # Set to True if a non-legendary shiny is found.
+    reset_game = False  # Set to True in some cases in non-default modes.
     for i in range(inst.num_caught):
         # First check if we need to reset immediately.
-        # Note that "keep path" mode resets always unless a shiny legendary
+        # Note that "keep path" mode resets always unless a shiny legendary.
         # is found, and "ball saver" resets if a non-shiny legendary was caught.
         if (
             (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
@@ -457,12 +488,12 @@ def select_pokemon(inst) -> str:
             else:
                 return 'done'  # End if there isn't enough ore to keep resetting
         elif inst.check_shiny():
-            inst.log('''******************************
-                \n\nShiny found!\n\n******************************'''
+            inst.log('******************************'
+                '\n\nShiny found!\n\n******************************'
             )
             inst.log(
-                f'''Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be
-                 kept'''
+                f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
+                 'kept.'
             )
             inst.caught_shinies.append(
                 inst.caught_pokemon[inst.num_caught - 1 - i]
@@ -496,7 +527,7 @@ def select_pokemon(inst) -> str:
             inst.push_buttons((b'b', 3), (b'b', 1))
         inst.record_ore_reward()
     else:
-        inst.log('Resetting game...')
+        inst.log('Resetting the game to preserve a winning seed.')
         inst.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
@@ -519,10 +550,10 @@ def select_pokemon(inst) -> str:
 
     # Start another run if there are sufficient Poke balls to do so.
     if inst.check_sufficient_balls():
-        inst.log('Preparing for another run...')
+        inst.log('Preparing for another run.')
         return 'join'
     else:
-        inst.log('Out of balls. Quitting...')
+        inst.log('Out of balls. Quitting.')
         return 'done'
 
     
@@ -544,22 +575,52 @@ def main_loop():
     pressing 'Q'.
     """
 
+    # Set up the logger
+    log_name = ''.join((BOSS,'_',datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+    # Configure the logger.
+    logger = logging.getLogger(log_name)
+    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
+    )
+    
+    # Configure the console, which will print logged information.
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(formatter)
+
+    # Configure the file handler, which will save logged information.
+    fileHandler = logging.handlers.TimedRotatingFileHandler(
+        filename=os.path.join('logs', log_name+'.log'),
+        when='midnight',
+        backupCount=30
+    )
+    fileHandler.setFormatter(formatter)
+    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+
+    # Add the handlers to the logger so that it will both print messages to
+    # the console as well as save them to a log file.
+    logger.addHandler(console)
+    logger.addHandler(fileHandler)
+    logger.info(f'Starting new series: {log_name}.')
+
     # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
-    print(f'Connecting to {com.port}...')
+    logger.info(f'Attempting to connect to {com.port}.')
     while not com.is_open:
         try:
             com.open()
         except serial.SerialException:
             pass
-    print('Connected!')
+    logger.info('Connected to the serial device successfully.')
 
     # Open the video capture
-    print('Opening the video connection...')
+    logger.info('Attempting to open the video connection.')
     cap = cv2.VideoCapture(VIDEO_INDEX)
     if not cap.isOpened():
-        print('''Failed to open the video connection. Check the config file and
-            ensure no other application is using the video input.'''
+        logger.error(
+            'Failed to open the video connection. Check the config file and '
+            'ensure no other application is using the video input.'
         )
         com.close()
         return
@@ -567,18 +628,9 @@ def main_loop():
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
     instance = MaxLairInstance(
-        BOSS, (BASE_BALL, BASE_BALLS, LEGENDARY_BALL, LEGENDARY_BALLS), com,
-        cap, VIDEO_SCALE, threading.Lock(), threading.Event(), datetime.now(),
-        (boss_pokemon_path, rental_pokemon_path, boss_matchup_LUT_path,
-        rental_matchup_LUT_path, rental_pokemon_scores_path), PHRASES,
-        MODE, DYNITE_ORE, 'join'
+        config, com, cap, threading.Lock(), threading.Event(), log_name,
+        ENABLE_DEBUG_LOGS   
     )
-
-    # DEBUG overrides for starting the script mid-run
-    # instance.pokemon = instance.rental_pokemon['Krookodile']
-    # instance.num_caught = 1
-    # instance.stage = 'detect'
-    ##    instance.consecutive_resets = 1
 
     # Map stages to the appropriate function to execute when in each stage
     actions = {'join': join, 'path': path, 'detect': detect, 'battle': battle,
@@ -588,8 +640,8 @@ def main_loop():
     
 
     # Start a thread that will control all the button press sequences
-    button_control_thread = threading.Thread(target=button_control_task,
-        args=(instance,actions,)
+    button_control_thread = threading.Thread(
+        target=button_control_task, args=(instance,actions,)
     )
     button_control_thread.start()
     
