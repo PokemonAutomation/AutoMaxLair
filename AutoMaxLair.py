@@ -306,7 +306,7 @@ def catch(inst) -> str:
         and not inst.check_sufficient_ore(1)
     ):
         inst.log('Finishing the run without wasting a ball on the boss.')
-        inst.push_buttons((b'b', 2), (b'a', 40))
+        inst.push_buttons((b'v', 2), (b'a', 30))
         inst.log('Congratulations!')
         return 'select_pokemon'
 
@@ -484,15 +484,15 @@ def select_pokemon(inst) -> str:
             (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
             or (inst.mode == 'ball saver' and inst.num_caught == 4 and i > 0)
         ):
-            if inst.check_sufficient_ore(2):
+            if inst.mode == 'ball saver' or inst.check_sufficient_ore(2):
                 reset_game = True
                 break
             else:
-                return 'done'  # End if there isn't enough ore to keep resetting
+                return 'done'  # End if there isn't enough ore to reset.
         elif inst.check_shiny():
-            inst.log('******************************'
-                '\n\nShiny found!\n\n******************************'
-            )
+            inst.log('******************************')
+            inst.log('Shiny found!')
+            inst.log('******************************')
             inst.log(
                 f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
                  'kept.'

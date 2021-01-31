@@ -600,7 +600,7 @@ class MaxLairInstance():
         # Calculate some statistics for display        
         win_percent = (
             'N/A' if self.runs == 0 else (
-                str(round(100 * self.wins / self.runs))+' %'
+                str(round(100 * self.wins / self.runs))+'%'
             )
         )
         time_per_run = (
