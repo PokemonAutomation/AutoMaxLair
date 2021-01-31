@@ -583,12 +583,12 @@ def main_loop():
     logger = logging.getLogger(log_name)
     logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
     formatter = logging.Formatter(
-        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
+        '%(asctime)s | %(levelname)s: %(message)s'
     )
     
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
+    console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
     console.setFormatter(formatter)
 
     # Configure the file handler, which will save logged information.
