@@ -103,15 +103,16 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a',27)
-    inst.log('Finished joining. Now choosing a path.')
+    inst.log('Finished joining.')
     return 'path'
 
 
 def path(inst) -> str:
     """Choose a path to follow."""
+    inst.lot('Choosing a path to follow.')
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
-    inst.log('Finished choosing a path. Now detecting where the path led.')
+    inst.log('Finished choosing a path.')
     return 'detect'
 
 
@@ -120,6 +121,7 @@ def detect(inst) -> str:
     backpacker, or fork in the path.
     """
 
+    inst.log('Detecting where the path led.')
     # Loop continually until an event is detected.
     # Relevant events include a battle starting, a backpacker encountered,
     # a scientist encountered, or a fork in the path.
@@ -129,24 +131,21 @@ def detect(inst) -> str:
         text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
         if re.search(inst.phrases['FIGHT'], text):
             # Battle has started and the move selection screen is up
-            inst.log('Battle starting.')
             return 'battle'
         elif re.search(inst.phrases['BACKPACKER'], text):
             # Backpacker encountered so choose an item
-            inst.log('Backpacker encountered.')
             return 'backpacker'
         elif re.search(inst.phrases['SCIENTIST'], text):
             # Scientist appeared to deal with that
-            inst.log('Scientist encountered.')
             return 'scientist'
         elif re.search(inst.phrases['PATH'], text):
             # Fork in the path appeared to choose where to go
-            inst.log('Choosing a path.')
             return 'path'
 
 
 def battle(inst) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
+    inst.log(f'Battle {inst.num_caught+1} starting.')
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by "X was blown out of the den!").
@@ -158,7 +157,7 @@ def battle(inst) -> str:
             
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
-            inst.log('Battle finished. Now catching the boss.')
+            inst.log('Battle finished.')
             inst.reset_stage()
             return 'catch'
         elif re.search(inst.phrases['FAINT'], text):
@@ -166,12 +165,13 @@ def battle(inst) -> str:
             inst.lives -= 1
             inst.push_button(None, 4)
         elif inst.check_defeated():
-            inst.log('You lose and the battle is finished. Now quitting.')
+            inst.log('You lose and the battle is finished.')
             inst.lives -= 1
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
         elif re.search(inst.phrases['CHEER'], text):
+            inst.log('Cheering for your teammates.')
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
@@ -294,6 +294,7 @@ def battle(inst) -> str:
 
 def catch(inst) -> str:
     """Catch each boss after defeating it."""
+    inst.log('Catching the boss.')
     # Start by navigating to the ball selection screen
     inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
@@ -344,15 +345,12 @@ def catch(inst) -> str:
             # Choose to swap your existing Pokemon for the new Pokemon.
             inst.pokemon = pokemon
             inst.push_button(b'a', 3)
-            
+            inst.log(f'Decided to swap for {inst.pokemon.name_id}.')
         else:
             inst.push_button(b'b', 3)
+            inst.log(f'Decided to keep going with {inst.pokemon.name_id}.')
 
         # Move on to the detect stage.
-        inst.log(
-            f'Decided to take {inst.pokemon.name_id}. '
-            'Now detecting where the path led.'
-        )
         return 'detect'
 
     # If the final boss was the caught Pokemon, wrap up the run and check the
@@ -360,7 +358,7 @@ def catch(inst) -> str:
     else:
         inst.caught_pokemon.append(inst.boss)
         inst.push_button(None,10)
-        inst.log('Congratulations! Checking the haul from this run.')
+        inst.log('Congratulations!')
         return 'select_pokemon'
 
 
@@ -370,7 +368,7 @@ def backpacker(inst) -> str:
 
     inst.log("Reading the backpacker's items.")
 
-    f = open("itemsList.txt", "a", encoding='utf8')
+    f = open('itemsList.txt', 'a', encoding='utf8')
     items = []
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_1, threshold=False, invert=True, segmentation_mode='--psm 7').strip())
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_2, threshold=False, segmentation_mode='--psm 7').strip())
@@ -384,12 +382,14 @@ def backpacker(inst) -> str:
 
     inst.push_button(b'a', 5)
 
-    inst.log('Finished choosing an item. Now detecting where the path led.')
+    inst.log('Finished choosing an item.')
     return 'detect'
 
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
+
+    inst.log('Scientist encountered.')
 
     if inst.pokemon is not None:
         # Consider the amount of remaining minibosses when scoring each rental
@@ -427,9 +427,10 @@ def scientist(inst) -> str:
     if inst.pokemon is None or average_score > existing_score:
         inst.push_buttons((None, 3), (b'a', 1))
         inst.pokemon = None
+        inst.log('Took a Pokemon from the scientist.')
     else:
         inst.push_buttons((None, 3), (b'b', 1))
-    inst.log('Finished with the scientist. Now detecting where the path led.')
+        inst.log(f'Decided to keep going with {inst.pokemon.name_id}')
     return 'detect'
 
 
@@ -439,9 +440,11 @@ def select_pokemon(inst) -> str:
     Note that this function returns 'done', causing the program to quit, if a
     shiny legendary Pokemon is found.
     """
+
     # If the bot lost against the first boss, skip the checking process since
     # there are no Pokemon to check.
     if inst.num_caught == 0:
+        inst.log('No Pokemon caught.')
         inst.push_buttons((None, 10), (b'b', 1))
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
@@ -450,14 +453,15 @@ def select_pokemon(inst) -> str:
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
+    inst.log('Checking the haul from this run.')
     inst.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
 
-    # Check all Pokemon for shininess
-    take_pokemon = False  # Set to True if a non-legendary shiny is found
-    reset_game = False  # Set to True in some cases in non-default modes
+    # Check all Pokemon for shininess.
+    take_pokemon = False  # Set to True if a non-legendary shiny is found.
+    reset_game = False  # Set to True in some cases in non-default modes.
     for i in range(inst.num_caught):
         # First check if we need to reset immediately.
-        # Note that "keep path" mode resets always unless a shiny legendary
+        # Note that "keep path" mode resets always unless a shiny legendary.
         # is found, and "ball saver" resets if a non-shiny legendary was caught.
         if (
             (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
@@ -560,10 +564,7 @@ def main_loop():
     log_name = ''.join((BOSS,'_',datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
     # Configure the logger.
     logger = logging.getLogger(log_name)
-    logger.setLevel(
-        logging.DEBUG if config['default']['ENABLE_DEBUG_LOGS'] == 'True'
-        else logging.INFO
-    )
+    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
     formatter = logging.Formatter(
         '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
     )

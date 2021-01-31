@@ -9,7 +9,7 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, TypeVar
+from typing import Dict, List, Tuple, TypeVar, Container
 
 import cv2
 import enchant
@@ -19,11 +19,11 @@ Pokemon = TypeVar('Pokemon')
 Move = TypeVar('Move')
 Serial = TypeVar('serial.Serial')
 VideoCapture = TypeVar('cv2.VideoCapture')
-DateTime = TypeVar('datetime.datetime')
 Image = TypeVar('cv2 image')
 Configparser = TypeVar('configparser.Configparser')
 Lock = TypeVar('threading.Lock')
 Event = TypeVar('threading.Event')
+Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
 
 class MaxLairInstance():
@@ -179,9 +179,9 @@ class MaxLairInstance():
     def outline_region(
         self,
         image: Image,
-        rect: Tuple[Tuple[float, float], Tuple[float, float]],
-        bgr: Tuple[int, int, int]=(255,255,255),
-        thickness: int=2
+        rect: Rectangle,
+        bgr: Tuple[int, int, int] = (255,255,255),
+        thickness: int = 2
     ) -> None:
         """Draw a rectangle around a detection area for debug purposes."""
         h, w = image.shape[:2]
@@ -189,12 +189,18 @@ class MaxLairInstance():
         bottom_right = (round(rect[1][0]*w)+1, round(rect[1][1]*h)+1)
         cv2.rectangle(image, top_left, bottom_right, bgr, thickness)
 
-    def outline_regions(self, image, rects, bgr=(255,255,255), thickness=2):
+    def outline_regions(
+        self,
+        image: Image,
+        rects: Container[Rectangle],
+        bgr: Tuple[int, int, int] = (255,255,255),
+        thickness: int = 2
+    ):
         """Draw multiple rectangles around detection areas."""
         for rect in rects:
             self.outline_region(image, rect, bgr, thickness)
         
-    def get_frame(self, rectangle_set: str='') -> Image:
+    def get_frame(self, rectangle_set: str = '') -> Image:
         """Get an annotated image of the current Switch output."""
         ret, img = self.cap.read()
 
@@ -251,10 +257,10 @@ class MaxLairInstance():
     def read_text(
         self,
         img: Image,
-        section: Tuple[Tuple[float, float], Tuple[float, float]]=((0,0),(1,1)),
-        threshold: bool=True,
-        invert: bool=False,
-        segmentation_mode: str='--psm 11'
+        section: Rectangle = ((0,0),(1,1)),
+        threshold: bool = True,
+        invert: bool = False,
+        segmentation_mode: str = '--psm 11'
     ) -> str:
         """Read text from a section (default entirety) of an image using Tesseract."""
         # Process image according to instructions
@@ -415,7 +421,7 @@ class MaxLairInstance():
 
     def check_rect_HSV_match(
         self,
-        rect: Tuple[Tuple[float, float], Tuple[float, float]],
+        rect: Rectangle,
         lower_threshold: Tuple[int, int, int],
         upper_threshold: Tuple[int, int, int],
         mean_value_threshold: int
@@ -458,7 +464,7 @@ class MaxLairInstance():
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
-        self.push_buttons((b'0', 0.2))
+        self.push_buttons((None, 0.2))
         return self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
             (180,255,10), 250
         )
@@ -538,13 +544,6 @@ class MaxLairInstance():
         if self.exit_flag.is_set():
             sys.exit()
 
-        # DEBUG: check for interruption of video feed while trying to send a
-        # command.
-        if self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
-            (180,255,10), 250
-        ):
-            self.log('Loss of video detected while sending command.', 'DEBUG')
-
         # Then we release the lock so the display thread can run while we
         # complete the button press and subsequent delay.
         self.lock.release()
@@ -585,39 +584,63 @@ class MaxLairInstance():
         for character, duration in commands:
             self.push_button(character, duration)
 
-    def log(self,
-            text: str,
-            level: str= 'INFO') -> None:
+    def log(
+        self,
+        text: str,
+        level: str = 'INFO'
+    ) -> None:
         """Print a string to the console and log file with a timestamp."""
         self.logger.log(getattr(logging, level), text)
         
-    def display_results(self, log=False, screenshot=False):
-        """Display video from the Switch alongside some annotations describing the run sequence."""
+    def display_results(self, log: bool = False, screenshot: bool = False):
+        """Display video from the Switch alongside some annotations describing
+        the run sequence.
+        """
+
         # Calculate some statistics for display        
-        win_percent = 'N/A' if self.runs == 0 else round(100 * self.wins / self.runs)
-        time_per_run = 'N/A' if self.runs == 0 else str((datetime.now() - self.start_date) / self.runs)[2:7]
+        win_percent = (
+            'N/A' if self.runs == 0 else (
+                str(round(100 * self.wins / self.runs))+' %'
+            )
+        )
+        time_per_run = (
+            'N/A' if self.runs == 0 else str((datetime.now() - self.start_date)
+            / self.runs)[2:7]
+        )
 
         # Expand the image with blank space for writing results
-        frame = cv2.copyMakeBorder(cv2.resize(self.get_frame(stage=self.stage), self.display_resolution), 0, 0, 0, 250, cv2.BORDER_CONSTANT)
+        frame = cv2.copyMakeBorder(
+            cv2.resize(self.get_frame(rectangle_set=self.stage),
+            self.display_resolution), 0, 0, 0, 250, cv2.BORDER_CONSTANT
+        )
         width = frame.shape[1]
 
         # Construct arrays of text and values to display
         labels = [
-        'Run #', 'Hunting for: ', 'Stage: ', 'Base balls: ', 'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
-        'Opponent: ', 'Win percentage: ', 'Time per run: ', 'Shinies found: ', 'Dynite Ore: ']
-        values = [str(self.runs + 1), self.boss, self.stage, str(self.base_balls), str(self.legendary_balls),
-                str(self.num_caught), str(self.lives), str(self.pokemon), str(self.opponent), str(win_percent) + '%', time_per_run,
-                str(self.shinies_found), str(self.dynite_ore)]
+            'Run #', 'Hunting for: ', 'Stage: ', 'Base balls: ',
+            'Legendary balls: ', 'Pokemon caught: ', 'Lives: ', 'Pokemon: ',
+            'Opponent: ', 'Win percentage: ', 'Time per run: ',
+            'Shinies found: ', 'Dynite Ore: '
+        ]
+        values = [
+            self.runs + 1, self.boss, self.stage, self.base_balls,
+            self.legendary_balls, self.num_caught, self.lives, self.pokemon,
+            self.opponent, win_percent, time_per_run, self.shinies_found,
+            self.dynite_ore
+        ]
 
         for i in range(len(self.caught_shinies)):
-            labels.append('shiny #' + str(i+1) + ': ')
+            labels.append(''.join(('Shiny #', str(i+1), ': ')))
             values.append(self.caught_shinies[i])
 
+        # Place the text on the newly created black space in the image.
         for i in range(len(labels)):
-            cv2.putText(frame, labels[i] + values[i], (width - 245, 25 + 25 * i), cv2.FONT_HERSHEY_PLAIN, 1,
-                        (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(
+                frame, labels[i] + values[i], (width - 245, 25 + 25 * i),
+                cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA
+            )
             if log:
-                self.log(labels[i] + values[i])
+                self.log(labels[i] + str(values[i]))
 
         # Display
         cv2.imshow('Output', frame)
@@ -625,4 +648,7 @@ class MaxLairInstance():
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
-            cv2.imwrite('logs//'+self.log_name + '_cap_'+str(self.num_saved_images)+'.png', frame)
+            cv2.imwrite(
+                ''.join(('logs//', self.log_name, '_cap_', 
+                str(self.num_saved_images), '.png')), frame
+            )
