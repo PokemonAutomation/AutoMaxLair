@@ -229,7 +229,7 @@ def battle(inst) -> str:
                 inst.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            inst.push_buttons((b'b', 2), (b'a', 2, 2))
+            inst.push_buttons((b'b', 2), (b'a', 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -318,7 +318,7 @@ def catch(inst) -> str:
     while (inst.get_target_ball() != 'DEFAULT'
         and inst.get_target_ball() not in inst.check_ball()
     ):
-        inst.push_button(b'<', 2)
+        inst.push_button(b'<', 2, 1)
     inst.push_button(b'a', 30)
     inst.record_ball_use()
 
@@ -509,7 +509,7 @@ def select_pokemon(inst) -> str:
                 take_pokemon = True
                 break
         elif i < inst.num_caught - 1:
-            inst.push_button(b'^',3)
+            inst.push_button(b'^', 3)
     
     if (
         not take_pokemon and inst.mode == 'strong boss' and inst.num_caught == 4
@@ -542,7 +542,7 @@ def select_pokemon(inst) -> str:
         inst.get_frame(),
         ((0, 0.6), (1, 1)), threshold=False
     ):
-        inst.push_button(b'a', 1.5)
+        inst.push_button(b'a', 1.5, 1)
     inst.push_buttons((b'b', 1.5), (b'b', 1.5))
     
     # Update statistics and reset stored information about the complete run.
@@ -572,40 +572,13 @@ def button_control_task(inst, actions) -> None:
             inst.stage = actions[inst.stage](inst)
 
 
-def main_loop():
+def main(log_name):
     """Main loop. Runs until a shiny is found or the user manually quits by
     pressing 'Q'.
     """
 
-    # Set up the logger
-    log_name = ''.join((BOSS,'_',datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
-    # Configure the logger.
+    # Fetch the logger
     logger = logging.getLogger(log_name)
-    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
-    )
-    
-    # Configure the console, which will print logged information.
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(formatter)
-
-    # Configure the file handler, which will save logged information.
-    fileHandler = logging.handlers.TimedRotatingFileHandler(
-        filename=os.path.join('logs', log_name+'.log'),
-        when='midnight',
-        backupCount=30,
-        encoding = "UTF-8"
-    )
-    fileHandler.setFormatter(formatter)
-    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-
-    # Add the handlers to the logger so that it will both print messages to
-    # the console as well as save them to a log file.
-    logger.addHandler(console)
-    logger.addHandler(fileHandler)
-    logger.info(f'Starting new series: {log_name}.')
 
     # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
@@ -682,4 +655,36 @@ def main_loop():
 
 
 if __name__ == '__main__':
-    main_loop()
+    # Set up the logger
+    log_name = ''.join((BOSS,'_',datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+    # Configure the logger.
+    logger = logging.getLogger(log_name)
+    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s | %(levelname)s: %(message)s'
+    )
+    
+    # Configure the console, which will print logged information.
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    console.setFormatter(formatter)
+
+    # Configure the file handler, which will save logged information.
+    fileHandler = logging.FileHandler(
+        filename=os.path.join('logs', log_name+'.log'),
+        encoding = "UTF-8"
+    )
+    fileHandler.setFormatter(formatter)
+    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+
+    # Add the handlers to the logger so that it will both print messages to
+    # the console as well as save them to a log file.
+    logger.addHandler(console)
+    logger.addHandler(fileHandler)
+    logger.info(f'Starting new series: {log_name}.')
+
+    # Call main
+    try:
+        main(log_name)
+    except Exception as e:
+        logger.exception(e)
