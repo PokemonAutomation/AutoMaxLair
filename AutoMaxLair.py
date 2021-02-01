@@ -103,16 +103,16 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a',27)
-    inst.log('Finished joining.')
+    inst.log('Finished joining.', 'DEBUG')
     return 'path'
 
 
 def path(inst) -> str:
     """Choose a path to follow."""
-    inst.log('Choosing a path to follow.')
+    inst.log('Choosing a path to follow.', 'DEBUG')
     # TODO: implement intelligent path selection
     inst.push_buttons((b'a', 4))
-    inst.log('Finished choosing a path.')
+    inst.log('Finished choosing a path.', 'DEBUG')
     return 'detect'
 
 
@@ -121,7 +121,7 @@ def detect(inst) -> str:
     backpacker, or fork in the path.
     """
 
-    inst.log('Detecting where the path led.')
+    inst.log('Detecting where the path led.', 'DEBUG')
     # Loop continually until an event is detected.
     # Relevant events include a battle starting, a backpacker encountered,
     # a scientist encountered, or a fork in the path.
@@ -157,7 +157,7 @@ def battle(inst) -> str:
             
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
-            inst.log('Battle finished.')
+            inst.log('Battle finished.', 'DEBUG')
             inst.reset_stage()
             return 'catch'
         elif re.search(inst.phrases['FAINT'], text):
@@ -173,7 +173,7 @@ def battle(inst) -> str:
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
         elif re.search(inst.phrases['CHEER'], text):
-            inst.log('Cheering for your teammates.')
+            inst.log('Cheering for your teammates.', 'DEBUG')
             if inst.pokemon.dynamax:
                 inst.pokemon.dynamax = False
                 inst.move_index = 0
@@ -399,14 +399,14 @@ def backpacker(inst) -> str:
 
     inst.push_button(b'a', 5)
 
-    inst.log('Finished choosing an item.')
+    inst.log('Finished choosing an item.', 'DEBUG')
     return 'detect'
 
 
 def scientist(inst) -> str:
     """Take (or not) a Pokemon from the scientist."""
 
-    inst.log('Scientist encountered.')
+    inst.log('Scientist encountered.', 'DEBUG')
 
     if inst.pokemon is not None:
         # Consider the amount of remaining minibosses when scoring each rental
@@ -470,7 +470,7 @@ def select_pokemon(inst) -> str:
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
-    inst.log('Checking the haul from this run.')
+    inst.log('Checking the haul from this run.', 'DEBUG')
     inst.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
 
     # Check all Pokemon for shininess.
