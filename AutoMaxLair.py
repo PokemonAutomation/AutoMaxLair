@@ -229,7 +229,7 @@ def battle(inst) -> str:
                 inst.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            inst.push_buttons((b'b', 2), (b'a', 0.05), (b'a', 2))
+            inst.push_buttons((b'b', 2), (b'a', 2, 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
