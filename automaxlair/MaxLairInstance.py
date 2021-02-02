@@ -463,7 +463,7 @@ class MaxLairInstance():
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
-        self.push_buttons((None, 0.2))
+        self.push_button(None, 0.2)
         return self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
             (180,255,10), 250
         )
