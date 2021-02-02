@@ -579,31 +579,6 @@ def main(log_name):
 
     # Fetch the logger
     logger = logging.getLogger(log_name)
-    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s | %(levelname)s: %(message)s'
-    )
-    
-    # Configure the console, which will print logged information.
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    console.setFormatter(formatter)
-
-    # Configure the file handler, which will save logged information.
-    fileHandler = logging.handlers.TimedRotatingFileHandler(
-        filename=os.path.join('logs', log_name+'.log'),
-        when='midnight',
-        backupCount=30,
-        encoding = "UTF-8"
-    )
-    fileHandler.setFormatter(formatter)
-    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-
-    # Add the handlers to the logger so that it will both print messages to
-    # the console as well as save them to a log file.
-    logger.addHandler(console)
-    logger.addHandler(fileHandler)
-    logger.info(f'Starting new series: {log_name}.')
 
     # Connect to the Teensy over a serial port
     com = serial.Serial(COM_PORT, 9600, timeout=0.05)
