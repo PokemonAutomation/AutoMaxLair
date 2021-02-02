@@ -169,6 +169,7 @@ def battle(inst) -> str:
             inst.lives -= 1
             if inst.lives != 0:
                 inst.log('The lives counter was not 0.', 'WARNING')
+                inst.lives = 0
             inst.reset_stage()
             inst.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
@@ -463,6 +464,10 @@ def select_pokemon(inst) -> str:
     if inst.num_caught == 0:
         inst.log('No Pokemon caught.')
         inst.push_buttons((None, 10), (b'b', 1))
+        inst.runs += 1
+        inst.reset_run()
+        inst.record_ore_reward()
+        inst.log('Preparing for another run.')
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
@@ -546,7 +551,7 @@ def select_pokemon(inst) -> str:
     inst.push_buttons((b'b', 1.5), (b'b', 1.5))
     
     # Update statistics and reset stored information about the complete run.
-    inst.wins += 1 if inst.num_caught == 4 else 0
+    inst.wins += 1 if inst.lives != 0 else 0
     inst.runs += 1
     inst.reset_run()
 
