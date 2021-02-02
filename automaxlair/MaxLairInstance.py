@@ -9,7 +9,7 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, TypeVar, Iterable
+from typing import Dict, List, Tuple, TypeVar, Iterable, Optional
 
 import cv2
 import enchant
@@ -444,6 +444,7 @@ class MaxLairInstance():
         """Detect whether a Pokemon is shiny by looking for the icon in the
         summary screen.
         """
+
         return self.check_rect_HSV_match(self.shiny_rect, (0,100,20),
             (180,255,255), 10
         )
@@ -502,9 +503,10 @@ class MaxLairInstance():
     def record_ore_reward(self) -> None:
         """Award Dynite Ore depending on how the run went."""
         self.consecutive_resets = 0
-        self.dynite_ore += (self.num_caught + (2 if self.num_caught == 4 else 0)
-            + (2 if self.lives == 4 else 0)
-        )
+        if self.lives == 0:
+            self.dynite_ore += self.num_caught
+        else:
+            self.dynite_ore += 6 + (2 if self.lives == 4 else 0)
         self.dynite_ore = min(self.dynite_ore, 999)
 
     def calculate_ore_cost(self, num_resets: int) -> int:
@@ -534,7 +536,12 @@ class MaxLairInstance():
         self.dynite_ore -= ore_cost
         self.log(f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
 
-    def push_button(self, char: str, duration: float) -> None:
+    def push_button(
+        self,
+        char: Optional[str],
+        duration: float,
+        num_repeats: int = 2
+    ) -> None:
         """Send a message to the microcontroller telling it to press buttons on
         the Switch.
         """
@@ -555,16 +562,18 @@ class MaxLairInstance():
             )
         
         if char is not None:
-            # Send the command to the microcontroller using the serial port.
-            self.com.write(char)
-            # Check whether the microcontroller successfully echoed back the
-            # command, and raise a warning if it did not.
-            response = self.com.read()
-            if response != char:
-                self.log(
-                    f'Received "{response}" instead of sent command "{char}".',
-                    'WARNING'
-                )
+            for __ in range(num_repeats):
+                # Send the command to the microcontroller using the serial port.
+                self.com.write(char)
+                time.sleep(0.04)
+                # Check whether the microcontroller successfully echoed back the
+                # command, and raise a warning if it did not.
+                response = self.com.read()
+                if response != char:
+                    self.log(
+                        f'Received "{response}" instead of sent "{char}".',
+                        'WARNING'
+                    )
 
         # Delay for the specified time.
         time.sleep(duration)
@@ -581,8 +590,8 @@ class MaxLairInstance():
 
         # Commands are supplied as tuples consisting of a character
         # corresponding to a button push and a delay that follows the push.
-        for character, duration in commands:
-            self.push_button(character, duration)
+        for command in commands:
+            self.push_button(*command)
 
     def log(
         self,
