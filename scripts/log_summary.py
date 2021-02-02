@@ -9,6 +9,8 @@ file_list = os.listdir(log_path)
 
 # Modify this list with whatever bosses you want to look at.
 bosses = [ 'dialga', 'zapdos', 'entei']
+global_losses = 0
+global_wins = 0
 
 for boss in bosses:
     total_losses = 0
@@ -41,3 +43,16 @@ for boss in bosses:
     print(f'Total wins: {total_wins}')
     print(f'Total runs: {total_runs}')
     print(f'Win percentage: {win_percentage:.0f} %\n')
+    
+    global_wins += total_wins
+    global_losses += total_losses
+
+
+global_runs = global_losses + global_wins
+global_win_percentage = 0 if global_runs == 0 else global_wins / global_runs * 100
+
+print(f'Global Summary')
+print(f'Global loses: {global_losses}')
+print(f'Global wins: {global_wins}')
+print(f'Global runs: {global_runs}')
+print(f'Global Win percentage: {global_win_percentage:.0f} %\n')
