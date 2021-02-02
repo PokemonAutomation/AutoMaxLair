@@ -39,7 +39,7 @@ for boss in bosses:
 
 
     print(f'Summary for {boss}')
-    print(f'Total loses: {total_losses}')
+    print(f'Total losses: {total_losses}')
     print(f'Total wins: {total_wins}')
     print(f'Total runs: {total_runs}')
     print(f'Win percentage: {win_percentage:.0f} %\n')

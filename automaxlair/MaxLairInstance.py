@@ -540,7 +540,7 @@ class MaxLairInstance():
         self,
         char: Optional[str],
         duration: float,
-        num_repeats: int = 2
+        num_repeats: int = 1
     ) -> None:
         """Send a message to the microcontroller telling it to press buttons on
         the Switch.
@@ -565,7 +565,7 @@ class MaxLairInstance():
             for __ in range(num_repeats):
                 # Send the command to the microcontroller using the serial port.
                 self.com.write(char)
-                time.sleep(0.04)
+                time.sleep(0.08)
                 # Check whether the microcontroller successfully echoed back the
                 # command, and raise a warning if it did not.
                 response = self.com.read()
