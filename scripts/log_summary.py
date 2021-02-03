@@ -52,7 +52,7 @@ global_runs = global_losses + global_wins
 global_win_percentage = 0 if global_runs == 0 else global_wins / global_runs * 100
 
 print(f'Global Summary')
-print(f'Global loses: {global_losses}')
+print(f'Global losses: {global_losses}')
 print(f'Global wins: {global_wins}')
 print(f'Global runs: {global_runs}')
 print(f'Global Win percentage: {global_win_percentage:.0f} %\n')
