@@ -36,7 +36,7 @@ class MaxLairInstance():
         lock: Lock,
         exit_flag: Event,
         log_name: str,
-        enable_debug_logs: bool=False
+        enable_debug_logs: bool = False
     ) -> None:
         # Read values from the config.
         vid_scale = float(config['default']['VIDEO_SCALE'])
@@ -81,7 +81,7 @@ class MaxLairInstance():
         # objects used.
         self.cap = cap
         self.base_resolution = (1920, 1080)
-        self.display_resolution = (round(1920*vid_scale), round(1080*vid_scale))
+        self.display_resolution = (round(1920 * vid_scale), round(1080 * vid_scale))
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
         self.com = com
@@ -183,8 +183,8 @@ class MaxLairInstance():
     ) -> None:
         """Draw a rectangle around a detection area for debug purposes."""
         h, w = image.shape[:2]
-        top_left = (round(rect[0][0]*w)-1, round(rect[0][1]*h)-1)
-        bottom_right = (round(rect[1][0]*w)+1, round(rect[1][1]*h)+1)
+        top_left = (round(rect[0][0] * w) - 1, round(rect[0][1] * h) - 1)
+        bottom_right = (round(rect[1][0] * w) + 1, round(rect[1][1] * h) + 1)
         cv2.rectangle(image, top_left, bottom_right, bgr, thickness)
 
     def outline_regions(
@@ -267,9 +267,8 @@ class MaxLairInstance():
             img = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
-        img = img[round(section[0][1]*h):round(section[1][1]*h),
-                  round(section[0][0]*w):round(section[1][0]*w)]
-        #cv2.imshow('Text Area', img) # DEBUG
+        img = img[round(section[0][1] * h):round(section[1][1] * h),
+                  round(section[0][0] * w):round(section[1][0] * w)]
 
         # Then, read text using Tesseract.
         # Note that we need to check for the main thread exiting here.
@@ -289,14 +288,14 @@ class MaxLairInstance():
     def identify_pokemon(
         self,
         name: str,
-        ability: str='',
-        types: str='',
-        moves: str=''
+        ability: str = '',
+        types: str = '',
+        moves: str = ''
     ) -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
         # Strip line breaks from OCRed text and combine name, ability, and types
         # to make a composite identifying string.
-        text = (name+ability+types+moves).replace('\n', '')
+        text = (name + ability + types + moves).replace('\n', '')
 
         # Then, initialize the matched text variable in case it is somehow not
         # assigned later.
@@ -321,9 +320,7 @@ class MaxLairInstance():
                     string_to_match += type_name_dict[self.lang]
             if moves != '':
                 for move_name_dict in pokemon.moves:
-                    if self.lang in move_name_dict.names:
-                        #TODO some moves are not translated yet
-                        string_to_match += move_name_dict.names[self.lang]
+                    string_to_match += move_name_dict.names[self.lang]
 
             # After building the identifying string, calculate how different it
             # is from the OCRed string.
@@ -338,7 +335,7 @@ class MaxLairInstance():
 
         # Raise a warning if the OCRed text didn't closely match any stored
         # value.
-        if match_value > len(text)/3:
+        if match_value > len(text) / 3:
             self.log(
                 f'Could not find a good match for Pokemon: "{text}"', 'WARNING'
             )
@@ -367,7 +364,7 @@ class MaxLairInstance():
                 invert=True, segmentation_mode='--psm 8').strip()
             )
             pokemon_names.append(self.read_text(image, self.sel_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
-            pokemon_names.append(self.read_text(image, self.sel_rect_3, threshold=False, segmentation_mode='--psm 3').strip()) # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
+            pokemon_names.append(self.read_text(image, self.sel_rect_3, threshold=False, segmentation_mode='--psm 3').strip())  # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
             abilities.append(self.read_text(image, self.abil_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip())
             abilities.append(self.read_text(image, self.abil_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
             abilities.append(self.read_text(image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
@@ -430,8 +427,8 @@ class MaxLairInstance():
         # is white (value 255) and everything else appears black (0)
         img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
-        cropped_area = img[round(rect[0][1]*h):round(rect[1][1]*h),
-                         round(rect[0][0]*w):round(rect[1][0]*w)]
+        cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
+                         round(rect[0][0] * w):round(rect[1][0] * w)]
         measured_value = cv2.inRange(cropped_area, lower_threshold,
             upper_threshold).mean()
 
@@ -607,7 +604,7 @@ class MaxLairInstance():
         # Calculate some statistics for display
         win_percent = (
             'N/A' if self.runs == 0 else (
-                str(round(100 * self.wins / self.runs))+'%'
+                str(round(100 * self.wins / self.runs)) + '%'
             )
         )
         time_per_run = (
@@ -637,7 +634,7 @@ class MaxLairInstance():
         ]
 
         for i in range(len(self.caught_shinies)):
-            labels.append(''.join(('Shiny #', str(i+1), ': ')))
+            labels.append(''.join(('Shiny #', str(i + 1), ': ')))
             values.append(self.caught_shinies[i])
 
         # Place the text on the newly created black space in the image.

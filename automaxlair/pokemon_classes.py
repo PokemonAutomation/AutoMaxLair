@@ -18,10 +18,10 @@ class Pokemon():
         base_stats: Tuple[int, int, int, int, int, int],
         moves,
         max_moves,
-        level: int=100,
-        IVs: Tuple[int, int, int, int, int, int]=(15, 15, 15, 15, 15, 15),
-        EVs: Tuple[int, int, int, int, int, int]=(0, 0, 0, 0, 0, 0),
-        nature: Tuple[int, int, int, int, int, int]=(1, 1, 1, 1, 1, 1)
+        level: int = 100,
+        IVs: Tuple[int, int, int, int, int, int] = (15, 15, 15, 15, 15, 15),
+        EVs: Tuple[int, int, int, int, int, int] = (0, 0, 0, 0, 0, 0),
+        nature: Tuple[int, int, int, int, int, int] = (1, 1, 1, 1, 1, 1)
     ):
         self.id_num = id_num
         self.name_id = name_id
@@ -107,17 +107,17 @@ class Pokemon():
         self.recalculate_stats()
 
     def recalculate_stats(self):
-        self.stats = [(math.floor((2*self.base_stats[0]+self.ivs[0]+math.floor(self.evs[0]/4))*self.level/100)+self.level+10) * self.HP]
+        self.stats = [(math.floor((2 * self.base_stats[0] + self.ivs[0] + math.floor(self.evs[0] / 4)) * self.level / 100) + self.level + 10) * self.HP]
         for i in range(1, 6):
-            self.stats.append(math.floor((math.floor((2*self.base_stats[i]+self.ivs[i]+math.floor(self.evs[i]/4))*self.level/100)+5)*self.nature[i]))
+            self.stats.append(math.floor((math.floor((2 * self.base_stats[i] + self.ivs[i] + math.floor(self.evs[i] / 4)) * self.level / 100) + 5) * self.nature[i]))
             if self.stat_modifiers[i] >= 0:
                 if self.stat_modifiers[i] > 6:
                     self.stat_modifiers[i] = 6
-                self.stats[i] *= (2+self.stat_modifiers[i])/2
+                self.stats[i] *= (2 + self.stat_modifiers[i]) / 2
             elif self.stat_modifiers[i] < 0:
                 if self.stat_modifiers[i] < -6:
                     self.stat_modifiers[i] = -6
-                self.stats[i] *= 2/(2+self.stat_modifiers[i])
+                self.stats[i] *= 2 / (2 + self.stat_modifiers[i])
 
     def get_name(self, language: str) -> str:
         """Return the name of the Pokemon in a given language.
@@ -147,8 +147,8 @@ class Pokemon():
 class Move():
     def __init__(self, id_num: int, name_id: str, names: Dict[str, str],
         type_id: str, category: str, base_power: float, accuracy: float,
-        PP: int, effect: str, probability: float, is_spread: bool=False,
-        correction_factor: float=1
+        PP: int, effect: str, probability: float, is_spread: bool = False,
+        correction_factor: float = 1
     ):
         self.id_num = id_num
         self.name_id = name_id
@@ -163,7 +163,7 @@ class Move():
         self.is_spread = is_spread
         self.correction_factor = correction_factor
 
-        self.power = base_power*correction_factor
+        self.power = base_power * correction_factor
 
     def __str__(self):
         return self.name_id

@@ -15,7 +15,7 @@ from automaxlair import matchup_scoring
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
-sys.path.insert(1, base_dir+'\\automaxlair')
+sys.path.insert(1, base_dir + '\\automaxlair')
 
 
 # Config values for the log and multiprocessing.
@@ -37,9 +37,9 @@ def compute_scores(attacker):
 
     # Load a separate dictionary for each process because elements get popped
     # and re-added during the matchup scoring process.
-    with open(base_dir+'/data/rental_pokemon.pickle', 'rb') as rental_file:
+    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
         rental_pokemon = pickle.load(rental_file)
-    with open(base_dir+'/data/boss_pokemon.pickle', 'rb') as boss_file:
+    with open(base_dir + '/data/boss_pokemon.pickle', 'rb') as boss_file:
         boss_pokemon = pickle.load(boss_file)
 
     # First iterate through all boss Pokemon and score the interactions.
@@ -98,7 +98,7 @@ def main(q):
 
     """
 
-    with open(base_dir+'/data/rental_pokemon.pickle', 'rb') as rental_file:
+    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
         rental_pokemon = pickle.load(rental_file)
 
     # Iterate through all rental Pokemon and calculate scores against all the
@@ -123,14 +123,14 @@ def main(q):
 
     # Normalize the total scores.
     for key in rental_pokemon_scores:
-        rental_pokemon_scores[key] /= (total_score/len(rental_pokemon))
+        rental_pokemon_scores[key] /= (total_score / len(rental_pokemon))
 
     # Pickle the score lookup tables for later use.
-    with open(base_dir+'/data/boss_matchup_LUT.pickle', 'wb') as file:
+    with open(base_dir + '/data/boss_matchup_LUT.pickle', 'wb') as file:
         pickle.dump(boss_matchup_LUT, file)
-    with open(base_dir+'/data/rental_matchup_LUT.pickle', 'wb') as file:
+    with open(base_dir + '/data/rental_matchup_LUT.pickle', 'wb') as file:
         pickle.dump(rental_matchup_LUT, file)
-    with open(base_dir+'/data/rental_pokemon_scores.pickle', 'wb') as file:
+    with open(base_dir + '/data/rental_pokemon_scores.pickle', 'wb') as file:
         pickle.dump(rental_pokemon_scores, file)
 
 

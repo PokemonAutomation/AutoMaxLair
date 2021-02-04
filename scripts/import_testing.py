@@ -7,15 +7,15 @@ from automaxlair import matchup_scoring
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
-sys.path.insert(1, base_dir+'\\automaxlair')
+sys.path.insert(1, base_dir + '\\automaxlair')
 
 
 def main():
-    boss_pokemon = pickle.load(open(base_dir+'/data/boss_pokemon.pickle', 'rb'))
-    rental_pokemon = pickle.load(open(base_dir+'/data/rental_pokemon.pickle', 'rb'))
-    boss_matchups = pickle.load(open(base_dir+'/data/boss_matchup_LUT.pickle', 'rb'))
-    rental_matchups = pickle.load(open(base_dir+'/data/rental_matchup_LUT.pickle', 'rb'))
-    rental_scores = pickle.load(open(base_dir+'/data/rental_pokemon_scores.pickle', 'rb'))
+    boss_pokemon = pickle.load(open(base_dir + '/data/boss_pokemon.pickle', 'rb'))
+    rental_pokemon = pickle.load(open(base_dir + '/data/rental_pokemon.pickle', 'rb'))
+    boss_matchups = pickle.load(open(base_dir + '/data/boss_matchup_LUT.pickle', 'rb'))
+    rental_matchups = pickle.load(open(base_dir + '/data/rental_matchup_LUT.pickle', 'rb'))
+    rental_scores = pickle.load(open(base_dir + '/data/rental_pokemon_scores.pickle', 'rb'))
 
     # Test retrieval of a rental Pokemon
     rental_pokemon['stunfisk-galar'].print_verbose()
