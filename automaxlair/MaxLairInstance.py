@@ -90,49 +90,49 @@ class MaxLairInstance():
 
         # Define rectangles for checking shininess and reading specific text.
         # Shiny star rectangle.
-        self.shiny_rect = ((0.075,0.53), (0.105,0.58))
+        self.shiny_rect = ((0.075, 0.53), (0.105, 0.58))
         # Selectable Pokemon names rectangles.
-        self.sel_rect_1 = ((0.485,0.28), (0.60,0.33))
-        self.sel_rect_2 = ((0.485,0.54), (0.60,0.59))
-        self.sel_rect_3 = ((0.485,0.80), (0.60,0.855))
-        self.sel_rect_4 = ((0.485,0.59), (0.60,0.645))
+        self.sel_rect_1 = ((0.485, 0.28), (0.60, 0.33))
+        self.sel_rect_2 = ((0.485, 0.54), (0.60, 0.59))
+        self.sel_rect_3 = ((0.485, 0.80), (0.60, 0.855))
+        self.sel_rect_4 = ((0.485, 0.59), (0.60, 0.645))
         # In-battle Pokemon name & type rectangles.
-        self.sel_rect_5 = ((0.195,0.11), (0.39,0.165))
-        self.type_rect_1 = ((0.24,0.175), (0.31,0.21))
-        self.type_rect_2 = ((0.35,0.175), (0.425,0.21))
+        self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
+        self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
+        self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
         # Dynamax icon rectangle.
-        self.dmax_symbol_rect = ((0.58, 0.80), (0.61,0.84))
+        self.dmax_symbol_rect = ((0.58, 0.80), (0.61, 0.84))
         # Selectable Pokemon abilities rectangles.
-        self.abil_rect_1 = ((0.485,0.33), (0.60,0.39))
-        self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
-        self.abil_rect_3 = ((0.485,0.85), (0.60,0.91))
-        self.abil_rect_4 = ((0.485,0.645), (0.60,0.69))
+        self.abil_rect_1 = ((0.485, 0.33), (0.60, 0.39))
+        self.abil_rect_2 = ((0.485, 0.59), (0.60, 0.65))
+        self.abil_rect_3 = ((0.485, 0.85), (0.60, 0.91))
+        self.abil_rect_4 = ((0.485, 0.645), (0.60, 0.69))
         # Selectable Pokemon abilities rectangles.
-        self.move_rect_1 = ((0.71,0.15), (0.91,0.20))
-        self.move_rect_2 = ((0.71,0.21), (0.91,0.26))
-        self.move_rect_3 = ((0.71,0.27), (0.91,0.32))
-        self.move_rect_4 = ((0.71,0.33), (0.91,0.38))
-        self.move_rect_5 = ((0.71,0.41), (0.91,0.46))
-        self.move_rect_6 = ((0.71,0.47), (0.91,0.52))
-        self.move_rect_7 = ((0.71,0.53), (0.91,0.58))
-        self.move_rect_8 = ((0.71,0.59), (0.91,0.64))
-        self.move_rect_9 = ((0.71,0.67), (0.91,0.72))
-        self.move_rect_10 = ((0.71,0.73), (0.91,0.78))
-        self.move_rect_11 = ((0.71,0.79), (0.91,0.84))
-        self.move_rect_12 = ((0.71,0.85), (0.91,0.90))
-        self.move_rect_13 = ((0.71,0.46), (0.91,0.51))
-        self.move_rect_14 = ((0.71,0.52), (0.91,0.57))
-        self.move_rect_15 = ((0.71,0.58), (0.91,0.63))
-        self.move_rect_16 = ((0.71,0.64), (0.91,0.69))
+        self.move_rect_1 = ((0.71, 0.15), (0.91, 0.20))
+        self.move_rect_2 = ((0.71, 0.21), (0.91, 0.26))
+        self.move_rect_3 = ((0.71, 0.27), (0.91, 0.32))
+        self.move_rect_4 = ((0.71, 0.33), (0.91, 0.38))
+        self.move_rect_5 = ((0.71, 0.41), (0.91, 0.46))
+        self.move_rect_6 = ((0.71, 0.47), (0.91, 0.52))
+        self.move_rect_7 = ((0.71, 0.53), (0.91, 0.58))
+        self.move_rect_8 = ((0.71, 0.59), (0.91, 0.64))
+        self.move_rect_9 = ((0.71, 0.67), (0.91, 0.72))
+        self.move_rect_10 = ((0.71, 0.73), (0.91, 0.78))
+        self.move_rect_11 = ((0.71, 0.79), (0.91, 0.84))
+        self.move_rect_12 = ((0.71, 0.85), (0.91, 0.90))
+        self.move_rect_13 = ((0.71, 0.46), (0.91, 0.51))
+        self.move_rect_14 = ((0.71, 0.52), (0.91, 0.57))
+        self.move_rect_15 = ((0.71, 0.58), (0.91, 0.63))
+        self.move_rect_16 = ((0.71, 0.64), (0.91, 0.69))
         # Poke ball rectangles.
-        self.ball_rect = ((0.69,0.63), (0.88,0.68))
-        self.ball_num_rect = ((0.915,0.63), (0.95,0.68))
+        self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
+        self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
         # Backpacker item rectangles.
-        self.item_rect_1 = ((0.549,0.11), (0.745,0.16))
-        self.item_rect_2 = ((0.549,0.19), (0.745,0.24))
-        self.item_rect_3 = ((0.549,0.27), (0.745,0.32))
-        self.item_rect_4 = ((0.549,0.35), (0.745,0.40))
-        self.item_rect_5 = ((0.549,0.43), (0.745,0.48))
+        self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
+        self.item_rect_2 = ((0.549, 0.19), (0.745, 0.24))
+        self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
+        self.item_rect_4 = ((0.549, 0.35), (0.745, 0.40))
+        self.item_rect_5 = ((0.549, 0.43), (0.745, 0.48))
 
         # Validate starting values.
         if self.mode not in (
@@ -178,7 +178,7 @@ class MaxLairInstance():
         self,
         image: Image,
         rect: Rectangle,
-        bgr: Tuple[int, int, int] = (255,255,255),
+        bgr: Tuple[int, int, int] = (255, 255, 255),
         thickness: int = 2
     ) -> None:
         """Draw a rectangle around a detection area for debug purposes."""
@@ -191,7 +191,7 @@ class MaxLairInstance():
         self,
         image: Image,
         rects: Iterable[Rectangle],
-        bgr: Tuple[int, int, int] = (255,255,255),
+        bgr: Tuple[int, int, int] = (255, 255, 255),
         thickness: int = 2
     ):
         """Draw multiple rectangles around detection areas."""
@@ -210,43 +210,43 @@ class MaxLairInstance():
         if not self.enable_debug_logs:
             pass
         elif rectangle_set == 'select_pokemon':
-            self.outline_region(img, self.shiny_rect, (0,255,0))
+            self.outline_region(img, self.shiny_rect, (0, 255, 0))
         elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
-                self.sel_rect_4), (0,255,0)
+                self.sel_rect_4), (0, 255, 0)
             )
             self.outline_regions(
                 img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
-                self.abil_rect_4), (0,255,255)
+                self.abil_rect_4), (0, 255, 255)
             )
             self.outline_regions(
                 img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
                 self.move_rect_4, self.move_rect_5, self.move_rect_6,
                 self.move_rect_7, self.move_rect_8, self.move_rect_9,
                 self.move_rect_10, self.move_rect_11, self.move_rect_12),
-                (255,255,0)
+                (255, 255, 0)
             )
         elif rectangle_set == 'catch':
-            self.outline_region(img, self.sel_rect_4, (0,255,0))
-            self.outline_region(img, self.abil_rect_4, (0,255,255))
+            self.outline_region(img, self.sel_rect_4, (0, 255, 0))
+            self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_regions(
                 img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
-                self.move_rect_16), (255,255,0)
+                self.move_rect_16), (255, 255, 0)
             )
             self.outline_regions(
-                img, (self.ball_rect, self.ball_num_rect), (0,0,255)
+                img, (self.ball_rect, self.ball_num_rect), (0, 0, 255)
             )
         elif rectangle_set == 'battle':
-            self.outline_region(img, self.sel_rect_5, (0,255,0))
+            self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
                 img, (self.type_rect_1, self.type_rect_2,
-                self.dmax_symbol_rect), (255,255,0)
+                self.dmax_symbol_rect), (255, 255, 0)
             )
         elif rectangle_set == 'backpacker':
             self.outline_regions(
                 img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                self.item_rect_4, self.item_rect_5), (0,255,0)
+                self.item_rect_4, self.item_rect_5), (0, 255, 0)
             )
 
         # Return annotated image.
@@ -255,7 +255,7 @@ class MaxLairInstance():
     def read_text(
         self,
         img: Image,
-        section: Rectangle = ((0,0),(1,1)),
+        section: Rectangle = ((0, 0), (1, 1)),
         threshold: bool = True,
         invert: bool = False,
         segmentation_mode: str = '--psm 11'
@@ -264,7 +264,7 @@ class MaxLairInstance():
         # Process image according to instructions
         h, w = img.shape[:2]
         if threshold:
-            img = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2HSV), (0,0,100), (180,15,255))
+            img = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
         img = img[round(section[0][1]*h):round(section[1][1]*h),
@@ -296,7 +296,7 @@ class MaxLairInstance():
         """Match OCRed Pokemon to a rental Pokemon."""
         # Strip line breaks from OCRed text and combine name, ability, and types
         # to make a composite identifying string.
-        text = (name+ability+types+moves).replace('\n','')
+        text = (name+ability+types+moves).replace('\n', '')
 
         # Then, initialize the matched text variable in case it is somehow not
         # assigned later.
@@ -371,7 +371,7 @@ class MaxLairInstance():
             abilities.append(self.read_text(image, self.abil_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip())
             abilities.append(self.read_text(image, self.abil_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
             abilities.append(self.read_text(image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
-            types = ['','','']
+            types = ['', '', '']
             move_1 = self.read_text(image, self.move_rect_1, threshold=False, segmentation_mode='--psm 7').strip()
             move_2 = self.read_text(image, self.move_rect_2, threshold=False, segmentation_mode='--psm 7').strip()
             move_3 = self.read_text(image, self.move_rect_3, threshold=False, segmentation_mode='--psm 7').strip()
@@ -443,8 +443,8 @@ class MaxLairInstance():
         summary screen.
         """
 
-        return self.check_rect_HSV_match(self.shiny_rect, (0,100,20),
-            (180,255,255), 10
+        return self.check_rect_HSV_match(self.shiny_rect, (0, 100, 20),
+            (180, 255, 255), 10
         )
 
     def check_dynamax_available(self) -> bool:
@@ -455,15 +455,15 @@ class MaxLairInstance():
 
     def check_defeated(self) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
-        if not self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
-            (180,255,10), 250
+        if not self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
+            (180, 255, 10), 250
         ):
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
         self.push_button(None, 0.2)
-        return self.check_rect_HSV_match(((0,0), (1,1)), (0,0,0),
-            (180,255,10), 250
+        return self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
+            (180, 255, 10), 250
         )
 
     def get_target_ball(self) -> str:

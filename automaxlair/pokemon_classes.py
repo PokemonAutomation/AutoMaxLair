@@ -5,6 +5,7 @@ import math
 import copy
 from typing import Dict, List, Tuple
 
+
 class Pokemon():
     def __init__(self,
         id_num: int,
@@ -18,9 +19,9 @@ class Pokemon():
         moves,
         max_moves,
         level: int=100,
-        IVs: Tuple[int, int, int, int, int, int]=(15,15,15,15,15,15),
-        EVs: Tuple[int, int, int, int, int, int]=(0,0,0,0,0,0),
-        nature: Tuple[int, int, int, int, int, int]=(1,1,1,1,1,1)
+        IVs: Tuple[int, int, int, int, int, int]=(15, 15, 15, 15, 15, 15),
+        EVs: Tuple[int, int, int, int, int, int]=(0, 0, 0, 0, 0, 0),
+        nature: Tuple[int, int, int, int, int, int]=(1, 1, 1, 1, 1, 1)
     ):
         self.id_num = id_num
         self.name_id = name_id
@@ -96,18 +97,18 @@ class Pokemon():
 
     def reset_stats(self):
         """Reset stat changes."""
-        self.stat_modifiers = (None,0,0,0,0,0)
+        self.stat_modifiers = (None, 0, 0, 0, 0, 0)
         self.recalculate_stats()
         self.dynamax = False
 
     def adjust_stats(self, modification):
-        for i in range(1,6):
+        for i in range(1, 6):
             self.stat_modifiers[i] += modification[i]
         self.recalculate_stats()
 
     def recalculate_stats(self):
         self.stats = [(math.floor((2*self.base_stats[0]+self.ivs[0]+math.floor(self.evs[0]/4))*self.level/100)+self.level+10) * self.HP]
-        for i in range(1,6):
+        for i in range(1, 6):
             self.stats.append(math.floor((math.floor((2*self.base_stats[i]+self.ivs[i]+math.floor(self.evs[i]/4))*self.level/100)+5)*self.nature[i]))
             if self.stat_modifiers[i] >= 0:
                 if self.stat_modifiers[i] > 6:
