@@ -2,21 +2,21 @@
 #   Version 2
 #   Eric Donders
 #   2021-01-10
-#   Read information on rental and boss Pokemon and construct dictionaries which
-#   are stored as pickle files
+#   Read information on rental and boss Pokemon and construct dictionaries
+#   which are stored as pickle files
 
 import sys
 import pickle
 
 from typing import Tuple
+from automaxlair import Pokemon, Move
 
 import pokebase as pb
 
 # We need to import some class definitions from the parent directory.
-from os.path import dirname, abspath, join
+from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
-from automaxlair import Pokemon, Move
 
 
 def extract_name_dict(names_resource) -> dict:
@@ -40,8 +40,8 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
     """
 
     # The base power is the supplied power except for variable power moves
-    # where we estimate an average power of 65 and status moves whose power must
-    # be converted to 0 if it is None.
+    # where we estimate an average power of 65 and status moves whose power
+    # must be converted to 0 if it is None.
     base_power = power if name_id not in ('electro-ball', 'gyro-ball') else 65
     if base_power is None:
         base_power = 0
@@ -50,8 +50,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
     factor = 1.0
     # Account for multi-turn moves.
     if (name_id in ('fly', 'dive', 'dig', 'bounce', 'sky-attack', 'solar-beam',
-        'hyper-beam', 'giga-impact', 'meteor-beam', 'razor-wind')
-    ):
+                    'hyper-beam', 'giga-impact', 'meteor-beam', 'razor-wind')):
         factor = 0.5
     elif name_id == 'future-sight':
         factor = 0.3
@@ -63,15 +62,15 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         factor = 0.75
     # Account for multi-strike moves.
     elif name_id in ('bonemerang', 'double-hit', 'double-iron-bash',
-        'double-kick', 'dragon-darts', 'dual-chop', 'dual-wingbeat',
-        'gear-grind', 'twineedle'
-    ):
-        factor = 2 
+                     'double-kick', 'dragon-darts', 'dual-chop',
+                     'dual-wingbeat', 'gear-grind', 'twineedle'
+                     ):
+        factor = 2
     elif name_id in ('arm-thrust', 'barrage', 'bone-rush', 'bullet-seed',
-        'comet-punch', 'double-slap', 'fury-attack', 'fury-swipes',
-        'icicle-spear', 'pin-missile', 'rock-blast', 'scale-shot',
-        'spike-cannon', 'tail-slap', 'water-shuriken'
-    ):
+                     'comet-punch', 'double-slap', 'fury-attack',
+                     'fury-swipes', 'icicle-spear', 'pin-missile',
+                     'rock-blast', 'scale-shot', 'spike-cannon',
+                     'tail-slap', 'water-shuriken'):
         factor = 3.167
     elif name_id == 'triple-axel':
         factor = 5.23
@@ -84,7 +83,7 @@ def get_moves(move_resource):
 
     # Extract important values from the move resource.
     id_num = move_resource.id_
-    name_id  = move_resource.name
+    name_id = move_resource.name
     names = extract_name_dict(move_resource.names)
     type_ = move_resource.type.name
     category = move_resource.damage_class.name
@@ -105,11 +104,12 @@ def get_moves(move_resource):
     # Then create a new Move object (and corresponding Max Move)
     # and add it to the list.
     move = Move(id_num, name_id, names, type_, category, base_power, accuracy,
-        PP, effect, probability, is_spread, correction_factor
-    )
+                PP, effect, probability, is_spread, correction_factor
+                )
     max_move = get_max_move(move)
-    
+
     return move, max_move
+
 
 def get_max_move(move):
     """Return the Max Move corresponding to the supplied regular move."""
@@ -121,15 +121,15 @@ def get_max_move(move):
         base_power = 0
     else:
         name_id = {'normal': 'max-strike', 'fighting': 'max-knuckle',
-            'flying': 'max-airstream', 'poison': 'max-ooze',
-            'ground': 'max-quake', 'rock': 'max-rockfall',
-            'bug': 'max-flutterby', 'ghost': 'max-phantasm',
-            'steel': 'max-steelspike', 'fire': 'max-flare',
-            'water': 'max-geyser', 'grass': 'max-overgrowth',
-            'electric': 'max-lightning', 'psychic': 'max-mindstorm',
-            'ice': 'max-hailstorm', 'dragon': 'max-wyrmwind',
-            'dark': 'max-darkness', 'fairy': 'max-starfall'
-        }[move.type_id]
+                   'flying': 'max-airstream', 'poison': 'max-ooze',
+                   'ground': 'max-quake', 'rock': 'max-rockfall',
+                   'bug': 'max-flutterby', 'ghost': 'max-phantasm',
+                   'steel': 'max-steelspike', 'fire': 'max-flare',
+                   'water': 'max-geyser', 'grass': 'max-overgrowth',
+                   'electric': 'max-lightning', 'psychic': 'max-mindstorm',
+                   'ice': 'max-hailstorm', 'dragon': 'max-wyrmwind',
+                   'dark': 'max-darkness', 'fairy': 'max-starfall'
+                   }[move.type_id]
         type_id = move.type_id
 
         # Calculate base power based on the original move.
@@ -168,7 +168,6 @@ def get_max_move(move):
             else:
                 base_power = 150
 
-
     # TODO: update the actual names with translations.
 
     # TODO: look up actual ID of the max move
@@ -178,9 +177,9 @@ def get_max_move(move):
     names = extract_name_dict(max_move_resource.names)
 
     # Instantiate a new move using the parameters calculated above.
-    max_move = Move(id_num, name_id, names, type_id, move.category, base_power, 1,
-        move.PP, '', 0
-    )
+    max_move = Move(id_num, name_id, names, type_id, move.category, base_power,
+                    1, move.PP, '', 0
+                    )
     return max_move
 
 
@@ -200,7 +199,6 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
             # PokeAPI (includes stats, names in all languages, et cetera).
             name_id, ability_id, *move_ids = line.strip('\n').split(',')
 
-
             # Information can be supplied as strings (e.g., 'stunfisk-galar')
             # or as numeric identifiers. Convert the numbers to ints if
             # appropriate.
@@ -214,7 +212,6 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
             except ValueError:
                 # IDs were supplied as strings so continue.
                 pass
-
 
             # Fetch information on the Pokemon from PokeAPI
             variant_resource = pb.APIResource('pokemon', name_id)
@@ -239,9 +236,9 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
             # Load the Pokemon's base stats into a list.
             stats = variant_resource.stats
             base_stats = (stats[0].base_stat, stats[1].base_stat,
-                stats[2].base_stat, stats[3].base_stat, stats[4].base_stat,
-                stats[5].base_stat
-            )
+                          stats[2].base_stat, stats[3].base_stat,
+                          stats[4].base_stat, stats[5].base_stat
+                          )
 
             # Load all of the Pokemon's names into a dict with the language as
             # the key.
@@ -250,7 +247,7 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
             # Load all of the ability's names into a dict with the language as
             # the key.
             ability_name_id = ability_resource.name
-            #ability_num = ability_resource.id_
+            # ability_num = ability_resource.id_
             abilities = extract_name_dict(ability_resource.names)
 
             # Construct a Move object for each move and store it in a list.
@@ -264,19 +261,21 @@ def pokemon_from_txt(filename: str, level: int) -> dict:
             # Finally, create a new Pokemon object from the assembled
             # information and add it to the dict.
             pokemon = Pokemon(id_num, variant_name, names, ability_name_id,
-                abilities, type_ids, type_names, base_stats, moves, max_moves,
-                level=level
-            )
+                              abilities, type_ids, type_names, base_stats,
+                              moves, max_moves, level=level
+                              )
             pokemon_dict[variant_name] = pokemon
 
-            #pokemon.print_verbose()  # DEBUG
+            # pokemon.print_verbose()  # DEBUG
             print(f'Finished loading {variant_name}')
 
     return pokemon_dict
 
 
 def main():
-    """Build Pokemon dictionaries from the text files and pickle the results."""
+    """Build Pokemon dictionaries from the text files and pickle the
+    results.
+    """
 
     rental_pokemon = pokemon_from_txt(base_dir+'/data/rental_pokemon.txt', 65)
     boss_pokemon = pokemon_from_txt(base_dir+'/data/boss_pokemon.txt', 70)

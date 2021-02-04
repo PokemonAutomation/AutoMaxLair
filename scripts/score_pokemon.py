@@ -9,14 +9,14 @@ import multiprocessing as mp
 import os
 import pickle
 import sys
+from automaxlair import matchup_scoring
 
 # We need to import some things from the parent directory.
-from os.path import dirname, abspath, join
+from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir+'\\automaxlair')
 
-from automaxlair import Pokemon, Move, matchup_scoring
 
 # Config values for the log and multiprocessing.
 LOG_NAME = 'packagePokemon'
@@ -30,7 +30,7 @@ def compute_scores(attacker):
     Parameters:
         attacker (Pokemon): the rental Pokemon to be scored.
     """
-    
+
     logger = logging.getLogger(LOG_NAME)
 
     attacker_id = attacker.name_id
@@ -69,9 +69,9 @@ def compute_scores(attacker):
             f'Matchup between {attacker_id} and {defender_id}: {score:.2f}'
         )
 
-    # Return the results as a tuple which will be unpacked and repacked in dicts
-    # later, with the first element (the Pokemon's name identifier) as the key
-    # and the other elements as values in their respective dicts.
+    # Return the results as a tuple which will be unpacked and repacked in
+    # dicts later, with the first element (the Pokemon's name identifier) as
+    # the key and the other elements as values in their respective dicts.
     logger.info(f'Finished computing matchups for {attacker}')
     return (attacker_id, boss_matchups, rental_matchups, rental_score)
 
@@ -102,9 +102,9 @@ def main(q):
         rental_pokemon = pickle.load(rental_file)
 
     # Iterate through all rental Pokemon and calculate scores against all the
-    # other rental Pokemon and all boss Pokemon. Also calculate an average score
-    # against other rental Pokemon which is helpful for picking generalists at
-    # the start of a new run.
+    # other rental Pokemon and all boss Pokemon. Also calculate an average
+    # score against other rental Pokemon which is helpful for picking
+    # generalists at the start of a new run.
     pool = mp.Pool(MAX_NUM_THREADS, worker_init, [q])
     results_dump = pool.imap(compute_scores, rental_pokemon.values())
     pool.close()
@@ -124,8 +124,7 @@ def main(q):
     # Normalize the total scores.
     for key in rental_pokemon_scores:
         rental_pokemon_scores[key] /= (total_score/len(rental_pokemon))
-        
-        
+
     # Pickle the score lookup tables for later use.
     with open(base_dir+'/data/boss_matchup_LUT.pickle', 'wb') as file:
         pickle.dump(boss_matchup_LUT, file)
@@ -143,7 +142,7 @@ if __name__ == '__main__':
     formatter = logging.Formatter(
         '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
     )
-    
+
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
@@ -168,7 +167,6 @@ if __name__ == '__main__':
     q = mp.Queue()
     ql = logging.handlers.QueueListener(q, console, fileHandler)
     ql.start()
-    
 
     # Call main, then clean up.
     logger.info('Started scoring Pokemon.')
