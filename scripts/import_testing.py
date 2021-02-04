@@ -11,11 +11,16 @@ sys.path.insert(1, base_dir + '\\automaxlair')
 
 
 def main():
-    boss_pokemon = pickle.load(open(base_dir + '/data/boss_pokemon.pickle', 'rb'))
-    rental_pokemon = pickle.load(open(base_dir + '/data/rental_pokemon.pickle', 'rb'))
-    boss_matchups = pickle.load(open(base_dir + '/data/boss_matchup_LUT.pickle', 'rb'))
-    rental_matchups = pickle.load(open(base_dir + '/data/rental_matchup_LUT.pickle', 'rb'))
-    rental_scores = pickle.load(open(base_dir + '/data/rental_pokemon_scores.pickle', 'rb'))
+    boss_pokemon = pickle.load(
+        open(base_dir + '/data/boss_pokemon.pickle', 'rb'))
+    rental_pokemon = pickle.load(
+        open(base_dir + '/data/rental_pokemon.pickle', 'rb'))
+    boss_matchups = pickle.load(
+        open(base_dir + '/data/boss_matchup_LUT.pickle', 'rb'))
+    rental_matchups = pickle.load(
+        open(base_dir + '/data/rental_matchup_LUT.pickle', 'rb'))
+    rental_scores = pickle.load(
+        open(base_dir + '/data/rental_pokemon_scores.pickle', 'rb'))
 
     # Test retrieval of a rental Pokemon
     rental_pokemon['stunfisk-galar'].print_verbose()
@@ -26,13 +31,17 @@ def main():
     print('________________________________________')
 
     # Test retrieval of rental Pokemon matchups
-    print(f'Matchup for Chansey against Golurk (poor): {rental_matchups["chansey"]["golurk"]}')
-    print(f'Matchup for Carkol against Butterfree (good): {rental_matchups["carkol"]["butterfree"]}')
+    print(
+        f'Matchup for Chansey against Golurk (poor): {rental_matchups["chansey"]["golurk"]}')
+    print(
+        f'Matchup for Carkol against Butterfree (good): {rental_matchups["carkol"]["butterfree"]}')
     print('________________________________________')
 
     # Test retrieval of boss Pokemon matchups
-    print(f'Matchup for Jynx against Heatran (poor): {boss_matchups["jynx"]["heatran"]}')
-    print(f'Matchup for Golurk against Raikou (good): {boss_matchups["golurk"]["raikou"]}')
+    print(
+        f'Matchup for Jynx against Heatran (poor): {boss_matchups["jynx"]["heatran"]}')
+    print(
+        f'Matchup for Golurk against Raikou (good): {boss_matchups["golurk"]["raikou"]}')
     print('________________________________________')
 
     # Test retrieval of rental Pokemon scores

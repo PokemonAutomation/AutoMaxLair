@@ -28,6 +28,7 @@ class MaxLairInstance():
     """An object for storing and processing information related to a Dynamax
     Adventure in Pokemon Sword and Shield: the Crown Tundra.
     """
+
     def __init__(
         self,
         config: ConfigParser,
@@ -81,7 +82,8 @@ class MaxLairInstance():
         # objects used.
         self.cap = cap
         self.base_resolution = (1920, 1080)
-        self.display_resolution = (round(1920 * vid_scale), round(1080 * vid_scale))
+        self.display_resolution = (
+            round(1920 * vid_scale), round(1080 * vid_scale))
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
         self.com = com
@@ -214,17 +216,17 @@ class MaxLairInstance():
         elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
-                self.sel_rect_4), (0, 255, 0)
+                      self.sel_rect_4), (0, 255, 0)
             )
             self.outline_regions(
                 img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
-                self.abil_rect_4), (0, 255, 255)
+                      self.abil_rect_4), (0, 255, 255)
             )
             self.outline_regions(
                 img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
-                self.move_rect_4, self.move_rect_5, self.move_rect_6,
-                self.move_rect_7, self.move_rect_8, self.move_rect_9,
-                self.move_rect_10, self.move_rect_11, self.move_rect_12),
+                      self.move_rect_4, self.move_rect_5, self.move_rect_6,
+                      self.move_rect_7, self.move_rect_8, self.move_rect_9,
+                      self.move_rect_10, self.move_rect_11, self.move_rect_12),
                 (255, 255, 0)
             )
         elif rectangle_set == 'catch':
@@ -232,7 +234,7 @@ class MaxLairInstance():
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_regions(
                 img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
-                self.move_rect_16), (255, 255, 0)
+                      self.move_rect_16), (255, 255, 0)
             )
             self.outline_regions(
                 img, (self.ball_rect, self.ball_num_rect), (0, 0, 255)
@@ -241,12 +243,12 @@ class MaxLairInstance():
             self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
                 img, (self.type_rect_1, self.type_rect_2,
-                self.dmax_symbol_rect), (255, 255, 0)
+                      self.dmax_symbol_rect), (255, 255, 0)
             )
         elif rectangle_set == 'backpacker':
             self.outline_regions(
                 img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                self.item_rect_4, self.item_rect_5), (0, 255, 0)
+                      self.item_rect_4, self.item_rect_5), (0, 255, 0)
             )
 
         # Return annotated image.
@@ -264,7 +266,8 @@ class MaxLairInstance():
         # Process image according to instructions
         h, w = img.shape[:2]
         if threshold:
-            img = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
+            img = cv2.inRange(cv2.cvtColor(
+                img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
         img = img[round(section[0][1] * h):round(section[1][1] * h),
@@ -361,43 +364,70 @@ class MaxLairInstance():
         if stage == 'join':
             pokemon_names.append(
                 self.read_text(image, self.sel_rect_1, threshold=False,
-                invert=True, segmentation_mode='--psm 8').strip()
+                               invert=True, segmentation_mode='--psm 8').strip()
             )
-            pokemon_names.append(self.read_text(image, self.sel_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
-            pokemon_names.append(self.read_text(image, self.sel_rect_3, threshold=False, segmentation_mode='--psm 3').strip())  # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
-            abilities.append(self.read_text(image, self.abil_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip())
-            abilities.append(self.read_text(image, self.abil_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
-            abilities.append(self.read_text(image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
+            pokemon_names.append(self.read_text(
+                image, self.sel_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
+            # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
+            pokemon_names.append(self.read_text(
+                image, self.sel_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
+            abilities.append(self.read_text(
+                image, self.abil_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip())
+            abilities.append(self.read_text(
+                image, self.abil_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
+            abilities.append(self.read_text(
+                image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
             types = ['', '', '']
-            move_1 = self.read_text(image, self.move_rect_1, threshold=False, segmentation_mode='--psm 7').strip()
-            move_2 = self.read_text(image, self.move_rect_2, threshold=False, segmentation_mode='--psm 7').strip()
-            move_3 = self.read_text(image, self.move_rect_3, threshold=False, segmentation_mode='--psm 7').strip()
-            move_4 = self.read_text(image, self.move_rect_4, threshold=False, segmentation_mode='--psm 7').strip()
+            move_1 = self.read_text(
+                image, self.move_rect_1, threshold=False, segmentation_mode='--psm 7').strip()
+            move_2 = self.read_text(
+                image, self.move_rect_2, threshold=False, segmentation_mode='--psm 7').strip()
+            move_3 = self.read_text(
+                image, self.move_rect_3, threshold=False, segmentation_mode='--psm 7').strip()
+            move_4 = self.read_text(
+                image, self.move_rect_4, threshold=False, segmentation_mode='--psm 7').strip()
             moves.append(move_1 + move_2 + move_3 + move_4)
-            move_5 = self.read_text(image, self.move_rect_5, threshold=False, segmentation_mode='--psm 7').strip()
-            move_6 = self.read_text(image, self.move_rect_6, threshold=False, segmentation_mode='--psm 7').strip()
-            move_7 = self.read_text(image, self.move_rect_7, threshold=False, segmentation_mode='--psm 7').strip()
-            move_8 = self.read_text(image, self.move_rect_8, threshold=False, segmentation_mode='--psm 7').strip()
+            move_5 = self.read_text(
+                image, self.move_rect_5, threshold=False, segmentation_mode='--psm 7').strip()
+            move_6 = self.read_text(
+                image, self.move_rect_6, threshold=False, segmentation_mode='--psm 7').strip()
+            move_7 = self.read_text(
+                image, self.move_rect_7, threshold=False, segmentation_mode='--psm 7').strip()
+            move_8 = self.read_text(
+                image, self.move_rect_8, threshold=False, segmentation_mode='--psm 7').strip()
             moves.append(move_5 + move_6 + move_7 + move_8)
-            move_9 = self.read_text(image, self.move_rect_9, threshold=False, segmentation_mode='--psm 7').strip()
-            move_10 = self.read_text(image, self.move_rect_10, threshold=False, segmentation_mode='--psm 7').strip()
-            move_11 = self.read_text(image, self.move_rect_11, threshold=False, segmentation_mode='--psm 7').strip()
-            move_12 = self.read_text(image, self.move_rect_12, threshold=False, segmentation_mode='--psm 7').strip()
+            move_9 = self.read_text(
+                image, self.move_rect_9, threshold=False, segmentation_mode='--psm 7').strip()
+            move_10 = self.read_text(
+                image, self.move_rect_10, threshold=False, segmentation_mode='--psm 7').strip()
+            move_11 = self.read_text(
+                image, self.move_rect_11, threshold=False, segmentation_mode='--psm 7').strip()
+            move_12 = self.read_text(
+                image, self.move_rect_12, threshold=False, segmentation_mode='--psm 7').strip()
             moves.append(move_9 + move_10 + move_11 + move_12)
         elif stage == 'catch':
-            pokemon_names.append(self.read_text(image, self.sel_rect_4, threshold=False, segmentation_mode='--psm 3').strip().split('\n')[-1])
-            abilities.append(self.read_text(image, self.abil_rect_4, threshold=False, segmentation_mode='--psm 3').strip())
+            pokemon_names.append(self.read_text(
+                image, self.sel_rect_4, threshold=False, segmentation_mode='--psm 3').strip().split('\n')[-1])
+            abilities.append(self.read_text(
+                image, self.abil_rect_4, threshold=False, segmentation_mode='--psm 3').strip())
             types.append('')
-            move_1 = self.read_text(image, self.move_rect_13, threshold=False, segmentation_mode='--psm 7').strip()
-            move_2 = self.read_text(image, self.move_rect_14, threshold=False, segmentation_mode='--psm 7').strip()
-            move_3 = self.read_text(image, self.move_rect_15, threshold=False, segmentation_mode='--psm 7').strip()
-            move_4 = self.read_text(image, self.move_rect_16, threshold=False, segmentation_mode='--psm 7').strip()
+            move_1 = self.read_text(
+                image, self.move_rect_13, threshold=False, segmentation_mode='--psm 7').strip()
+            move_2 = self.read_text(
+                image, self.move_rect_14, threshold=False, segmentation_mode='--psm 7').strip()
+            move_3 = self.read_text(
+                image, self.move_rect_15, threshold=False, segmentation_mode='--psm 7').strip()
+            move_4 = self.read_text(
+                image, self.move_rect_16, threshold=False, segmentation_mode='--psm 7').strip()
             moves.append(move_1 + move_2 + move_3 + move_4)
         elif stage == 'battle':
-            pokemon_names.append(self.read_text(image, self.sel_rect_5, threshold=False, invert=False, segmentation_mode='--psm 8').strip())
+            pokemon_names.append(self.read_text(
+                image, self.sel_rect_5, threshold=False, invert=False, segmentation_mode='--psm 8').strip())
             abilities.append('')
-            type_1 = self.read_text(image, self.type_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip().title()
-            type_2 = self.read_text(image, self.type_rect_2, threshold=False, invert=True, segmentation_mode='--psm 8').strip().title()
+            type_1 = self.read_text(image, self.type_rect_1, threshold=False,
+                                    invert=True, segmentation_mode='--psm 8').strip().title()
+            type_2 = self.read_text(image, self.type_rect_2, threshold=False,
+                                    invert=True, segmentation_mode='--psm 8').strip().title()
             types.append(type_1 + type_2)
             moves.append('')
 
@@ -406,7 +436,8 @@ class MaxLairInstance():
         pokemon_list = []
         for i in range(len(pokemon_names)):
             pokemon_list.append(
-                self.identify_pokemon(pokemon_names[i], abilities[i], types[i], moves[i])
+                self.identify_pokemon(
+                    pokemon_names[i], abilities[i], types[i], moves[i])
             )
 
         # Return the list of Pokemon.
@@ -428,9 +459,9 @@ class MaxLairInstance():
         img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
-                         round(rect[0][0] * w):round(rect[1][0] * w)]
+                           round(rect[0][0] * w):round(rect[1][0] * w)]
         measured_value = cv2.inRange(cropped_area, lower_threshold,
-            upper_threshold).mean()
+                                     upper_threshold).mean()
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
@@ -441,27 +472,27 @@ class MaxLairInstance():
         """
 
         return self.check_rect_HSV_match(self.shiny_rect, (0, 100, 20),
-            (180, 255, 255), 10
-        )
+                                         (180, 255, 255), 10
+                                         )
 
     def check_dynamax_available(self) -> bool:
         """Detect whether Dynamax is available for the player."""
         return self.check_rect_HSV_match(self.dmax_symbol_rect, (0, 0, 200),
-            (180, 50, 255), 10
-        )
+                                         (180, 50, 255), 10
+                                         )
 
     def check_defeated(self) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
         if not self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
-            (180, 255, 10), 250
-        ):
+                                         (180, 255, 10), 250
+                                         ):
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
         self.push_button(None, 0.2)
         return self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
-            (180, 255, 10), 250
-        )
+                                         (180, 255, 10), 250
+                                         )
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
@@ -473,7 +504,7 @@ class MaxLairInstance():
         """
 
         return self.read_text(self.get_frame(), self.ball_rect, threshold=False,
-            invert=True, segmentation_mode='--psm 8').strip()
+                              invert=True, segmentation_mode='--psm 8').strip()
 
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
@@ -492,8 +523,8 @@ class MaxLairInstance():
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
         return not ((self.base_ball == self.legendary_ball and self.base_balls
-            < 4) or (self.base_balls < 3) or (self.legendary_balls < 1)
-        )
+                     < 4) or (self.base_balls < 3) or (self.legendary_balls < 1)
+                    )
 
     def record_ore_reward(self) -> None:
         """Award Dynite Ore depending on how the run went."""
@@ -515,7 +546,8 @@ class MaxLairInstance():
 
         ore_after_resets = self.dynite_ore
         for i in range(aditionnal_reset_count):
-            ore_after_resets -= self.calculate_ore_cost(self.consecutive_resets + 1 + i)
+            ore_after_resets -= self.calculate_ore_cost(
+                self.consecutive_resets + 1 + i)
         return ore_after_resets >= 0
 
     def record_game_reset(self) -> None:
@@ -529,7 +561,8 @@ class MaxLairInstance():
         self.consecutive_resets += 1
         ore_cost = self.calculate_ore_cost(self.consecutive_resets)
         self.dynite_ore -= ore_cost
-        self.log(f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
+        self.log(
+            f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
 
     def push_button(
         self,
@@ -609,13 +642,13 @@ class MaxLairInstance():
         )
         time_per_run = (
             'N/A' if self.runs == 0 else str((datetime.now() - self.start_date)
-            / self.runs)[2:7]
+                                             / self.runs)[2:7]
         )
 
         # Expand the image with blank space for writing results
         frame = cv2.copyMakeBorder(
             cv2.resize(self.get_frame(rectangle_set=self.stage),
-            self.display_resolution), 0, 0, 0, 250, cv2.BORDER_CONSTANT
+                       self.display_resolution), 0, 0, 0, 250, cv2.BORDER_CONSTANT
         )
         width = frame.shape[1]
 
@@ -654,5 +687,5 @@ class MaxLairInstance():
             self.num_saved_images += 1
             cv2.imwrite(
                 ''.join(('logs//', self.log_name, '_cap_',
-                str(self.num_saved_images), '.png')), frame
+                         str(self.num_saved_images), '.png')), frame
             )

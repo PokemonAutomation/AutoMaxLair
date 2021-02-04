@@ -8,21 +8,23 @@ from typing import Dict, List, Tuple
 
 class Pokemon():
     def __init__(self,
-        id_num: int,
-        name_id: str,
-        names: Dict[str, str],
-        ability_name_id: str,
-        abilities: Dict[str, str],
-        type_ids: List[str],
-        types: List[Dict[str, str]],
-        base_stats: Tuple[int, int, int, int, int, int],
-        moves,
-        max_moves,
-        level: int = 100,
-        IVs: Tuple[int, int, int, int, int, int] = (15, 15, 15, 15, 15, 15),
-        EVs: Tuple[int, int, int, int, int, int] = (0, 0, 0, 0, 0, 0),
-        nature: Tuple[int, int, int, int, int, int] = (1, 1, 1, 1, 1, 1)
-    ):
+                 id_num: int,
+                 name_id: str,
+                 names: Dict[str, str],
+                 ability_name_id: str,
+                 abilities: Dict[str, str],
+                 type_ids: List[str],
+                 types: List[Dict[str, str]],
+                 base_stats: Tuple[int, int, int, int, int, int],
+                 moves,
+                 max_moves,
+                 level: int = 100,
+                 IVs: Tuple[int, int, int, int, int, int] = (
+                     15, 15, 15, 15, 15, 15),
+                 EVs: Tuple[int, int, int, int, int, int] = (0, 0, 0, 0, 0, 0),
+                 nature: Tuple[int, int, int, int,
+                               int, int] = (1, 1, 1, 1, 1, 1)
+                 ):
         self.id_num = id_num
         self.name_id = name_id
         self.names = names
@@ -50,10 +52,10 @@ class Pokemon():
 
     def __copy__(self):
         copied_pokemon = type(self)(self. id_num, self.name_id, self.names,
-            self.ability_name_id, self.abilities, self.type_ids, self.types,
-            self.base_stats, self.moves, self.max_moves, self.level, self.ivs,
-            self.evs, self.nature
-        )
+                                    self.ability_name_id, self.abilities, self.type_ids, self.types,
+                                    self.base_stats, self.moves, self.max_moves, self.level, self.ivs,
+                                    self.evs, self.nature
+                                    )
         copied_pokemon.PP = copy.deepcopy(self.PP)
         copied_pokemon.HP = copy.deepcopy(self.HP)
         copied_pokemon.status = self.status
@@ -107,9 +109,11 @@ class Pokemon():
         self.recalculate_stats()
 
     def recalculate_stats(self):
-        self.stats = [(math.floor((2 * self.base_stats[0] + self.ivs[0] + math.floor(self.evs[0] / 4)) * self.level / 100) + self.level + 10) * self.HP]
+        self.stats = [(math.floor((2 * self.base_stats[0] + self.ivs[0] + math.floor(
+            self.evs[0] / 4)) * self.level / 100) + self.level + 10) * self.HP]
         for i in range(1, 6):
-            self.stats.append(math.floor((math.floor((2 * self.base_stats[i] + self.ivs[i] + math.floor(self.evs[i] / 4)) * self.level / 100) + 5) * self.nature[i]))
+            self.stats.append(math.floor((math.floor(
+                (2 * self.base_stats[i] + self.ivs[i] + math.floor(self.evs[i] / 4)) * self.level / 100) + 5) * self.nature[i]))
             if self.stat_modifiers[i] >= 0:
                 if self.stat_modifiers[i] > 6:
                     self.stat_modifiers[i] = 6
@@ -146,10 +150,10 @@ class Pokemon():
 
 class Move():
     def __init__(self, id_num: int, name_id: str, names: Dict[str, str],
-        type_id: str, category: str, base_power: float, accuracy: float,
-        PP: int, effect: str, probability: float, is_spread: bool = False,
-        correction_factor: float = 1
-    ):
+                 type_id: str, category: str, base_power: float, accuracy: float,
+                 PP: int, effect: str, probability: float, is_spread: bool = False,
+                 correction_factor: float = 1
+                 ):
         self.id_num = id_num
         self.name_id = name_id
         self.names = names
@@ -170,9 +174,9 @@ class Move():
 
     def __copy__(self):
         return type(self)(self.id_num, self.name_id, self.names, self.type_id,
-            self.category, self.base_power, self.accuracy, self.PP, self.effect,
-            self.probability, self.is_spread, self.correction_factor
-        )
+                          self.category, self.base_power, self.accuracy, self.PP, self.effect,
+                          self.probability, self.is_spread, self.correction_factor
+                          )
 
     def print_verbose(self):
         """Print a detailed summary of the Move."""
