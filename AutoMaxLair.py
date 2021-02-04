@@ -384,7 +384,6 @@ def backpacker(inst) -> str:
 
     inst.log("Reading the backpacker's items.")
 
-    f = open('itemsList.txt', 'a', encoding='utf8')
     items = []
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_1,
                                 threshold=False, invert=True, segmentation_mode='--psm 7').strip())
@@ -397,9 +396,7 @@ def backpacker(inst) -> str:
     items.append(inst.read_text(inst.get_frame(), inst.item_rect_5,
                                 threshold=False, segmentation_mode='--psm 7').strip())
     for item in items:
-        f.write(f'{item}\n')
         inst.log(f'Detected item: {item}', 'DEBUG')
-    f.close()
 
     inst.push_button(b'a', 5)
 
