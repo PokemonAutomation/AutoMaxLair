@@ -1,12 +1,13 @@
 import pickle
 import sys
 
+from automaxlair import matchup_scoring
+
 # We need to import some class definitions from the parent directory.
-from os.path import dirname, abspath, join
+from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir+'\\automaxlair')
-from automaxlair import Pokemon, Move, matchup_scoring
 
 
 def main():
@@ -54,7 +55,6 @@ def main():
     matchup_scoring.print_matchup_summary(
         salazzle, boss_pokemon['kartana'], rental_pokemon
     )
-
 
 
 if __name__ == '__main__':

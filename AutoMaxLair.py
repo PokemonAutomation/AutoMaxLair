@@ -1,6 +1,6 @@
 #   AutoMaxLair
 #       Eric Donders
-#       Contributions from Miguel Tavera, Discord user fawress, 
+#       Contributions from Miguel Tavera, Discord user fawress,
 #           Discord user pifopi, and Discord user denvoros
 #       Created 2020-11-20
 
@@ -8,16 +8,12 @@ import configparser
 import logging
 import logging.handlers
 import os
-import pickle
 import re
 import threading
 import time
-from copy import copy, deepcopy
 from datetime import datetime
 
 import cv2
-import enchant
-import numpy
 import pytesseract
 import serial
 
@@ -30,7 +26,6 @@ config = configparser.ConfigParser()
 # so manually raise an error if the file was not read.
 if not config.read('Config.ini', 'utf8'):
     raise FileNotFoundError('Failed to locate the Config.ini file.')
-    
 
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
@@ -60,7 +55,7 @@ ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'] == 'True'
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
     # Start a new Dynamax Adventure.
-    # 
+    #
     # First, start a new run by talking to the scientist in the Max Lair.
     inst.log(f'Run #{inst.runs + 1} started!')
     inst.push_buttons(
@@ -153,8 +148,8 @@ def battle(inst) -> str:
     # This function returns directly when those conditions are found.
     while True:
         # Read text from the bottom section of the screen.
-        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)  
-            
+        text = inst.read_text(inst.get_frame(), ((0, 0.6), (1, 1)), invert=True)
+
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(inst.phrases['CATCH'], text):
             inst.log('Battle finished.', 'DEBUG')
@@ -199,11 +194,11 @@ def battle(inst) -> str:
 
                 # Otherwise, we identify the boss using its name and types.
                 else:
-                    # 
+                    #
                     inst.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
                     inst.opponent = inst.read_selectable_pokemon('battle')[0]
                     inst.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                
+
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
                 if inst.pokemon.name_id == 'ditto':
@@ -293,7 +288,7 @@ def battle(inst) -> str:
         else:
             # Press B which can speed up dialogue
             inst.push_button(b'b', 0.005)
-        
+
 
 def catch(inst) -> str:
     """Catch each boss after defeating it."""
@@ -328,7 +323,7 @@ def catch(inst) -> str:
     if inst.num_caught < 4:
         # Note that read_selectable_pokemon returns a list of preconfigured
         # Pokemon objects with types, abilities, stats, moves, et cetera.
-        # 
+        #
         # In this stage the list contains only 1 item.
         pokemon = inst.read_selectable_pokemon('catch')[0]
         # Consider the amount of remaining minibosses when scoring each rental
@@ -438,7 +433,6 @@ def scientist(inst) -> str:
         inst.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
         inst.log(f'Score for {inst.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
 
-
     # If current pokemon is None, it means we just already talked to scientist
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
@@ -454,7 +448,7 @@ def scientist(inst) -> str:
 
 def select_pokemon(inst) -> str:
     """Check Pokemon caught during the run and keep one if it's shiny.
-    
+
     Note that this function returns 'done', causing the program to quit, if a
     shiny legendary Pokemon is found.
     """
@@ -500,7 +494,7 @@ def select_pokemon(inst) -> str:
             inst.log('******************************')
             inst.log(
                 f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
-                 'kept.'
+                'kept.'
             )
             inst.caught_shinies.append(
                 inst.caught_pokemon[inst.num_caught - 1 - i]
@@ -515,7 +509,7 @@ def select_pokemon(inst) -> str:
                 break
         elif i < inst.num_caught - 1:
             inst.push_button(b'^', 3)
-    
+
     if (
         not take_pokemon and inst.mode == 'strong boss' and inst.num_caught == 4
         and inst.check_sufficient_ore(1)
@@ -523,7 +517,7 @@ def select_pokemon(inst) -> str:
         reset_game = True
 
     # After checking all the Pokemon, wrap up the run (including taking a
-    # Pokemon or resetting the game, where appropriate).     
+    # Pokemon or resetting the game, where appropriate).
     if not reset_game:
         if take_pokemon:
             inst.push_buttons(
@@ -549,7 +543,7 @@ def select_pokemon(inst) -> str:
     ):
         inst.push_button(b'a', 1.5, 1)
     inst.push_buttons((b'b', 1.5), (b'b', 1.5))
-    
+
     # Update statistics and reset stored information about the complete run.
     inst.wins += 1 if inst.lives != 0 else 0
     inst.runs += 1
@@ -563,7 +557,7 @@ def select_pokemon(inst) -> str:
         inst.log('Out of balls. Quitting.')
         return 'done'
 
-    
+
 def button_control_task(inst, actions) -> None:
     """Loop called by a thread which handles the main button detecting and
     detection aspects of the bot.
@@ -610,7 +604,7 @@ def main(log_name):
     # and the entire sequence of runs
     instance = MaxLairInstance(
         config, com, cap, threading.Lock(), threading.Event(), log_name,
-        ENABLE_DEBUG_LOGS   
+        ENABLE_DEBUG_LOGS
     )
 
     # Map stages to the appropriate function to execute when in each stage
@@ -618,16 +612,13 @@ def main(log_name):
         'catch': catch, 'backpacker': backpacker, 'scientist': scientist,
         'select_pokemon': select_pokemon
     }
-    
 
     # Start a thread that will control all the button press sequences
     button_control_thread = threading.Thread(
         target=button_control_task, args=(instance,actions,)
     )
     button_control_thread.start()
-    
 
-    
     # Start event loop which handles the display and checks for the user
     # manually quitting.
     # The loop ends when the button control thread ends naturally or when
@@ -638,7 +629,7 @@ def main(log_name):
         # idle time to update the graphical display.
         with instance.lock:
             instance.display_results()
-        
+
         # Add a brief delay between each frame so the button control thread has
         # some time to acquire the lock.
         time.sleep(0.01)
@@ -650,7 +641,6 @@ def main(log_name):
             # control thread to exit because it only checks the flag at the
             # start of a new button push or OCR call.
             button_control_thread.join()
-
 
     # When finished, clean up video and serial connections
     instance.display_results(log=True)
@@ -668,7 +658,7 @@ if __name__ == '__main__':
     formatter = logging.Formatter(
         '%(asctime)s | %(levelname)s: %(message)s'
     )
-    
+
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
@@ -677,7 +667,7 @@ if __name__ == '__main__':
     # Configure the file handler, which will save logged information.
     fileHandler = logging.FileHandler(
         filename=os.path.join('logs', log_name+'.log'),
-        encoding = "UTF-8"
+        encoding="UTF-8"
     )
     fileHandler.setFormatter(formatter)
     fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)

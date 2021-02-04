@@ -1,7 +1,8 @@
 # Pokemon
 #   Eric Donders
 #   2020-11-27
-import math, copy
+import math
+import copy
 from typing import Dict, List, Tuple
 
 class Pokemon():
@@ -35,7 +36,7 @@ class Pokemon():
         self.ivs = IVs
         self.evs = EVs
         self.nature = nature
-        
+
         self.PP = []
         for move in moves:
             self.PP.append(move.PP)
@@ -138,7 +139,7 @@ class Pokemon():
 
         types = []
         for i in range(len(self.types)):
-            types.append(self.types[i].get(language, self.type_ids[i])) 
+            types.append(self.types[i].get(language, self.type_ids[i]))
         return types
 
 
@@ -148,7 +149,7 @@ class Move():
         PP: int, effect: str, probability: float, is_spread: bool=False,
         correction_factor: float=1
     ):
-        self.id_num  = id_num
+        self.id_num = id_num
         self.name_id = name_id
         self.names = names
         self.type_id = type_id

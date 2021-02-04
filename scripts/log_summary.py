@@ -1,14 +1,13 @@
 import os
-import sys
 
 # We need to import log files from the parent directory.
-from os.path import dirname, abspath, join
+from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 log_path = os.path.join(base_dir, 'logs')
 file_list = os.listdir(log_path)
 
 # Modify this list with whatever bosses you want to look at.
-bosses = [ 'dialga', 'zapdos', 'entei']
+bosses = ['dialga', 'zapdos', 'entei']
 global_losses = 0
 global_wins = 0
 
@@ -37,13 +36,12 @@ for boss in bosses:
     total_runs = total_losses + total_wins
     win_percentage = 0 if total_runs == 0 else total_wins / total_runs * 100
 
-
     print(f'Summary for {boss}')
     print(f'Total losses: {total_losses}')
     print(f'Total wins: {total_wins}')
     print(f'Total runs: {total_runs}')
     print(f'Win percentage: {win_percentage:.0f} %\n')
-    
+
     global_wins += total_wins
     global_losses += total_losses
 
@@ -51,7 +49,7 @@ for boss in bosses:
 global_runs = global_losses + global_wins
 global_win_percentage = 0 if global_runs == 0 else global_wins / global_runs * 100
 
-print(f'Global Summary')
+print('Global Summary')
 print(f'Global losses: {global_losses}')
 print(f'Global wins: {global_wins}')
 print(f'Global runs: {global_runs}')

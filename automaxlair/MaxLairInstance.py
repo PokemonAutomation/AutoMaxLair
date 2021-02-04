@@ -1,6 +1,6 @@
 #   MaxLairInstance
 #       Eric Donders
-#       Contributions from Miguel Tavera and Discord users denvoros and pirofpi
+#       Contributions from Miguel Tavera and Discord users denvoros and pifopi
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
@@ -9,13 +9,13 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, TypeVar, Iterable, Optional
+from typing import List, Tuple, TypeVar, Iterable, Optional
 
 import cv2
 import enchant
 import pytesseract
 
-from automaxlair.pokemon_classes import Pokemon, Move
+from automaxlair.pokemon_classes import Pokemon
 from serial import Serial
 from cv2 import VideoCapture
 from configparser import ConfigParser
@@ -37,11 +37,11 @@ class MaxLairInstance():
         exit_flag: Event,
         log_name: str,
         enable_debug_logs: bool=False
-     ) -> None:
+    ) -> None:
         # Read values from the config.
         vid_scale = float(config['default']['VIDEO_SCALE'])
         self.boss = config['default']['BOSS'].lower().replace(' ', '-')
-        
+
         self.base_ball = config['default']['BASE_BALL']
         self.base_balls = int(config['default']['BASE_BALLS'])
         self.legendary_ball = config['default']['LEGENDARY_BALL']
@@ -60,13 +60,12 @@ class MaxLairInstance():
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
         self.enable_debug_logs = enable_debug_logs
-        
-        
+
         # Zero the start time and fetch the logger.
         self.start_date = datetime.now()
         self.log_name = log_name
         self.logger = logging.getLogger(self.log_name)
-        
+
         # Initialize starting values.
         self.num_saved_images = 0
         self.runs = 0
@@ -102,7 +101,7 @@ class MaxLairInstance():
         self.type_rect_1 = ((0.24,0.175), (0.31,0.21))
         self.type_rect_2 = ((0.35,0.175), (0.425,0.21))
         # Dynamax icon rectangle.
-        self.dmax_symbol_rect = ((0.58, 0.80), (0.61 ,0.84))
+        self.dmax_symbol_rect = ((0.58, 0.80), (0.61,0.84))
         # Selectable Pokemon abilities rectangles.
         self.abil_rect_1 = ((0.485,0.33), (0.60,0.39))
         self.abil_rect_2 = ((0.485,0.59), (0.60,0.65))
@@ -129,7 +128,7 @@ class MaxLairInstance():
         self.ball_rect = ((0.69,0.63), (0.88,0.68))
         self.ball_num_rect = ((0.915,0.63), (0.95,0.68))
         # Backpacker item rectangles.
-        self.item_rect_1 = ((0.549,0.11), (0.745,0.16)) 
+        self.item_rect_1 = ((0.549,0.11), (0.745,0.16))
         self.item_rect_2 = ((0.549,0.19), (0.745,0.24))
         self.item_rect_3 = ((0.549,0.27), (0.745,0.32))
         self.item_rect_4 = ((0.549,0.35), (0.745,0.40))
@@ -163,7 +162,7 @@ class MaxLairInstance():
             self.rental_matchups = pickle.load(rental_matchup_file)
         with open(self.data_paths[4], 'rb') as rental_score_file:
             self.rental_scores = pickle.load(rental_score_file)
-        
+
     def reset_stage(self) -> None:
         """Reset after a battle."""
         self.move_index = 0
@@ -184,7 +183,7 @@ class MaxLairInstance():
     ) -> None:
         """Draw a rectangle around a detection area for debug purposes."""
         h, w = image.shape[:2]
-        top_left =  (round(rect[0][0]*w)-1, round(rect[0][1]*h)-1)
+        top_left = (round(rect[0][0]*w)-1, round(rect[0][1]*h)-1)
         bottom_right = (round(rect[1][0]*w)+1, round(rect[1][1]*h)+1)
         cv2.rectangle(image, top_left, bottom_right, bgr, thickness)
 
@@ -198,7 +197,7 @@ class MaxLairInstance():
         """Draw multiple rectangles around detection areas."""
         for rect in rects:
             self.outline_region(image, rect, bgr, thickness)
-        
+
     def get_frame(self, rectangle_set: str = '') -> Image:
         """Get an annotated image of the current Switch output."""
         ret, img = self.cap.read()
@@ -314,7 +313,7 @@ class MaxLairInstance():
             # OCRed text.
             # Note that some OCR strings omit the ability and others omit the
             # types so don't include these identifiers in these cases.
-            string_to_match = pokemon.names[self.lang]  #.split(' (')[0]
+            string_to_match = pokemon.names[self.lang]
             if ability != '':
                 string_to_match += pokemon.abilities[self.lang]
             if types != '':
@@ -344,11 +343,10 @@ class MaxLairInstance():
                 f'Could not find a good match for Pokemon: "{text}"', 'WARNING'
             )
 
-
         self.log(
             f'OCRed Pokemon {text} matched to rental Pokemon {matched_text} '
             f'with distance of {match_value}', 'DEBUG'
-        ) 
+        )
 
         # finally, return the Pokemon that matched best with the OCRed text
         return best_match
@@ -427,7 +425,7 @@ class MaxLairInstance():
         """Check a specified section of the screen for values within a certain
         HSV range.
         """
-        
+
         # Fetch, convert, crop, and threshold image so the feature of interest
         # is white (value 255) and everything else appears black (0)
         img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
@@ -439,7 +437,7 @@ class MaxLairInstance():
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
-    
+
     def check_shiny(self) -> bool:
         """Detect whether a Pokemon is shiny by looking for the icon in the
         summary screen.
@@ -479,7 +477,7 @@ class MaxLairInstance():
 
         return self.read_text(self.get_frame(), self.ball_rect, threshold=False,
             invert=True, segmentation_mode='--psm 8').strip()
-        
+
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
         number of pokemon caught.
@@ -522,7 +520,7 @@ class MaxLairInstance():
         for i in range(aditionnal_reset_count):
             ore_after_resets -= self.calculate_ore_cost(self.consecutive_resets + 1 + i)
         return ore_after_resets >= 0
-    
+
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
         if self.base_ball != self.legendary_ball:
@@ -560,7 +558,7 @@ class MaxLairInstance():
             self.log(
                 f'Unexpected byte received: "{self.com.read()}"', 'WARNING'
             )
-        
+
         if char is not None:
             for __ in range(num_repeats):
                 # Send the command to the microcontroller using the serial port.
@@ -600,13 +598,13 @@ class MaxLairInstance():
     ) -> None:
         """Print a string to the console and log file with a timestamp."""
         self.logger.log(getattr(logging, level), text)
-        
+
     def display_results(self, log: bool = False, screenshot: bool = False):
         """Display video from the Switch alongside some annotations describing
         the run sequence.
         """
 
-        # Calculate some statistics for display        
+        # Calculate some statistics for display
         win_percent = (
             'N/A' if self.runs == 0 else (
                 str(round(100 * self.wins / self.runs))+'%'
@@ -653,11 +651,11 @@ class MaxLairInstance():
 
         # Display
         cv2.imshow('Output', frame)
-        
+
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
             cv2.imwrite(
-                ''.join(('logs//', self.log_name, '_cap_', 
+                ''.join(('logs//', self.log_name, '_cap_',
                 str(self.num_saved_images), '.png')), frame
             )
