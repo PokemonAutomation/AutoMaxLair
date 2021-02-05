@@ -9,7 +9,6 @@ import sys
 import pickle
 
 from typing import Tuple
-from automaxlair import Pokemon, Move
 
 import pokebase as pb
 
@@ -17,6 +16,8 @@ import pokebase as pb
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
+
+from automaxlair.pokemon_classes import Pokemon, Move
 
 
 def extract_name_dict(names_resource) -> dict:

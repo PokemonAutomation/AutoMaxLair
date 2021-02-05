@@ -1,13 +1,13 @@
 import pickle
 import sys
 
-from automaxlair import matchup_scoring
-
 # We need to import some class definitions from the parent directory.
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir + '\\automaxlair')
+
+from automaxlair import matchup_scoring
 
 
 def main():
