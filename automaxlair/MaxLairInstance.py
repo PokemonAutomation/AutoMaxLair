@@ -322,8 +322,8 @@ class MaxLairInstance():
                 for type_name_dict in pokemon.types:
                     string_to_match += type_name_dict[self.lang]
             if moves != '':
-                for move_name_dict in pokemon.moves:
-                    string_to_match += move_name_dict.names[self.lang]
+                for move in pokemon.moves:
+                    string_to_match += move.names.get(self.lang, move.name_id)
 
             # After building the identifying string, calculate how different it
             # is from the OCRed string.
