@@ -9,13 +9,15 @@ import multiprocessing as mp
 import os
 import pickle
 import sys
-from automaxlair import matchup_scoring
+import time
 
 # We need to import some things from the parent directory.
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir + '\\automaxlair')
+
+from automaxlair import matchup_scoring  # Needs to be lower than path insert.
 
 
 # Config values for the log and multiprocessing.
@@ -90,7 +92,7 @@ def worker_init(q):
     logger.addHandler(qh)
 
 
-def main(q):
+def main():
     """Main function that loads the Pokemon data files, uses a multiprocessing
     pool to compute their matchups, and saves the results.
     Parameters:
@@ -98,7 +100,42 @@ def main(q):
 
     """
 
-    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
+    # Configure the logger.
+    logger = logging.getLogger(LOG_NAME)
+    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
+    )
+
+    # Configure the console, which will print logged information.
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(formatter)
+
+    # Configure the file handler, which will save logged information.
+    fileHandler = logging.handlers.TimedRotatingFileHandler(
+        filename=os.path.join(base_dir, 'logs', 'packagePokemonScript.log'),
+        when='midnight',
+        backupCount=30
+    )
+    fileHandler.setFormatter(formatter)
+    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+
+    # Add the handlers to the logger so that it will both print messages to the
+    # console as well as save them to a log file.
+    logger.addHandler(console)
+    logger.addHandler(fileHandler)
+
+    # Configure the queue and listener that will receive information to be
+    # logged from all of the processes.
+    q = mp.Queue()
+    ql = logging.handlers.QueueListener(q, console, fileHandler)
+    ql.start()
+    
+    logger.info('Started scoring Pokemon.')
+    
+
+    with open(base_dir+'/data/rental_pokemon.pickle', 'rb') as rental_file:
         rental_pokemon = pickle.load(rental_file)
 
     # Iterate through all rental Pokemon and calculate scores against all the
@@ -125,6 +162,8 @@ def main(q):
     for key in rental_pokemon_scores:
         rental_pokemon_scores[key] /= (total_score / len(rental_pokemon))
 
+    ql.stop()
+
     # Pickle the score lookup tables for later use.
     with open(base_dir + '/data/boss_matchup_LUT.pickle', 'wb') as file:
         pickle.dump(boss_matchup_LUT, file)
@@ -135,41 +174,9 @@ def main(q):
 
 
 if __name__ == '__main__':
-
-    # Configure the logger.
-    logger = logging.getLogger(LOG_NAME)
-    logger.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s | %(name)s | %(levelname)s: %(message)s'
-    )
-
-    # Configure the console, which will print logged information.
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(formatter)
-
-    # Configure the file handler, which will save logged information.
-    fileHandler = logging.handlers.TimedRotatingFileHandler(
-        filename=os.path.join('logs', 'packagePokemonScript.log'),
-        when='midnight',
-        backupCount=30
-    )
-    fileHandler.setFormatter(formatter)
-    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-
-    # Add the handlers to the logger so that it will both print messages to the
-    # console as well as save them to a log file.
-    logger.addHandler(console)
-    logger.addHandler(fileHandler)
-
-    # Configure the queue and listener that will receive information to be
-    # logged from all of the processes.
-    q = mp.Queue()
-    ql = logging.handlers.QueueListener(q, console, fileHandler)
-    ql.start()
-
     # Call main, then clean up.
-    logger.info('Started scoring Pokemon.')
-    main(q)
-    ql.stop()
-    logger.info('Finished scoring Pokemon.')
+    start_time = time.time()
+    main()
+    end_time = time.time()
+    logger = logging.getLogger(LOG_NAME)
+    logger.info(f'Finished scoring Pokemon, taking {end_time - start_time} s.')
