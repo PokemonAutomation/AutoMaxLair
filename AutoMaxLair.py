@@ -608,7 +608,7 @@ def main(log_name):
 
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
-    instance = MaxLairInstance(
+    instance = MaxLairInstance.MaxLairInstance(
         config, com, cap, threading.Lock(), threading.Event(), log_name,
         ENABLE_DEBUG_LOGS
     )
