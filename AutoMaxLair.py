@@ -315,8 +315,8 @@ def catch(inst) -> str:
     inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
     while (inst.get_target_ball().lower() != 'default'
-        and inst.get_target_ball() not in inst.check_ball()
-    ):
+           and inst.get_target_ball() not in inst.check_ball()
+           ):
         inst.push_button(b'<', 2, 1)
     inst.push_button(b'a', 30)
     inst.record_ball_use()

@@ -131,11 +131,10 @@ def main():
     q = mp.Queue()
     ql = logging.handlers.QueueListener(q, console, fileHandler)
     ql.start()
-    
-    logger.info('Started scoring Pokemon.')
-    
 
-    with open(base_dir+'/data/rental_pokemon.pickle', 'rb') as rental_file:
+    logger.info('Started scoring Pokemon.')
+
+    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
         rental_pokemon = pickle.load(rental_file)
 
     # Iterate through all rental Pokemon and calculate scores against all the
