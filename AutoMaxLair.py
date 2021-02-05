@@ -51,6 +51,12 @@ PHRASES = config[language]
 
 ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
+CHECK_ATTACK_STAT = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
+ATTACK_STAT = int(config['default']['ATTACK_STAT'])
+
+CHECK_SPEED_STAT = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
+SPEED_STAT = int(config['default']['SPEED_STATS'])
+
 
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
@@ -481,40 +487,53 @@ def select_pokemon(inst) -> str:
     # Check all Pokemon for shininess.
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
-    for i in range(inst.num_caught):
-        # First check if we need to reset immediately.
-        # Note that "keep path" mode resets always unless a shiny legendary.
-        # is found, and "ball saver" resets if a non-shiny legendary was caught.
-        if (
-            (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
-            or (inst.mode == 'ball saver' and inst.num_caught == 4 and i > 0)
-        ):
-            if inst.mode == 'ball saver' or inst.check_sufficient_ore(2):
-                reset_game = True
-                break
-            else:
-                return 'done'  # End if there isn't enough ore to reset.
-        elif inst.check_shiny():
+
+    if inst.num_caught == 4 and (CHECK_ATTACK_STAT is True or CHECK_SPEED_STAT is True):
+        inst.push_button(b'>', 1)
+        if inst.check_stats(CHECK_ATTACK_STAT, ATTACK_STAT, CHECK_SPEED_STAT, SPEED_STAT):
             inst.log('******************************')
-            inst.log('Shiny found!')
+            inst.log('Matching stats found!')
             inst.log('******************************')
-            inst.log(
-                f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
-                'kept.'
-            )
-            inst.caught_shinies.append(
-                inst.caught_pokemon[inst.num_caught - 1 - i]
-            )
-            inst.shinies_found += 1
-            inst.display_results(screenshot=True)
-            inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
-            if inst.num_caught == 4 and i == 0:
-                return 'done'  # End whenever a shiny legendary is found
-            else:
-                take_pokemon = True
-                break
-        elif i < inst.num_caught - 1:
-            inst.push_button(b'^', 3)
+            # take_pokemon = True
+            #TODO uncomment to submit
+
+        inst.push_button(b'<', 1)
+
+    if take_pokemon is False:
+        for i in range(inst.num_caught):
+            # First check if we need to reset immediately.
+            # Note that "keep path" mode resets always unless a shiny legendary.
+            # is found, and "ball saver" resets if a non-shiny legendary was caught.
+            if (
+                (inst.mode == 'keep path' and (inst.num_caught < 4 or i > 0))
+                or (inst.mode == 'ball saver' and inst.num_caught == 4 and i > 0)
+            ):
+                if inst.mode == 'ball saver' or inst.check_sufficient_ore(2):
+                    reset_game = True
+                    break
+                else:
+                    return 'done'  # End if there isn't enough ore to reset.
+            elif inst.check_shiny():
+                inst.log('******************************')
+                inst.log('Shiny found!')
+                inst.log('******************************')
+                inst.log(
+                    f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
+                    'kept.'
+                )
+                inst.caught_shinies.append(
+                    inst.caught_pokemon[inst.num_caught - 1 - i]
+                )
+                inst.shinies_found += 1
+                inst.display_results(screenshot=True)
+                inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
+                if inst.num_caught == 4 and i == 0:
+                    return 'done'  # End whenever a shiny legendary is found
+                else:
+                    take_pokemon = True
+                    break
+            elif i < inst.num_caught - 1:
+                inst.push_button(b'^', 3)
 
     if (
         not take_pokemon and inst.mode == 'strong boss' and inst.num_caught == 4
