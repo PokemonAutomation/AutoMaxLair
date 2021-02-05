@@ -54,7 +54,7 @@ rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores
 language = config['language']['LANGUAGE']
 PHRASES = config[language]
 
-ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'] == 'True'
+ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
 
 def join(inst) -> str:
@@ -72,7 +72,7 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
 
     inst.push_buttons(
-        (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 5)
+        (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 3)
     )
 
     # Next, read what rental Pokemon are available to choose.
@@ -316,7 +316,7 @@ def catch(inst) -> str:
     # Start by navigating to the ball selection screen
     inst.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
-    while (inst.get_target_ball() != 'DEFAULT'
+    while (inst.get_target_ball().lower() != 'default'
         and inst.get_target_ball() not in inst.check_ball()
     ):
         inst.push_button(b'<', 2, 1)
