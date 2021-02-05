@@ -57,7 +57,7 @@ Figure 5: Screen capture of the Pokemon summary screen at the end of the run. Th
 
 Figure 6: Screen capture saved at the end of a successful run. The bot detects the red shiny star on the left side of the screen. The program will quit if it detects the star while checking the legendary’s summary; if the legendary is not shiny but another Pokemon is, the program will take that shiny Pokemon and start another run.
 
-In addition to the standard mode which always finishes the Dynamax Adventure without resetting the game, two additional modes can be implemented by updating the appropriate field in Config.ini. These modes are summarized in Table 1.
+In addition to the standard mode which always finishes the Dynamax Adventure without resetting the game, three additional modes can be implemented by updating the appropriate field in Config.ini. These modes are summarized in Table 1.
 
 Table 1: Summary of the benefits and drawbacks of using the different operation modes.
 Mode|Benefits|Drawbacks
@@ -65,8 +65,9 @@ Mode|Benefits|Drawbacks
 Default|Accumulates Dynite Ore.|Lower win rate, especially against difficult bosses. Wastes balls used to catch the legendary.
 Strong Boss|Higher win rate. Wastes fewer balls used to catch the legendary.|Can consume Dynite Ore*
 Ball Saver|Higher win rate. Wastes no balls used to catch the legendary.|Can rapidly consume Dynite Ore. Ignores non-legendary shiny Pokemon.
+Keep Path|Highest win rate if you find a good seed beforehand. Wastes no balls used to catch the legendary.|Rapidly consumes Dynite Ore. Ignores non-legendary shiny Pokemon.
 
-*The strong boss mode can be made Dynite Ore-neutral (i.e., neither produces nor consumes) by setting the amount of starting Dynite Ore to zero in Config.ini. Difficult bosses may also cause the bot to lose, causing ore to accumulate but at a reduced rate.
+*The strong boss and ball saver modes can be made Dynite Ore-neutral (i.e., neither produces nor consumes) by setting the amount of starting Dynite Ore to zero in Config.ini. Difficult bosses may also cause the bot to lose, causing ore to accumulate but at a reduced rate.
 
 ## TODO
 ### Major Features
@@ -79,7 +80,7 @@ Ball Saver|Higher win rate. Wastes no balls used to catch the legendary.|Can rap
 	*	When considering a potential new Pokemon, only the player’s current Pokemon is compared. The rest of the team could be considered to see whether another member would benefit more from the Pokemon.
 *	(Not sure if this idea is a good one) online capability
 	*	Connecting with other players online might be beneficial for having more intelligent teammates but may be inconsiderate if the bot makes poor choices.
-###M inor Updates and Bug Fixes
+### Minor Updates and Bug Fixes
 *	PP use is currently overestimated because the bot deducts PP when the move is selected as opposed to when it is used.
 *	Boss move usage is not fully reflected by their movesets.
 	*	Bosses use their 5th move only when at low HP with boss-dependent frequency and timing.
@@ -123,4 +124,6 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 	* Supported and verified languages include English, French, Spanish, and Korean
 	* German, Italian, and Mandarin may also work but have not been tested.
 * Changed how a loss (losing all 4 lives) is detected, increasing consistency.
+* Detect move names, improving the accuracy of Pokemon identification.
+* Updated Ball Saver mode to skip catching the boss if it can't afford to reset the game, allowing it to be run indefinitely.
 * More QOL improvements on the way!
