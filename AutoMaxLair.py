@@ -473,7 +473,7 @@ def select_pokemon(inst) -> str:
         # although the path would be lost that situation should never arise.
         return 'join'
     # "keep path" mode quits if the run is successful.
-    elif num_caught == 4 and inst.mode == 'find path':
+    elif inst.num_caught == 4 and inst.mode == 'find path':
         inst.log(f'This path won with {inst.lives} lives remaining.')
         return 'done'
 
