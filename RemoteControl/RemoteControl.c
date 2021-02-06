@@ -160,7 +160,7 @@ void HID_Task(void) {
 	}
 }
 
-#define ECHOES 5
+#define ECHOES 10
 int echoes = ECHOES;
 USB_JoystickReport_Input_t last_report;
 
