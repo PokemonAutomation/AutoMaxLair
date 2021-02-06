@@ -453,7 +453,7 @@ class MaxLairInstance():
         rect: Rectangle,
         lower_threshold: Tuple[int, int, int],
         upper_threshold: Tuple[int, int, int],
-        mean_value_threshold: int
+        mean_value_threshold: float
     ) -> bool:
         """Check a specified section of the screen for values within a certain
         HSV range.
@@ -622,7 +622,8 @@ class MaxLairInstance():
         """
 
         # Commands are supplied as tuples consisting of a character
-        # corresponding to a button push and a delay that follows the push.
+        # corresponding to a button push, a delay that follows the push, and an
+        # optional number of repeats (default is 1).
         for command in commands:
             self.push_button(*command)
 

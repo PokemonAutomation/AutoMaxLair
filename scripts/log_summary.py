@@ -40,8 +40,7 @@ for boss in bosses:
                         if 'Congratulations' in row:
                             num_wins += 1
                 except Exception as e:
-                    print(f'Error processing {fn}:')
-                    print(e)
+                    print(f'Error processing {fn}: {e}')
                 total_losses += num_losses
                 total_wins += num_wins
 

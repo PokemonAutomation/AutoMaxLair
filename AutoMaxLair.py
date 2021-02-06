@@ -98,6 +98,12 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a', 27)
+
+    # DEBUG: take some screenshots of the path
+    if inst.enable_debug_logs:
+        inst.display_results(screenshot=true)
+        inst.push_button(b'^', 0.5, 30)  # Not sure this is actually the button
+        inst.display_results(screenshot=true)
     inst.log('Finished joining.', 'DEBUG')
     return 'path'
 
@@ -500,7 +506,7 @@ def select_pokemon(inst) -> str:
                 return 'done'  # End if there isn't enough ore to reset.
         elif inst.check_shiny():
             inst.log('******************************')
-            inst.log('Shiny found!')
+            inst.log('*********Shiny found!*********')
             inst.log('******************************')
             inst.log(
                 f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
