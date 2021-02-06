@@ -138,11 +138,16 @@ class MaxLairInstance():
 
         # Validate starting values.
         if self.mode not in (
-            'default', 'strong boss', 'ball saver', 'keep path'
+            'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ):
             self.log(
                 f'Supplied mode {self.mode} not understood; '
                 'using default mode.', 'WARNING'
+            )
+        if self.boss not in self.boss_pokemon:
+            raise KeyError(
+                f'Incorrect value: {config['default']['BOSS']} for BOSS '
+                'supplied in Config.ini'
             )
 
     def reset_run(self) -> None:

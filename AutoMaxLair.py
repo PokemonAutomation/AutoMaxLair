@@ -472,6 +472,10 @@ def select_pokemon(inst) -> str:
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
         return 'join'
+    # "keep path" mode quits if the run is successful.
+    elif num_caught == 4 and inst.mode == 'find path':
+        inst.log(f'This path won with {inst.lives} lives remaining.')
+        return 'done'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
