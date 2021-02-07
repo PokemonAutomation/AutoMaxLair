@@ -51,6 +51,12 @@ PHRASES = config[language]
 
 ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
+CHECK_ATTACK_STAT = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
+ATTACK_STAT = int(config['default']['ATTACK_STAT'])
+
+CHECK_SPEED_STAT = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
+SPEED_STAT = int(config['default']['SPEED_STATS'])
+
 
 def join(inst) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
@@ -101,9 +107,9 @@ def join(inst) -> str:
 
     # DEBUG: take some screenshots of the path
     if inst.enable_debug_logs:
-        inst.display_results(screenshot=true)
+        inst.display_results(screenshot=True)
         inst.push_button(b'^', 0.5, 30)  # Not sure this is actually the button
-        inst.display_results(screenshot=true)
+        inst.display_results(screenshot=True)
     inst.log('Finished joining.', 'DEBUG')
     return 'path'
 
@@ -491,6 +497,17 @@ def select_pokemon(inst) -> str:
     # Check all Pokemon for shininess.
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
+
+    if inst.num_caught == 4 and (CHECK_ATTACK_STAT is True or CHECK_SPEED_STAT is True):
+        inst.push_button(b'>', 1)
+        if inst.check_stats(CHECK_ATTACK_STAT, ATTACK_STAT, CHECK_SPEED_STAT, SPEED_STAT):
+            inst.log('******************************')
+            inst.log('****Matching stats found!*****')
+            inst.log('******************************')
+            # return 'done'  # End whenever a matching stats legendary is found
+
+        inst.push_button(b'<', 1)
+
     for i in range(inst.num_caught):
         # First check if we need to reset immediately.
         # Note that "keep path" mode resets always unless a shiny legendary.
