@@ -202,7 +202,7 @@ class MaxLairInstance():
 
         if not ret:
             self.log('failed to read frame from VideoCapture.', 'ERROR')
-            return
+            return None
 
         # Draw rectangles around detection areas if debug logs are on.
         if not self.enable_debug_logs:

@@ -290,7 +290,7 @@ def battle(inst) -> str:
                 f'(index {best_move_index})', 'DEBUG'
             )
             inst.move_index %= 4  # Loop index back to zero if it exceeds 3
-            for __ in range((best_move_index - inst.move_index + 4) % 4):
+            for ___ in range((best_move_index - inst.move_index + 4) % 4):
                 inst.push_button(b'v', 1)
                 inst.move_index = (inst.move_index + 1) % 4
             inst.push_buttons(
