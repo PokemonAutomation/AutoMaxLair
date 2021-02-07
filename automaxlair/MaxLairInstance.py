@@ -149,7 +149,7 @@ class MaxLairInstance():
             )
         if self.boss not in self.boss_pokemon:
             raise KeyError(
-                f'Incorrect value: {config['default']['BOSS']} for BOSS '
+                f'Incorrect value: {config["default"]["BOSS"]} for BOSS '
                 'supplied in Config.ini'
             )
 
