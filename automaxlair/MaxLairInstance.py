@@ -135,6 +135,9 @@ class MaxLairInstance():
         self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
         self.item_rect_4 = ((0.549, 0.35), (0.745, 0.40))
         self.item_rect_5 = ((0.549, 0.43), (0.745, 0.48))
+        # stats rectangles.
+        self.attack_stat_rect = ((0.33, 0.29), (0.37, 0.33))
+        self.speed_stat_rect = ((0.22, 0.54), (0.26, 0.58))
 
         # Validate starting values.
         if self.mode not in (
@@ -146,7 +149,7 @@ class MaxLairInstance():
             )
         if self.boss not in self.boss_pokemon:
             raise KeyError(
-                f'Incorrect value: {config['default']['BOSS']} for BOSS '
+                f'Incorrect value: {config["default"]["BOSS"]} for BOSS '
                 'supplied in Config.ini'
             )
 
@@ -217,7 +220,8 @@ class MaxLairInstance():
         if not self.enable_debug_logs:
             pass
         elif rectangle_set == 'select_pokemon':
-            self.outline_region(img, self.shiny_rect, (0, 255, 0))
+            self.outline_regions(
+                img, (self.shiny_rect, self.attack_stat_rect, self.speed_stat_rect), (0, 255, 0))
         elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
@@ -479,6 +483,31 @@ class MaxLairInstance():
         return self.check_rect_HSV_match(self.shiny_rect, (0, 100, 20),
                                          (180, 255, 255), 10
                                          )
+
+    def check_stats(self,
+                    check_attack: bool,
+                    attack_stat: int,
+                    check_speed: bool,
+                    speed_stat: int
+                    ) -> bool:
+        """Detect whether a Pokemon has perfect stats.
+        """
+        ret = True
+        if check_attack:
+            if str(attack_stat) not in self.read_text(self.get_frame(), self.attack_stat_rect, threshold=False, segmentation_mode='--psm 8'):
+                ret = False
+                self.log('attack is not good', 'DEBUG')
+            else:
+                self.log('attack is good', 'DEBUG')
+
+        if check_speed:
+            if str(speed_stat) not in self.read_text(self.get_frame(), self.speed_stat_rect, threshold=False, segmentation_mode='--psm 8'):
+                ret = False
+                self.log('speed is not good', 'DEBUG')
+            else:
+                self.log('speed is good', 'DEBUG')
+
+        return ret
 
     def check_dynamax_available(self) -> bool:
         """Detect whether Dynamax is available for the player."""
