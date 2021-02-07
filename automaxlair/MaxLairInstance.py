@@ -212,12 +212,12 @@ class MaxLairInstance():
                 img, (self.shiny_rect, self.attack_stat_rect, self.speed_stat_rect), (0, 255, 0))
         elif rectangle_set == 'join':
             self.outline_regions(
-                img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3,
-                      self.sel_rect_4), (0, 255, 0)
+                img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3),
+                (0, 255, 0)
             )
             self.outline_regions(
-                img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3,
-                      self.abil_rect_4), (0, 255, 255)
+                img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3),
+                (0, 255, 255)
             )
             self.outline_regions(
                 img, (self.moves_rect_1, self.moves_rect_2, self.moves_rect_3),
