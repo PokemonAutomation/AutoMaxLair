@@ -392,7 +392,7 @@ def catch(inst) -> str:
 
 def backpacker(inst) -> str:
     """Choose an item from the backpacker."""
-    inst.push_button(None, 4)
+    inst.push_button(None, 5)
 
     inst.log("Reading the backpacker's items.")
 
