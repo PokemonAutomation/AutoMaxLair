@@ -240,7 +240,7 @@ def battle(inst) -> str:
                 inst.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            inst.push_buttons((b'b', 2), (b'a', 2, 2))
+            inst.push_buttons((b'b', 2), (b'a', 2))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -329,7 +329,7 @@ def catch(inst) -> str:
     while (inst.get_target_ball().lower() != 'default'
            and inst.get_target_ball() not in inst.check_ball()
            ):
-        inst.push_button(b'<', 2, 1)
+        inst.push_button(b'<', 2)
     inst.push_button(b'a', 30)
     inst.record_ball_use()
 
@@ -574,7 +574,7 @@ def select_pokemon(inst) -> str:
         inst.get_frame(),
         ((0, 0.6), (1, 1)), threshold=False
     ):
-        inst.push_button(b'a', 1.5, 1)
+        inst.push_button(b'a', 1.5)
     inst.push_buttons((b'b', 1.5), (b'b', 1.5))
 
     # Update statistics and reset stored information about the complete run.
