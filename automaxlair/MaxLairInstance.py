@@ -109,23 +109,11 @@ class MaxLairInstance():
         self.abil_rect_2 = ((0.485, 0.59), (0.60, 0.65))
         self.abil_rect_3 = ((0.485, 0.85), (0.60, 0.91))
         self.abil_rect_4 = ((0.485, 0.645), (0.60, 0.69))
-        # Selectable Pokemon abilities rectangles.
-        self.move_rect_1 = ((0.71, 0.15), (0.91, 0.20))
-        self.move_rect_2 = ((0.71, 0.21), (0.91, 0.26))
-        self.move_rect_3 = ((0.71, 0.27), (0.91, 0.32))
-        self.move_rect_4 = ((0.71, 0.33), (0.91, 0.38))
-        self.move_rect_5 = ((0.71, 0.41), (0.91, 0.46))
-        self.move_rect_6 = ((0.71, 0.47), (0.91, 0.52))
-        self.move_rect_7 = ((0.71, 0.53), (0.91, 0.58))
-        self.move_rect_8 = ((0.71, 0.59), (0.91, 0.64))
-        self.move_rect_9 = ((0.71, 0.67), (0.91, 0.72))
-        self.move_rect_10 = ((0.71, 0.73), (0.91, 0.78))
-        self.move_rect_11 = ((0.71, 0.79), (0.91, 0.84))
-        self.move_rect_12 = ((0.71, 0.85), (0.91, 0.90))
-        self.move_rect_13 = ((0.71, 0.46), (0.91, 0.51))
-        self.move_rect_14 = ((0.71, 0.52), (0.91, 0.57))
-        self.move_rect_15 = ((0.71, 0.58), (0.91, 0.63))
-        self.move_rect_16 = ((0.71, 0.64), (0.91, 0.69))
+        # Selectable Pokemon moves rectangles.
+        self.moves_rect_1 = ((0.71, 0.15), (0.91, 0.38))
+        self.moves_rect_2 = ((0.71, 0.41), (0.91, 0.64))
+        self.moves_rect_3 = ((0.71, 0.67), (0.91, 0.90))
+        self.moves_rect_4 = ((0.71, 0.46), (0.91, 0.69))
         # Poke ball rectangles.
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
@@ -232,19 +220,13 @@ class MaxLairInstance():
                       self.abil_rect_4), (0, 255, 255)
             )
             self.outline_regions(
-                img, (self.move_rect_1, self.move_rect_2, self.move_rect_3,
-                      self.move_rect_4, self.move_rect_5, self.move_rect_6,
-                      self.move_rect_7, self.move_rect_8, self.move_rect_9,
-                      self.move_rect_10, self.move_rect_11, self.move_rect_12),
+                img, (self.moves_rect_1, self.moves_rect_2, self.moves_rect_3),
                 (255, 255, 0)
             )
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0, 255, 0))
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
-            self.outline_regions(
-                img, (self.move_rect_13, self.move_rect_14, self.move_rect_15,
-                      self.move_rect_16), (255, 255, 0)
-            )
+            self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
                 img, (self.ball_rect, self.ball_num_rect), (0, 0, 255)
             )
@@ -387,48 +369,20 @@ class MaxLairInstance():
             abilities.append(self.read_text(
                 image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
             types = ['', '', '']
-            move_1 = self.read_text(
-                image, self.move_rect_1, threshold=False, segmentation_mode='--psm 7').strip()
-            move_2 = self.read_text(
-                image, self.move_rect_2, threshold=False, segmentation_mode='--psm 7').strip()
-            move_3 = self.read_text(
-                image, self.move_rect_3, threshold=False, segmentation_mode='--psm 7').strip()
-            move_4 = self.read_text(
-                image, self.move_rect_4, threshold=False, segmentation_mode='--psm 7').strip()
-            moves.append(move_1 + move_2 + move_3 + move_4)
-            move_5 = self.read_text(
-                image, self.move_rect_5, threshold=False, segmentation_mode='--psm 7').strip()
-            move_6 = self.read_text(
-                image, self.move_rect_6, threshold=False, segmentation_mode='--psm 7').strip()
-            move_7 = self.read_text(
-                image, self.move_rect_7, threshold=False, segmentation_mode='--psm 7').strip()
-            move_8 = self.read_text(
-                image, self.move_rect_8, threshold=False, segmentation_mode='--psm 7').strip()
-            moves.append(move_5 + move_6 + move_7 + move_8)
-            move_9 = self.read_text(
-                image, self.move_rect_9, threshold=False, segmentation_mode='--psm 7').strip()
-            move_10 = self.read_text(
-                image, self.move_rect_10, threshold=False, segmentation_mode='--psm 7').strip()
-            move_11 = self.read_text(
-                image, self.move_rect_11, threshold=False, segmentation_mode='--psm 7').strip()
-            move_12 = self.read_text(
-                image, self.move_rect_12, threshold=False, segmentation_mode='--psm 7').strip()
-            moves.append(move_9 + move_10 + move_11 + move_12)
+            moves.append(self.read_text(
+                image, self.moves_rect_1, threshold=False, segmentation_mode='--psm 4').strip())
+            moves.append(self.read_text(
+                image, self.moves_rect_2, threshold=False, segmentation_mode='--psm 4').strip())
+            moves.append(self.read_text(
+                image, self.moves_rect_3, threshold=False, segmentation_mode='--psm 4').strip())
         elif stage == 'catch':
             pokemon_names.append(self.read_text(
                 image, self.sel_rect_4, threshold=False, segmentation_mode='--psm 3').strip().split('\n')[-1])
             abilities.append(self.read_text(
                 image, self.abil_rect_4, threshold=False, segmentation_mode='--psm 3').strip())
             types.append('')
-            move_1 = self.read_text(
-                image, self.move_rect_13, threshold=False, segmentation_mode='--psm 7').strip()
-            move_2 = self.read_text(
-                image, self.move_rect_14, threshold=False, segmentation_mode='--psm 7').strip()
-            move_3 = self.read_text(
-                image, self.move_rect_15, threshold=False, segmentation_mode='--psm 7').strip()
-            move_4 = self.read_text(
-                image, self.move_rect_16, threshold=False, segmentation_mode='--psm 7').strip()
-            moves.append(move_1 + move_2 + move_3 + move_4)
+            moves.append(self.read_text(
+                image, self.moves_rect_4, threshold=False, segmentation_mode='--psm 4').strip())
         elif stage == 'battle':
             pokemon_names.append(self.read_text(
                 image, self.sel_rect_5, threshold=False, invert=False, segmentation_mode='--psm 8').strip())
