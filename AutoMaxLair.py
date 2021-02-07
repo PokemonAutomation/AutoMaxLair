@@ -104,6 +104,12 @@ def join(inst) -> str:
         inst.push_button(b'v', 1)
     inst.pokemon = pokemon_list[selection_index]
     inst.push_button(b'a', 27)
+
+    # DEBUG: take some screenshots of the path
+    if inst.enable_debug_logs:
+        inst.display_results(screenshot=true)
+        inst.push_button(b'^', 0.5, 30)  # Not sure this is actually the button
+        inst.display_results(screenshot=true)
     inst.log('Finished joining.', 'DEBUG')
     return 'path'
 
@@ -478,6 +484,10 @@ def select_pokemon(inst) -> str:
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
         return 'join'
+    # "find path" mode quits if the run is successful.
+    elif inst.num_caught == 4 and inst.mode == 'find path':
+        inst.log(f'This path won with {inst.lives} lives remaining.')
+        return 'done'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
@@ -492,10 +502,9 @@ def select_pokemon(inst) -> str:
         inst.push_button(b'>', 1)
         if inst.check_stats(CHECK_ATTACK_STAT, ATTACK_STAT, CHECK_SPEED_STAT, SPEED_STAT):
             inst.log('******************************')
-            inst.log('Matching stats found!')
+            inst.log('****Matching stats found!*****')
             inst.log('******************************')
-            # take_pokemon = True
-            #TODO uncomment to submit
+            # return 'done'  # End whenever a matching stats legendary is found
 
         inst.push_button(b'<', 1)
 
@@ -515,7 +524,7 @@ def select_pokemon(inst) -> str:
                     return 'done'  # End if there isn't enough ore to reset.
             elif inst.check_shiny():
                 inst.log('******************************')
-                inst.log('Shiny found!')
+                inst.log('*********Shiny found!*********')
                 inst.log('******************************')
                 inst.log(
                     f'Shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} will be '
