@@ -52,10 +52,10 @@ PHRASES = config[language]
 ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
 CHECK_ATTACK_STAT = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
-ATTACK_STAT = int(config['default']['ATTACK_STAT'])
+ATTACK_STATS = config['default']['ATTACK_STATS']
 
 CHECK_SPEED_STAT = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
-SPEED_STAT = int(config['default']['SPEED_STATS'])
+SPEED_STATS = config['default']['SPEED_STATS']
 
 
 def join(inst) -> str:
@@ -500,11 +500,11 @@ def select_pokemon(inst) -> str:
 
     if inst.num_caught == 4 and (CHECK_ATTACK_STAT is True or CHECK_SPEED_STAT is True):
         inst.push_button(b'>', 1)
-        if inst.check_stats(CHECK_ATTACK_STAT, ATTACK_STAT, CHECK_SPEED_STAT, SPEED_STAT):
+        if inst.check_stats():
             inst.log('******************************')
             inst.log('****Matching stats found!*****')
             inst.log('******************************')
-            # return 'done'  # End whenever a matching stats legendary is found
+            return 'done'  # End whenever a matching stats legendary is found
 
         inst.push_button(b'<', 1)
 
@@ -637,7 +637,7 @@ def main(log_name):
     # and the entire sequence of runs
     instance = MaxLairInstance.MaxLairInstance(
         config, com, cap, threading.Lock(), threading.Event(), log_name,
-        ENABLE_DEBUG_LOGS
+        ENABLE_DEBUG_LOGS, CHECK_ATTACK_STAT, ATTACK_STATS, CHECK_SPEED_STAT, SPEED_STATS
     )
 
     # Map stages to the appropriate function to execute when in each stage
