@@ -36,8 +36,7 @@ class MaxLairInstance():
         cap: VideoCapture,
         lock: Lock,
         exit_flag: Event,
-        log_name: str,
-        enable_debug_logs: bool = False
+        log_name: str
     ) -> None:
         # Read values from the config.
         vid_scale = float(config['default']['VIDEO_SCALE'])
@@ -60,7 +59,12 @@ class MaxLairInstance():
         self.phrases = config[config['language']['LANGUAGE']]
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
-        self.enable_debug_logs = enable_debug_logs
+        self.enable_debug_logs = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+
+        self.check_attack_stat = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
+        self.expected_attack_stats = config['default']['ATTACK_STATS']
+        self.check_speed_stat = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
+        self.expected_speed_stats = config['default']['SPEED_STATS']
 
         # Zero the start time and fetch the logger.
         self.start_date = datetime.now()
@@ -438,30 +442,39 @@ class MaxLairInstance():
                                          (180, 255, 255), 10
                                          )
 
-    def check_stats(self,
-                    check_attack: bool,
-                    attack_stat: int,
-                    check_speed: bool,
-                    speed_stat: int
-                    ) -> bool:
+    def check_stats(self) -> bool:
         """Detect whether a Pokemon has perfect stats.
         """
-        ret = True
-        if check_attack:
-            if str(attack_stat) not in self.read_text(self.get_frame(), self.attack_stat_rect, threshold=False, segmentation_mode='--psm 8'):
-                ret = False
-                self.log('attack is not good', 'DEBUG')
-            else:
-                self.log('attack is good', 'DEBUG')
 
-        if check_speed:
-            if str(speed_stat) not in self.read_text(self.get_frame(), self.speed_stat_rect, threshold=False, segmentation_mode='--psm 8'):
-                ret = False
-                self.log('speed is not good', 'DEBUG')
-            else:
-                self.log('speed is good', 'DEBUG')
+        # First check if the attack stat match one of the expected value
+        is_attack_matching = True
+        if self.check_attack_stat:
+            is_attack_matching = False
+            read_attack = self.read_text(self.get_frame(), self.attack_stat_rect, threshold=False, segmentation_mode='--psm 8')
+            for expected_attack in self.expected_attack_stats.split(','):
+                if expected_attack in read_attack:
+                    is_attack_matching = True
 
-        return ret
+            if is_attack_matching:
+                self.log(f'Found a legend with the right attack stat : {self.expected_attack_stats}.')
+            else:
+                self.log('Found legend with the wrong attack stat.')
+
+        # Then check if the speed stat match one of the expected value
+        is_speed_matching = True
+        if self.check_speed_stat:
+            is_speed_matching = False
+            read_speed = self.read_text(self.get_frame(), self.speed_stat_rect, threshold=False, segmentation_mode='--psm 8')
+            for expected_speed in self.expected_speed_stats.split(','):
+                if expected_speed in read_speed:
+                    is_speed_matching = True
+
+            if is_speed_matching:
+                self.log(f'Found a legend with the right speed stat : {self.expected_speed_stats}.')
+            else:
+                self.log('Found legend with the wrong speed stat.')
+
+        return is_attack_matching and is_speed_matching
 
     def check_dynamax_available(self) -> bool:
         """Detect whether Dynamax is available for the player."""
