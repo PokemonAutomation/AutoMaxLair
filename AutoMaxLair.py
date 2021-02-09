@@ -636,8 +636,7 @@ def main(log_name):
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
     instance = MaxLairInstance.MaxLairInstance(
-        config, com, cap, threading.Lock(), threading.Event(), log_name,
-        ENABLE_DEBUG_LOGS, CHECK_ATTACK_STAT, ATTACK_STATS, CHECK_SPEED_STAT, SPEED_STATS
+        config, com, cap, threading.Lock(), threading.Event(), log_name
     )
 
     # Map stages to the appropriate function to execute when in each stage
