@@ -78,7 +78,7 @@ class MaxLairInstance():
         self.shinies_found = 0
         self.caught_pokemon: List[str] = []
         self.caught_shinies: List[str] = []
-        self.consecutive_resets = 0
+        self.consecutive_resets = int(config['default']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
         self.stage = 'join'
 
