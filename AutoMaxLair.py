@@ -29,33 +29,10 @@ if not config.read('Config.ini', 'utf8'):
 
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
-VIDEO_SCALE = float(config['default']['VIDEO_SCALE'])
 BOSS = config['default']['BOSS'].lower().replace(' ', '-')
 PATH_INDEX = int(config['default']['PATH_INDEX'])
-BASE_BALL = config['default']['BASE_BALL']
-BASE_BALLS = int(config['default']['BASE_BALLS'])
-LEGENDARY_BALL = config['default']['LEGENDARY_BALL']
-LEGENDARY_BALLS = int(config['default']['LEGENDARY_BALLS'])
-MODE = config['default']['MODE'].lower()
-DYNITE_ORE = int(config['default']['DYNITE_ORE'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-
-boss_pokemon_path = config['pokemon_data_paths']['Boss_Pokemon']
-rental_pokemon_path = config['pokemon_data_paths']['Rental_Pokemon']
-boss_matchup_LUT_path = config['pokemon_data_paths']['Boss_Matchup_LUT']
-rental_matchup_LUT_path = config['pokemon_data_paths']['Rental_Matchup_LUT']
-rental_pokemon_scores_path = config['pokemon_data_paths']['Rental_Pokemon_Scores']
-
-language = config['language']['LANGUAGE']
-PHRASES = config[language]
-
 ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
-
-CHECK_ATTACK_STAT = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
-ATTACK_STATS = config['default']['ATTACK_STATS']
-
-CHECK_SPEED_STAT = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
-SPEED_STATS = config['default']['SPEED_STATS']
 
 
 def join(inst) -> str:
@@ -498,7 +475,7 @@ def select_pokemon(inst) -> str:
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
 
-    if inst.num_caught == 4 and (CHECK_ATTACK_STAT is True or CHECK_SPEED_STAT is True):
+    if inst.num_caught == 4 and (inst.check_attack_stat is True or inst.check_speed_stat is True):
         inst.push_button(b'>', 1)
         if inst.check_stats():
             inst.log('******************************')
