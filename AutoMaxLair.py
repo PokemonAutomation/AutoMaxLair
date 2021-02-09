@@ -107,9 +107,9 @@ def join(inst) -> str:
 
     # DEBUG: take some screenshots of the path
     if inst.enable_debug_logs:
-        inst.display_results(screenshot=True)
-        inst.push_button(b'^', 0.5, 30)  # Not sure this is actually the button
-        inst.display_results(screenshot=True)
+        # inst.display_results(screenshot=True)
+        inst.push_button(b'8', 0.5, 30)  # Not sure this is actually the button
+        # inst.display_results(screenshot=True)
     inst.log('Finished joining.', 'DEBUG')
     return 'path'
 
