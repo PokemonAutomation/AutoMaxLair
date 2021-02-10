@@ -687,7 +687,4 @@ class MaxLairInstance():
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
-            cv2.imwrite(
-                ''.join(('logs//', self.log_name, '_cap_',
-                         str(self.num_saved_images), '.png')), frame
-            )
+            cv2.imwrite(f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
