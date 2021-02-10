@@ -481,6 +481,7 @@ def select_pokemon(inst) -> str:
             inst.log('******************************')
             inst.log('****Matching stats found!*****')
             inst.log('******************************')
+            inst.display_results(screenshot=True)
             return 'done'  # End whenever a matching stats legendary is found
 
         inst.push_button(b'<', 1)
