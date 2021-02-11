@@ -475,7 +475,7 @@ def select_pokemon(inst) -> str:
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
 
-    if inst.num_caught == 4 and (inst.check_attack_stat is True or inst.check_speed_stat is True):
+    if inst.num_caught == 4 and (inst.check_attack_stat or inst.check_speed_stat):
         inst.push_button(b'>', 1)
         if inst.check_stats():
             inst.log('******************************')
