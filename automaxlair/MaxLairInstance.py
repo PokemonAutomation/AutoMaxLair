@@ -78,7 +78,7 @@ class MaxLairInstance():
         self.shinies_found = 0
         self.caught_pokemon: List[str] = []
         self.caught_shinies: List[str] = []
-        self.consecutive_resets = 0
+        self.consecutive_resets = int(config['default']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
         self.stage = 'join'
 
@@ -687,7 +687,4 @@ class MaxLairInstance():
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
-            cv2.imwrite(
-                ''.join(('logs//', self.log_name, '_cap_',
-                         str(self.num_saved_images), '.png')), frame
-            )
+            cv2.imwrite(f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
