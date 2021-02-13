@@ -30,9 +30,9 @@ if not config.read('Config.ini', 'utf8'):
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 BOSS = config['default']['BOSS'].lower().replace(' ', '-')
-PATH_INDEX = int(config['default']['PATH_INDEX'])
+BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
 
 def join(inst) -> str:
@@ -46,7 +46,7 @@ def join(inst) -> str:
     )
 
     # select the right path
-    for __ in range(PATH_INDEX):
+    for __ in range(BOSS_INDEX):
         inst.push_button(b'v', 1)
 
     inst.push_buttons(

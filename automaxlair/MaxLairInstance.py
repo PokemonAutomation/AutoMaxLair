@@ -39,7 +39,7 @@ class MaxLairInstance():
         log_name: str
     ) -> None:
         # Read values from the config.
-        vid_scale = float(config['default']['VIDEO_SCALE'])
+        vid_scale = float(config['advanced']['VIDEO_SCALE'])
         self.boss = config['default']['BOSS'].lower().replace(' ', '-')
 
         self.base_ball = config['default']['BASE_BALL']
@@ -47,7 +47,7 @@ class MaxLairInstance():
         self.legendary_ball = config['default']['LEGENDARY_BALL']
         self.legendary_balls = int(config['default']['LEGENDARY_BALLS'])
         self.mode = config['default']['MODE'].lower()
-        self.dynite_ore = int(config['default']['DYNITE_ORE'])
+        self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
             config['pokemon_data_paths']['Rental_Pokemon'],
@@ -59,12 +59,12 @@ class MaxLairInstance():
         self.phrases = config[config['language']['LANGUAGE']]
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
-        self.enable_debug_logs = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+        self.enable_debug_logs = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
-        self.check_attack_stat = config['default']['CHECK_ATTACK_STAT'].lower() == 'true'
-        self.expected_attack_stats = config['default']['ATTACK_STATS']
-        self.check_speed_stat = config['default']['CHECK_SPEED_STAT'].lower() == 'true'
-        self.expected_speed_stats = config['default']['SPEED_STATS']
+        self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT'].lower() == 'true'
+        self.expected_attack_stats = config['stats']['ATTACK_STATS']
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT'].lower() == 'true'
+        self.expected_speed_stats = config['stats']['SPEED_STATS']
 
         # Zero the start time and fetch the logger.
         self.start_date = datetime.now()
@@ -78,7 +78,7 @@ class MaxLairInstance():
         self.shinies_found = 0
         self.caught_pokemon: List[str] = []
         self.caught_shinies: List[str] = []
-        self.consecutive_resets = int(config['default']['CONSECUTIVE_RESETS'])
+        self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
         self.stage = 'join'
 
