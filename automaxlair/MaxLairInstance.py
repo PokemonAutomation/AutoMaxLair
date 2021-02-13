@@ -90,6 +90,7 @@ class MaxLairInstance():
             round(1920 * vid_scale), round(1080 * vid_scale))
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
+        self.last_image = None
         self.com = com
         self.lock = lock
         self.exit_flag = exit_flag
@@ -202,11 +203,17 @@ class MaxLairInstance():
 
     def get_frame(self, rectangle_set: str = '') -> Image:
         """Get an annotated image of the current Switch output."""
+
+        # Fetch a frame from the VideoCapture object.
         ret, img = self.cap.read()
 
-        if not ret:
-            self.log('failed to read frame from VideoCapture.', 'ERROR')
-            return None
+        # Try to handle a dropped frame gracefully. Note that multiple dropped
+        # frames may cause the program to appear to freeze.
+        if ret:
+            self.last_image = img
+        else:
+            self.log('Failed to read a frame from VideoCapture.', 'WARNING')
+            img = self.last_image
 
         # Draw rectangles around detection areas if debug logs are on.
         if not self.enable_debug_logs:
@@ -257,7 +264,10 @@ class MaxLairInstance():
         invert: bool = False,
         segmentation_mode: str = '--psm 11'
     ) -> str:
-        """Read text from a section (default entirety) of an image using Tesseract."""
+        """Read text from a section (default entirety) of an image using
+        Tesseract.
+        """
+
         # Process image according to instructions
         h, w = img.shape[:2]
         if threshold:
