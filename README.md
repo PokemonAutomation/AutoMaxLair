@@ -131,3 +131,6 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Updated Ball Saver mode to skip catching the boss if it can't afford to reset the game, allowing it to be run indefinitely.
 * Added "Keep Path" and "Find Path" modes, which are useful against very strong bosses (e.g., Zygarde).
 * More QOL improvements on the way!
+* Add the ability to take a pokemon from the scientist if your current pokemon is worse than average
+* Add the ability to hunt for specific stats legendary
+* Add a way to send discord message with a picture showing your latest catch
