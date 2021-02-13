@@ -14,6 +14,7 @@ from typing import List, Tuple, TypeVar, Iterable, Optional
 import cv2
 import enchant
 import pytesseract
+import discord
 
 from automaxlair.pokemon_classes import Pokemon
 from serial import Serial
@@ -65,6 +66,10 @@ class MaxLairInstance():
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
         self.check_speed_stat = config['stats']['CHECK_SPEED_STAT'].lower() == 'true'
         self.expected_speed_stats = config['stats']['SPEED_STATS']
+
+        self.webhook_id = config['discord']['WEBHOOK_ID']
+        self.webhook_token = config['discord']['WEBHOOK_TOKEN']
+        self.user_id = config['discord']['USER_ID']
 
         # Zero the start time and fetch the logger.
         self.start_date = datetime.now()
@@ -688,3 +693,28 @@ class MaxLairInstance():
             # Save a screenshot
             self.num_saved_images += 1
             cv2.imwrite(f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+
+    def send_discord_message(self,
+                             ping_yourself: bool,
+                             text: str,
+                             path_to_picture: str
+                             ) -> None:
+
+        # If user did not setup the discord informations, do nothing
+        if self.webhook_id == '' or self.webhook_token == '':
+            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
+            return
+
+        if self.user_id == '' and ping_yourself:
+            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
+            return
+
+        webhook = discord.Webhook.partial(self.webhook_id, self.webhook_token, adapter=discord.RequestsWebhookAdapter())
+
+        with open(file=f'{path_to_picture}', mode='rb') as f:
+            my_file = discord.File(f)
+
+        if ping_yourself:
+            ping_str = f'<@{self.user_id}>'
+
+        webhook.send(f'{ping_str} {text}', file=my_file)
