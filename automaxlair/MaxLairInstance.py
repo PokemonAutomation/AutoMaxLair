@@ -520,7 +520,7 @@ class MaxLairInstance():
         """
 
         return self.read_text(self.get_frame(), self.ball_rect, threshold=False,
-                              invert=True, segmentation_mode='--psm 8').strip()
+                              invert=True, segmentation_mode='--psm 7').strip()
 
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
