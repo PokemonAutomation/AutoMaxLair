@@ -463,6 +463,9 @@ def select_pokemon(inst) -> str:
         return 'join'
     # "find path" mode quits if the run is successful.
     elif inst.num_caught == 4 and inst.mode == 'find path':
+        inst.display_results(screenshot=True)
+        inst.send_discord_message(True, f'You got a winning path for {inst.caught_pokemon[3]} with {inst.lives} lives remaining !!!',
+                                  f'logs/{inst.log_name}_cap_{inst.num_saved_images}.png')
         inst.log(f'This path won with {inst.lives} lives remaining.')
         return 'done'
 
