@@ -18,11 +18,62 @@ import discord
 
 from automaxlair.pokemon_classes import Pokemon
 from serial import Serial
-from cv2 import VideoCapture
 from configparser import ConfigParser
 from threading import Lock, Event
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
+
+
+class VideoCaptureHelper:
+    def __init__(
+        self,
+        video_index: int,
+        base_resolution: Tuple[int, int],
+        logger: logging.Logger,
+    ) -> None:
+        self.video_index = video_index
+        self.base_resolution = base_resolution
+        self.logger = logger
+        self.last_image = None
+        self.init_video_capture()
+
+    def init_video_capture(self) -> None:
+        self.cap = cv2.VideoCapture(self.video_index)
+        if not self.cap.isOpened():
+            self.logger.error(
+                'Failed to open the video connection. Check the config file and '
+                'ensure no other application is using the video input.'
+            )
+            raise RuntimeError("Failed to initialize video capture")
+
+        self.cap.set(3, self.base_resolution[0])
+        self.cap.set(4, self.base_resolution[1])
+        self.failed_count = 0
+
+    def read(self) -> Image:
+        # Fetch a frame from the VideoCapture object.
+        ret, img = self.cap.read()
+
+        # Try to handle a dropped frame gracefully. Note that multiple dropped
+        # frames may cause the program to appear to freeze.
+        if ret:
+            self.last_image = img
+            self.failed_count = 0  # Clear count on consecutive failed frames
+        else:
+            self.logger.warning('Failed to read a frame from VideoCapture.')
+            img = self.last_image
+
+            self.failed_count = self.failed_count + 1
+            # If failed for too long, reiniitalize video capture connection
+            if self.failed_count == 10:
+                self.logger.warning('Too many failed frames. Reinitialize VideoCapture')
+                self.release()
+                self.init_video_capture()
+
+        return img
+
+    def release(self):
+        self.cap.release()
 
 
 class MaxLairInstance():
@@ -34,7 +85,7 @@ class MaxLairInstance():
         self,
         config: ConfigParser,
         com: Serial,
-        cap: VideoCapture,
+        video_index: int,
         lock: Lock,
         exit_flag: Event,
         log_name: str
@@ -89,12 +140,13 @@ class MaxLairInstance():
 
         # Store references to the video capture, serial communication, and lock
         # objects used.
-        self.cap = cap
         self.base_resolution = (1920, 1080)
+        self.video_capture = VideoCaptureHelper(
+            video_index, self.base_resolution, self.logger)
+
         self.display_resolution = (
             round(1920 * vid_scale), round(1080 * vid_scale))
-        self.cap.set(3, self.base_resolution[0])
-        self.cap.set(4, self.base_resolution[1])
+
         self.last_image = None
         self.com = com
         self.lock = lock
@@ -210,15 +262,7 @@ class MaxLairInstance():
         """Get an annotated image of the current Switch output."""
 
         # Fetch a frame from the VideoCapture object.
-        ret, img = self.cap.read()
-
-        # Try to handle a dropped frame gracefully. Note that multiple dropped
-        # frames may cause the program to appear to freeze.
-        if ret:
-            self.last_image = img
-        else:
-            self.log('Failed to read a frame from VideoCapture.', 'WARNING')
-            img = self.last_image
+        img = self.video_capture.read()
 
         # Draw rectangles around detection areas if debug logs are on.
         if not self.enable_debug_logs:

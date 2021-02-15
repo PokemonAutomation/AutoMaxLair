@@ -613,20 +613,16 @@ def main(log_name):
 
     # Open the video capture
     logger.info('Attempting to open the video connection.')
-    cap = cv2.VideoCapture(VIDEO_INDEX)
-    if not cap.isOpened():
-        logger.error(
-            'Failed to open the video connection. Check the config file and '
-            'ensure no other application is using the video input.'
-        )
-        com.close()
-        return
 
     # Create a Max Lair Instance object to store information about each run
     # and the entire sequence of runs
-    instance = MaxLairInstance.MaxLairInstance(
-        config, com, cap, threading.Lock(), threading.Event(), log_name
-    )
+    try:
+        instance = MaxLairInstance.MaxLairInstance(
+            config, com, VIDEO_INDEX, threading.Lock(), threading.Event(), log_name
+        )
+    except RuntimeError:  # Possible video capture initialization error
+        com.close()
+        return
 
     # Map stages to the appropriate function to execute when in each stage
     actions = {'join': join, 'path': path, 'detect': detect, 'battle': battle,
@@ -665,7 +661,7 @@ def main(log_name):
 
     # When finished, clean up video and serial connections
     instance.display_results(log=True)
-    cap.release()
+    instance.video_capture.release()  # Release resource for video capture
     com.close()
     # cv2.destroyAllWindows()
 
