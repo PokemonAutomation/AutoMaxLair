@@ -18,7 +18,6 @@ import discord
 
 from automaxlair.pokemon_classes import Pokemon
 from serial import Serial
-from cv2 import VideoCapture
 from configparser import ConfigParser
 from threading import Lock, Event
 Image = TypeVar('cv2 image')
@@ -74,10 +73,7 @@ class VideoCaptureHelper:
         return img
 
     def release(self):
-        try:
-            self.cap.release()
-        except:
-            pass
+        self.cap.release()
 
 
 class MaxLairInstance():
