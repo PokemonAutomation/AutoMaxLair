@@ -30,9 +30,9 @@ if not config.read('Config.ini', 'utf8'):
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
 BOSS = config['default']['BOSS'].lower().replace(' ', '-')
-PATH_INDEX = int(config['default']['PATH_INDEX'])
+BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-ENABLE_DEBUG_LOGS = config['default']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
 
 def join(inst) -> str:
@@ -46,7 +46,7 @@ def join(inst) -> str:
     )
 
     # select the right path
-    for __ in range(PATH_INDEX):
+    for __ in range(BOSS_INDEX):
         inst.push_button(b'v', 1)
 
     inst.push_buttons(
@@ -463,6 +463,9 @@ def select_pokemon(inst) -> str:
         return 'join'
     # "find path" mode quits if the run is successful.
     elif inst.num_caught == 4 and inst.mode == 'find path':
+        inst.display_results(screenshot=True)
+        inst.send_discord_message(True, f'You got a winning path for {inst.caught_pokemon[3]} with {inst.lives} lives remaining !!!',
+                                  f'logs/{inst.log_name}_cap_{inst.num_saved_images}.png')
         inst.log(f'This path won with {inst.lives} lives remaining.')
         return 'done'
 
@@ -482,6 +485,8 @@ def select_pokemon(inst) -> str:
             inst.log('****Matching stats found!*****')
             inst.log('******************************')
             inst.display_results(screenshot=True)
+            inst.send_discord_message(True, f'You got a matching stats {inst.caught_pokemon[3]} !!!',
+                                      f'logs/{inst.log_name}_cap_{inst.num_saved_images}.png')
             return 'done'  # End whenever a matching stats legendary is found
 
         inst.push_button(b'<', 1)
@@ -514,8 +519,14 @@ def select_pokemon(inst) -> str:
             inst.display_results(screenshot=True)
             inst.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if inst.num_caught == 4 and i == 0:
+                inst.send_discord_message(
+                    True, f'You got a shiny {inst.caught_pokemon[3]} !!!',
+                    f'logs/{inst.log_name}_cap_{inst.num_saved_images}.png')
                 return 'done'  # End whenever a shiny legendary is found
             else:
+                inst.send_discord_message(
+                    False, f'You got a shiny {inst.caught_pokemon[inst.num_caught - 1 - i]} !!!',
+                    f'logs/{inst.log_name}_cap_{inst.num_saved_images}.png')
                 take_pokemon = True
                 break
         elif i < inst.num_caught - 1:

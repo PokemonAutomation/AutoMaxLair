@@ -6,7 +6,7 @@ AutoMaxLair is designed for shiny hunting legendary Pokemon in Dynamax Adventure
 * HDMI capture card or similar. You can also use a cheap USB device instead.
 *	A computer that you can run continuously for many hours.
 ## Required Software
-* Teensy Loader (or similar, depending on your microcontroller )for programming the microcontroller.
+* Teensy Loader (or similar, depending on your microcontroller) for programming the microcontroller.
 * Tesseract OCR. Compiled executables can be downloaded from the [UB Mannheim Github](https://github.com/UB-Mannheim/tesseract/wiki).
 *	Python 3.6-3.8 with the following packages installed (see requirements.txt for details):
 	* opencv-python
@@ -131,3 +131,6 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Updated Ball Saver mode to skip catching the boss if it can't afford to reset the game, allowing it to be run indefinitely.
 * Added "Keep Path" and "Find Path" modes, which are useful against very strong bosses (e.g., Zygarde).
 * More QOL improvements on the way!
+* Add the ability to take a pokemon from the scientist if your current pokemon is worse than average
+* Add the ability to hunt for specific stats legendary
+* Add a way to send discord message with a picture showing your latest catch
