@@ -75,7 +75,7 @@ Find Path|Useful for finding a path to use "Keep Path" mode on.|Utility mode tha
 ## TODO
 ### Major Features
 * Improved move selection
-	*	Stat changes, status, weather, and field effects are not currently considered in damage calculations.
+	*	Stat changes, status, weather, field effects, terrain and current teammates are not currently considered in damage calculations.
 *	Improved path selection
 	*	Intelligent path selection is not currently implemented—the default path (up the left side) is always used. This path is unlikely to be the optimal one, which could be a meaningful disadvantage if the boss is a difficult one.
 *	Improved selection of Pokemon
@@ -88,6 +88,12 @@ Find Path|Useful for finding a path to use "Keep Path" mode on.|Utility mode tha
 *	Boss move usage is not fully reflected by their movesets.
 	*	Bosses use their 5th move only when at low HP with boss-dependent frequency and timing.
 *	Items are not chosen intelligently
+*	Natures are not taken into account when searching for perfect stats legendary so some false positives are found.
+*	Balls count could be read instead of being inputed in the config file.
+*	Use a JSON files instead of pickle files to store the database.
+	*	Works better with git and would allow humans to read it too.
+*	Improved goal selection (shiny and perfect attack, shiny, etc)
+
 ## Contributors
 AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It has been supported by code contributions from [pifopi](https://github.com/pifopi) and [denvoros](https://github.com/denvoros), as well as advice and testing by multiple users in the [Pokemon Automation Discord](https://discord.gg/PokemonAutomation) and extra code contributions from users Miguel90 and fawress. The microcontroller code is based on the [AutoController](https://github.com/brianuuu/AutoController_swsh) program family published by [brianuuu](https://github.com/brianuuu).
 ## Changelog
