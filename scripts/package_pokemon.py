@@ -3,10 +3,10 @@
 #   Eric Donders
 #   2021-01-10
 #   Read information on rental and boss Pokemon and construct dictionaries
-#   which are stored as pickle files
+#   which are stored as JSON files
 
 import sys
-import pickle
+import jsonpickle
 
 from typing import Tuple
 
@@ -283,10 +283,10 @@ def main():
     boss_pokemon = pokemon_from_txt(base_dir + '/data/boss_pokemon.txt', 70)
 
     # Pickle the Pokemon dictionaries for later use.
-    with open(base_dir + '/data/rental_pokemon.pickle', 'wb') as file:
-        pickle.dump(rental_pokemon, file)
-    with open(base_dir + '/data/boss_pokemon.pickle', 'wb') as file:
-        pickle.dump(boss_pokemon, file)
+    with open(base_dir + '/data/rental_pokemon.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(rental_pokemon, indent=4))
+    with open(base_dir + '/data/boss_pokemon.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(boss_pokemon, indent=4))
     print('Finished packaging Pokemon!')
 
 

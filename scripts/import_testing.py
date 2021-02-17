@@ -1,4 +1,4 @@
-import pickle
+import jsonpickle
 import sys
 
 # We need to import some class definitions from the parent directory.
@@ -11,16 +11,16 @@ from automaxlair import matchup_scoring
 
 
 def main():
-    boss_pokemon = pickle.load(
-        open(base_dir + '/data/boss_pokemon.pickle', 'rb'))
-    rental_pokemon = pickle.load(
-        open(base_dir + '/data/rental_pokemon.pickle', 'rb'))
-    boss_matchups = pickle.load(
-        open(base_dir + '/data/boss_matchup_LUT.pickle', 'rb'))
-    rental_matchups = pickle.load(
-        open(base_dir + '/data/rental_matchup_LUT.pickle', 'rb'))
-    rental_scores = pickle.load(
-        open(base_dir + '/data/rental_pokemon_scores.pickle', 'rb'))
+    with open(base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8') as file:
+        boss_pokemon = jsonpickle.decode(file.read())
+    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+        rental_pokemon = jsonpickle.decode(file.read())
+    with open(base_dir + '/data/boss_matchup_LUT.json', 'r', encoding='utf8') as file:
+        boss_matchups = jsonpickle.decode(file.read())
+    with open(base_dir + '/data/rental_matchup_LUT.json', 'r', encoding='utf8') as file:
+        rental_matchups = jsonpickle.decode(file.read())
+    with open(base_dir + '/data/rental_pokemon_scores.json', 'r', encoding='utf8') as file:
+        rental_scores = jsonpickle.decode(file.read())
 
     # Test retrieval of a rental Pokemon
     rental_pokemon['stunfisk-galar'].print_verbose()
