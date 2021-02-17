@@ -443,7 +443,7 @@ def scientist(c) -> str:
     # If current pokemon is None, it means we just already talked to scientist
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
-    if c.pokemon is None or average_score > existing_score:
+    if c.current_run.pokemon is None or average_score > existing_score:
         c.push_buttons((None, 3), (b'a', 1))
         c.current_run.pokemon = None
         c.log('Took a Pokemon from the scientist.')
