@@ -7,7 +7,7 @@ import logging
 import logging.handlers
 import multiprocessing as mp
 import os
-import pickle
+import jsonpickle
 import sys
 import time
 
@@ -39,10 +39,10 @@ def compute_scores(attacker):
 
     # Load a separate dictionary for each process because elements get popped
     # and re-added during the matchup scoring process.
-    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
-        rental_pokemon = pickle.load(rental_file)
-    with open(base_dir + '/data/boss_pokemon.pickle', 'rb') as boss_file:
-        boss_pokemon = pickle.load(boss_file)
+    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+        rental_pokemon = jsonpickle.decode(file.read())
+    with open(base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8') as file:
+        boss_pokemon = jsonpickle.decode(file.read())
 
     # First iterate through all boss Pokemon and score the interactions.
     boss_matchups = {}
@@ -134,8 +134,8 @@ def main():
 
     logger.info('Started scoring Pokemon.')
 
-    with open(base_dir + '/data/rental_pokemon.pickle', 'rb') as rental_file:
-        rental_pokemon = pickle.load(rental_file)
+    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+        rental_pokemon = jsonpickle.decode(file.read())
 
     # Iterate through all rental Pokemon and calculate scores against all the
     # other rental Pokemon and all boss Pokemon. Also calculate an average
@@ -164,12 +164,12 @@ def main():
     ql.stop()
 
     # Pickle the score lookup tables for later use.
-    with open(base_dir + '/data/boss_matchup_LUT.pickle', 'wb') as file:
-        pickle.dump(boss_matchup_LUT, file)
-    with open(base_dir + '/data/rental_matchup_LUT.pickle', 'wb') as file:
-        pickle.dump(rental_matchup_LUT, file)
-    with open(base_dir + '/data/rental_pokemon_scores.pickle', 'wb') as file:
-        pickle.dump(rental_pokemon_scores, file)
+    with open(base_dir + '/data/boss_matchup_LUT.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(boss_matchup_LUT, indent=4))
+    with open(base_dir + '/data/rental_matchup_LUT.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(rental_matchup_LUT, indent=4))
+    with open(base_dir + '/data/rental_pokemon_scores.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(rental_pokemon_scores, indent=4))
 
 
 if __name__ == '__main__':

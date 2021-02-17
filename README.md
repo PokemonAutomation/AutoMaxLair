@@ -13,7 +13,7 @@ AutoMaxLair is designed for shiny hunting legendary Pokemon in Dynamax Adventure
 	* pytesseract
 	* pyenchant
 	* pyserial
-	* pokebase (not strictly required if you don't need to rebuild the included pickle files)
+	* pokebase (not strictly required if you don't need to rebuild the included json files)
 ## Setup
 1.	Install Python, ensuring you check the box to add Python to your PATH environment variable (possibly specific to Windows).
 1.	Install the required Python modules. If you are using Windows, you can run install_requirements.bat which will install the modules for you.
@@ -90,8 +90,6 @@ Find Path|Useful for finding a path to use "Keep Path" mode on.|Utility mode tha
 *	Items are not chosen intelligently
 *	Natures are not taken into account when searching for perfect stats legendary so some false positives are found.
 *	Balls count could be read instead of being inputed in the config file.
-*	Use a JSON files instead of pickle files to store the database.
-	*	Works better with git and would allow humans to read it too.
 *	Improved goal selection (shiny and perfect attack, shiny, etc)
 
 ## Contributors
