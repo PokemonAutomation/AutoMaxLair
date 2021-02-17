@@ -430,7 +430,7 @@ def scientist(c) -> str:
 
         # TODO: actually read the current Pokemon's health so the bot can decide
         # to switch if it's low.
-        existing_score = c.HP * ((rental_weight
+        existing_score = c.current_run.HP * ((rental_weight
                                      * c.current_run.rental_scores[c.current_run.pokemon.name_id] + boss_weight
                                      * automaxlair.matchup_scoring.evaluate_matchup(c.current_run.pokemon,
                                                                         c.current_run.boss_pokemon[c.boss], c.current_run.rental_pokemon))
