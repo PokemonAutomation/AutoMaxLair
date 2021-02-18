@@ -449,7 +449,7 @@ def scientist(c) -> str:
         c.log('Took a Pokemon from the scientist.')
     else:
         c.push_buttons((None, 3), (b'b', 1))
-        c.log(f'Decided to keep going with {c.pokemon.name_id}')
+        c.log(f'Decided to keep going with {c.current_run.pokemon.name_id}')
     return 'detect'
 
 
@@ -568,7 +568,7 @@ def select_pokemon(c) -> str:
     c.push_buttons((b'b', 1.5), (b'b', 1.5))
 
     # Update statistics and reset stored information about the complete run.
-    c.wins += 1 if c.lives != 0 else 0
+    c.wins += 1 if c.current_run.lives != 0 else 0
     c.runs += 1
     c.reset_run()
 
