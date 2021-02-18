@@ -355,7 +355,7 @@ def catch(c) -> str:
             f'Score for {c.current_run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
         )
 
-        c.caught_pokemon.append(pokemon.name_id)
+        c.current_run.caught_pokemon.append(pokemon.name_id)
 
         # Compare the scores for the two options and choose the best one.
         if score > existing_score:

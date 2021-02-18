@@ -320,7 +320,7 @@ class SwitchController:
                 cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA
             )
             if log:
-                self.log(key + str(value))
+                self.log(key + ': ' + str(value))
             i += 1
 
         # Display
