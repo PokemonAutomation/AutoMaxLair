@@ -433,11 +433,11 @@ class DAController(SwitchController):
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
         if self.base_ball != self.legendary_ball:
-            self.base_balls += min(3, self.num_caught)
-            self.legendary_balls += 1 if self.num_caught == 4 else 0
+            self.base_balls += min(3, self.current_run.num_caught)
+            self.legendary_balls += 1 if self.current_run.num_caught == 4 else 0
         else:
-            self.base_balls += self.num_caught
-            self.legendary_balls += self.num_caught
+            self.base_balls += self.current_run.num_caught
+            self.legendary_balls += self.current_run.num_caught
         self.consecutive_resets += 1
         ore_cost = self.calculate_ore_cost(self.consecutive_resets)
         self.dynite_ore -= ore_cost
