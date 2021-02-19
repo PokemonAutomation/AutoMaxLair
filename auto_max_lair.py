@@ -36,7 +36,7 @@ ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
 
 # Set the log name
 LOG_NAME = ''.join(
-        (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+    (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
 
 
 def initialize(ctrlr) -> str:
