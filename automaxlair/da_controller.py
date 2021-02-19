@@ -4,23 +4,15 @@
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
-import logging
-import pickle
-import sys
-import time
 from datetime import datetime
-from typing import List, Tuple, TypeVar, Iterable, Optional, Callable
+from typing import List, Tuple, TypeVar, Callable, Dict
 
-import cv2
 import enchant
-import pytesseract
 
 from .pokemon_classes import Pokemon
 from .max_lair_instance import MaxLairInstance
 from .switch_controller import SwitchController
-from serial import Serial
 from configparser import ConfigParser
-from threading import Lock, Event
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 

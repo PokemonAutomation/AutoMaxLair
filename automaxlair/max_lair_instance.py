@@ -4,25 +4,11 @@
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
-import logging
 import jsonpickle
-import sys
-import time
-from datetime import datetime
+
 from typing import List, Tuple, TypeVar, Iterable, Optional
 
-import cv2
-import enchant
-import pytesseract
-
 from .pokemon_classes import Pokemon
-from serial import Serial
-from cv2 import VideoCapture
-from configparser import ConfigParser
-from threading import Lock, Event
-Image = TypeVar('cv2 image')
-Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
-
 
 class MaxLairInstance:
     """An object for storing and processing information related to a Dynamax
