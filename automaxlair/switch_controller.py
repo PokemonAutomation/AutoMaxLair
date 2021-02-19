@@ -58,21 +58,18 @@ class SwitchController:
         self.logger.info('Connected to the serial device successfully.')
 
         # Open the video capture.
-        self.logger.info('Attempting to open the video connection.')
-        self.cap = cv2.VideoCapture(int(config['default']['VIDEO_INDEX']))
-        if not self.cap.isOpened():
-            self.com.close()
-            self.cap.release()
-            raise Exception('Failed to open the video connection. Check the config file and '
-                'ensure no other application is using the video input.')
+        # self.logger.info('Attempting to open the video connection.')
+        # self.cap = cv2.VideoCapture(int(config['default']['VIDEO_INDEX']))
+        # if not self.cap.isOpened():
+        #     self.com.close()
+        #     self.cap.release()
+        #     raise Exception('Failed to open the video connection. Check the config file and '
+        #         'ensure no other application is using the video input.')
 
+        vid_index = int(config['default']['VIDEO_INDEX'])
         vid_scale = float(config['advanced']['VIDEO_SCALE'])
-        self.base_resolution = (1920, 1080)
-        self.display_resolution = (
-            round(1920 * vid_scale), round(1080 * vid_scale))
-        self.cap.set(3, self.base_resolution[0])
-        self.cap.set(4, self.base_resolution[1])
-        self.last_image = None
+        self.cap = VideoCaptureHelper(vid_index, (1920, 1080), log_name, vid_scale)
+
         self.lock = threading.Lock()
         self.exit_flag = threading.Event()
         self.stage = 'initialize'
@@ -159,22 +156,11 @@ class SwitchController:
         for rect in rects:
             self.outline_region(image, rect, bgr, thickness)
 
-    def get_frame(self) -> Image:
+    def get_frame(self, resize: bool = False) -> Image:
         """Get an annotated image of the current Switch output."""
 
-        # Fetch a frame from the VideoCapture object.
-        ret, img = self.cap.read()
-
-        # Try to handle a dropped frame gracefully. Note that multiple dropped
-        # frames may cause the program to appear to freeze.
-        if ret:
-            self.last_image = img
-        else:
-            self.log('Failed to read a frame from VideoCapture.', 'WARNING')
-            img = self.last_image
-
-        # Return annotated image.
-        return img
+        # Return image from the VideoCaptureHelper object.
+        return self.cap.read(resize)
 
     def read_text(
         self,
@@ -307,8 +293,7 @@ class SwitchController:
 
         # Expand the image with blank space for writing results
         frame = cv2.copyMakeBorder(
-            cv2.resize(self.get_frame(),
-                       self.display_resolution), 0, 0, 0, 250, cv2.BORDER_CONSTANT
+            self.get_frame(True), 0, 0, 0, 250, cv2.BORDER_CONSTANT
         )
         width = frame.shape[1]
 
@@ -332,4 +317,66 @@ class SwitchController:
             cv2.imwrite(f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
 
 
+
+class VideoCaptureHelper:
+    def __init__(
+        self,
+        video_index: int,
+        base_resolution: Tuple[int, int],
+        log_name: str,
+        display_scale: float = 1.0
+    ) -> None:
+        self.video_index = video_index
+        self.base_resolution = base_resolution
+        self.logger = logging.getLogger(log_name)
+        self.display_scale = display_scale
+        self.display_resolution = (
+            int(base_resolution[0] * display_scale),
+            int(base_resolution[1] * display_scale)
+        )
+        self.last_image = None
+        self.init_video_capture()
+
+    def init_video_capture(self) -> None:
+        """Initialize the OpenCV VideoCapture object."""
+        self.cap = cv2.VideoCapture(self.video_index)
+        if not self.cap.isOpened():
+            self.logger.error(
+                'Failed to open the video connection. Check the config file and '
+                'ensure no other application is using the video input.'
+            )
+            raise RuntimeError("Failed to initialize video capture.")
+
+        self.cap.set(3, self.base_resolution[0])
+        self.cap.set(4, self.base_resolution[1])
+        self.failed_count = 0
+
+    def read(self, resize: bool = False) -> Image:
+        """Fetch a frame from the VideoCapture object."""
+        ret, img = self.cap.read()
+
+        # Try to handle a dropped frame gracefully. Note that multiple dropped
+        # frames may cause the program to appear to freeze.
+        if ret:
+            self.last_image = img
+            self.failed_count = 0  # Clear count on consecutive failed frames
+        else:
+            self.logger.warning('Failed to read a frame from VideoCapture.')
+            img = self.last_image
+
+            self.failed_count = self.failed_count + 1
+            # If failed for too long, reiniitalize video capture connection
+            if self.failed_count == 10:
+                self.logger.warning('Too many failed frames. Reinitialize VideoCapture')
+                self.release()
+                self.init_video_capture()
+
+        if resize:
+            img = cv2.resize(img, self.display_resolution)
+
+        return img
+
+    def release(self):
+        """Release the OpenCV VideoCapture object."""
+        self.cap.release()
         
