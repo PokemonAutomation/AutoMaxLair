@@ -44,11 +44,11 @@
 #include <avr/pgmspace.h>
 #include <string.h>
 
-#include <LUFA/Drivers/USB/USB.h>
-#include <LUFA/Drivers/Board/Joystick.h>
-#include <LUFA/Drivers/Board/LEDs.h>
-#include <LUFA/Drivers/Board/Buttons.h>
-#include <LUFA/Platform/Platform.h>
+#include <LUFA/LUFA/Drivers/USB/USB.h>
+#include <LUFA/LUFA/Drivers/Board/Joystick.h>
+#include <LUFA/LUFA/Drivers/Board/LEDs.h>
+#include <LUFA/LUFA/Drivers/Board/Buttons.h>
+#include <LUFA/LUFA/Platform/Platform.h>
 
 #include "Descriptors.h"
 

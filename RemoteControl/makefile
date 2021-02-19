@@ -22,7 +22,7 @@ OPTIMIZATION = s
 TARGET       = RemoteControl_$(MCU)
 UART_PATH    = ./Source/uart
 SRC          = ./Source/RemoteControl.c ./Config/Descriptors.c $(LUFA_SRC_USB) $(UART_PATH).c
-LUFA_PATH    = ./LUFA
+LUFA_PATH    = ./LUFA/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
 
