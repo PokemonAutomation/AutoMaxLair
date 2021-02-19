@@ -23,15 +23,15 @@ class MaxLairInstance:
         self.lives = 4
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
-        with open(self.data_paths[0], 'r', encoding='utf8') as file:
+        with open(data_paths[0], 'r', encoding='utf8') as file:
             self.boss_pokemon = jsonpickle.decode(file.read())
-        with open(self.data_paths[1], 'r', encoding='utf8') as file:
+        with open(data_paths[1], 'r', encoding='utf8') as file:
             self.rental_pokemon = jsonpickle.decode(file.read())
-        with open(self.data_paths[2], 'r', encoding='utf8') as file:
+        with open(data_paths[2], 'r', encoding='utf8') as file:
             self.boss_matchups = jsonpickle.decode(file.read())
-        with open(self.data_paths[3], 'r', encoding='utf8') as file:
+        with open(data_paths[3], 'r', encoding='utf8') as file:
             self.rental_matchups = jsonpickle.decode(file.read())
-        with open(self.data_paths[4], 'r', encoding='utf8') as file:
+        with open(data_paths[4], 'r', encoding='utf8') as file:
             self.rental_scores = jsonpickle.decode(file.read())
 
     def reset_stage(self) -> None:
