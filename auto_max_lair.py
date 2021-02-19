@@ -43,6 +43,7 @@ def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     return 'join'
 
+
 def join(ctrlr) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
     run = ctrlr.current_run
@@ -626,7 +627,7 @@ def main(log_name):
     controller = automaxlair.da_controller.DAController(
         config, log_name, actions)
     controller.add_info('Version', VERSION)
-    
+
     # Start the event loop.
     controller.event_loop()
 

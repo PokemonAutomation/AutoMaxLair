@@ -1,3 +1,8 @@
+"""Controller object for automating Dynamax Adventures on the Nintendo Switch.
+Inherits basic methods from SwitchController and adds others for navigating the
+den.
+"""
+
 #   MaxLairInstance
 #       Eric Donders
 #       Contributions from Miguel Tavera and Discord users denvoros and pifopi

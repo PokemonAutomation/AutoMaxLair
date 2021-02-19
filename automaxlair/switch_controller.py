@@ -2,6 +2,8 @@
 Contains a basic event loop as well as methods for viewing video from the
 Switch, sending commands via a serial-enabled microcontroller, and logging
 results.
+
+Specific use cases can inherit from this class and add specific functionality.
 """
 
 # SwitchController
