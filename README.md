@@ -135,6 +135,12 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Updated Ball Saver mode to skip catching the boss if it can't afford to reset the game, allowing it to be run indefinitely.
 * Added "Keep Path" and "Find Path" modes, which are useful against very strong bosses (e.g., Zygarde).
 * More QOL improvements on the way!
-* Add the ability to take a pokemon from the scientist if your current pokemon is worse than average
-* Add the ability to hunt for specific stats legendary
-* Add a way to send discord message with a picture showing your latest catch
+* Add the ability to take a pokemon from the scientist if your current pokemon is worse than average.
+* Add the ability to hunt for specific stats legendary.
+* Add a way to send discord message with a picture showing your latest catch.
+### v0.7
+* Refactored code to improve readability and facilitate extension to tasks other than Dynamax Adventures in the future.
+* Added support for variable hold time for button presses. The computer now sends two bytes per command, with the second byte specifying the hold time.
+* Added dependencies for the microcontroller code so it can be altered and recompiled without any external tools (besides WinAVR).
+* Precalculated data files are now stored in human-readable JSON format.
+* Tweaked how Pokemon are scored.
