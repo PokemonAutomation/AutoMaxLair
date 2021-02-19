@@ -58,14 +58,6 @@ class SwitchController:
         self.logger.info('Connected to the serial device successfully.')
 
         # Open the video capture.
-        # self.logger.info('Attempting to open the video connection.')
-        # self.cap = cv2.VideoCapture(int(config['default']['VIDEO_INDEX']))
-        # if not self.cap.isOpened():
-        #     self.com.close()
-        #     self.cap.release()
-        #     raise Exception('Failed to open the video connection. Check the config file and '
-        #         'ensure no other application is using the video input.')
-
         vid_index = int(config['default']['VIDEO_INDEX'])
         vid_scale = float(config['advanced']['VIDEO_SCALE'])
         self.cap = VideoCaptureHelper(vid_index, (1920, 1080), log_name, vid_scale)
@@ -123,7 +115,6 @@ class SwitchController:
         self.cap.release()
         self.com.close()
 
-
     def log(
         self,
         text: str,
@@ -131,6 +122,10 @@ class SwitchController:
     ) -> None:
         """Print a string to the console and log file with a timestamp."""
         self.logger.log(getattr(logging, level), text)
+
+    def add_info(self, key, value) -> None:
+        """Add some information to display as part of the video output."""
+        self.info[key] = value
 
     def outline_region(
         self,
@@ -160,7 +155,7 @@ class SwitchController:
         """Get an annotated image of the current Switch output."""
 
         # Return image from the VideoCaptureHelper object.
-        return self.cap.read(resize)
+        return self.cap.read(resize=resize)
 
     def read_text(
         self,
@@ -286,14 +281,22 @@ class SwitchController:
         for command in commands:
             self.push_button(*command)
 
-    def display_results(self, log: bool = False, screenshot: bool = False):
+    def display_results(
+        self,
+        image: Optional[Image] = None,
+        log: bool = False,
+        screenshot: bool = False
+    ):
         """Display video from the Switch alongside some annotations describing
         the run sequence.
         """
 
+        if image is None:
+            image = self.get_frame(resize=True)
+
         # Expand the image with blank space for writing results
         frame = cv2.copyMakeBorder(
-            self.get_frame(True), 0, 0, 0, 250, cv2.BORDER_CONSTANT
+            image, 0, 0, 0, 250, cv2.BORDER_CONSTANT
         )
         width = frame.shape[1]
 
@@ -319,6 +322,11 @@ class SwitchController:
 
 
 class VideoCaptureHelper:
+    """A wrapper for an OpenCV VideoCapture object that assists in
+    restarting the video stream in the event of an error and resizing the video
+    when necessary.
+    """
+
     def __init__(
         self,
         video_index: int,
@@ -331,8 +339,8 @@ class VideoCaptureHelper:
         self.logger = logging.getLogger(log_name)
         self.display_scale = display_scale
         self.display_resolution = (
-            int(base_resolution[0] * display_scale),
-            int(base_resolution[1] * display_scale)
+            round(base_resolution[0] * display_scale),
+            round(base_resolution[1] * display_scale)
         )
         self.last_image = None
         self.init_video_capture()
@@ -350,6 +358,7 @@ class VideoCaptureHelper:
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])
         self.failed_count = 0
+        self.logger.info('Connected to the video stream.')
 
     def read(self, resize: bool = False) -> Image:
         """Fetch a frame from the VideoCapture object."""

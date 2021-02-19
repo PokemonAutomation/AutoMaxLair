@@ -20,6 +20,8 @@ import serial
 
 import automaxlair
 
+VERSION = 'v0.7-beta'
+
 # Load configuration from config file
 config = configparser.ConfigParser()
 
@@ -606,6 +608,7 @@ def main(log_name):
                }
 
     controller = automaxlair.da_controller.DAController(config, log_name, actions)
+    controller.add_info('Version', VERSION)
     
     # Start the event loop, 
     controller.event_loop()

@@ -9,7 +9,7 @@ import pickle
 import sys
 import time
 from datetime import datetime
-from typing import List, Tuple, TypeVar, Iterable, Optional
+from typing import List, Tuple, TypeVar, Iterable, Optional, Callable
 
 import cv2
 import enchant
@@ -19,7 +19,6 @@ from .pokemon_classes import Pokemon
 from .max_lair_instance import MaxLairInstance
 from .switch_controller import SwitchController
 from serial import Serial
-from cv2 import VideoCapture
 from configparser import ConfigParser
 from threading import Lock, Event
 Image = TypeVar('cv2 image')
@@ -35,7 +34,7 @@ class DAController(SwitchController):
         self,
         config: ConfigParser,
         log_name: str,
-        actions
+        actions: Dict[str, Callable]
     ) -> None:
 
         # Call base class constructor.
@@ -71,7 +70,6 @@ class DAController(SwitchController):
         self.runs = 0
         self.wins = 0
         self.shinies_found = 0
-        self.caught_pokemon: List[str] = []
         self.caught_shinies: List[str] = []
         self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
@@ -130,19 +128,17 @@ class DAController(SwitchController):
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
-
         self.current_run = MaxLairInstance(self.data_paths)
-
 
     def reset_stage(self) -> None:
         """Reset after a battle."""
         self.current_run.reset_stage()
 
-    def get_frame(self, rectangle_set: str = '') -> Image:
+    def get_frame(self, rectangle_set: str = '', resize: bool = False) -> Image:
         """Get an annotated image of the current Switch output."""
 
         # Get the base image from the base class method.
-        img = super().get_frame()
+        img = super().get_frame(resize=resize)
 
         # Draw rectangles around detection areas if debug logs are on.
         if not self.enable_debug_logs:
@@ -442,7 +438,9 @@ class DAController(SwitchController):
         ore_cost = self.calculate_ore_cost(self.consecutive_resets)
         self.dynite_ore -= ore_cost
         self.log(
-            f'Spending {ore_cost} dynite ore after {self.consecutive_resets} reset.', 'DEBUG')
+            f'Spending {ore_cost} dynite ore after {self.consecutive_resets}'
+            ' reset.', 'DEBUG'
+        )
 
 
     def display_results(self, log: bool = False, screenshot: bool = False):
@@ -462,7 +460,7 @@ class DAController(SwitchController):
         )
 
         # Construct the dictionary that will be displayed by the base method.
-        self.info = {
+        for key, value in  {
             'Run #': self.runs + 1, 'Hunting for': self.boss,
             'Stage': self.stage, 'Base balls': self.base_balls,
             'Legendary balls': self.legendary_balls,
@@ -470,9 +468,11 @@ class DAController(SwitchController):
             'Pokemon': self.current_run.pokemon, 'Opponent': self.current_run.opponent,
             'Win percentage': win_percent, 'Time per run': time_per_run,
             'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore, 'Mode': self.mode
-        }
+        }.items():
+            self.info[key] = value
+
         for i in range(len(self.caught_shinies)):
-            self.info[f'Shiny #{i+1}: '] = self.caught_shinies[i]
+            self.info[f'Shiny #{i+1}'] = self.caught_shinies[i]
 
         # Call the base display method.
-        super().display_results(log, screenshot)
+        super().display_results(image=self.get_frame(resize=True), log=log, screenshot=screenshot)
