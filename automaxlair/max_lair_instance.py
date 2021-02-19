@@ -1,3 +1,7 @@
+"""Object for storing and processing information related to a Dynamax
+Adventure in Pokemon Sword and Shield: the Crown Tundra.
+"""
+
 #   MaxLairInstance
 #       Eric Donders
 #       Contributions from Miguel Tavera and Discord users denvoros and pifopi
@@ -6,14 +10,14 @@
 
 import jsonpickle
 
-from typing import List, Tuple, TypeVar, Iterable, Optional
-
-from .pokemon_classes import Pokemon
 
 class MaxLairInstance:
     """An object for storing and processing information related to a Dynamax
     Adventure in Pokemon Sword and Shield: the Crown Tundra.
     """
+
+    # pylint: disable=too-many-instance-attributes
+    # This class is a storage container, so having many attributes is sensible.
 
     def __init__(self, data_paths) -> None:
         self.pokemon = None

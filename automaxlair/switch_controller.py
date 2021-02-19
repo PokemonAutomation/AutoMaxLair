@@ -1,25 +1,28 @@
+"""Basic controller object for interfacing with the Switch.
+Contains a basic event loop as well as methods for viewing video from the
+Switch, sending commands via a serial-enabled microcontroller, and logging
+results.
+"""
+
 # SwitchController
 #
 # Eric Donders
 # 2021-02-13
 
 import logging
-import pickle
 import sys
 import time
 from datetime import datetime
-from typing import List, Tuple, TypeVar, Iterable, Optional
+from typing import Tuple, TypeVar, Iterable, Optional
 
 import cv2
-import enchant
 import pytesseract
 import serial
 import threading
 
-from .pokemon_classes import Pokemon
-from configparser import ConfigParser
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
+
 
 class SwitchController:
     """Generic class for an object that controls a Nintendo Switch through
@@ -38,8 +41,8 @@ class SwitchController:
         self.phrases = config[config['language']['LANGUAGE']]
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
-        self.enable_debug_logs = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
-
+        self.enable_debug_logs = (
+            config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true')
 
         self.actions = actions
         self.info = {}  # To be overwritten later.
@@ -48,7 +51,8 @@ class SwitchController:
         # objects used.
 
         # Connect to the Teensy over a serial port.
-        self.com = serial.Serial(config['default']['COM_PORT'], 9600, timeout=0.05)
+        self.com = serial.Serial(
+            config['default']['COM_PORT'], 9600, timeout=0.05)
         self.logger.info(f'Attempting to connect to {self.com.port}.')
         while not self.com.is_open:
             try:
@@ -60,7 +64,8 @@ class SwitchController:
         # Open the video capture.
         vid_index = int(config['default']['VIDEO_INDEX'])
         vid_scale = float(config['advanced']['VIDEO_SCALE'])
-        self.cap = VideoCaptureHelper(vid_index, (1920, 1080), log_name, vid_scale)
+        self.cap = VideoCaptureHelper(
+            vid_index, (1920, 1080), log_name, vid_scale)
 
         self.lock = threading.Lock()
         self.exit_flag = threading.Event()
@@ -95,13 +100,13 @@ class SwitchController:
         # The loop ends when the button control thread ends naturally or when
         # signalled by the user pressing the Q key.
         while self.button_control_thread.is_alive():
-            # Wait until the button control thread releases the lock, then use the
-            # idle time to update the graphical display.
+            # Wait until the button control thread releases the lock, then use
+            # the idle time to update the graphical display.
             with self.lock:
                 self.display_results()
 
-            # Add a brief delay between each frame so the button control thread has
-            # some time to acquire the lock.
+            # Add a brief delay between each frame so the button control thread
+            # has some time to acquire the lock.
             time.sleep(0.01)
 
             # Tell the button control thread to quit if the Q key is pressed.
@@ -317,8 +322,8 @@ class SwitchController:
         if log or screenshot:
             # Save a screenshot
             self.num_saved_images += 1
-            cv2.imwrite(f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
-
+            cv2.imwrite(
+                f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
 
 
 class VideoCaptureHelper:
@@ -350,8 +355,8 @@ class VideoCaptureHelper:
         self.cap = cv2.VideoCapture(self.video_index)
         if not self.cap.isOpened():
             self.logger.error(
-                'Failed to open the video connection. Check the config file and '
-                'ensure no other application is using the video input.'
+                'Failed to open the video connection. Check the config file '
+                'and ensure no other application is using the video input.'
             )
             raise RuntimeError("Failed to initialize video capture.")
 
@@ -376,7 +381,8 @@ class VideoCaptureHelper:
             self.failed_count = self.failed_count + 1
             # If failed for too long, reiniitalize video capture connection
             if self.failed_count == 10:
-                self.logger.warning('Too many failed frames. Reinitialize VideoCapture')
+                self.logger.warning(
+                    'Too many failed frames. Reinitializing VideoCapture.')
                 self.release()
                 self.init_video_capture()
 
@@ -388,4 +394,3 @@ class VideoCaptureHelper:
     def release(self):
         """Release the OpenCV VideoCapture object."""
         self.cap.release()
-        

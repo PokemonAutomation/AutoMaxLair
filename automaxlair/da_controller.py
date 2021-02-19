@@ -51,11 +51,12 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['Rental_Pokemon_Scores']
         )
 
-        self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT'].lower() == 'true'
+        self.check_attack_stat = (
+            config['stats']['CHECK_ATTACK_STAT'].lower() == 'true')
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT'].lower() == 'true'
+        self.check_speed_stat = (
+            config['stats']['CHECK_SPEED_STAT'].lower() == 'true')
         self.expected_speed_stats = config['stats']['SPEED_STATS']
-
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -65,7 +66,6 @@ class DAController(SwitchController):
         self.caught_shinies: List[str] = []
         self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
-
 
         # Define rectangles for checking shininess and reading specific text.
         # Shiny star rectangle.
@@ -126,7 +126,11 @@ class DAController(SwitchController):
         """Reset after a battle."""
         self.current_run.reset_stage()
 
-    def get_frame(self, rectangle_set: str = '', resize: bool = False) -> Image:
+    def get_frame(
+        self,
+        rectangle_set: str = '',
+        resize: bool = False
+    ) -> Image:
         """Get an annotated image of the current Switch output."""
 
         # Get the base image from the base class method.
@@ -137,7 +141,10 @@ class DAController(SwitchController):
             pass
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
-                img, (self.shiny_rect, self.attack_stat_rect, self.speed_stat_rect), (0, 255, 0))
+                img,
+                (self.shiny_rect, self.attack_stat_rect, self.speed_stat_rect),
+                (0, 255, 0)
+            )
         elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3),
@@ -181,8 +188,8 @@ class DAController(SwitchController):
         moves: str = ''
     ) -> Pokemon:
         """Match OCRed Pokemon to a rental Pokemon."""
-        # Strip line breaks from OCRed text and combine name, ability, and types
-        # to make a composite identifying string.
+        # Strip line breaks from OCRed text and combine name, ability, and
+        # types to make a composite identifying string.
         text = (name + ability + types + moves).replace('\n', '')
 
         # Then, initialize the matched text variable in case it is somehow not
@@ -196,8 +203,8 @@ class DAController(SwitchController):
         # Then, loop through all the possible rental pokemon looking for the
         # best match with the OCRed text.
         for pokemon in self.current_run.rental_pokemon.values():
-            # Build the composite identifying string with the same format as the
-            # OCRed text.
+            # Build the composite identifying string with the same format as
+            # the OCRed text.
             # Note that some OCR strings omit the ability and others omit the
             # types so don't include these identifiers in these cases.
             string_to_match = pokemon.names[self.lang]
@@ -214,8 +221,8 @@ class DAController(SwitchController):
             # is from the OCRed string.
             distance = enchant.utils.levenshtein(text, string_to_match)
 
-            # Then, update the best match values if the match is better than the
-            # previous best match.
+            # Then, update the best match values if the match is better than
+            # the previous best match.
             if distance < match_value:
                 match_value = distance
                 best_match = pokemon
@@ -248,43 +255,83 @@ class DAController(SwitchController):
         moves = []
         if stage == 'join':
             pokemon_names.append(
-                self.read_text(image, self.sel_rect_1, threshold=False,
-                               invert=True, segmentation_mode='--psm 8').strip()
+                self.read_text(
+                    image, self.sel_rect_1, threshold=False,
+                    invert=True, segmentation_mode='--psm 8').strip()
             )
-            pokemon_names.append(self.read_text(
-                image, self.sel_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
-            # This last name shifts around between runs necessitating a bigger rectangle and different text segmentation mode
-            pokemon_names.append(self.read_text(
-                image, self.sel_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
-            abilities.append(self.read_text(
-                image, self.abil_rect_1, threshold=False, invert=True, segmentation_mode='--psm 8').strip())
-            abilities.append(self.read_text(
-                image, self.abil_rect_2, threshold=False, segmentation_mode='--psm 8').strip())
-            abilities.append(self.read_text(
-                image, self.abil_rect_3, threshold=False, segmentation_mode='--psm 3').strip())
+            pokemon_names.append(
+                self.read_text(
+                    image, self.sel_rect_2, threshold=False,
+                    segmentation_mode='--psm 8'
+                ).strip())
+            # This last name shifts around between runs necessitating a larger
+            # rectangle and different text segmentation mode.
+            pokemon_names.append(
+                self.read_text(
+                    image, self.sel_rect_3, threshold=False,
+                    segmentation_mode='--psm 3'
+                ).strip())
+            abilities.append(
+                self.read_text(
+                    image, self.abil_rect_1, threshold=False, invert=True,
+                    segmentation_mode='--psm 8'
+                ).strip())
+            abilities.append(
+                self.read_text(
+                    image, self.abil_rect_2, threshold=False,
+                    segmentation_mode='--psm 8'
+                ).strip())
+            abilities.append(
+                self.read_text(
+                    image, self.abil_rect_3, threshold=False,
+                    segmentation_mode='--psm 3'
+                ).strip())
             types = ['', '', '']
-            moves.append(self.read_text(
-                image, self.moves_rect_1, threshold=False, segmentation_mode='--psm 4').strip())
-            moves.append(self.read_text(
-                image, self.moves_rect_2, threshold=False, segmentation_mode='--psm 4').strip())
-            moves.append(self.read_text(
-                image, self.moves_rect_3, threshold=False, segmentation_mode='--psm 4').strip())
+            moves.append(
+                self.read_text(
+                    image, self.moves_rect_1, threshold=False,
+                    segmentation_mode='--psm 4'
+                ).strip())
+            moves.append(
+                self.read_text(
+                    image, self.moves_rect_2, threshold=False,
+                    segmentation_mode='--psm 4'
+                ).strip())
+            moves.append(
+                self.read_text(
+                    image, self.moves_rect_3, threshold=False,
+                    segmentation_mode='--psm 4'
+                ).strip())
         elif stage == 'catch':
-            pokemon_names.append(self.read_text(
-                image, self.sel_rect_4, threshold=False, segmentation_mode='--psm 3').strip().split('\n')[-1])
-            abilities.append(self.read_text(
-                image, self.abil_rect_4, threshold=False, segmentation_mode='--psm 3').strip())
+            pokemon_names.append(
+                self.read_text(
+                    image, self.sel_rect_4, threshold=False,
+                    segmentation_mode='--psm 3'
+                ).strip().split('\n')[-1])
+            abilities.append(
+                self.read_text(
+                    image, self.abil_rect_4, threshold=False,
+                    segmentation_mode='--psm 3'
+                ).strip())
             types.append('')
-            moves.append(self.read_text(
-                image, self.moves_rect_4, threshold=False, segmentation_mode='--psm 4').strip())
+            moves.append(
+                self.read_text(
+                    image, self.moves_rect_4, threshold=False,
+                    segmentation_mode='--psm 4'
+                ).strip())
         elif stage == 'battle':
-            pokemon_names.append(self.read_text(
-                image, self.sel_rect_5, threshold=False, invert=False, segmentation_mode='--psm 8').strip())
+            pokemon_names.append(
+                self.read_text(
+                    image, self.sel_rect_5, threshold=False, invert=False,
+                    segmentation_mode='--psm 8'
+                ).strip())
             abilities.append('')
-            type_1 = self.read_text(image, self.type_rect_1, threshold=False,
-                                    invert=True, segmentation_mode='--psm 8').strip().title()
-            type_2 = self.read_text(image, self.type_rect_2, threshold=False,
-                                    invert=True, segmentation_mode='--psm 8').strip().title()
+            type_1 = self.read_text(
+                image, self.type_rect_1, threshold=False, invert=True,
+                segmentation_mode='--psm 8').strip().title()
+            type_2 = self.read_text(
+                image, self.type_rect_2, threshold=False, invert=True,
+                segmentation_mode='--psm 8').strip().title()
             types.append(type_1 + type_2)
             moves.append('')
 
@@ -317,13 +364,18 @@ class DAController(SwitchController):
         is_attack_matching = True
         if self.check_attack_stat:
             is_attack_matching = False
-            read_attack = self.read_text(self.get_frame(), self.attack_stat_rect, threshold=False, segmentation_mode='--psm 8')
+            read_attack = self.read_text(
+                self.get_frame(), self.attack_stat_rect, threshold=False,
+                segmentation_mode='--psm 8'
+            )
             for expected_attack in self.expected_attack_stats.split(','):
                 if expected_attack in read_attack:
                     is_attack_matching = True
 
             if is_attack_matching:
-                self.log(f'Found a legend with the right attack stat : {self.expected_attack_stats}.')
+                self.log(
+                    'Found a legend with the right attack stat : '
+                    f'{self.expected_attack_stats}.')
             else:
                 self.log('Found legend with the wrong attack stat.')
 
@@ -331,13 +383,18 @@ class DAController(SwitchController):
         is_speed_matching = True
         if self.check_speed_stat:
             is_speed_matching = False
-            read_speed = self.read_text(self.get_frame(), self.speed_stat_rect, threshold=False, segmentation_mode='--psm 8')
+            read_speed = self.read_text(
+                self.get_frame(), self.speed_stat_rect, threshold=False,
+                segmentation_mode='--psm 8'
+            )
             for expected_speed in self.expected_speed_stats.split(','):
                 if expected_speed in read_speed:
                     is_speed_matching = True
 
             if is_speed_matching:
-                self.log(f'Found a legend with the right speed stat : {self.expected_speed_stats}.')
+                self.log(
+                    'Found a legend with the right speed stat : '
+                    f'{self.expected_speed_stats}.')
             else:
                 self.log('Found legend with the wrong speed stat.')
 
@@ -345,34 +402,35 @@ class DAController(SwitchController):
 
     def check_dynamax_available(self) -> bool:
         """Detect whether Dynamax is available for the player."""
-        return self.check_rect_HSV_match(self.dmax_symbol_rect, (0, 0, 200),
-                                         (180, 50, 255), 10
-                                         )
+        return self.check_rect_HSV_match(
+            self.dmax_symbol_rect, (0, 0, 200), (180, 50, 255), 10)
 
     def check_defeated(self) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
-        if not self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
-                                         (180, 255, 10), 250
-                                         ):
+        if not self.check_rect_HSV_match(
+            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250
+        ):
             return False
 
         # Pause and check a second time as a rudimentary debounce filter.
         self.push_button(None, 0.2)
-        return self.check_rect_HSV_match(((0, 0), (1, 1)), (0, 0, 0),
-                                         (180, 255, 10), 250
-                                         )
+        return self.check_rect_HSV_match(
+            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250)
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
-        return self.base_ball if self.current_run.num_caught < 3 else self.legendary_ball
+        return (
+            self.base_ball if self.current_run.num_caught < 3
+            else self.legendary_ball)
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of the
         game.
         """
 
-        return self.read_text(self.get_frame(), self.ball_rect, threshold=False,
-                              invert=True, segmentation_mode='--psm 8').strip()
+        return self.read_text(
+            self.get_frame(), self.ball_rect, threshold=False, invert=True,
+            segmentation_mode='--psm 8').strip()
 
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
@@ -390,9 +448,9 @@ class DAController(SwitchController):
 
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
-        return not ((self.base_ball == self.legendary_ball and self.base_balls
-                     < 4) or (self.base_balls < 3) or (self.legendary_balls < 1)
-                    )
+        return not (
+            (self.base_ball == self.legendary_ball and self.base_balls < 4)
+            or (self.base_balls < 3) or (self.legendary_balls < 1))
 
     def record_ore_reward(self) -> None:
         """Award Dynite Ore depending on how the run went."""
@@ -434,7 +492,6 @@ class DAController(SwitchController):
             ' reset.', 'DEBUG'
         )
 
-
     def display_results(self, log: bool = False, screenshot: bool = False):
         """Display video from the Switch alongside some annotations describing
         the run sequence.
@@ -452,14 +509,17 @@ class DAController(SwitchController):
         )
 
         # Construct the dictionary that will be displayed by the base method.
-        for key, value in  {
+        for key, value in {
             'Run #': self.runs + 1, 'Hunting for': self.boss,
             'Stage': self.stage, 'Base balls': self.base_balls,
             'Legendary balls': self.legendary_balls,
-            'Pokemon caught': self.current_run.num_caught, 'Lives': self.current_run.lives,
-            'Pokemon': self.current_run.pokemon, 'Opponent': self.current_run.opponent,
+            'Pokemon caught': self.current_run.num_caught,
+            'Lives': self.current_run.lives,
+            'Pokemon': self.current_run.pokemon,
+            'Opponent': self.current_run.opponent,
             'Win percentage': win_percent, 'Time per run': time_per_run,
-            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore, 'Mode': self.mode
+            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore,
+            'Mode': self.mode
         }.items():
             self.info[key] = value
 
@@ -467,4 +527,5 @@ class DAController(SwitchController):
             self.info[f'Shiny #{i+1}'] = self.caught_shinies[i]
 
         # Call the base display method.
-        super().display_results(image=self.get_frame(resize=True), log=log, screenshot=screenshot)
+        super().display_results(
+            image=self.get_frame(resize=True), log=log, screenshot=screenshot)
