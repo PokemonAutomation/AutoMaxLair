@@ -18,9 +18,6 @@ import cv2
 import pytesseract
 import serial
 
-#import automaxlair
-
-#from automaxlair import matchup_scoring, da_controller, pokemon_classes
 import automaxlair
 
 # Load configuration from config file
@@ -49,6 +46,7 @@ def initialize(c) -> str:
 
 def join(c) -> str:
     """Join a Dynamax Adventure and choose a Pokemon."""
+    r = c.current_run
     # Start a new Dynamax Adventure.
     #
     # First, start a new run by talking to the scientist in the Max Lair.
@@ -82,8 +80,8 @@ def join(c) -> str:
         # the other bosses.
         rental_weight = 3
         boss_weight = 2
-        score = ((rental_weight * c.current_run.rental_scores[name_id] + boss_weight
-                  * c.current_run.boss_matchups[name_id][c.boss])
+        score = ((rental_weight * r.rental_scores[name_id] + boss_weight
+                  * r.boss_matchups[name_id][c.boss])
                  / (rental_weight + boss_weight)
                  )
         pokemon_scores.append(score)
@@ -91,7 +89,7 @@ def join(c) -> str:
     selection_index = pokemon_scores.index(max(pokemon_scores))
     for __ in range(selection_index):
         c.push_button(b'v', 1)
-    c.current_run.pokemon = pokemon_list[selection_index]
+    r.pokemon = pokemon_list[selection_index]
     c.push_button(b'a', 25)
 
     # DEBUG: take some screenshots of the path
@@ -143,7 +141,7 @@ def detect(c) -> str:
 def battle(c) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     r = c.current_run
-    c.log(f'Battle {c.current_run.num_caught+1} starting.')
+    c.log(f'Battle {r.num_caught+1} starting.')
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by "X was blown out of the den!").
@@ -157,62 +155,62 @@ def battle(c) -> str:
         # Check the text for key phrases that inform the bot what to do next.
         if re.search(c.phrases['CATCH'], text):
             c.log('Battle finished.', 'DEBUG')
-            c.current_run.reset_stage()
+            r.reset_stage()
             return 'catch'
         elif re.search(c.phrases['FAINT'], text):
-            c.current_run.lives -= 1
-            c.log(f'Pokemon fainted. {c.current_run.lives} lives remaining.')
+            r.lives -= 1
+            c.log(f'Pokemon fainted. {r.lives} lives remaining.')
             c.push_button(None, 4)
         elif c.check_defeated():
             c.log('You lose and the battle is finished.')
-            c.current_run.lives -= 1
-            if c.current_run.lives != 0:
+            r.lives -= 1
+            if r.lives != 0:
                 c.log('The lives counter was not 0.', 'WARNING')
-                c.current_run.lives = 0
-            c.current_run.reset_stage()
+                r.lives = 0
+            r.reset_stage()
             c.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence
         elif re.search(c.phrases['CHEER'], text):
             c.log('Cheering for your teammates.', 'DEBUG')
-            if c.current_run.pokemon.dynamax:
-                c.current_run.pokemon.dynamax = False
-                c.current_run.move_index = 0
-                c.current_run.dmax_timer = 0
+            if r.pokemon.dynamax:
+                r.pokemon.dynamax = False
+                r.move_index = 0
+                r.dmax_timer = 0
             c.push_buttons((b'a', 1.5), (b'b', 1))
         elif re.search(c.phrases['FIGHT'], text):
             # If we got the pokemon from the scientist, we don't know what
             # our current pokemon is, so check it first.
-            if c.current_run.pokemon is None:
+            if r.pokemon is None:
                 c.push_buttons((b'y', 1), (b'a', 1))
-                c.current_run.pokemon = c.read_selectable_pokemon('battle')[0]
+                r.pokemon = c.read_selectable_pokemon('battle')[0]
                 c.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
                 c.log(
-                    f'Received {c.current_run.pokemon.name_id} from the scientist.')
+                    f'Received {r.pokemon.name_id} from the scientist.')
 
             # Before the bot makes a decision, it needs to know what the boss
             # is.
-            if c.current_run.opponent is None:
+            if r.opponent is None:
                 # If we have defeated three oppoenents already we know the
                 # opponent is the boss Pokemon.
-                if c.current_run.num_caught == 3:
-                    c.current_run.opponent = c.current_run.boss_pokemon[BOSS]
+                if r.num_caught == 3:
+                    r.opponent = r.boss_pokemon[BOSS]
 
                 # Otherwise, we identify the boss using its name and types.
                 else:
                     #
                     c.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
-                    c.current_run.opponent = c.read_selectable_pokemon('battle')[0]
+                    r.opponent = c.read_selectable_pokemon('battle')[0]
                     c.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
 
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
-                if c.current_run.pokemon.name_id == 'ditto':
-                    c.current_run.pokemon = automaxlair.matchup_scoring.transform_ditto(
-                        c.current_run.pokemon, c.current_run.opponent
+                if r.pokemon.name_id == 'ditto':
+                    r.pokemon = automaxlair.matchup_scoring.transform_ditto(
+                        r.pokemon, r.opponent
                     )
-                elif c.current_run.opponent.name_id == 'ditto':
+                elif r.opponent.name_id == 'ditto':
                     c.opponent = automaxlair.matchup_scoring.transform_ditto(
-                        c.current_run.opponent, c.current_run.pokemon
+                        r.opponent, r.pokemon
                     )
 
             # Handle the Dynamax timer
@@ -222,12 +220,12 @@ def battle(c) -> str:
             # Dynamax).
             # A value of 0 indicates Dynamax has ended and nobody can Dynamax
             # for the remainder of the battle.
-            if c.current_run.dmax_timer == 1:
-                c.current_run.dmax_timer = 0
-                c.current_run.move_index = 0
-                c.current_run.pokemon.dynamax = False
-            elif c.current_run.dmax_timer > 1:
-                c.current_run.dmax_timer -= 1
+            if r.dmax_timer == 1:
+                r.dmax_timer = 0
+                r.move_index = 0
+                r.pokemon.dynamax = False
+            elif r.dmax_timer > 1:
+                r.dmax_timer -= 1
 
             # Navigate to the move selection screen.
             c.push_buttons((b'b', 2), (b'a', 2))
@@ -237,58 +235,58 @@ def battle(c) -> str:
             # Pokemon has not Dynamaxed yet.
             # If no Pokemon has Dynamaxed yet, check_dynamax_available visually
             # detects if the player can Dynamax by observing the icon.
-            c.current_run.dynamax_available = (
-                c.current_run.dmax_timer == -1 and c.check_dynamax_available()
+            r.dynamax_available = (
+                r.dmax_timer == -1 and c.check_dynamax_available()
             )
             # Choose the best move to use against the boss
             # TODO: use the actual teammates instead of the average of all
             # rental Pokemon.
             best_move_index, __, best_move_score = (
-                automaxlair.matchup_scoring.select_best_move(c.current_run.pokemon,
-                                                 c.current_run.opponent, teammates=c.current_run.rental_pokemon)
+                automaxlair.matchup_scoring.select_best_move(r.pokemon,
+                                                 r.opponent, teammates=r.rental_pokemon)
             )
-            if c.current_run.dynamax_available:
+            if r.dynamax_available:
                 default_score = best_move_score
-                c.current_run.pokemon.dynamax = True  # Temporary
+                r.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     automaxlair.matchup_scoring.select_best_move(
-                        c.current_run.pokemon, c.current_run.opponent, c.current_run.rental_pokemon)
+                        r.pokemon, r.opponent, r.rental_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
                 else:
                     # Choose not to Dynamax this time by making the following
                     # code think that it isn't available.
-                    c.current_run.dynamax_available = False
-                c.current_run.pokemon.dynamax = False  # Revert previous temporary change
+                    r.dynamax_available = False
+                r.pokemon.dynamax = False  # Revert previous temporary change
 
             # Navigate to the correct move and use it.
             # Note that c.dynamax_available is set to false if dynamax is
             # available but not optimal.
-            if c.current_run.dynamax_available:
+            if r.dynamax_available:
                 # Dynamax and then choose a move as usual
                 c.push_buttons((b'<', 1), (b'a', 1))
-                c.current_run.dmax_timer = 3
-                c.current_run.pokemon.dynamax = True
-                c.current_run.dynamax_available = False
+                r.dmax_timer = 3
+                r.pokemon.dynamax = True
+                r.dynamax_available = False
             move = (
-                c.current_run.pokemon.max_moves[best_move_index] if c.current_run.pokemon.dynamax
-                else c.current_run.pokemon.moves[best_move_index]
+                r.pokemon.max_moves[best_move_index] if r.pokemon.dynamax
+                else r.pokemon.moves[best_move_index]
             )
             c.log(
-                f'Best move against {c.current_run.opponent.name_id}: {move.name_id} '
+                f'Best move against {r.opponent.name_id}: {move.name_id} '
                 f'(index {best_move_index})', 'DEBUG'
             )
-            c.current_run.move_index %= 4  # Loop index back to zero if it exceeds 3
-            for __ in range((best_move_index - c.current_run.move_index + 4) % 4):
+            r.move_index %= 4  # Loop index back to zero if it exceeds 3
+            for __ in range((best_move_index - r.move_index + 4) % 4):
                 c.push_button(b'v', 1)
-                c.current_run.move_index = (c.current_run.move_index + 1) % 4
+                r.move_index = (r.move_index + 1) % 4
             c.push_buttons(
                 (b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1), (b'a', 0.5),
                 (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
             )
-            c.current_run.pokemon.PP[c.current_run.move_index] -= (
-                1 if c.current_run.opponent.ability_name_id != 'pressure' else 2
+            r.pokemon.PP[r.move_index] -= (
+                1 if r.opponent.ability_name_id != 'pressure' else 2
             )
         else:
             # Press B which can speed up dialogue
@@ -297,12 +295,12 @@ def battle(c) -> str:
 
 def catch(c) -> str:
     """Catch each boss after defeating it."""
-
+    r = c.current_run
     # Check if we need to skip catching a the final boss.
     # This scenario is used by Ball Saver mode when it can't afford to reset
     # the game.
     if (
-        c.current_run.num_caught == 3 and c.mode == 'ball saver'
+        r.num_caught == 3 and c.mode == 'ball saver'
         and not c.check_sufficient_ore(1)
     ):
         c.log('Finishing the run without wasting a ball on the boss.')
@@ -311,7 +309,7 @@ def catch(c) -> str:
         return 'select_pokemon'
 
     # Catch the boss in almost all cases.
-    c.log(f'Catching boss #{c.current_run.num_caught + 1}.')
+    c.log(f'Catching boss #{r.num_caught + 1}.')
     # Start by navigating to the ball selection screen
     c.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
@@ -324,7 +322,7 @@ def catch(c) -> str:
 
     # If the caught Pokemon was not the final boss, check out the Pokemon and
     # decide whether to keep it.
-    if c.current_run.num_caught < 4:
+    if r.num_caught < 4:
         # Note that read_selectable_pokemon returns a list of preconfigured
         # Pokemon objects with types, abilities, stats, moves, et cetera.
         #
@@ -334,38 +332,38 @@ def catch(c) -> str:
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
         # difficult than the other bosses.
-        rental_weight = 3 - c.current_run.num_caught
+        rental_weight = 3 - r.num_caught
         boss_weight = 2
         # Calculate scores for the new and existing Pokemon.
         # TODO: actually read the current Pokemon's health so the bot can decide
         # to switch if it's low.
         score = (
-            (rental_weight * c.current_run.rental_scores[pokemon.name_id] + boss_weight
-             * c.current_run.boss_matchups[pokemon.name_id][c.boss])
+            (rental_weight * r.rental_scores[pokemon.name_id] + boss_weight
+             * r.boss_matchups[pokemon.name_id][c.boss])
             / (rental_weight + boss_weight)
         )
-        existing_score = c.current_run.HP * ((rental_weight
-                                     * c.current_run.rental_scores[c.current_run.pokemon.name_id] + boss_weight
-                                     * automaxlair.matchup_scoring.evaluate_matchup(c.current_run.pokemon,
-                                                                        c.current_run.boss_pokemon[c.boss], c.current_run.rental_pokemon))
+        existing_score = r.HP * ((rental_weight
+                                     * r.rental_scores[r.pokemon.name_id] + boss_weight
+                                     * automaxlair.matchup_scoring.evaluate_matchup(r.pokemon,
+                                                                        r.boss_pokemon[c.boss], r.rental_pokemon))
                                     / (rental_weight + boss_weight)
                                     )
         c.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
         c.log(
-            f'Score for {c.current_run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
+            f'Score for {r.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
         )
 
-        c.current_run.caught_pokemon.append(pokemon.name_id)
+        r.caught_pokemon.append(pokemon.name_id)
 
         # Compare the scores for the two options and choose the best one.
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
-            c.current_run.pokemon = pokemon
+            r.pokemon = pokemon
             c.push_button(b'a', 3)
-            c.log(f'Decided to swap for {c.current_run.pokemon.name_id}.')
+            c.log(f'Decided to swap for {r.pokemon.name_id}.')
         else:
             c.push_button(b'b', 3)
-            c.log(f'Decided to keep going with {c.current_run.pokemon.name_id}.')
+            c.log(f'Decided to keep going with {r.pokemon.name_id}.')
 
         # Move on to the detect stage.
         return 'detect'
@@ -373,7 +371,7 @@ def catch(c) -> str:
     # If the final boss was the caught Pokemon, wrap up the run and check the
     # Pokemon caught along the way.
     else:
-        c.current_run.caught_pokemon.append(c.boss)
+        r.caught_pokemon.append(c.boss)
         c.push_button(None, 10)
         c.log('Congratulations!')
         return 'select_pokemon'
@@ -407,22 +405,23 @@ def backpacker(c) -> str:
 
 def scientist(c) -> str:
     """Take (or not) a Pokemon from the scientist."""
+    r = c.current_run
 
     c.log('Scientist encountered.', 'DEBUG')
 
-    if c.current_run.pokemon is not None:
+    if r.pokemon is not None:
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
         # difficult than the other bosses.
-        rental_weight = 3 - c.current_run.num_caught
+        rental_weight = 3 - r.num_caught
         boss_weight = 2
 
         # Calculate scores for an average and existing Pokemon.
         pokemon_scores = []
-        for pokemon in c.current_run.rental_pokemon:
-            score = ((rental_weight * c.current_run.rental_scores[pokemon] + boss_weight
-                      * c.current_run.boss_matchups[pokemon][c.boss])
+        for pokemon in r.rental_pokemon:
+            score = ((rental_weight * r.rental_scores[pokemon] + boss_weight
+                      * r.boss_matchups[pokemon][c.boss])
                      / (rental_weight + boss_weight)
                      )
             pokemon_scores.append(score)
@@ -430,26 +429,26 @@ def scientist(c) -> str:
 
         # TODO: actually read the current Pokemon's health so the bot can decide
         # to switch if it's low.
-        existing_score = c.current_run.HP * ((rental_weight
-                                     * c.current_run.rental_scores[c.current_run.pokemon.name_id] + boss_weight
-                                     * automaxlair.matchup_scoring.evaluate_matchup(c.current_run.pokemon,
-                                                                        c.current_run.boss_pokemon[c.boss], c.current_run.rental_pokemon))
+        existing_score = r.HP * ((rental_weight
+                                     * r.rental_scores[r.pokemon.name_id] + boss_weight
+                                     * automaxlair.matchup_scoring.evaluate_matchup(r.pokemon,
+                                                                        r.boss_pokemon[c.boss], r.rental_pokemon))
                                     / (rental_weight + boss_weight)
                                     )
         c.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
         c.log(
-            f'Score for {c.current_run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
+            f'Score for {r.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
 
     # If current pokemon is None, it means we just already talked to scientist
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
-    if c.current_run.pokemon is None or average_score > existing_score:
+    if r.pokemon is None or average_score > existing_score:
         c.push_buttons((None, 3), (b'a', 1))
-        c.current_run.pokemon = None
+        r.pokemon = None
         c.log('Took a Pokemon from the scientist.')
     else:
         c.push_buttons((None, 3), (b'b', 1))
-        c.log(f'Decided to keep going with {c.current_run.pokemon.name_id}')
+        c.log(f'Decided to keep going with {r.pokemon.name_id}')
     return 'detect'
 
 
@@ -460,9 +459,10 @@ def select_pokemon(c) -> str:
     shiny legendary Pokemon is found.
     """
 
+    r = c.current_run
     # If the bot lost against the first boss, skip the checking process since
     # there are no Pokemon to check.
-    if c.current_run.num_caught == 0:
+    if r.num_caught == 0:
         c.log('No Pokemon caught.')
         c.push_buttons((None, 10), (b'b', 1))
         c.runs += 1
@@ -474,8 +474,8 @@ def select_pokemon(c) -> str:
         # although the path would be lost that situation should never arise.
         return 'join'
     # "find path" mode quits if the run is successful.
-    elif c.current_run.num_caught == 4 and c.mode == 'find path':
-        c.log(f'This path won with {c.current_run.lives} lives remaining.')
+    elif r.num_caught == 4 and c.mode == 'find path':
+        c.log(f'This path won with {r.lives} lives remaining.')
         return 'done'
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -487,7 +487,7 @@ def select_pokemon(c) -> str:
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
 
-    if c.current_run.num_caught == 4 and (c.check_attack_stat or c.check_speed_stat):
+    if r.num_caught == 4 and (c.check_attack_stat or c.check_speed_stat):
         c.push_button(b'>', 1)
         if c.check_stats():
             c.log('******************************')
@@ -498,13 +498,13 @@ def select_pokemon(c) -> str:
 
         c.push_button(b'<', 1)
 
-    for i in range(c.current_run.num_caught):
+    for i in range(r.num_caught):
         # First check if we need to reset immediately.
         # Note that "keep path" mode resets always unless a shiny legendary.
         # is found, and "ball saver" resets if a non-shiny legendary was caught.
         if (
-            (c.mode == 'keep path' and (c.current_run.num_caught < 4 or i > 0))
-            or (c.mode == 'ball saver' and c.current_run.num_caught == 4 and i > 0)
+            (c.mode == 'keep path' and (r.num_caught < 4 or i > 0))
+            or (c.mode == 'ball saver' and r.num_caught == 4 and i > 0)
         ):
             if c.mode == 'ball saver' or c.check_sufficient_ore(2):
                 reset_game = True
@@ -516,25 +516,25 @@ def select_pokemon(c) -> str:
             c.log('*********Shiny found!*********')
             c.log('******************************')
             c.log(
-                f'Shiny {c.current_run.caught_pokemon[c.current_run.num_caught - 1 - i]} will be '
+                f'Shiny {r.caught_pokemon[r.num_caught - 1 - i]} will be '
                 'kept.'
             )
             c.caught_shinies.append(
-                c.current_run.caught_pokemon[c.current_run.num_caught - 1 - i]
+                r.caught_pokemon[r.num_caught - 1 - i]
             )
             c.shinies_found += 1
             c.display_results(screenshot=True)
             c.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
-            if c.current_run.num_caught == 4 and i == 0:
+            if r.num_caught == 4 and i == 0:
                 return 'done'  # End whenever a shiny legendary is found
             else:
                 take_pokemon = True
                 break
-        elif i < c.current_run.num_caught - 1:
+        elif i < r.num_caught - 1:
             c.push_button(b'^', 3)
 
     if (
-        not take_pokemon and c.mode == 'strong boss' and c.current_run.num_caught == 4
+        not take_pokemon and c.mode == 'strong boss' and r.num_caught == 4
         and c.check_sufficient_ore(1)
     ):
         reset_game = True
@@ -568,7 +568,7 @@ def select_pokemon(c) -> str:
     c.push_buttons((b'b', 1.5), (b'b', 1.5))
 
     # Update statistics and reset stored information about the complete run.
-    c.wins += 1 if c.current_run.lives != 0 else 0
+    c.wins += 1 if r.lives != 0 else 0
     c.runs += 1
     c.reset_run()
 
