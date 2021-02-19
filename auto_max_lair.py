@@ -10,13 +10,10 @@ import logging.handlers
 import os
 import re
 import sys
-import threading
-import time
+
 from datetime import datetime
 
-import cv2
 import pytesseract
-import serial
 
 import automaxlair
 
