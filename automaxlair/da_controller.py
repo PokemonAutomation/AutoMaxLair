@@ -469,7 +469,7 @@ class DAController(SwitchController):
             'Pokemon caught': self.current_run.num_caught, 'Lives': self.current_run.lives,
             'Pokemon': self.current_run.pokemon, 'Opponent': self.current_run.opponent,
             'Win percentage': win_percent, 'Time per run': time_per_run,
-            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore
+            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore, 'Mode': self.mode
         }
         for i in range(len(self.caught_shinies)):
             self.info[f'Shiny #{i+1}: '] = self.caught_shinies[i]
