@@ -107,7 +107,9 @@ class DAController(SwitchController):
         self.item_rect_5 = ((0.549, 0.43), (0.745, 0.48))
         # stats rectangles.
         self.attack_stat_rect = ((0.33, 0.29), (0.37, 0.33))
+        self.attack_label_rect = ((0.31, 0.33), (0.39, 0.38))
         self.speed_stat_rect = ((0.22, 0.54), (0.26, 0.58))
+        self.speed_label_rect = ((0.20, 0.58), (0.28, 0.63))
 
         # Validate starting values.
         if self.mode not in (
@@ -147,7 +149,7 @@ class DAController(SwitchController):
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
                 img,
-                (self.shiny_rect, self.attack_stat_rect, self.speed_stat_rect),
+                (self.shiny_rect, self.attack_stat_rect, self.attack_label_rect, self.speed_stat_rect, self.speed_label_rect),
                 (0, 255, 0)
             )
         elif rectangle_set == 'join':
@@ -374,8 +376,19 @@ class DAController(SwitchController):
                 segmentation_mode='--psm 8'
             )
             for expected_attack in self.expected_attack_stats.split(','):
+                nature_plus_expected = False
+                nature_minus_expected = False
+                if '+' in expected_attack:
+                    nature_plus_expected = True
+                    expected_attack = expected_attack.strip('+')
+                elif '-' in expected_attack:
+                    nature_minus_expected = True
+                    expected_attack = expected_attack.strip('-')
                 if expected_attack in read_attack:
-                    is_attack_matching = True
+                    if ((nature_minus_expected and self.check_rect_HSV_match(self.attack_label_rect, (80, 30, 0), (110, 255, 255), 10))
+                       or (nature_plus_expected and self.check_rect_HSV_match(self.attack_label_rect, (150, 30, 0), (180, 255, 255), 10))
+                       or (not nature_minus_expected and not nature_plus_expected)):
+                        is_attack_matching = True
 
             if is_attack_matching:
                 self.log(
@@ -393,8 +406,19 @@ class DAController(SwitchController):
                 segmentation_mode='--psm 8'
             )
             for expected_speed in self.expected_speed_stats.split(','):
+                nature_plus_expected = False
+                nature_minus_expected = False
+                if '+' in expected_speed:
+                    nature_plus_expected = True
+                    expected_speed = expected_speed.strip('+')
+                elif '-' in expected_speed:
+                    nature_minus_expected = True
+                    expected_speed = expected_speed.strip('-')
                 if expected_speed in read_speed:
-                    is_speed_matching = True
+                    if ((nature_minus_expected and self.check_rect_HSV_match(self.speed_label_rect, (80, 30, 0), (110, 255, 255), 10))
+                       or (nature_plus_expected and self.check_rect_HSV_match(self.speed_label_rect, (150, 30, 0), (180, 255, 255), 10))
+                       or (not nature_minus_expected and not nature_plus_expected)):
+                        is_speed_matching = True
 
             if is_speed_matching:
                 self.log(
@@ -435,7 +459,7 @@ class DAController(SwitchController):
 
         return self.read_text(
             self.get_frame(), self.ball_rect, threshold=False, invert=True,
-            segmentation_mode='--psm 8').strip()
+            segmentation_mode='--psm 7').strip()
 
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
@@ -516,16 +540,20 @@ class DAController(SwitchController):
 
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
-            'Run #': self.runs + 1, 'Hunting for': self.boss,
-            'Stage': self.stage, 'Base balls': self.base_balls,
+            'Run #': self.runs + 1,
+            'Hunting for': self.boss,
+            'Mode': self.mode,
+            'Stage': self.stage,
+            'Base balls': self.base_balls,
             'Legendary balls': self.legendary_balls,
+            'Dynite Ore': self.dynite_ore,
             'Pokemon caught': self.current_run.num_caught,
             'Lives': self.current_run.lives,
             'Pokemon': self.current_run.pokemon,
             'Opponent': self.current_run.opponent,
-            'Win percentage': win_percent, 'Time per run': time_per_run,
-            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore,
-            'Mode': self.mode
+            'Win percentage': win_percent,
+            'Time per run': time_per_run,
+            'Shinies found': self.shinies_found
         }.items():
             self.info[key] = value
 
@@ -534,4 +562,4 @@ class DAController(SwitchController):
 
         # Call the base display method.
         super().display_results(
-            image=self.get_frame(resize=True), log=log, screenshot=screenshot)
+            image=self.get_frame(rectangle_set=self.stage, resize=True), log=log, screenshot=screenshot)

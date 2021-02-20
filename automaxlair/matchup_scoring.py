@@ -128,6 +128,26 @@ def calculate_damage(
         modifier *= 0.75
     # Ignore weather for now
     # Ignore crits
+
+    # It needs to be before STAB
+    if move.type_id == 'normal':
+        if attacker.ability_name_id == 'refrigerate':
+            move.type_id = 'ice'
+            modifier *= 1.2
+        elif attacker.ability_name_id == 'aerilate':
+            move.type_id = 'fly'
+            modifier *= 1.2
+        elif attacker.ability_name_id == 'alvanize':
+            move.type_id = 'fly'
+            modifier *= 1.2
+        elif attacker.ability_name_id == 'aerilate':
+            move.type_id = 'fly'
+            modifier *= 1.2
+    else:
+        if attacker.ability_name_id == 'normalize':
+            move.type_id = 'normal'
+            modifier *= 1.2
+
     if move.type_id in attacker.type_ids:  # Apply STAB
         # Note that Adaptability is handled elsewhere.
         modifier *= 1.5
