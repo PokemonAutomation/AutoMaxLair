@@ -516,16 +516,20 @@ class DAController(SwitchController):
 
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
-            'Run #': self.runs + 1, 'Hunting for': self.boss,
-            'Stage': self.stage, 'Base balls': self.base_balls,
+            'Run #': self.runs + 1,
+            'Hunting for': self.boss,
+            'Mode': self.mode,
+            'Stage': self.stage,
+            'Base balls': self.base_balls,
             'Legendary balls': self.legendary_balls,
+            'Dynite Ore': self.dynite_ore,
             'Pokemon caught': self.current_run.num_caught,
             'Lives': self.current_run.lives,
             'Pokemon': self.current_run.pokemon,
             'Opponent': self.current_run.opponent,
-            'Win percentage': win_percent, 'Time per run': time_per_run,
-            'Shinies found': self.shinies_found, 'Dynite Ore': self.dynite_ore,
-            'Mode': self.mode
+            'Win percentage': win_percent,
+            'Time per run': time_per_run,
+            'Shinies found': self.shinies_found
         }.items():
             self.info[key] = value
 
