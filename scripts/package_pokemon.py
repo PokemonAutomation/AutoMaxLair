@@ -57,7 +57,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         factor = 0.3
     # Account for conditional moves that require certain conditions
     # (Steel Roller, Dream Eater, Belch, etc.).
-    elif name_id in ('steel-roller', 'dream-eater', 'belch'):
+    elif name_id in ('steel-roller', 'dream-eater', 'belch', 'last-resort'):
         factor = 0
     elif name_id == 'focus-punch':
         factor = 0.75

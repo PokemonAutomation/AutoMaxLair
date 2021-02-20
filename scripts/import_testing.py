@@ -11,15 +11,25 @@ from automaxlair import matchup_scoring
 
 
 def main():
-    with open(base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8'
+    ) as file:
         boss_pokemon = jsonpickle.decode(file.read())
-    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8'
+    ) as file:
         rental_pokemon = jsonpickle.decode(file.read())
-    with open(base_dir + '/data/boss_matchup_LUT.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/boss_matchup_LUT.json', 'r', encoding='utf8'
+    ) as file:
         boss_matchups = jsonpickle.decode(file.read())
-    with open(base_dir + '/data/rental_matchup_LUT.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_matchup_LUT.json', 'r', encoding='utf8'
+    ) as file:
         rental_matchups = jsonpickle.decode(file.read())
-    with open(base_dir + '/data/rental_pokemon_scores.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_pokemon_scores.json', 'r', encoding='utf8'
+    ) as file:
         rental_scores = jsonpickle.decode(file.read())
 
     # Test retrieval of a rental Pokemon
@@ -32,16 +42,20 @@ def main():
 
     # Test retrieval of rental Pokemon matchups
     print(
-        f'Matchup for Chansey against Golurk (poor): {rental_matchups["chansey"]["golurk"]}')
+        'Matchup for Chansey against Golurk (poor): '
+        f'{rental_matchups["chansey"]["golurk"]}')
     print(
-        f'Matchup for Carkol against Butterfree (good): {rental_matchups["carkol"]["butterfree"]}')
+        'Matchup for Carkol against Butterfree (good): '
+        f'{rental_matchups["carkol"]["butterfree"]}')
     print('________________________________________')
 
     # Test retrieval of boss Pokemon matchups
     print(
-        f'Matchup for Jynx against Heatran (poor): {boss_matchups["jynx"]["heatran"]}')
+        'Matchup for Jynx against Heatran (poor): '
+        f'{boss_matchups["jynx"]["heatran"]}')
     print(
-        f'Matchup for Golurk against Raikou (good): {boss_matchups["golurk"]["raikou"]}')
+        'Matchup for Golurk against Raikou (good): '
+        f'{boss_matchups["golurk"]["raikou"]}')
     print('________________________________________')
 
     # Test retrieval of rental Pokemon scores

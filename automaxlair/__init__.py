@@ -7,6 +7,8 @@ name space.
 
 import logging as __logging
 
+from .da_controller import DAController
+
 # Define the logger for the package so that it can be imported and used
 # elsewhere.
 logger = __logging.getLogger("automaxlair")

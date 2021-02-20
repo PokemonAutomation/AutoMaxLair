@@ -7,12 +7,14 @@ import logging
 import logging.handlers
 import multiprocessing as mp
 import os
-import jsonpickle
 import sys
 import time
 
-# We need to import some things from the parent directory.
 from os.path import dirname, abspath
+
+import jsonpickle
+
+# We need to import some things from the parent directory.
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir + '\\automaxlair')
@@ -39,9 +41,13 @@ def compute_scores(attacker):
 
     # Load a separate dictionary for each process because elements get popped
     # and re-added during the matchup scoring process.
-    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8'
+    ) as file:
         rental_pokemon = jsonpickle.decode(file.read())
-    with open(base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8'
+    ) as file:
         boss_pokemon = jsonpickle.decode(file.read())
 
     # First iterate through all boss Pokemon and score the interactions.
@@ -70,11 +76,13 @@ def compute_scores(attacker):
         logger.debug(
             f'Matchup between {attacker_id} and {defender_id}: {score:.2f}'
         )
+    rental_score /= len(rental_pokemon)
+    logger.debug(f'Score for {attacker_id}: {rental_score:.3f}')
 
     # Return the results as a tuple which will be unpacked and repacked in
     # dicts later, with the first element (the Pokemon's name identifier) as
     # the key and the other elements as values in their respective dicts.
-    logger.info(f'Finished computing matchups for {attacker}')
+    logger.info('Finished computing matchups for %s', attacker)
     return (attacker_id, boss_matchups, rental_matchups, rental_score)
 
 
@@ -134,7 +142,9 @@ def main():
 
     logger.info('Started scoring Pokemon.')
 
-    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8'
+    ) as file:
         rental_pokemon = jsonpickle.decode(file.read())
 
     # Iterate through all rental Pokemon and calculate scores against all the
@@ -157,18 +167,20 @@ def main():
         rental_pokemon_scores[name_id] = rental_score
         total_score += rental_score
 
-    # Normalize the total scores.
-    for key in rental_pokemon_scores:
-        rental_pokemon_scores[key] /= (total_score / len(rental_pokemon))
-
     ql.stop()
 
     # Pickle the score lookup tables for later use.
-    with open(base_dir + '/data/boss_matchup_LUT.json', 'w', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/boss_matchup_LUT.json', 'w', encoding='utf8'
+    ) as file:
         file.write(jsonpickle.encode(boss_matchup_LUT, indent=4))
-    with open(base_dir + '/data/rental_matchup_LUT.json', 'w', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_matchup_LUT.json', 'w', encoding='utf8'
+    ) as file:
         file.write(jsonpickle.encode(rental_matchup_LUT, indent=4))
-    with open(base_dir + '/data/rental_pokemon_scores.json', 'w', encoding='utf8') as file:
+    with open(
+        base_dir + '/data/rental_pokemon_scores.json', 'w', encoding='utf8'
+    ) as file:
         file.write(jsonpickle.encode(rental_pokemon_scores, indent=4))
 
 

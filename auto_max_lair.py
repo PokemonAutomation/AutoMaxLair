@@ -17,6 +17,8 @@ import pytesseract
 
 import automaxlair
 
+from automaxlair import matchup_scoring
+
 VERSION = 'v0.7-beta'
 
 # Load configuration from config file
@@ -80,10 +82,10 @@ def join(ctrlr) -> str:
         # than the other bosses.
         rental_weight = 3
         boss_weight = 2
-        score = ((rental_weight * run.rental_scores[name_id] + boss_weight
-                  * run.boss_matchups[name_id][ctrlr.boss])
-                 / (rental_weight + boss_weight)
-                 )
+        score = matchup_scoring.get_weighted_score(
+            run.rental_scores[name_id], rental_weight,
+            run.boss_matchups[name_id][ctrlr.boss], boss_weight
+        )
         pokemon_scores.append(score)
         ctrlr.log(f'Score for {name_id}: {score:.2f}', 'DEBUG')
     selection_index = pokemon_scores.index(max(pokemon_scores))
@@ -205,11 +207,11 @@ def battle(ctrlr) -> str:
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
                 if run.pokemon.name_id == 'ditto':
-                    run.pokemon = automaxlair.matchup_scoring.transform_ditto(
+                    run.pokemon = matchup_scoring.transform_ditto(
                         run.pokemon, run.opponent)
                 elif run.opponent.name_id == 'ditto':
                     ctrlr.opponent = (
-                        automaxlair.matchup_scoring.transform_ditto(
+                        matchup_scoring.transform_ditto(
                             run.opponent, run.pokemon))
 
             # Handle the Dynamax timer
@@ -241,14 +243,14 @@ def battle(ctrlr) -> str:
             # TODO: use the actual teammates instead of the average of all
             # rental Pokemon.
             best_move_index, __, best_move_score = (
-                automaxlair.matchup_scoring.select_best_move(
+                matchup_scoring.select_best_move(
                     run.pokemon, run.opponent, teammates=run.rental_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
-                    automaxlair.matchup_scoring.select_best_move(
+                    matchup_scoring.select_best_move(
                         run.pokemon, run.opponent, run.rental_pokemon)
                 )
                 if best_dmax_move_score > default_score:
@@ -336,17 +338,16 @@ def catch(ctrlr) -> str:
         # Calculate scores for the new and existing Pokemon.
         # TODO: actually read the current Pokemon's health so the bot can
         # decide to switch if it's low.
-        score = (
-            (rental_weight * run.rental_scores[pokemon.name_id] + boss_weight
-             * run.boss_matchups[pokemon.name_id][ctrlr.boss])
-            / (rental_weight + boss_weight)
+        score = matchup_scoring.get_weighted_score(
+            run.rental_scores[pokemon.name_id], rental_weight,
+            run.boss_matchups[pokemon.name_id][ctrlr.boss], boss_weight
         )
-        existing_score = run.HP * ((
-            rental_weight * run.rental_scores[run.pokemon.name_id]
-            + boss_weight * automaxlair.matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon))
-            / (rental_weight + boss_weight)
-        )
+        existing_score = matchup_scoring.get_weighted_score(
+            run.rental_scores[run.pokemon.name_id], rental_weight,
+            matchup_scoring.evaluate_matchup(
+                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
+            ), boss_weight
+        ) * run.HP
         ctrlr.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
         ctrlr.log(
             f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
@@ -445,7 +446,7 @@ def scientist(ctrlr) -> str:
         # decide to switch if it's low.
         existing_score = run.HP * ((
             rental_weight * run.rental_scores[run.pokemon.name_id]
-            + boss_weight * automaxlair.matchup_scoring.evaluate_matchup(
+            + boss_weight * matchup_scoring.evaluate_matchup(
                 run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon))
             / (rental_weight + boss_weight)
         )
