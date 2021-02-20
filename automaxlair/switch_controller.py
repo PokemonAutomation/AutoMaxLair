@@ -21,6 +21,7 @@ import cv2
 import pytesseract
 import serial
 import threading
+import discord
 
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
@@ -45,6 +46,10 @@ class SwitchController:
         self.lang = self.phrases['DATA_LANG_NAME']
         self.enable_debug_logs = (
             config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true')
+
+        self.webhook_id = config['discord']['WEBHOOK_ID']
+        self.webhook_token = config['discord']['WEBHOOK_TOKEN']
+        self.user_id = config['discord']['USER_ID']
 
         self.actions = actions
         self.info = {}  # To be overwritten later.
@@ -326,6 +331,31 @@ class SwitchController:
             self.num_saved_images += 1
             cv2.imwrite(
                 f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+
+    def send_discord_message(self,
+                             ping_yourself: bool,
+                             text: str,
+                             path_to_picture: str
+                             ) -> None:
+
+        # If user did not setup the discord informations, do nothing
+        if self.webhook_id == '' or self.webhook_token == '':
+            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
+            return
+
+        if self.user_id == '' and ping_yourself:
+            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
+            return
+
+        webhook = discord.Webhook.partial(self.webhook_id, self.webhook_token, adapter=discord.RequestsWebhookAdapter())
+
+        with open(file=f'{path_to_picture}', mode='rb') as f:
+            my_file = discord.File(f)
+
+        if ping_yourself:
+            ping_str = f'<@{self.user_id}>'
+
+        webhook.send(f'{ping_str} {text}', file=my_file)
 
 
 class VideoCaptureHelper:
