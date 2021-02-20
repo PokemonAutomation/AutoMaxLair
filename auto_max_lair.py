@@ -171,7 +171,7 @@ def battle(ctrlr) -> str:
                 run.lives = 0
             run.reset_stage()
             ctrlr.push_button(None, 7)
-            return 'select_pokemon'  # Go to quit sequence
+            return 'select_pokemon'  # Go to quit sequence.
         if re.search(ctrlr.phrases['CHEER'], text):
             ctrlr.log('Cheering for your teammates.', 'DEBUG')
             if run.pokemon.dynamax:
@@ -470,7 +470,7 @@ def scientist(ctrlr) -> str:
 def select_pokemon(ctrlr) -> str:
     """Check Pokemon caught during the run and keep one if it's shiny.
 
-    Note that this function returns 'done', causing the program to quit, if a
+    Note that this function returns None, causing the program to quit, if a
     shiny legendary Pokemon is found.
     """
 
@@ -494,7 +494,7 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.send_discord_message(True, f'You got a winning path for {run.caught_pokemon[3]} with {run.lives} lives remaining !!!',
                                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
         ctrlr.log(f'This path won with {run.lives} lives remaining.')
-        return 'done'
+        return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
@@ -516,7 +516,7 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
                                        f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
-            return 'done'  # End whenever a matching stats legendary is found
+            return None  # End whenever a matching stats legendary is found
 
         ctrlr.push_button(b'<', 1)
 
@@ -533,7 +533,7 @@ def select_pokemon(ctrlr) -> str:
                 reset_game = True
                 break
             else:
-                return 'done'  # End if there isn't enough ore to reset.
+                return None  # End if there isn't enough ore to reset.
         elif ctrlr.check_shiny():
             ctrlr.log('******************************')
             ctrlr.log('*********Shiny found!*********')
@@ -551,7 +551,7 @@ def select_pokemon(ctrlr) -> str:
             if run.num_caught == 4 and i == 0:
                 ctrlr.send_discord_message(True, f'You got a shiny {run.caught_pokemon[3]} !!!',
                                            f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
-                return 'done'  # End whenever a shiny legendary is found
+                return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(False, f'You got a shiny {run.caught_pokemon[run.num_caught - 1 - i]} !!!',
                                            f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
@@ -561,8 +561,8 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.push_button(b'^', 3)
 
     if (
-        not take_pokemon and ctrlr.mode == (
-            'strong boss' and run.num_caught == 4)
+        not take_pokemon and (
+            ctrlr.mode == 'strong boss' and run.num_caught == 4)
         and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
@@ -606,20 +606,7 @@ def select_pokemon(ctrlr) -> str:
         return 'join'
     else:
         ctrlr.log('Out of balls. Quitting.')
-        return 'done'
-
-
-def button_control_task(ctrlr, actions) -> None:
-    """Loop called by a thread which handles the main button detecting and
-    detection aspects of the bot.
-    """
-
-    while ctrlr.stage != 'done':
-        # Note that this task holds the lock by default but drops it while
-        # waiting for Tesseract to respond or while delaying after a button
-        # push.
-        with ctrlr.lock:
-            ctrlr.stage = actions[ctrlr.stage](ctrlr)
+        return None  # Return None to signal the program to end.
 
 
 def main(log_name):

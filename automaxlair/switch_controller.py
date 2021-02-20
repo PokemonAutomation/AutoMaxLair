@@ -79,12 +79,17 @@ class SwitchController:
         self.stage = 'initialize'
         self.num_saved_images = 0
 
+    def __del__(self):
+        """On destruction, release the serial port and video capture."""
+        self.cap.release()
+        self.com.close()
+
     def _button_control_task(self):
         """Loop called by a thread which handles the main button detecting and
         detection aspects of the bot.
         """
 
-        while not self.exit_flag.is_set():
+        while not self.exit_flag.is_set() and self.stage is not None:
             # Note that this task holds the lock by default but drops it while
             # waiting for Tesseract to respond or while delaying after a button
             # push.
@@ -123,9 +128,6 @@ class SwitchController:
                 # control thread to exit because it only checks the flag at the
                 # start of a new button push or OCR call.
                 self.button_control_thread.join()
-
-        self.cap.release()
-        self.com.close()
 
     def log(
         self,
