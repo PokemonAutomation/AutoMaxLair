@@ -18152,8 +18152,8 @@
                 "effect": "Can only be used after all of the user's other moves have been used.",
                 "probability": null,
                 "is_spread": false,
-                "correction_factor": 1.0,
-                "power": 140.0
+                "correction_factor": 0,
+                "power": 0
             }
         ],
         "max_moves": [
