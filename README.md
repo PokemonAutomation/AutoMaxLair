@@ -88,7 +88,6 @@ Find Path|Useful for finding a path to use "Keep Path" mode on.|Utility mode tha
 *	Boss move usage is not fully reflected by their movesets.
 	*	Bosses use their 5th move only when at low HP with boss-dependent frequency and timing.
 *	Items are not chosen intelligently
-*	Natures are not taken into account when searching for perfect stats legendary so some false positives are found.
 *	Balls count could be read instead of being inputed in the config file.
 *	Improved goal selection (shiny and perfect attack, shiny, etc)
 
@@ -144,3 +143,4 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Added dependencies for the microcontroller code so it can be altered and recompiled without any external tools (besides WinAVR).
 * Precalculated data files are now stored in human-readable JSON format.
 * Tweaked how Pokemon are scored.
+* Stats checking now takes nature into account.

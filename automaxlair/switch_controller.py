@@ -354,10 +354,11 @@ class SwitchController:
         with open(file=f'{path_to_picture}', mode='rb') as f:
             my_file = discord.File(f)
 
+        ping_str = ''
         if ping_yourself:
-            ping_str = f'<@{self.user_id}>'
+            ping_str = f'<@{self.user_id}> '
 
-        webhook.send(f'{ping_str} {text}', file=my_file)
+        webhook.send(f'{ping_str}{text}', file=my_file)
 
 
 class VideoCaptureHelper:

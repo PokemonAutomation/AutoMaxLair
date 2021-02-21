@@ -137,7 +137,7 @@ def calculate_damage(
         elif attacker.ability_name_id == 'aerilate':
             move.type_id = 'fly'
             modifier *= 1.2
-        elif attacker.ability_name_id == 'alvanize':
+        elif attacker.ability_name_id == 'galvanize':
             move.type_id = 'fly'
             modifier *= 1.2
         elif attacker.ability_name_id == 'aerilate':

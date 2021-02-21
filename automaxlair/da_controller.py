@@ -107,7 +107,7 @@ class DAController(SwitchController):
         self.item_rect_5 = ((0.549, 0.43), (0.745, 0.48))
         # stats rectangles.
         self.attack_stat_rect = ((0.33, 0.29), (0.37, 0.33))
-        self.attack_label_rect = ((0.31, 0.33), (0.39, 0.38))
+        self.attack_label_rect = ((0.31, 0.24), (0.39, 0.29))
         self.speed_stat_rect = ((0.22, 0.54), (0.26, 0.58))
         self.speed_label_rect = ((0.20, 0.58), (0.28, 0.63))
 
