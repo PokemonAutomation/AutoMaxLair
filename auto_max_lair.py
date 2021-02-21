@@ -31,6 +31,7 @@ if not config.read('Config.ini', 'utf8'):
 
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
+VIDEO_EXTRA_DELAY = int(config['advanced']['VIDEO_EXTRA_DELAY'])
 BOSS = config['default']['BOSS'].lower().replace(' ', '-')
 BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
@@ -62,7 +63,8 @@ def join(ctrlr) -> str:
         ctrlr.push_button(b'v', 1)
 
     ctrlr.push_buttons(
-        (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1), (b'a', 3)
+        (b'a', 1.5), (b'a', 1), (b'a', 1.5), (b'a', 4), (b'v', 1),
+        (b'a', 3 + VIDEO_EXTRA_DELAY)
     )
 
     # Next, read what rental Pokemon are available to choose.
@@ -178,12 +180,12 @@ def battle(ctrlr) -> str:
                 run.pokemon.dynamax = False
                 run.move_index = 0
                 run.dmax_timer = 0
-            ctrlr.push_buttons((b'a', 1.5), (b'b', 1))
+            ctrlr.push_buttons((b'a', 1.5), (b'b', 1 + VIDEO_EXTRA_DELAY))
         elif re.search(ctrlr.phrases['FIGHT'], text):
             # If we got the pokemon from the scientist, we don't know what
             # our current pokemon is, so check it first.
             if run.pokemon is None:
-                ctrlr.push_buttons((b'y', 1), (b'a', 1))
+                ctrlr.push_buttons((b'y', 1), (b'a', 1 + VIDEO_EXTRA_DELAY))
                 run.pokemon = ctrlr.read_selectable_pokemon('battle')[0]
                 ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
                 ctrlr.log(
@@ -200,7 +202,8 @@ def battle(ctrlr) -> str:
                 # Otherwise, we identify the boss using its name and types.
                 else:
                     #
-                    ctrlr.push_buttons((b'y', 1), (b'a', 1), (b'l', 3))
+                    ctrlr.push_buttons(
+                        (b'y', 1), (b'a', 1), (b'l', 3 + VIDEO_EXTRA_DELAY))
                     run.opponent = ctrlr.read_selectable_pokemon('battle')[0]
                     ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
 
@@ -229,7 +232,7 @@ def battle(ctrlr) -> str:
                 run.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            ctrlr.push_buttons((b'b', 2), (b'a', 2))
+            ctrlr.push_buttons((b'b', 2), (b'a', 2 + VIDEO_EXTRA_DELAY))
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -317,7 +320,7 @@ def catch(ctrlr) -> str:
     while (ctrlr.get_target_ball().lower() != 'default'
            and ctrlr.get_target_ball() not in ctrlr.check_ball()
            ):
-        ctrlr.push_button(b'<', 2)
+        ctrlr.push_button(b'<', 2 + VIDEO_EXTRA_DELAY)
     ctrlr.push_button(b'a', 30)
     ctrlr.record_ball_use()
 
@@ -379,37 +382,20 @@ def catch(ctrlr) -> str:
 
 def backpacker(ctrlr) -> str:
     """Choose an item from the backpacker."""
-    ctrlr.push_button(None, 5)
+    ctrlr.push_button(None, 5 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log("Reading the backpacker's items.")
 
     items = []
-    items.append(
-        ctrlr.read_text(
-            ctrlr.get_frame(), ctrlr.item_rect_1, threshold=False, invert=True,
+    frame = ctrlr.get_frame()
+    for rect in (
+        ctrlr.item_rect_1, ctrlr.item_rect_2, ctrlr.item_rect_3,
+        ctrlr.item_rect_4, ctrlr.item_rect_5
+    ):
+        item = ctrlr.read_text(
+            frame, rect, threshold=False, invert=False,
             segmentation_mode='--psm 7').strip()
-    )
-    items.append(
-        ctrlr.read_text(
-            ctrlr.get_frame(), ctrlr.item_rect_2, threshold=False,
-            segmentation_mode='--psm 7').strip()
-    )
-    items.append(
-        ctrlr.read_text(
-            ctrlr.get_frame(), ctrlr.item_rect_3, threshold=False,
-            segmentation_mode='--psm 7').strip()
-    )
-    items.append(
-        ctrlr.read_text(
-            ctrlr.get_frame(), ctrlr.item_rect_4, threshold=False,
-            segmentation_mode='--psm 7').strip()
-    )
-    items.append(
-        ctrlr.read_text(
-            ctrlr.get_frame(), ctrlr.item_rect_5, threshold=False,
-            segmentation_mode='--psm 7').strip()
-    )
-    for item in items:
+        items.append(item)
         ctrlr.log(f'Detected item: {item}', 'DEBUG')
 
     ctrlr.push_button(b'a', 5)
@@ -434,22 +420,22 @@ def scientist(ctrlr) -> str:
 
         # Calculate scores for an average and existing Pokemon.
         pokemon_scores = []
-        for pokemon in run.rental_pokemon:
-            score = ((rental_weight * run.rental_scores[pokemon] + boss_weight
-                      * run.boss_matchups[pokemon][ctrlr.boss])
-                     / (rental_weight + boss_weight)
-                     )
+        for name_id in run.rental_pokemon:
+            score = matchup_scoring.get_weighted_score(
+                run.rental_scores[name_id], rental_weight,
+                run.boss_matchups[name_id][ctrlr.boss], boss_weight
+            )
             pokemon_scores.append(score)
         average_score = sum(pokemon_scores) / len(pokemon_scores)
 
         # TODO: actually read the current Pokemon's health so the bot can
         # decide to switch if it's low.
-        existing_score = run.HP * ((
-            rental_weight * run.rental_scores[run.pokemon.name_id]
-            + boss_weight * matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon))
-            / (rental_weight + boss_weight)
-        )
+        existing_score = matchup_scoring.get_weighted_score(
+            run.rental_scores[run.pokemon.name_id], rental_weight,
+            matchup_scoring.evaluate_matchup(
+                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
+            ), boss_weight
+        ) * run.HP
         ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
         ctrlr.log(
             f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
@@ -491,15 +477,18 @@ def select_pokemon(ctrlr) -> str:
     # "find path" mode quits if the run is successful.
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
-        ctrlr.send_discord_message(True, f'You got a winning path for {run.caught_pokemon[3]} with {run.lives} lives remaining !!!',
-                                   f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+        ctrlr.send_discord_message(
+            True, f'You got a winning path for {run.caught_pokemon[3]} with '
+            f'{run.lives} lives remaining !!!',
+            f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
         ctrlr.log(f'This path won with {run.lives} lives remaining.')
         return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
     # legendary if the run was successful)
     ctrlr.log('Checking the haul from this run.', 'DEBUG')
-    ctrlr.push_buttons((b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3))
+    ctrlr.push_buttons(
+        (b'^', 1), (b'a', 1), (b'v', 1), (b'a', 3 + VIDEO_EXTRA_DELAY))
 
     # Check all Pokemon for shininess.
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
@@ -514,8 +503,9 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('****Matching stats found!*****')
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
-            ctrlr.send_discord_message(True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
-                                       f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+            ctrlr.send_discord_message(
+                True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
+                f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
             return None  # End whenever a matching stats legendary is found
 
         ctrlr.push_button(b'<', 1)
@@ -549,16 +539,19 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.display_results(screenshot=True)
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
-                ctrlr.send_discord_message(True, f'You got a shiny {run.caught_pokemon[3]} !!!',
-                                           f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                ctrlr.send_discord_message(
+                    True, f'You got a shiny {run.caught_pokemon[3]} !!!',
+                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
                 return None  # End whenever a shiny legendary is found.
             else:
-                ctrlr.send_discord_message(False, f'You got a shiny {run.caught_pokemon[run.num_caught - 1 - i]} !!!',
-                                           f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                ctrlr.send_discord_message(
+                    False, f'You got a shiny '
+                    f'{run.caught_pokemon[run.num_caught - 1 - i]} !!!',
+                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
                 take_pokemon = True
                 break
         elif i < run.num_caught - 1:
-            ctrlr.push_button(b'^', 3)
+            ctrlr.push_button(b'^', 3 + VIDEO_EXTRA_DELAY)
 
     if (
         not take_pokemon and (
