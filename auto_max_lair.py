@@ -1,4 +1,5 @@
-#   AutoMaxLair
+"""Main script for automating Dynamax Adventures."""
+
 #       Eric Donders
 #       Contributions from Miguel Tavera, Discord user fawress,
 #           Discord user pifopi, and Discord user denvoros

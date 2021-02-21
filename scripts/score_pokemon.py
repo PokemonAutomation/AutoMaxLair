@@ -1,3 +1,7 @@
+"""Score Pokemon script. Takes stored rental and boss Pokemon and generates
+scores for the rental Pokemon.
+"""
+
 # Score Pokemon
 #   Eric Donders
 #   Multiprocessing and logging implemented with help from denvoros.
@@ -19,7 +23,8 @@ base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
 sys.path.insert(1, base_dir + '\\automaxlair')
 
-from automaxlair import matchup_scoring  # Needs to be lower than path insert.
+# Needs to be lower than path insert.
+from automaxlair import matchup_scoring  # noqa: E402
 
 
 # Config values for the log and multiprocessing.

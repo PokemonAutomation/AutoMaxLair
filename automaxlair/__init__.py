@@ -7,7 +7,7 @@ name space.
 
 import logging as __logging
 
-from .da_controller import DAController
+from .da_controller import DAController  # noqa: F401
 
 # Define the logger for the package so that it can be imported and used
 # elsewhere.
