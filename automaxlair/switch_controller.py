@@ -334,30 +334,31 @@ class SwitchController:
             cv2.imwrite(
                 f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
 
-    def send_discord_message(self,
-                             ping_yourself: bool,
-                             text: str,
-                             path_to_picture: str
-                             ) -> None:
-
-        # If user did not setup the discord informations, do nothing
-        if self.webhook_id == '' or self.webhook_token == '':
-            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
+    def send_discord_message(
+        self, ping_yourself: bool, text: str, path_to_picture: str) -> None:
+        """Send a notification via Discord."""
+        # Do nothing if user did not setup the Discord information.
+        if self.webhook_id == '' or self.webhook_token == '' or (
+            self.user_id == '' and ping_yourself
+        ):
+            self.log(
+                'You need to setup the discord section to be able to use the '
+                'ping feature.', 'DEBUG')
             return
 
-        if self.user_id == '' and ping_yourself:
-            self.log('You need to setup the discord section to be able to use that feature.', 'WARNING')
-            return
+        # Create a webhook where the message can be sent to.
+        webhook = discord.Webhook.partial(
+            self.webhook_id, self.webhook_token,
+            adapter=discord.RequestsWebhookAdapter())
 
-        webhook = discord.Webhook.partial(self.webhook_id, self.webhook_token, adapter=discord.RequestsWebhookAdapter())
-
+        # Open the image to be sent.
         with open(file=f'{path_to_picture}', mode='rb') as f:
             my_file = discord.File(f)
 
+        # Send the message with optional ping.
         ping_str = ''
         if ping_yourself:
             ping_str = f'<@{self.user_id}> '
-
         webhook.send(f'{ping_str}{text}', file=my_file)
 
 

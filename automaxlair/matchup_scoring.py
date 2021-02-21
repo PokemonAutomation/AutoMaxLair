@@ -1,6 +1,9 @@
+"""Helper functions for scoring Pokemon against each other."""
+
 # Matchup Scoring
 #   Eric Donders
 #   2020-11-27
+
 import copy
 from typing import Dict, List, Tuple
 from automaxlair.pokemon_classes import Pokemon
@@ -32,7 +35,7 @@ def type_damage_multiplier_single(type1: str, type2: str) -> float:
         (1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 0.5),
         (1, 0.5, 0.5, 0.5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.5, 2),
         (1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1)
-        )[types.index(type1)][types.index(type2)]
+    )[types.index(type1)][types.index(type2)]
 
 
 def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
@@ -43,9 +46,8 @@ def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
     return factor
 
 
-def ability_damage_multiplier(attacker: Pokemon, move_index: int,
-                              defender: Pokemon
-                              ) -> float:
+def ability_damage_multiplier(
+    attacker: Pokemon, move_index: int, defender: Pokemon) -> float:
     """Return a damage multiplier stemming from abilities."""
 
     move_type = attacker.moves[move_index].type_id
@@ -310,9 +312,9 @@ def calculate_move_score(
     return dealt_damage / received_damage
 
 
-def evaluate_matchup(attacker: Pokemon, boss: Pokemon,
-                     teammates: Dict[str, Pokemon] = {}
-                     ) -> float:
+def evaluate_matchup(
+    attacker: Pokemon, boss: Pokemon, teammates: Dict[str, Pokemon] = {}
+) -> float:
     """Return a matchup score between an attacker and defender, with the
     attacker using optimal moves and the defender using average moves.
     """
@@ -327,8 +329,8 @@ def evaluate_matchup(attacker: Pokemon, boss: Pokemon,
 
     base_version_score = select_best_move(base_version, boss, teammates)[2]
     dmax_version_score = select_best_move(dmax_version, boss, teammates)[2]
-    score = max(base_version_score,
-                (base_version_score + dmax_version_score) / 2)
+    score = max(
+        base_version_score, (base_version_score + dmax_version_score) / 2)
 
     return score
 
@@ -345,9 +347,8 @@ def select_best_move(attacker: Pokemon, defender: Pokemon,
     best_move_name_id = ''
     for i in range(len(attacker.moves)):
         if attacker.PP[i] > 0:
-            score = calculate_move_score(attacker, i, defender,
-                                         teammates=teammates
-                                         )
+            score = calculate_move_score(
+                attacker, i, defender, teammates=teammates)
             if score > best_score:
                 best_index = i
                 best_move_name_id = attacker.moves[i].name_id
