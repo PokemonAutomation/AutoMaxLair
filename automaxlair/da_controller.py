@@ -9,8 +9,10 @@ den.
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
+import re
+
 from datetime import datetime
-from typing import List, Tuple, TypeVar, Callable, Dict
+from typing import List, Tuple, TypeVar, Callable, Dict, Optional
 
 import enchant
 
@@ -38,6 +40,7 @@ class DAController(SwitchController):
         super().__init__(config, log_name, actions)
 
         # Then, configure everything specific to Dynamax Adventures.
+        self.window_name = 'AutoMaxLair Output'
 
         # Read values from the config.
         self.boss = config['default']['BOSS'].lower().replace(' ', '-')
@@ -80,12 +83,18 @@ class DAController(SwitchController):
         self.sel_rect_2 = ((0.485, 0.54), (0.60, 0.59))
         self.sel_rect_3 = ((0.485, 0.80), (0.60, 0.855))
         self.sel_rect_4 = ((0.485, 0.59), (0.60, 0.645))
-        # In-battle Pokemon name & type rectangles.
+        # In-battle rectangles.
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        # Dynamax icon rectangle.
+        self.menu_rect_1 = ((0.83, 0.69), (0.91, 0.75))
+        self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
+        self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
+        self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
+        self.battle_text_rect = ((0, 0.80), (1, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.80), (0.61, 0.84))
+        # In-den rectangles.
+        self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
         # Selectable Pokemon abilities rectangles.
         self.abil_rect_1 = ((0.485, 0.33), (0.60, 0.39))
         self.abil_rect_2 = ((0.485, 0.59), (0.60, 0.65))
@@ -105,7 +114,7 @@ class DAController(SwitchController):
         self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
         self.item_rect_4 = ((0.549, 0.35), (0.745, 0.40))
         self.item_rect_5 = ((0.549, 0.43), (0.745, 0.48))
-        # stats rectangles.
+        # Stats rectangles.
         self.attack_stat_rect = ((0.33, 0.29), (0.37, 0.33))
         self.attack_label_rect = ((0.31, 0.24), (0.39, 0.29))
         self.speed_stat_rect = ((0.22, 0.54), (0.26, 0.58))
@@ -146,43 +155,44 @@ class DAController(SwitchController):
         # Draw rectangles around detection areas if debug logs are on.
         if not self.enable_debug_logs:
             pass
+        elif rectangle_set == 'detect':
+            self.outline_regions(
+                img, (self.menu_rect_1, self.menu_rect_2, self.den_text_rect),
+                (255, 255, 0))
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
-                img,
-                (self.shiny_rect, self.attack_stat_rect, self.attack_label_rect, self.speed_stat_rect, self.speed_label_rect),
-                (0, 255, 0)
-            )
+                img, (
+                    self.shiny_rect, self.attack_stat_rect,
+                    self.attack_label_rect, self.speed_stat_rect,
+                    self.speed_label_rect), (0, 255, 0))
         elif rectangle_set == 'join':
             self.outline_regions(
                 img, (self.sel_rect_1, self.sel_rect_2, self.sel_rect_3),
-                (0, 255, 0)
-            )
+                (0, 255, 0))
             self.outline_regions(
                 img, (self.abil_rect_1, self.abil_rect_2, self.abil_rect_3),
-                (0, 255, 255)
-            )
+                (0, 255, 255))
             self.outline_regions(
                 img, (self.moves_rect_1, self.moves_rect_2, self.moves_rect_3),
-                (255, 255, 0)
-            )
+                (255, 255, 0))
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0, 255, 0))
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
-                img, (self.ball_rect, self.ball_num_rect), (0, 0, 255)
-            )
+                img, (self.ball_rect, self.ball_num_rect), (0, 0, 255))
         elif rectangle_set == 'battle':
             self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
-                img, (self.type_rect_1, self.type_rect_2,
-                      self.dmax_symbol_rect), (255, 255, 0)
-            )
+                img, (
+                    self.type_rect_1, self.type_rect_2, self.menu_rect_1,
+                    self.menu_rect_2, self.menu_rect_3, self.menu_rect_4,
+                    self.dmax_symbol_rect, self.battle_text_rect
+                ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
                 img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                      self.item_rect_4, self.item_rect_5), (0, 255, 0)
-            )
+                      self.item_rect_4, self.item_rect_5), (0, 255, 0))
 
         # Return annotated image.
         return img
@@ -276,62 +286,51 @@ class DAController(SwitchController):
             pokemon_names.append(
                 self.read_text(
                     image, self.sel_rect_3, threshold=False,
-                    segmentation_mode='--psm 3'
-                ).strip())
+                    segmentation_mode='--psm 3').strip())
             abilities.append(
                 self.read_text(
                     image, self.abil_rect_1, threshold=False, invert=True,
-                    segmentation_mode='--psm 8'
-                ).strip())
+                    segmentation_mode='--psm 8').strip())
             abilities.append(
                 self.read_text(
                     image, self.abil_rect_2, threshold=False,
-                    segmentation_mode='--psm 8'
-                ).strip())
+                    segmentation_mode='--psm 8').strip())
             abilities.append(
                 self.read_text(
                     image, self.abil_rect_3, threshold=False,
-                    segmentation_mode='--psm 3'
-                ).strip())
+                    segmentation_mode='--psm 3').strip())
             types = ['', '', '']
             moves.append(
                 self.read_text(
                     image, self.moves_rect_1, threshold=False,
-                    segmentation_mode='--psm 4'
-                ).strip())
+                    segmentation_mode='--psm 4').strip())
             moves.append(
                 self.read_text(
                     image, self.moves_rect_2, threshold=False,
-                    segmentation_mode='--psm 4'
-                ).strip())
+                    segmentation_mode='--psm 4').strip())
             moves.append(
                 self.read_text(
                     image, self.moves_rect_3, threshold=False,
-                    segmentation_mode='--psm 4'
-                ).strip())
+                    segmentation_mode='--psm 4').strip())
         elif stage == 'catch':
             pokemon_names.append(
                 self.read_text(
                     image, self.sel_rect_4, threshold=False,
-                    segmentation_mode='--psm 3'
-                ).strip().split('\n')[-1])
+                    segmentation_mode='--psm 3').strip().split('\n')[-1])
             abilities.append(
                 self.read_text(
                     image, self.abil_rect_4, threshold=False,
-                    segmentation_mode='--psm 3'
-                ).strip())
+                    segmentation_mode='--psm 3').strip())
             types.append('')
             moves.append(
                 self.read_text(
                     image, self.moves_rect_4, threshold=False,
-                    segmentation_mode='--psm 4'
-                ).strip())
+                    segmentation_mode='--psm 4').strip())
         elif stage == 'battle':
             pokemon_names.append(
                 self.read_text(
                     image, self.sel_rect_5, threshold=False, invert=False,
-                    segmentation_mode='--psm 8'
-                ).strip())
+                    segmentation_mode='--psm 8').strip())
             abilities.append('')
             type_1 = self.read_text(
                 image, self.type_rect_1, threshold=False, invert=True,
@@ -348,20 +347,91 @@ class DAController(SwitchController):
         for i in range(len(pokemon_names)):
             pokemon_list.append(
                 self.identify_pokemon(
-                    pokemon_names[i], abilities[i], types[i], moves[i])
-            )
+                    pokemon_names[i], abilities[i], types[i], moves[i]))
 
         # Return the list of Pokemon.
         return pokemon_list
+
+    def read_in_den_state(self) -> Optional[str]:
+        """Detect states encountered when traversing the den. Note that this
+        function returns the names of actions. If nothing is detected, None is
+        returned instead.
+        """
+
+        # Get a frame from the VideoCapture that we will check for the state.
+        img = self.get_frame()
+
+        # First, check if a battle started.
+        if self.check_rect_HSV_match(
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 250, img
+        ) and self.check_rect_HSV_match(
+            self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
+        ):
+            return 'battle'
+        # Otherwise, check for other text.
+        if self.check_rect_HSV_match(
+            self.den_text_rect, (0, 0, 0,), (180, 10, 255), 220, img
+        ):
+            text = self.read_text(img, self.den_text_rect, invert=True)
+            if re.search(self.phrases['BACKPACKER'], text):
+                return 'backpacker'
+            if re.search(self.phrases['SCIENTIST'], text):
+                return 'scientist'
+            if re.search(self.phrases['PATH'], text):
+                return 'path'
+        # else
+        return None
+
+    def read_in_battle_state(self) -> Optional[str]:
+        """Detect states encountered within battle, such as the Fight menu
+        appearing, a Pokemon fainting, et cetera. If nothing is detected, None
+        is returned instead.
+        """
+
+        # Get a frame from the VideoCapture that we will check for the state.
+        img = self.get_frame()
+
+        # First, check if the player was defeated.
+        if self.check_defeated(img):
+            return 'LOSS'
+
+        # Then, check for the presence of the Fight or Cheer menu.
+        if self.check_rect_HSV_match(
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 250, img
+        ):
+            if self.check_rect_HSV_match(
+                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
+            ):
+                return 'FIGHT'
+            elif self.check_rect_HSV_match(
+                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img
+            ):
+                return 'CHEER'
+        # Then, check for the presence of the Catch menu.
+        if self.check_rect_HSV_match(
+            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 200, img
+        ) and self.check_rect_HSV_match(
+            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
+        ):
+            return 'CATCH'
+        # Finally, check for other text.
+        if self.check_rect_HSV_match(
+            self.battle_text_rect, (0, 0, 0,), (180, 5, 255), 250, img
+        ):
+            text = self.read_text(img, self.battle_text_rect, invert=True)
+            if re.search(self.phrases['FAINT'], text):
+                return 'FAINT'
+            # TODO: Add handlers for other events (weather etc.).
+        # else
+        return None
 
     def check_shiny(self) -> bool:
         """Detect whether a Pokemon is shiny by looking for the icon in the
         summary screen.
         """
 
-        return self.check_rect_HSV_match(self.shiny_rect, (0, 100, 20),
-                                         (180, 255, 255), 10
-                                         )
+        return self.check_rect_HSV_match(
+            self.shiny_rect, (0, 100, 20), (180, 255, 255), 10)
 
     def check_stats(self) -> bool:
         """Detect whether a Pokemon has perfect stats.
@@ -385,9 +455,18 @@ class DAController(SwitchController):
                     nature_minus_expected = True
                     expected_attack = expected_attack.strip('-')
                 if expected_attack in read_attack:
-                    if ((nature_minus_expected and self.check_rect_HSV_match(self.attack_label_rect, (80, 30, 0), (110, 255, 255), 10))
-                       or (nature_plus_expected and self.check_rect_HSV_match(self.attack_label_rect, (150, 30, 0), (180, 255, 255), 10))
-                       or (not nature_minus_expected and not nature_plus_expected)):
+                    if ((
+                        nature_minus_expected and self.check_rect_HSV_match(
+                            self.attack_label_rect, (80, 30, 0),
+                            (110, 255, 255), 10)) or (
+                            nature_plus_expected and self.check_rect_HSV_match(
+                                self.attack_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)
+                        )
+                        or (
+                            not nature_minus_expected
+                            and not nature_plus_expected)
+                    ):
                         is_attack_matching = True
 
             if is_attack_matching:
@@ -434,10 +513,10 @@ class DAController(SwitchController):
         return self.check_rect_HSV_match(
             self.dmax_symbol_rect, (0, 0, 200), (180, 50, 255), 10)
 
-    def check_defeated(self) -> bool:
+    def check_defeated(self, img: Image = None) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
         if not self.check_rect_HSV_match(
-            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250
+            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250, img
         ):
             return False
 

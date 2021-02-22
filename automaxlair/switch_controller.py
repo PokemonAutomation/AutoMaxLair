@@ -34,6 +34,7 @@ class SwitchController:
 
     def __init__(self, config, log_name: str, actions):
         # Zero the start time and fetch the logger.
+        self.window_name = 'SwitchController Output'
         self.start_date = datetime.now()
         self.log_name = log_name
         self.logger = logging.getLogger(self.log_name)
@@ -83,6 +84,7 @@ class SwitchController:
         """On destruction, release the serial port and video capture."""
         self.cap.release()
         self.com.close()
+        cv2.destroyAllWindows()
 
     def _button_control_task(self):
         """Loop called by a thread which handles the main button detecting and
@@ -93,8 +95,9 @@ class SwitchController:
             # Note that this task holds the lock by default but drops it while
             # waiting for Tesseract to respond or while delaying after a button
             # push.
-            with self.lock:
-                self.stage = self.actions[self.stage](self)
+            if self.stage is not None:
+                with self.lock:
+                    self.stage = self.actions[self.stage](self)
 
     def event_loop(self):
         """Method called to kick off the event loop. Note that this method is
@@ -122,7 +125,10 @@ class SwitchController:
             time.sleep(0.01)
 
             # Tell the button control thread to quit if the Q key is pressed.
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if (
+                (cv2.waitKey(1) & 0xFF == ord('q'))
+                or cv2.getWindowProperty(self.window_name, 0) == -1
+            ):
                 self.exit_flag.set()
                 # After setting the exit flag, we need to wait for the button
                 # control thread to exit because it only checks the flag at the
@@ -213,7 +219,8 @@ class SwitchController:
         rect: Rectangle,
         lower_threshold: Tuple[int, int, int],
         upper_threshold: Tuple[int, int, int],
-        mean_value_threshold: float
+        mean_value_threshold: float,
+        img: Image = None
     ) -> bool:
         """Check a specified section of the screen for values within a certain
         HSV range.
@@ -221,12 +228,14 @@ class SwitchController:
 
         # Fetch, convert, crop, and threshold image so the feature of interest
         # is white (value 255) and everything else appears black (0)
-        img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
+        if img is None:
+            img = self.get_frame()
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
                            round(rect[0][0] * w):round(rect[1][0] * w)]
-        measured_value = cv2.inRange(cropped_area, lower_threshold,
-                                     upper_threshold).mean()
+        measured_value = cv2.inRange(
+            cropped_area, lower_threshold, upper_threshold).mean()
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
@@ -326,7 +335,7 @@ class SwitchController:
             i += 1
 
         # Display
-        cv2.imshow('Output', frame)
+        cv2.imshow(self.window_name, frame)
 
         if log or screenshot:
             # Save a screenshot
@@ -335,7 +344,8 @@ class SwitchController:
                 f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
 
     def send_discord_message(
-        self, ping_yourself: bool, text: str, path_to_picture: str) -> None:
+        self, ping_yourself: bool, text: str, path_to_picture: str
+    ) -> None:
         """Send a notification via Discord."""
         # Do nothing if user did not setup the Discord information.
         if self.webhook_id == '' or self.webhook_token == '' or (

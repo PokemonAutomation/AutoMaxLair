@@ -127,20 +127,10 @@ def detect(ctrlr) -> str:
     #
     # This function returns directly when those conditions are found.
     while True:
-        text = ctrlr.read_text(
-            ctrlr.get_frame(), ((0, 0.6), (1, 1)), invert=True)
-        if re.search(ctrlr.phrases['FIGHT'], text):
-            # Battle has started and the move selection screen is up
-            return 'battle'
-        elif re.search(ctrlr.phrases['BACKPACKER'], text):
-            # Backpacker encountered so choose an item
-            return 'backpacker'
-        elif re.search(ctrlr.phrases['SCIENTIST'], text):
-            # Scientist appeared to deal with that
-            return 'scientist'
-        elif re.search(ctrlr.phrases['PATH'], text):
-            # Fork in the path appeared to choose where to go
-            return 'path'
+        state = ctrlr.read_in_den_state()
+        if state is not None:
+            return state
+        ctrlr.push_button(None, 0.1)
 
 
 def battle(ctrlr) -> str:
@@ -154,19 +144,18 @@ def battle(ctrlr) -> str:
     # This function returns directly when those conditions are found.
     while True:
         # Read text from the bottom section of the screen.
-        text = ctrlr.read_text(
-            ctrlr.get_frame(), ((0, 0.6), (1, 1)), invert=True)
+        battle_state = ctrlr.read_in_battle_state()
 
         # Check the text for key phrases that inform the bot what to do next.
-        if re.search(ctrlr.phrases['CATCH'], text):
+        if battle_state == 'CATCH':
             ctrlr.log('Battle finished.', 'DEBUG')
             run.reset_stage()
             return 'catch'
-        if re.search(ctrlr.phrases['FAINT'], text):
+        if battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
             ctrlr.push_button(None, 4)
-        elif ctrlr.check_defeated():
+        elif battle_state == 'LOSS':
             ctrlr.log('You lose and the battle is finished.')
             run.lives -= 1
             if run.lives != 0:
@@ -175,14 +164,14 @@ def battle(ctrlr) -> str:
             run.reset_stage()
             ctrlr.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence.
-        if re.search(ctrlr.phrases['CHEER'], text):
+        if battle_state == 'CHEER':
             ctrlr.log('Cheering for your teammates.', 'DEBUG')
             if run.pokemon.dynamax:
                 run.pokemon.dynamax = False
                 run.move_index = 0
                 run.dmax_timer = 0
             ctrlr.push_buttons((b'a', 1.5), (b'b', 1 + VIDEO_EXTRA_DELAY))
-        elif re.search(ctrlr.phrases['FIGHT'], text):
+        elif battle_state == 'FIGHT':
             # If we got the pokemon from the scientist, we don't know what
             # our current pokemon is, so check it first.
             if run.pokemon is None:
@@ -233,7 +222,7 @@ def battle(ctrlr) -> str:
                 run.dmax_timer -= 1
 
             # Navigate to the move selection screen.
-            ctrlr.push_buttons((b'b', 2), (b'a', 2 + VIDEO_EXTRA_DELAY))
+            ctrlr.push_button(b'a', 2 + VIDEO_EXTRA_DELAY)
 
             # Then, check whether Dynamax is available.
             # Note that a dmax_timer value of -1 indicates that the player's
@@ -295,7 +284,7 @@ def battle(ctrlr) -> str:
             )
         else:
             # Press B which can speed up dialogue
-            ctrlr.push_button(b'b', 0.005)
+            ctrlr.push_button(b'b', 0.1)
 
 
 def catch(ctrlr) -> str:
