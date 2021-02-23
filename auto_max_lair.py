@@ -9,7 +9,6 @@ import configparser
 import logging
 import logging.handlers
 import os
-import re
 import sys
 
 from datetime import datetime
@@ -151,7 +150,7 @@ def battle(ctrlr) -> str:
             ctrlr.log('Battle finished.', 'DEBUG')
             run.reset_stage()
             return 'catch'
-        if battle_state == 'FAINT':
+        elif battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
             ctrlr.push_button(None, 4)
@@ -164,7 +163,7 @@ def battle(ctrlr) -> str:
             run.reset_stage()
             ctrlr.push_button(None, 7)
             return 'select_pokemon'  # Go to quit sequence.
-        if battle_state == 'CHEER':
+        elif battle_state == 'CHEER':
             ctrlr.log('Cheering for your teammates.', 'DEBUG')
             if run.pokemon.dynamax:
                 run.pokemon.dynamax = False
