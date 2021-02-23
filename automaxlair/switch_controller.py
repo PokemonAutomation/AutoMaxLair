@@ -240,6 +240,22 @@ class SwitchController:
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
 
+    def match_template(
+        self,
+        img: Image,
+        template: Image,
+    ) -> Tuple[float, Tuple[int, int]]:
+        """Search for a certain pattern within an image. Return the maximum
+        match value and the coordinates of the best location.
+        """
+
+        # Use OpenCV to get a best match and the location of the match.
+        result = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+        __, max_val, __, max_loc = cv2.minMaxLoc(result, None)
+
+        return max_val, max_loc
+        return 0, (0, 0)
+
     def push_button(
         self,
         char: Optional[str],

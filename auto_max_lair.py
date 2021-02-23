@@ -9,7 +9,6 @@ import configparser
 import logging
 import logging.handlers
 import os
-import re
 import sys
 
 from datetime import datetime
@@ -43,7 +42,7 @@ LOG_NAME = ''.join(
     (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
 
 
-def initialize(ctrlr) -> str:
+def initialize(__) -> str:
     """Placeholder. Immediately enter the join stage."""
     return 'join'
 
@@ -100,7 +99,16 @@ def join(ctrlr) -> str:
     # DEBUG: take some screenshots of the path
     if ctrlr.enable_debug_logs:
         # ctrlr.display_results(screenshot=True)
-        ctrlr.push_button(b'8', 3.5, 3)
+        ctrlr.push_button(b'8', 3.5, 0.6)
+        # ctrlr.display_results(screenshot=True)
+        # DEBUG: read some type icons
+        results = ctrlr.identify_path_pokemon()
+        for key, result in results.items():
+            ctrlr.log(
+                f'Type symbol {key} found with value {result[0]:.3f} '
+                f'at position ({result[1][0]}, {result[1][1]})', 'DEBUG'
+            )
+        ctrlr.push_button(b'8', 3.5, 0.6)
         # ctrlr.display_results(screenshot=True)
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'

@@ -10,10 +10,12 @@ den.
 #       Created 2020-11-20
 
 import re
+import pickle
 
 from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
 
+import cv2
 import enchant
 
 from .pokemon_classes import Pokemon
@@ -120,6 +122,12 @@ class DAController(SwitchController):
         self.speed_stat_rect = ((0.22, 0.54), (0.26, 0.58))
         self.speed_label_rect = ((0.20, 0.58), (0.28, 0.63))
 
+        # Load image assets.
+        with open(
+            self.config['pokemon_data_paths']['type_icon_path'], 'rb'
+        ) as image_file:
+            self.type_icons = pickle.load(image_file)
+
         # Validate starting values.
         if self.mode not in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
@@ -144,7 +152,7 @@ class DAController(SwitchController):
 
     def get_frame(
         self,
-        rectangle_set: str = '',
+        rectangle_set: Optional[str] = None,
         resize: bool = False
     ) -> Image:
         """Get an annotated image of the current Switch output."""
@@ -153,7 +161,7 @@ class DAController(SwitchController):
         img = super().get_frame(resize=resize)
 
         # Draw rectangles around detection areas if debug logs are on.
-        if not self.enable_debug_logs:
+        if not self.enable_debug_logs or rectangle_set is None:
             pass
         elif rectangle_set == 'detect':
             self.outline_regions(
@@ -196,6 +204,42 @@ class DAController(SwitchController):
 
         # Return annotated image.
         return img
+
+    def read_path_information(
+        self,
+        stage_index: int
+    ) -> None:
+        """Read information about the path through the lair. This method should
+        be called three times, once at each of the three stages of bosses.
+        """
+        # TODO: Actually implement.
+        img = self.get_frame(resize=False)
+
+    def identify_path_pokemon(
+        self,
+        threshold_match_value: float = 0.85,
+        img: Optional[Image] = None
+    ) -> Dict[str, Tuple[float, Tuple[int, int]]]:
+        """Read type symbols to idenfity path shape and potential bosses."""
+        if img is None:
+            img = self.get_frame(resize=False)
+        img_thresholded = cv2.inRange(
+            cv2.cvtColor(img, cv2.COLOR_BGR2HSV), (0, 0, 200), (180, 50, 255))
+
+        # Check every type image for a match within the image
+        # TODO: try to look at the shadow of the Pokemon for more hints
+        match_results = {}
+        for type_id in (
+            'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting',
+            'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
+            'dragon', 'steel', 'dark', 'fairy'
+        ):
+            result = self.match_template(
+                img_thresholded, self.type_icons[type_id])
+            if result[0] > threshold_match_value:
+                match_results[type_id] = result
+
+        return match_results
 
     def identify_pokemon(
         self,
