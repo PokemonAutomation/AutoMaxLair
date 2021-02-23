@@ -172,10 +172,22 @@ class SwitchController:
             self.outline_region(image, rect, bgr, thickness)
 
     def get_frame(self, resize: bool = False) -> Image:
-        """Get an annotated image of the current Switch output."""
+        """Get an image of the current Switch output. This method will usually
+        be expanded upon by inheriting classes.
+        """
 
-        # Return image from the VideoCaptureHelper object.
         return self.cap.read(resize=resize)
+
+    def get_image_slice(self, img: Image, section: Rectangle) -> Image:
+        """Return the portion of the input image defined by the input
+        rectangle. Note the coordinates range from (0, 0) at the top left
+        corner to (1, 1) at the bottom right corner.
+        """
+
+        h, w = img.shape[:2]
+        img = img[round(section[0][1] * h):round(section[1][1] * h),
+                  round(section[0][0] * w):round(section[1][0] * w)]
+        return img
 
     def read_text(
         self,
@@ -190,14 +202,12 @@ class SwitchController:
         """
 
         # Process image according to instructions
-        h, w = img.shape[:2]
         if threshold:
             img = cv2.inRange(cv2.cvtColor(
                 img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
-        img = img[round(section[0][1] * h):round(section[1][1] * h),
-                  round(section[0][0] * w):round(section[1][0] * w)]
+        img = self.get_image_slice(img, section)
 
         # Then, read text using Tesseract.
         # Note that we need to check for the main thread exiting here.
