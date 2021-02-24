@@ -8,6 +8,8 @@ Adventure in Pokemon Sword and Shield: the Crown Tundra.
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
+from typing import List
+
 import jsonpickle
 
 
@@ -19,12 +21,16 @@ class MaxLairInstance:
     # pylint: disable=too-many-instance-attributes
     # This class is a storage container, so having many attributes is sensible.
 
-    def __init__(self, data_paths) -> None:
+    def __init__(self, data_paths: List) -> None:
         self.pokemon = None
         self.HP = 1  # 1 = 100%
         self.num_caught = 0
         self.caught_pokemon = []
         self.lives = 4
+        self.path_pokemon_types = [
+            [None, None], [None, None, None, None], [None, None, None, None]]
+        self.path_type = None
+
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
         with open(data_paths[0], 'r', encoding='utf8') as file:
@@ -48,3 +54,20 @@ class MaxLairInstance:
             if self.pokemon.name_id == 'ditto':
                 self.pokemon = self.rental_pokemon['ditto']
             self.pokemon.dynamax = False
+
+    def update_pokemon_types(self, type_data: List, index: int) -> None:
+        """Update the internal path storage."""
+        self.path_pokemon_types[index] = type_data
+
+        if index == 1:
+            y_values = []
+            for result in type_data:
+                y_values.append(result[1][1][1])
+            max_val = max(y_values)
+            min_val = min(y_values)
+            diff = max_val - min_val
+            # Standard values provided by MaruBatsu72
+            standard_vals = {135: '2x2', 180: '2x3', 65: '3x2'}
+            closest_match = min(
+                standard_vals.keys(), key=lambda x: abs(x-diff))
+            self.path_type = standard_vals[closest_match]
