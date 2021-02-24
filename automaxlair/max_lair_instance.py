@@ -94,6 +94,8 @@ class MaxLairInstance:
         self.dmax_timer = -1
         self.opponent = None
         self.dynamax_available = False
+        self.weather: Weather = None
+        self.terrain: Terrain = None
         if self.pokemon is not None:
             if self.pokemon.name_id == 'ditto':
                 self.pokemon = self.rental_pokemon['ditto']
@@ -182,3 +184,89 @@ class _BossNode(object):
         self.row = row
         self.col = col
         self.downstream_nodes = downstream_nodes
+
+
+class Weather(object):
+    clear = 0
+    sunlight = 1
+    rain = 2
+    sandstorm = 3
+    hail = 4
+
+    def __init__(
+        self
+    ) -> None:
+        self.weather_index = 0
+
+    def is_clear(self) -> bool:
+        return self.weather_index == self.clear
+
+    def is_sunlight(self) -> bool:
+        return self.weather_index == self.sunlight
+
+    def is_rain(self) -> bool:
+        return self.weather_index == self.rain
+
+    def is_sandstorm(self) -> bool:
+        return self.weather_index == self.sandstorm
+
+    def is_hail(self) -> bool:
+        return self.weather_index == self.hail
+
+    def set_clear(self) -> bool:
+        self.weather_index = self.clear
+
+    def set_sunlight(self) -> bool:
+        self.weather_index = self.sunlight
+
+    def set_rain(self) -> bool:
+        self.weather_index = self.rain
+
+    def set_sandstorm(self) -> bool:
+        self.weather_index = self.sandstorm
+
+    def set_hail(self) -> bool:
+        self.weather_index = self.hail
+
+
+class Terrain(object):
+    clear = 0
+    electric = 1
+    grassy = 2
+    misty = 3
+    psychic = 4
+
+    def __init__(
+        self
+    ) -> None:
+        self.terrain_index = 0
+
+    def is_clear(self) -> bool:
+        return self.terrain_index == self.clear
+
+    def is_electric(self) -> bool:
+        return self.terrain_index == self.electric
+
+    def is_grassy(self) -> bool:
+        return self.terrain_index == self.grassy
+
+    def is_misty(self) -> bool:
+        return self.terrain_index == self.misty
+
+    def is_psychic(self) -> bool:
+        return self.terrain_index == self.psychic
+
+    def set_clear(self) -> bool:
+        self.terrain_index = self.clear
+
+    def set_electric(self) -> bool:
+        self.weather_index = self.electric
+
+    def set_grassy(self) -> bool:
+        self.weather_index = self.grassy
+
+    def set_misty(self) -> bool:
+        self.weather_index = self.misty
+
+    def set_psychic(self) -> bool:
+        self.weather_index = self.psychic

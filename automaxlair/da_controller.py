@@ -490,8 +490,30 @@ class DAController(SwitchController):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
                 return 'FAINT'
-            # TODO: Add handlers for other events (weather etc.).
-        # else
+            elif re.search(self.phrases['WEATHER_SUNLIGHT'], text):
+                self.current_run.weather.set_sunlight()
+                self.log('WEATHER_SUNLIGHT has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_RAIN'], text):
+                self.current_run.weather.set_rain()
+                self.log('WEATHER_RAIN has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_SANDSTORM'], text):
+                self.current_run.weather.set_sandstorm()
+                self.log('WEATHER_SANDSTORM has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_HAIL'], text):
+                self.current_run.weather.set_hail()
+                self.log('WEATHER_HAIL has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_ELECTRIC'], text):
+                self.current_run.terrain.set_electric()
+                self.log('TERRAIN_ELECTRIC has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_GRASSY'], text):
+                self.current_run.terrain.set_grassy()
+                self.log('TERRAIN_GRASSY has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_MISTY'], text):
+                self.current_run.terrain.set_misty()
+                self.log('TERRAIN_MISTY has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_PSYCHIC'], text):
+                self.current_run.terrain.set_misty()
+                self.log('TERRAIN_PSYCHIC has been detected.', 'DEBUG')
         return None
 
     def check_shiny(self) -> bool:
