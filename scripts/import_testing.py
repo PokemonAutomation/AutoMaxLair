@@ -80,6 +80,10 @@ def main():
     matchup_scoring.print_matchup_summary(
         salazzle, boss_pokemon['kartana'], rental_pokemon
     )
+    print('Sap Sipper:')
+    matchup_scoring.print_matchup_summary(
+        rental_pokemon['tsareena'], rental_pokemon['azumarill'], rental_pokemon
+    )
 
 
 if __name__ == '__main__':

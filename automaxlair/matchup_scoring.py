@@ -68,20 +68,20 @@ def ability_damage_multiplier(
         elif move_type == 'water' and defender.ability_name_id in (
             'water-absorb', 'storm-drain', 'dry-skin'
         ):
-            return_val = 0.0
+            return_val = -1.0
         elif move_type == 'fire':
             if defender.ability_name_id == 'flash-fire':
-                return_val = 0.0
+                return_val = -1.0
             elif defender.ability_name_id in ('fluffy', 'dry-skin'):
                 return_val = 2.0
             elif defender.ability_name_id in ('thick-fat', 'heatproof'):
                 return_val = 0.5
         elif move_type == 'grass' and defender.ability_name_id == 'sap-sipper':
-            return_val = 0.0
+            return_val = -1.0
         elif move_type == 'electric' and defender.ability_name_id in (
             'lightning-rod', 'motor-drive', 'volt-absorb'
         ):
-            return_val = 0.0
+            return_val = -1.0
         elif move_type == 'ice' and defender.ability_name_id == 'thick-fat':
             return_val = 0.5
     elif attacker.ability_name_id == 'tinted-lens' and type_damage_multiplier(

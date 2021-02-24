@@ -85,7 +85,7 @@ class MaxLairInstance:
             fork_symbols[-4],
             '       START'
         ]
-        
+
         return'\n'.join(output)
 
     def reset_stage(self) -> None:
@@ -105,7 +105,7 @@ class MaxLairInstance:
         index: int
     ) -> None:
         """Update the internal path storage."""
-    
+
         col_index = 0
         for result in type_data:
             row = index

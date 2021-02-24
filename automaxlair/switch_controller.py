@@ -264,7 +264,6 @@ class SwitchController:
         __, max_val, __, max_loc = cv2.minMaxLoc(result, None)
 
         return max_val, max_loc
-        return 0, (0, 0)
 
     def push_button(
         self,
