@@ -14,7 +14,7 @@
 # atmega16u2 for Arduino UNO R3
 # atmega32u4 for Arduino Micro/Teensy 2.0
 
-MCU          = atmega32u4
+MCU          = atmega16u2
 ARCH         = AVR8
 F_CPU        = 16000000
 F_USB        = $(F_CPU)

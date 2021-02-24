@@ -150,7 +150,7 @@ class DAController(SwitchController):
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
-        self.current_run = MaxLairInstance(self.data_paths)
+        self.current_run = MaxLairInstance(self.boss, self.data_paths)
 
     def reset_stage(self) -> None:
         """Reset after a battle."""
@@ -224,21 +224,21 @@ class DAController(SwitchController):
 
         # Get a subset of images relevant to the stage index
         images = []
-        if stage_index == 0:
+        if stage_index == 1:
             images.append(self.get_image_slice(img, self.paths_2_1_rect))
             images.append(self.get_image_slice(img, self.paths_2_2_rect))
-        elif stage_index in (1, 2):
+        elif stage_index in (2, 3):
             images.append(self.get_image_slice(img, self.paths_4_1_rect))
             images.append(self.get_image_slice(img, self.paths_4_2_rect))
             images.append(self.get_image_slice(img, self.paths_4_3_rect))
             images.append(self.get_image_slice(img, self.paths_4_4_rect))
         else:
-            raise ValueError('Parameter "stage_index" must be 0, 1, or 2')
+            raise ValueError('Parameter "stage_index" must be 1, 2, or 3')
 
         type_data = []
         for img in images:
             type_data.append(self.identify_path_pokemon(img))
-        self.current_run.update_pokemon_types(type_data, stage_index)
+        self.current_run.update_paths(type_data, stage_index)
 
     def identify_path_pokemon(
         self,

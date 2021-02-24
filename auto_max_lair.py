@@ -98,14 +98,17 @@ def join(ctrlr) -> str:
 
     # DEBUG: take some screenshots of the path
     if ctrlr.enable_debug_logs:
-        ctrlr.read_path_information(0)
-        ctrlr.push_button(b'8', 3.5, 0.7)
         ctrlr.read_path_information(1)
-        ctrlr.display_results(screenshot=True)
+        # ctrlr.display_results(screenshot=True)
+        ctrlr.push_button(b'8', 3.5, 0.7)
+        ctrlr.read_path_information(2)
+        # ctrlr.display_results(screenshot=True)
         ctrlr.log(f'Path type identified as: {run.path_type}')
         ctrlr.push_button(b'8', 3.5, 0.6)
-        ctrlr.read_path_information(2)
-        ctrlr.log(str(run.path_pokemon_types), 'DEBUG')
+        ctrlr.read_path_information(3)
+        # ctrlr.display_results(screenshot=True)
+        ctrlr.log(str(run), 'DEBUG')
+            print(e)
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
