@@ -108,7 +108,6 @@ def join(ctrlr) -> str:
         ctrlr.read_path_information(3)
         # ctrlr.display_results(screenshot=True)
         ctrlr.log(str(run), 'DEBUG')
-            print(e)
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
