@@ -309,7 +309,12 @@ def calculate_move_score(
         teammates[popped_defender.name_id] = popped_defender
 
     # Return the score
-    return dealt_damage / received_damage
+    try:
+        return dealt_damage / received_damage
+    except ZeroDivisionError:
+        # just in case received damage is zero, the score is indefinite
+        # I'm setting it to 1.0 just for convenience
+        return 1.0
 
 
 def evaluate_matchup(
