@@ -104,15 +104,22 @@ def join(ctrlr) -> str:
     ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
-    all_paths = run.get_paths()
-    for path_ in all_paths:
-        ctrlr.log(list(map(str, path_)), 'DEBUG')
-    # TODO: choose the best path. Temporarily choose the last path to test
-    # navigation.
-    run.target_path, path_score = (all_paths[-1], 1)
+    all_paths_str = run.get_paths(truncate=True, name_only=True)
+    print(all_paths_str)
+
+    # Choose the best path out of the options.
+    # TODO: Improve path selection algorithm.
+    best_path_index, target_path_str, score_list = run.path_tree.get_best_path(
+        run.boss, all_paths_str
+    )
+    for i, path_str in enumerate(all_paths_str):
+        ctrlr.log(
+            f'Path at index {i} has score: {score_list[i]:.3f} and sequence: '
+            f'{path_str}', 'DEBUG')
+    run.target_path = run.get_paths()[best_path_index]
     ctrlr.log(
-        f'Target path selected with score {path_score:.3f}: '
-        f'{list(map(str, run.target_path))}.')
+        f'Target path at index {best_path_index} selected with score '
+        f'{score_list[best_path_index]:.3f}: {target_path_str}.')
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 

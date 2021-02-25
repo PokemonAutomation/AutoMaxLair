@@ -58,7 +58,8 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['Rental_Pokemon'],
             config['pokemon_data_paths']['Boss_Matchup_LUT'],
             config['pokemon_data_paths']['Rental_Matchup_LUT'],
-            config['pokemon_data_paths']['Rental_Pokemon_Scores']
+            config['pokemon_data_paths']['Rental_Pokemon_Scores'],
+            config['pokemon_data_paths']['path_tree_path']
         )
 
         self.check_attack_stat = (

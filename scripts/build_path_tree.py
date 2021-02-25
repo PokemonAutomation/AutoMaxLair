@@ -6,7 +6,7 @@ simple score values.
 """
 
 import sys
-from os.path import abspath, dirname
+from os.path import abspath, dirname, join
 
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
@@ -29,16 +29,16 @@ def argmax_index(values):
 
 if __name__ == "__main__":
 
-    with open(base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8') as file:
+    with open(join(base_dir, 'data', 'rental_pokemon.json'), 'r', encoding='utf8') as file:
         rental_pokemon = jsonpickle.decode(file.read())
 
-    with open(base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8') as file:
+    with open(join(base_dir, 'data', 'boss_pokemon.json'), 'r', encoding='utf8') as file:
         boss_pokemon = jsonpickle.decode(file.read())
 
     tree = PathTree(rental_pokemon=rental_pokemon, boss_pokemon=boss_pokemon)
 
     # save the tree to pickle
-    with open(base_dir + '/data/path_tree.json', 'w', encoding='utf8') as file:
+    with open(join(base_dir, 'data', 'path_tree.json'), 'w', encoding='utf8') as file:
         file.write(jsonpickle.encode(tree, indent=4))
 
     legendary = 'articuno'

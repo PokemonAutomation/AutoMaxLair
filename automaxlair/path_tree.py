@@ -1,10 +1,13 @@
 import logging
+import pickle
 import sys
 import os
+
+from typing import List, Tuple
 # We need to import some things from the parent directory.
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(1, base_dir)
-sys.path.insert(1, base_dir + '\\automaxlair')
+sys.path.insert(1, os.path.join(base_dir, 'automaxlair'))
 
 # Needs to be lower than path insert.
 from automaxlair import matchup_scoring  # noqa: E402
@@ -95,6 +98,16 @@ class PathTree():
 
         else:
             return self.base_node.traverse_node([legendary] + path, 0)
+
+    def get_best_path(
+        self, legendary: str, path_list: List[List[str]]
+    ) -> Tuple[float, List[str], List[float]]:
+        """Choose the best path out of a list of paths."""
+        path_scores = []
+        for path in path_list:
+            path_scores.append(self.score_path(legendary, path))
+        best_index = path_scores.index(max(path_scores))
+        return best_index, path_list[best_index], path_scores
 
     def _build_tree(self, rental_pokemon, boss_pokemon):
         self.base_node = TreeNode(legendary=True)

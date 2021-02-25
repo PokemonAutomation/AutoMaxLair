@@ -86,7 +86,9 @@ class MaxLairInstance:
             self.rental_matchups = jsonpickle.decode(file.read())
         with open(data_paths[4], 'r', encoding='utf8') as file:
             self.rental_scores = jsonpickle.decode(file.read())
-
+        with open(data_paths[5], 'r', encoding='utf8') as file:
+            self.path_tree = jsonpickle.decode(file.read())
+        
     def __str__(self) -> str:
         """Print information about the current instance."""
         fork_symbols = [
@@ -137,9 +139,31 @@ class MaxLairInstance:
                 self.pokemon = self.rental_pokemon['ditto']
             self.pokemon.dynamax = False
 
-    def get_paths(self) -> List[List[BossNode]]:
+    def get_paths(
+        self,
+        truncate: bool = False,
+        name_only: bool = False
+    ) -> List[List[BossNode]]:
         """Get a list of all paths through the den."""
-        return self.current_node.get_all_downstream_paths()
+        paths = self.current_node.get_all_downstream_paths()
+
+        if truncate:
+            # Strip out path start and boss.
+            new_paths = []
+            for path in paths:
+                new_paths.append([
+                    node for node in path if node.name not in (
+                        'START', self.boss)])
+            paths = new_paths
+        
+        if name_only:
+            # Return a list of strings inatead of object references.
+            new_paths = []
+            for path in paths:
+                new_paths.append(list(map(str, path)))
+            paths = new_paths
+
+        return paths
 
     def get_next_fork_offset(self) -> int:
         """Check how many times the bot should move the cursor over in order
