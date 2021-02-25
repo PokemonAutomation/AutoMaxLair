@@ -146,7 +146,9 @@ class Pokemon():
         for i in range(len(self.types)):
             types.append(self.types[i].get(language, self.type_ids[i]))
         return types
-
+    
+    def __repr__(self) -> str:
+        return f"<'{self.name_id}' Pokemon Object>"
 
 class Move():
     def __init__(self, id_num: int, name_id: str, names: Dict[str, str],
@@ -195,3 +197,6 @@ class Move():
         print(f'Spread move: {self.is_spread}')
         print(f'Correction factor: {self.correction_factor}')
         print(f'Adjusted power: {self.power}')
+    
+    def __repr__(self) -> str:
+        return f"<'{self.name_id}' Move object>"
