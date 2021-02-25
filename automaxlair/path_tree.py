@@ -44,6 +44,9 @@ class PathTree():
 
     def __init__(self, load_tree_path=None, rental_pokemon=None, boss_pokemon=None):
 
+        # TREE DEPTH OVERRIDE
+        self.tree_depth = 1
+
         # find all of the pokemon by type, both primary and secondary
         if rental_pokemon is not None:
             self.rental_by_type = {}
@@ -75,7 +78,23 @@ class PathTree():
         boss: 'articuno'
         path: ['type1', 'type2', 'type3']
         """
-        return self.base_node.traverse_node([legendary] + path, 0)
+
+        if self.tree_depth == 1:
+            legendary_tree_node = self.base_node.get_node_for_key(legendary)
+
+            # then build up the scores and scale them based on position
+            outscore = 0.0
+            for ii, type_name in enumerate(path):
+                base_score = legendary_tree_node.get_node_for_key(type_name)
+                # the formula for now helps weight the order you find
+                # the type in, so deeper paths might be more useful
+                # since you get a PP restore *and* type advantage
+                outscore += (1.0 + (ii * 0.1)) * base_score
+            
+            return outscore
+
+        else:
+            return self.base_node.traverse_node([legendary] + path, 0)
 
     def _build_tree(self, rental_pokemon, boss_pokemon):
         self.base_node = TreeNode(legendary=True)
@@ -106,15 +125,18 @@ class PathTree():
             type_score = self.calculate_score(possible_pokemon, legendary)
             # there are only a total of three paths, so we only add nodes to the tree
             # if we're less than 2 (ex. 0 and 1 for first two paths)
-            if path_num < 2:
-                # then pass through the tree to the next node through a recursive process to
-                # build up the tree
-                current_node.add_node(type_name, self._build_node_for_types(
-                    current_score=current_score+type_score, legendary=legendary, rental_pokemon=rental_pokemon,
-                    path_num=path_num+1
-                ))
-            else:
-                current_node.add_node(type_name, current_score + type_score)
+            # if path_num < 2:
+            #     # then pass through the tree to the next node through a recursive process to
+            #     # build up the tree
+            #     current_node.add_node(type_name, self._build_node_for_types(
+            #         current_score=current_score+type_score, legendary=legendary, rental_pokemon=rental_pokemon,
+            #         path_num=path_num+1
+            #     ))
+            # else:
+            #     current_node.add_node(type_name, current_score + type_score)
+            
+            # FOR NOW, NO RECURSION - TODO: modify algorithm for this to make sense
+            current_node.add_node(type_name, type_score)
 
         return current_node
 
@@ -148,3 +170,8 @@ class TreeNode:
             return self.hash_table[list_of_decisions[current_idx]].traverse_node(list_of_decisions, current_idx+1)
         else:
             return self.hash_table[list_of_decisions[current_idx]]
+        
+    def get_node_for_key(self, key):
+        # no matter what, this only returns what is assigned to the hash table
+        # for that particular key
+        return self.hash_table[key]

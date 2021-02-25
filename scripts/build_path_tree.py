@@ -5,13 +5,16 @@ to update store all path possiblities that might arise while returning
 simple score values.
 """
 
-import jsonpickle
-from scripts.package_pokemon import pokemon_from_txt
-from automaxlair.path_tree import PathTree
 import sys
-from os.path import dirname, abspath
+from os.path import abspath, dirname
+
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
+
+import jsonpickle
+from automaxlair.path_tree import PathTree
+
+from scripts.package_pokemon import pokemon_from_txt
 
 
 def argmax(pairs):
@@ -35,7 +38,7 @@ if __name__ == "__main__":
     tree = PathTree(rental_pokemon=rental_pokemon, boss_pokemon=boss_pokemon)
 
     # save the tree to pickle
-    with open(base_dir + '/data/path_tree.pickle', 'w', encoding='utf8') as file:
+    with open(base_dir + '/data/path_tree.json', 'w', encoding='utf8') as file:
         file.write(jsonpickle.encode(tree, indent=4))
 
     legendary = 'articuno'
@@ -43,10 +46,11 @@ if __name__ == "__main__":
     test_paths = [
         ['rock', 'rock', 'rock'],
         ['rock', 'fire', 'fighting'],
-        ['rock', 'normal', 'fighting'],
+        ['rock', 'normal', 'rock'],
         ['dark', 'fire', 'fighting'],
         ['ground', 'fire', 'water'],
-        ['water', 'electric', 'grass']
+        ['water', 'electric', 'grass'],
+        ['fire', 'rock', 'fire']
     ]
 
     path_scores = []
@@ -54,7 +58,9 @@ if __name__ == "__main__":
     for test_path in test_paths:
         path_scores.append(tree.score_path(legendary, test_path))
 
-    best_idx = argmax(path_scores)
+    print(path_scores)
+
+    best_idx = argmax_index(path_scores)
 
     print(
-        f"Best path found to be {path_scores[path_scores]} for {test_paths[path_scores]}")
+        f"Best path found to be {test_paths[best_idx]} with score {path_scores[best_idx]} for {legendary}")
