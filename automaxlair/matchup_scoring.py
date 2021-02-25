@@ -47,7 +47,8 @@ def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
 
 
 def ability_damage_multiplier(
-    attacker: Pokemon, move_index: int, defender: Pokemon) -> float:
+    attacker: Pokemon, move_index: int, defender: Pokemon
+) -> float:
     """Return a damage multiplier stemming from abilities."""
 
     move_type = attacker.moves[move_index].type_id

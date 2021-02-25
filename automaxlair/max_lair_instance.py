@@ -22,9 +22,9 @@ class BossNode(object):
         data: Tuple[str, Tuple[float, Tuple[int, int]]],
         row: int,
         col: int,
-        downstream_nodes: List = []
+        downstream_nodes: List['BossNode'] = []
     ) -> None:
-        self.type_id = data[0]
+        self.name = data[0]
         self.match_value = data[1][0]
         self.coordinates = data[1][1]
         self.row = row
@@ -32,9 +32,9 @@ class BossNode(object):
         self.downstream_nodes = downstream_nodes
 
     def __str__(self) -> str:
-        return self.type_id
+        return self.name
 
-    def get_all_downstream_paths(self) -> List:
+    def get_all_downstream_paths(self) -> List['BossNode']:
         """Recursively retrieve a list of all paths through the den."""
         # If this is the end of the path, return just this node.
         if len(self.downstream_nodes) == 0:
@@ -44,9 +44,7 @@ class BossNode(object):
             paths = []
             for node in self.downstream_nodes:
                 for path in node.get_all_downstream_paths():
-                    new_path = path
-                    new_path.append(self)
-                    paths.append(new_path)
+                    paths.append([self] + path)
 
         return paths
 
@@ -67,12 +65,14 @@ class MaxLairInstance:
         self.caught_pokemon = []
         self.lives = 4
         self.paths = [
-            [BossNode(('', (0, (0, 0))), 0, 0)],
+            [BossNode(('START', (0, (0, 0))), 0, 0)],
             [None, None], [None, None, None, None], [None, None, None, None],
             [BossNode((self.boss, (0, (0, 0))), 4, 0)]
         ]
         self.path_type = None
-        self.location = (0, 0)
+        self.target_path = []
+        self.current_node = self.paths[0][0]
+        self.current_node_index = 0
 
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
@@ -90,8 +90,8 @@ class MaxLairInstance:
     def __str__(self) -> str:
         """Print information about the current instance."""
         fork_symbols = [
-            ('    \\          /'),
-            ('\\     |     /' if self.path_type == '3x2' else '\\     |')
+            ('       \\    /'),
+            ('  \\   |   /  ' if self.path_type == '3x2' else '  \\   |')
             + ('\\     |     /' if self.path_type == '2x3' else '|     /')
         ]
         if self.path_type == '2x3':
@@ -101,7 +101,7 @@ class MaxLairInstance:
             )
         elif self.path_type == '3x2':
             fork_symbols.append(
-                '|_____/\\_____|_____/\n' +
+                '|_____/  \\____|____/\n' +
                 '|     \\      |     \\'
             )
         elif self.path_type == '2x2':
@@ -113,13 +113,13 @@ class MaxLairInstance:
         output = [
             f'\n        {self.boss}',
             fork_symbols[-1],
-            f'{self.paths[3][0].type_id} {self.paths[3][1].type_id} '
-            f'{self.paths[3][2].type_id} {self.paths[3][3].type_id}',
+            f'{self.paths[3][0].name} {self.paths[3][1].name} '
+            f'{self.paths[3][2].name} {self.paths[3][3].name}',
             fork_symbols[-2],
-            f'{self.paths[2][0].type_id} {self.paths[2][1].type_id} '
-            f'{self.paths[2][2].type_id} {self.paths[2][3].type_id}',
+            f'{self.paths[2][0].name} {self.paths[2][1].name} '
+            f'{self.paths[2][2].name} {self.paths[2][3].name}',
             fork_symbols[-3],
-            f'     {self.paths[1][0].type_id}  {self.paths[1][1].type_id}',
+            f'   {self.paths[1][0].name}   {self.paths[1][1].name}',
             fork_symbols[-4],
             '       START'
         ]
@@ -139,7 +139,26 @@ class MaxLairInstance:
 
     def get_paths(self) -> List[List[BossNode]]:
         """Get a list of all paths through the den."""
-        return self.paths[0][0].get_all_downstream_paths()
+        return self.current_node.get_all_downstream_paths()
+
+    def get_next_fork_offset(self) -> int:
+        """Check how many times the bot should move the cursor over in order
+        to navigate down the desired path.
+        """
+
+        if self.current_node_index + 1 < len(self.target_path):
+            target_node = self.target_path[self.current_node_index + 1]
+            return self.current_node.downstream_nodes.index(target_node)
+        else:
+            raise IndexError('No downstream path to select.')
+
+    def advance_node(self) -> None:
+        """Move to the next node in the desired path."""
+        if self.current_node_index + 1 < len(self.target_path):
+            self.current_node_index += 1
+            self.current_node = self.target_path[self.current_node_index]
+        else:
+            raise IndexError('No downstream node to move to.')
 
     def update_paths(
         self,
@@ -147,7 +166,7 @@ class MaxLairInstance:
         index: int
     ) -> None:
         """Update the internal path storage."""
-
+        # Update the nodes with the supplied data.
         col_index = 0
         for result in type_data:
             row = index
@@ -157,6 +176,8 @@ class MaxLairInstance:
             )
             col_index += 1
 
+        # If looking at the row of second bosses, use their relative positions
+        # to compute the path type.
         if index == 2:
             y_values = []
             for result in type_data:

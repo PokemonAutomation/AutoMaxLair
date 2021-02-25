@@ -93,8 +93,8 @@ class DAController(SwitchController):
         self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
         self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
         self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
-        self.battle_text_rect = ((0, 0.80), (1, 0.95))
-        self.dmax_symbol_rect = ((0.58, 0.80), (0.61, 0.84))
+        self.battle_text_rect = ((0, 0.805), (1, 0.95))
+        self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
         self.paths_2_1_rect = ((0.2, 0), (0.4, 1))
@@ -432,7 +432,7 @@ class DAController(SwitchController):
 
         # First, check if a battle started.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 220, img
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 240, img
         ) and self.check_rect_HSV_match(
             self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
         ):
@@ -466,7 +466,7 @@ class DAController(SwitchController):
 
         # Then, check for the presence of the Fight or Cheer menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 220, img
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 240, img
         ):
             if self.check_rect_HSV_match(
                 self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
@@ -485,7 +485,7 @@ class DAController(SwitchController):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 5, 255), 250, img
+            self.battle_text_rect, (0, 0, 0,), (180, 10, 255), 240, img
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
@@ -524,8 +524,8 @@ class DAController(SwitchController):
                     nature_minus_expected = True
                     expected_attack = expected_attack.strip('-')
                 if expected_attack in read_attack:
-                    if ((
-                        nature_minus_expected and self.check_rect_HSV_match(
+                    if (
+                        (nature_minus_expected and self.check_rect_HSV_match(
                             self.attack_label_rect, (80, 30, 0),
                             (110, 255, 255), 10)) or (
                             nature_plus_expected and self.check_rect_HSV_match(
@@ -563,9 +563,17 @@ class DAController(SwitchController):
                     nature_minus_expected = True
                     expected_speed = expected_speed.strip('-')
                 if expected_speed in read_speed:
-                    if ((nature_minus_expected and self.check_rect_HSV_match(self.speed_label_rect, (80, 30, 0), (110, 255, 255), 10))
-                       or (nature_plus_expected and self.check_rect_HSV_match(self.speed_label_rect, (150, 30, 0), (180, 255, 255), 10))
-                       or (not nature_minus_expected and not nature_plus_expected)):
+                    if (
+                        (nature_minus_expected and self.check_rect_HSV_match(
+                            self.speed_label_rect, (80, 30, 0),
+                            (110, 255, 255), 10))
+                        or (nature_plus_expected and self.check_rect_HSV_match(
+                           self.speed_label_rect, (150, 30, 0),
+                           (180, 255, 255), 10))
+                        or (
+                           not nature_minus_expected
+                           and not nature_plus_expected)
+                    ):
                         is_speed_matching = True
 
             if is_speed_matching:
@@ -710,4 +718,6 @@ class DAController(SwitchController):
 
         # Call the base display method.
         super().display_results(
-            image=self.get_frame(rectangle_set=self.stage, resize=True), log=log, screenshot=screenshot)
+            image=self.get_frame(
+                rectangle_set=self.stage, resize=True), log=log,
+            screenshot=screenshot)

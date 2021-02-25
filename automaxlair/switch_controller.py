@@ -219,6 +219,7 @@ class SwitchController:
         text = pytesseract.image_to_string(
             img, lang=self.tesseract_language, config=segmentation_mode
         )
+        self.log(f'Read text from screen: {text}', 'DEBUG')
         self.lock.acquire()
 
         # Finally, return the OCRed text.

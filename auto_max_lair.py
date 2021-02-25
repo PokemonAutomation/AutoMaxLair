@@ -94,36 +94,43 @@ def join(ctrlr) -> str:
     for __ in range(selection_index):
         ctrlr.push_button(b'v', 1)
     run.pokemon = pokemon_list[selection_index]
-    ctrlr.push_button(b'a', 25)
+    ctrlr.push_button(b'a', 22 + VIDEO_EXTRA_DELAY)
 
-    # DEBUG: take some screenshots of the path
-    if ctrlr.enable_debug_logs:
-        ctrlr.read_path_information(1)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.push_button(b'8', 3.5, 0.7)
-        ctrlr.read_path_information(2)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.log(f'Path type identified as: {run.path_type}')
-        ctrlr.push_button(b'8', 3.5, 0.6)
-        ctrlr.read_path_information(3)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.log(str(run), 'DEBUG')
-        try:
-            all_paths = run.get_paths()
-            for path_ in all_paths:
-                ctrlr.log(list(map(str, path_)), 'DEBUG')
-        except Exception as exc:
-            ctrlr.log(exc, 'ERROR')
+    # Read the path.
+    ctrlr.read_path_information(1)
+    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.read_path_information(2)
+    ctrlr.log(f'Path type identified as: {run.path_type}')
+    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.read_path_information(3)
+    ctrlr.log(str(run), 'DEBUG')
+    all_paths = run.get_paths()
+    for path_ in all_paths:
+        ctrlr.log(list(map(str, path_)), 'DEBUG')
+    # TODO: choose the best path. Temporarily choose the last path to test
+    # navigation.
+    run.target_path, path_score = (all_paths[-1], 1)
+    ctrlr.log(
+        f'Target path selected with score {path_score:.3f}: '
+        f'{list(map(str, run.target_path))}.')
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
 
 def path(ctrlr) -> str:
     """Choose a path to follow."""
+    run = ctrlr.current_run
     ctrlr.log('Choosing a path to follow.', 'DEBUG')
-    # TODO: implement intelligent path selection
+    # Check what direction the target path is.
+    offset = run.get_next_fork_offset()
+    # Then, move the cursor onto that boss and select it.
+    for __ in range(offset):
+        ctrlr.push_button(b'>', 1)
     ctrlr.push_buttons((b'a', 4))
-    ctrlr.log('Finished choosing a path.', 'DEBUG')
+    run.advance_node()
+    ctrlr.log(
+        f'Chose path with index {offset} from the left, towards type '
+        f'{run.current_node.name}.', 'DEBUG')
     return 'detect'
 
 
