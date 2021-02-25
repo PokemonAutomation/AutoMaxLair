@@ -432,7 +432,7 @@ class DAController(SwitchController):
 
         # First, check if a battle started.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 250, img
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 220, img
         ) and self.check_rect_HSV_match(
             self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
         ):
@@ -466,7 +466,7 @@ class DAController(SwitchController):
 
         # Then, check for the presence of the Fight or Cheer menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 250, img
+            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 220, img
         ):
             if self.check_rect_HSV_match(
                 self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img

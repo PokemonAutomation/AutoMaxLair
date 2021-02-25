@@ -108,6 +108,12 @@ def join(ctrlr) -> str:
         ctrlr.read_path_information(3)
         # ctrlr.display_results(screenshot=True)
         ctrlr.log(str(run), 'DEBUG')
+        try:
+            all_paths = run.get_paths()
+            for path_ in all_paths:
+                ctrlr.log(list(map(str, path_)), 'DEBUG')
+        except Exception as exc:
+            ctrlr.log(exc, 'ERROR')
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
