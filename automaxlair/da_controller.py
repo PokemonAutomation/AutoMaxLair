@@ -90,7 +90,7 @@ class DAController(SwitchController):
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        self.menu_rect_1 = ((0.83, 0.69), (0.91, 0.75))
+        self.menu_rect_1 = ((0.84, 0.685), (0.91, 0.695))
         self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
         self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
         self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
@@ -220,7 +220,6 @@ class DAController(SwitchController):
         be called three times, once at each of the three stages of bosses.
         """
 
-        # TODO: Actually implement.
         img = self.get_frame(resize=False)
 
         # Get a subset of images relevant to the stage index
@@ -239,6 +238,8 @@ class DAController(SwitchController):
         type_data = []
         for img in images:
             type_data.append(self.identify_path_pokemon(img))
+        
+        # Finally, update the path information with the matched types.
         self.current_run.update_paths(type_data, stage_index)
 
     def identify_path_pokemon(
@@ -432,15 +433,11 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # First, check if a battle started.
-        if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 240, img
-        ) and self.check_rect_HSV_match(
-            self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
-        ):
+        if self.check_black_screen(img):
             return 'battle'
         # Otherwise, check for other text.
         if self.check_rect_HSV_match(
-            self.den_text_rect, (0, 0, 0,), (180, 10, 255), 220, img
+            self.den_text_rect, (0, 0, 0,), (180, 55, 255), 220, img
         ):
             text = self.read_text(img, self.den_text_rect, invert=True)
             if re.search(self.phrases['BACKPACKER'], text):
@@ -462,12 +459,11 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # First, check if the player was defeated.
-        if self.check_defeated(img):
+        if self.check_black_screen(img):
             return 'LOSS'
-
         # Then, check for the presence of the Fight or Cheer menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 5, 255), 240, img
+            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img
         ):
             if self.check_rect_HSV_match(
                 self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
@@ -486,7 +482,7 @@ class DAController(SwitchController):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 10, 255), 240, img
+            self.battle_text_rect, (0, 0, 0,), (180, 55, 255), 240, img
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
@@ -591,7 +587,7 @@ class DAController(SwitchController):
         return self.check_rect_HSV_match(
             self.dmax_symbol_rect, (0, 0, 200), (180, 50, 255), 10)
 
-    def check_defeated(self, img: Image = None) -> bool:
+    def check_black_screen(self, img: Image = None) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
         if not self.check_rect_HSV_match(
             ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250, img

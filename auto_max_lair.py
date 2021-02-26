@@ -163,9 +163,10 @@ def battle(ctrlr) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
+    ctrlr.push_button(None, 7)
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
-    # or in defeat (signalled by "X was blown out of the den!").
+    # or in defeat (signalled by the screen going completely black).
     #
     # This function returns directly when those conditions are found.
     while True:
@@ -299,8 +300,10 @@ def battle(ctrlr) -> str:
             )
             run.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - run.move_index + 4) % 4):
-                ctrlr.push_button(b'v', 1)
+                ctrlr.push_button(b'v', 0.5)
                 run.move_index = (run.move_index + 1) % 4
+            # Select the attack and then mash a bunch of buttons to try and
+            # recover if something goes wrong.
             ctrlr.push_buttons(
                 (b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1), (b'a', 0.5),
                 (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
@@ -378,10 +381,14 @@ def catch(ctrlr) -> str:
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
             run.pokemon = pokemon
-            ctrlr.push_button(b'a', 3)
+            # Note: a long delay is required here so the bot doesn't think a
+            # battle started.
+            ctrlr.push_button(b'a', 7)
             ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
         else:
-            ctrlr.push_button(b'b', 3)
+            # Note: a long delay is required here so the bot doesn't think a
+            # battle started.
+            ctrlr.push_button(b'b', 7)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
 
         # Move on to the detect stage.

@@ -152,7 +152,7 @@ class SwitchController:
         image: Image,
         rect: Rectangle,
         bgr: Tuple[int, int, int] = (255, 255, 255),
-        thickness: int = 2
+        thickness: int = 1
     ) -> None:
         """Draw a rectangle around a detection area for debug purposes."""
         h, w = image.shape[:2]
@@ -165,7 +165,7 @@ class SwitchController:
         image: Image,
         rects: Iterable[Rectangle],
         bgr: Tuple[int, int, int] = (255, 255, 255),
-        thickness: int = 2
+        thickness: int = 1
     ):
         """Draw multiple rectangles around detection areas."""
         for rect in rects:
@@ -218,7 +218,7 @@ class SwitchController:
         self.lock.release()
         text = pytesseract.image_to_string(
             img, lang=self.tesseract_language, config=segmentation_mode
-        )
+        ).replace('\n', '').strip()
         self.log(f'Read text from screen: {text}', 'DEBUG')
         self.lock.acquire()
 
