@@ -94,8 +94,8 @@ class MaxLairInstance:
         self.dmax_timer = -1
         self.opponent = None
         self.dynamax_available = False
-        self.weather: Weather = None
-        self.terrain: Terrain = None
+        self.weather = Weather()
+        self.terrain = Terrain()
         if self.pokemon is not None:
             if self.pokemon.name_id == 'ditto':
                 self.pokemon = self.rental_pokemon['ditto']
@@ -157,7 +157,7 @@ class MaxLairInstance:
                 self.paths[2][1].downstream_nodes.append(self.paths[3][2])
             elif self.path_type == '3x2':
                 self.paths[1][0].downstream_nodes.append(self.paths[2][2])
-                self.paths[2][1].downstream_nodes.append(self.paths[3][0])
+                self.paths[2][1].downstream_nodes.append(0, self.paths[3][0])
                 self.paths[2][2].downstream_nodes.insert(0, self.paths[3][1])
                 self.paths[2][3].downstream_nodes.insert(0, self.paths[3][1])
             elif self.path_type == '2x2':

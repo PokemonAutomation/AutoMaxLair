@@ -203,6 +203,15 @@ def battle(ctrlr) -> str:
                     run.opponent = ctrlr.read_selectable_pokemon('battle')[0]
                     ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
 
+                    if run.opponent.name_id == 'ditto':
+                        if run.current_node.name != 'normal':
+                            ctrlr.log(f'We were expecting a {run.current_node.name} type'
+                                      ' pokemon and we got ditto.', 'WARNING')
+                    else:
+                        if run.current_node.name not in run.opponent.type_ids:
+                            ctrlr.log(f'We were expecting a {run.current_node.name} type '
+                                      f'pokemon and we got {run.opponent.name_id}.', 'WARNING')
+
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
                 if run.pokemon.name_id == 'ditto':

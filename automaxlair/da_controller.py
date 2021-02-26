@@ -512,7 +512,7 @@ class DAController(SwitchController):
                 self.current_run.terrain.set_misty()
                 self.log('TERRAIN_MISTY has been detected.', 'DEBUG')
             elif re.search(self.phrases['TERRAIN_PSYCHIC'], text):
-                self.current_run.terrain.set_misty()
+                self.current_run.terrain.set_psychic()
                 self.log('TERRAIN_PSYCHIC has been detected.', 'DEBUG')
         return None
 
