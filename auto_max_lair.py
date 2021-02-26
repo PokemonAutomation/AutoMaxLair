@@ -94,30 +94,50 @@ def join(ctrlr) -> str:
     for __ in range(selection_index):
         ctrlr.push_button(b'v', 1)
     run.pokemon = pokemon_list[selection_index]
-    ctrlr.push_button(b'a', 25)
+    ctrlr.push_button(b'a', 22 + VIDEO_EXTRA_DELAY)
 
-    # DEBUG: take some screenshots of the path
-    if ctrlr.enable_debug_logs:
-        ctrlr.read_path_information(1)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.push_button(b'8', 3.5, 0.7)
-        ctrlr.read_path_information(2)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.log(f'Path type identified as: {run.path_type}')
-        ctrlr.push_button(b'8', 3.5, 0.6)
-        ctrlr.read_path_information(3)
-        # ctrlr.display_results(screenshot=True)
-        ctrlr.log(str(run), 'DEBUG')
+    # Read the path.
+    ctrlr.read_path_information(1)
+    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.read_path_information(2)
+    ctrlr.log(f'Path type identified as: {run.path_type}')
+    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.read_path_information(3)
+    ctrlr.log(str(run), 'DEBUG')
+    all_paths_str = run.get_paths(truncate=True, name_only=True)
+    print(all_paths_str)
+
+    # Choose the best path out of the options.
+    # TODO: Improve path selection algorithm.
+    best_path_index, target_path_str, score_list = run.path_tree.get_best_path(
+        run.boss, all_paths_str
+    )
+    for i, path_str in enumerate(all_paths_str):
+        ctrlr.log(
+            f'Path at index {i} has score: {score_list[i]:.3f} and sequence: '
+            f'{path_str}', 'DEBUG')
+    run.target_path = run.get_paths()[best_path_index]
+    ctrlr.log(
+        f'Target path at index {best_path_index} selected with score '
+        f'{score_list[best_path_index]:.3f}: {target_path_str}.')
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
 
 def path(ctrlr) -> str:
     """Choose a path to follow."""
+    run = ctrlr.current_run
     ctrlr.log('Choosing a path to follow.', 'DEBUG')
-    # TODO: implement intelligent path selection
+    # Check what direction the target path is.
+    offset = run.get_next_fork_offset()
+    # Then, move the cursor onto that boss and select it.
+    for __ in range(offset):
+        ctrlr.push_button(b'>', 1)
     ctrlr.push_buttons((b'a', 4))
-    ctrlr.log('Finished choosing a path.', 'DEBUG')
+    run.advance_node()
+    ctrlr.log(
+        f'Chose path with index {offset} from the left, towards type '
+        f'{run.current_node.name}.', 'DEBUG')
     return 'detect'
 
 
@@ -143,9 +163,10 @@ def battle(ctrlr) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
+    ctrlr.push_button(None, 7)
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
-    # or in defeat (signalled by "X was blown out of the den!").
+    # or in defeat (signalled by the screen going completely black).
     #
     # This function returns directly when those conditions are found.
     while True:
@@ -288,8 +309,10 @@ def battle(ctrlr) -> str:
             )
             run.move_index %= 4  # Loop index back to zero if it exceeds 3
             for __ in range((best_move_index - run.move_index + 4) % 4):
-                ctrlr.push_button(b'v', 1)
+                ctrlr.push_button(b'v', 0.5)
                 run.move_index = (run.move_index + 1) % 4
+            # Select the attack and then mash a bunch of buttons to try and
+            # recover if something goes wrong.
             ctrlr.push_buttons(
                 (b'a', 1), (b'a', 1), (b'a', 1), (b'v', 1), (b'a', 0.5),
                 (b'b', 0.5), (b'^', 0.5), (b'b', 0.5)
@@ -367,10 +390,14 @@ def catch(ctrlr) -> str:
         if score > existing_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
             run.pokemon = pokemon
-            ctrlr.push_button(b'a', 3)
+            # Note: a long delay is required here so the bot doesn't think a
+            # battle started.
+            ctrlr.push_button(b'a', 7)
             ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
         else:
-            ctrlr.push_button(b'b', 3)
+            # Note: a long delay is required here so the bot doesn't think a
+            # battle started.
+            ctrlr.push_button(b'b', 7)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
 
         # Move on to the detect stage.

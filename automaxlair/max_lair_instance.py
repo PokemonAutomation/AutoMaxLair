@@ -13,6 +13,42 @@ from typing import List, Tuple
 import jsonpickle
 
 
+class BossNode(object):
+    """Data representing a node (i.e., a boss on the map of Dynamax Adventure
+    paths.
+    """
+    def __init__(
+        self,
+        data: Tuple[str, Tuple[float, Tuple[int, int]]],
+        row: int,
+        col: int,
+        downstream_nodes: List['BossNode'] = []
+    ) -> None:
+        self.name = data[0]
+        self.match_value = data[1][0]
+        self.coordinates = data[1][1]
+        self.row = row
+        self.col = col
+        self.downstream_nodes = downstream_nodes
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_all_downstream_paths(self) -> List['BossNode']:
+        """Recursively retrieve a list of all paths through the den."""
+        # If this is the end of the path, return just this node.
+        if len(self.downstream_nodes) == 0:
+            paths = [[self]]
+        # Otherwise, get the paths from the downstream nodes.
+        else:
+            paths = []
+            for node in self.downstream_nodes:
+                for path in node.get_all_downstream_paths():
+                    paths.append([self] + path)
+
+        return paths
+
+
 class MaxLairInstance:
     """An object for storing and processing information related to a Dynamax
     Adventure in Pokemon Sword and Shield: the Crown Tundra.
@@ -29,12 +65,14 @@ class MaxLairInstance:
         self.caught_pokemon = []
         self.lives = 4
         self.paths = [
-            [_BossNode(('', (0, (0, 0))), 0, 0)],
+            [BossNode(('START', (0, (0, 0))), 0, 0)],
             [None, None], [None, None, None, None], [None, None, None, None],
-            [_BossNode(('', (0, (0, 0))), 4, 0)]
+            [BossNode((self.boss, (0, (0, 0))), 4, 0)]
         ]
         self.path_type = None
-        self.location = (0, 0)
+        self.target_path = []
+        self.current_node = self.paths[0][0]
+        self.current_node_index = 0
 
         self.reset_stage()
         # Load precalculated resources for choosing Pokemon and moves
@@ -48,12 +86,14 @@ class MaxLairInstance:
             self.rental_matchups = jsonpickle.decode(file.read())
         with open(data_paths[4], 'r', encoding='utf8') as file:
             self.rental_scores = jsonpickle.decode(file.read())
-
+        with open(data_paths[5], 'r', encoding='utf8') as file:
+            self.path_tree = jsonpickle.decode(file.read())
+        
     def __str__(self) -> str:
         """Print information about the current instance."""
         fork_symbols = [
-            ('    \\          /'),
-            ('\\     |     /' if self.path_type == '3x2' else '\\     |')
+            ('       \\    /'),
+            ('  \\   |   /  ' if self.path_type == '3x2' else '  \\   |')
             + ('\\     |     /' if self.path_type == '2x3' else '|     /')
         ]
         if self.path_type == '2x3':
@@ -63,7 +103,7 @@ class MaxLairInstance:
             )
         elif self.path_type == '3x2':
             fork_symbols.append(
-                '|_____/\\_____|_____/\n' +
+                '|_____/  \\____|____/\n' +
                 '|     \\      |     \\'
             )
         elif self.path_type == '2x2':
@@ -75,13 +115,13 @@ class MaxLairInstance:
         output = [
             f'\n        {self.boss}',
             fork_symbols[-1],
-            f'{self.paths[3][0].type_id} {self.paths[3][1].type_id} '
-            f'{self.paths[3][2].type_id} {self.paths[3][3].type_id}',
+            f'{self.paths[3][0].name} {self.paths[3][1].name} '
+            f'{self.paths[3][2].name} {self.paths[3][3].name}',
             fork_symbols[-2],
-            f'{self.paths[2][0].type_id} {self.paths[2][1].type_id} '
-            f'{self.paths[2][2].type_id} {self.paths[2][3].type_id}',
+            f'{self.paths[2][0].name} {self.paths[2][1].name} '
+            f'{self.paths[2][2].name} {self.paths[2][3].name}',
             fork_symbols[-3],
-            f'     {self.paths[1][0].type_id}  {self.paths[1][1].type_id}',
+            f'   {self.paths[1][0].name}   {self.paths[1][1].name}',
             fork_symbols[-4],
             '       START'
         ]
@@ -101,22 +141,69 @@ class MaxLairInstance:
                 self.pokemon = self.rental_pokemon['ditto']
             self.pokemon.dynamax = False
 
+    def get_paths(
+        self,
+        truncate: bool = False,
+        name_only: bool = False
+    ) -> List[List[BossNode]]:
+        """Get a list of all paths through the den."""
+        paths = self.current_node.get_all_downstream_paths()
+
+        if truncate:
+            # Strip out path start and boss.
+            new_paths = []
+            for path in paths:
+                new_paths.append([
+                    node for node in path if node.name not in (
+                        'START', self.boss)])
+            paths = new_paths
+        
+        if name_only:
+            # Return a list of strings inatead of object references.
+            new_paths = []
+            for path in paths:
+                new_paths.append(list(map(str, path)))
+            paths = new_paths
+
+        return paths
+
+    def get_next_fork_offset(self) -> int:
+        """Check how many times the bot should move the cursor over in order
+        to navigate down the desired path.
+        """
+
+        if self.current_node_index + 1 < len(self.target_path):
+            target_node = self.target_path[self.current_node_index + 1]
+            return self.current_node.downstream_nodes.index(target_node)
+        else:
+            raise IndexError('No downstream path to select.')
+
+    def advance_node(self) -> None:
+        """Move to the next node in the desired path."""
+        if self.current_node_index + 1 < len(self.target_path):
+            self.current_node_index += 1
+            self.current_node = self.target_path[self.current_node_index]
+        else:
+            raise IndexError('No downstream node to move to.')
+
     def update_paths(
         self,
         type_data: List[Tuple[str, Tuple[float, Tuple[int, int]]]],
         index: int
     ) -> None:
         """Update the internal path storage."""
-
+        # Update the nodes with the supplied data.
         col_index = 0
         for result in type_data:
             row = index
             col = col_index
-            self.paths[row][col] = _BossNode(
+            self.paths[row][col] = BossNode(
                 result, row, col
             )
             col_index += 1
 
+        # If looking at the row of second bosses, use their relative positions
+        # to compute the path type.
         if index == 2:
             y_values = []
             for result in type_data:
@@ -165,25 +252,6 @@ class MaxLairInstance:
                 self.paths[2][1].downstream_nodes.append(self.paths[3][3])
                 self.paths[2][2].downstream_nodes.insert(0, self.paths[3][1])
                 self.paths[2][3].downstream_nodes.insert(0, self.paths[3][1])
-
-
-class _BossNode(object):
-    """Data representing a node (i.e., a boss on the map of Dynamax Adventure
-    paths.
-    """
-    def __init__(
-        self,
-        data: Tuple[str, Tuple[float, Tuple[int, int]]],
-        row: int,
-        col: int,
-        downstream_nodes: List = []
-    ) -> None:
-        self.type_id = data[0]
-        self.match_value = data[1][0]
-        self.coordinates = data[1][1]
-        self.row = row
-        self.col = col
-        self.downstream_nodes = downstream_nodes
 
 
 class Weather(object):

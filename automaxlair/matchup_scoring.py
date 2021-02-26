@@ -47,7 +47,8 @@ def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
 
 
 def ability_damage_multiplier(
-    attacker: Pokemon, move_index: int, defender: Pokemon) -> float:
+    attacker: Pokemon, move_index: int, defender: Pokemon
+) -> float:
     """Return a damage multiplier stemming from abilities."""
 
     move_type = attacker.moves[move_index].type_id
@@ -309,7 +310,12 @@ def calculate_move_score(
         teammates[popped_defender.name_id] = popped_defender
 
     # Return the score
-    return dealt_damage / received_damage
+    try:
+        return dealt_damage / received_damage
+    except ZeroDivisionError:
+        # just in case received damage is zero, the score is indefinite
+        # I'm setting it to 1.0 just for convenience
+        return 1.0
 
 
 def evaluate_matchup(
