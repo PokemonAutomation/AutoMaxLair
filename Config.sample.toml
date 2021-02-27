@@ -111,19 +111,29 @@ ENABLE_DEBUG_LOGS = false
 # === CHECK_ATTACK_STAT ===
 # Enables checking the Attack stat
 CHECK_ATTACK_STAT = false
-# === ATTACK_STATS ===
-# Enter three values for the Attack stat that are the targets.
-# These correspond to a negative nature, neutral nature, and positive nature in order.
-# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
-ATTACK_STATS = [131, 146, 160]
 # === CHECK_SPEED_STAT ===
 # Enables checking the Speed stat
 CHECK_SPEED_STAT = false
-# === SPEED_STATS ===
-# Enter three values for the Speed stat that are the targets.
-# These correspond to a negative nature, neutral nature, and positive nature in order.
+
+# === ATTACK_STATS ===
+# Enter the values for Attack stats you want to search for.
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
 # Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
-SPEED_STATS = [81, 90, 99]
+[stats.ATTACK_STATS]
+positive = [131, 132]
+neutral = [146, 147]
+negative = [160, 161]
+
+# === SPEED_STATS ===
+# Enter the values for Speed stats you want to search for. 
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
+# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
+[stats.SPEED_STATS]
+positive = [81, 82]
+neutral = [90, 91]
+negative = [99, 100]
 
 # ==========
 # === DISCORD SETTINGS
