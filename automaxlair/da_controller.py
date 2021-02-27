@@ -647,13 +647,21 @@ class DAController(SwitchController):
         """Calculate the prospective Dynite Ore cost of resetting the game."""
         return 0 if num_resets < 3 else min(10, num_resets)
 
-    def check_sufficient_ore(self, aditionnal_reset_count: int) -> bool:
+    def check_sufficient_ore(self, additionnal_reset_count: int) -> bool:
         """Calculate whether sufficient Dynite Ore remains to quit the run
         without saving.
         """
 
+        # If the ore cost of resetting is zero, resett regardless of the ore
+        # count.
+        if self.calculate_ore_cost(
+            self.consecutive_resets + additionnal_reset_count
+        ) == 0:
+            return True
+        # Otherwise, calculate whether the ore amount would still be positive
+        # after resetting.
         ore_after_resets = self.dynite_ore
-        for i in range(aditionnal_reset_count):
+        for i in range(additionnal_reset_count):
             ore_after_resets -= self.calculate_ore_cost(
                 self.consecutive_resets + 1 + i)
         return ore_after_resets >= 0
