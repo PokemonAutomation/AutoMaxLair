@@ -31,7 +31,7 @@ if not config.read('Config.ini', 'utf8'):
 
 COM_PORT = config['default']['COM_PORT']
 VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
-VIDEO_EXTRA_DELAY = int(config['advanced']['VIDEO_EXTRA_DELAY'])
+VIDEO_EXTRA_DELAY = float(config['advanced']['VIDEO_EXTRA_DELAY'])
 BOSS = config['default']['BOSS'].lower().replace(' ', '-')
 BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
 pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
@@ -98,10 +98,10 @@ def join(ctrlr) -> str:
 
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.7)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
