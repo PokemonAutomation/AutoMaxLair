@@ -45,13 +45,13 @@ class DAController(SwitchController):
         self.window_name = 'AutoMaxLair Output'
 
         # Read values from the config.
-        self.boss = config['default']['BOSS'].lower().replace(' ', '-')
+        self.boss = config['BOSS'].lower().replace(' ', '-')
 
-        self.base_ball = config['default']['BASE_BALL']
-        self.base_balls = int(config['default']['BASE_BALLS'])
-        self.legendary_ball = config['default']['LEGENDARY_BALL']
-        self.legendary_balls = int(config['default']['LEGENDARY_BALLS'])
-        self.mode = config['default']['MODE'].lower()
+        self.base_ball = config['BASE_BALL']
+        self.base_balls = int(config['BASE_BALLS'])
+        self.legendary_ball = config['LEGENDARY_BALL']
+        self.legendary_balls = int(config['LEGENDARY_BALLS'])
+        self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
@@ -145,7 +145,7 @@ class DAController(SwitchController):
             )
         if self.boss not in self.current_run.boss_pokemon:
             raise KeyError(
-                f'Incorrect value: {config["default"]["BOSS"]} for BOSS '
+                f'Incorrect value: {config["BOSS"]} for BOSS '
                 'supplied in Config.ini'
             )
 
