@@ -62,12 +62,17 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['path_tree_path']
         )
 
-        self.check_attack_stat = (
-            config['stats']['CHECK_ATTACK_STAT'].lower() == 'true')
+        self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        self.check_speed_stat = (
-            config['stats']['CHECK_SPEED_STAT'].lower() == 'true')
+        # only need to run this assertion if we're checking the attack stat
+        if self.check_attack_stat:
+            assert len(self.expected_attack_stats) == 3, "Expected attack stats should be a list of three numbers. Check the configs."
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
         self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # only need to run this assertion if we're checking the speed stat
+        if self.check_speed_stat:
+            assert len(self.expected_speed_stats) == 3, "Expected speed stats should be a list of three numbers. Check the configs."
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -511,15 +516,17 @@ class DAController(SwitchController):
                 self.get_frame(), self.attack_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_attack in self.expected_attack_stats.split(','):
+            for ii, expected_attack in enumerate(self.expected_attack_stats):
+                # convert the stored number to a string for comparison
+                expected_attack = str(expected_attack)
                 nature_plus_expected = False
                 nature_minus_expected = False
-                if '+' in expected_attack:
-                    nature_plus_expected = True
-                    expected_attack = expected_attack.strip('+')
-                elif '-' in expected_attack:
+                # the first value is negative nature
+                if ii == 0:
                     nature_minus_expected = True
-                    expected_attack = expected_attack.strip('-')
+                # the last value is the plus nature
+                elif ii == 2:
+                    nature_plus_expected = True
                 if expected_attack in read_attack:
                     if (
                         (nature_minus_expected and self.check_rect_HSV_match(
@@ -550,15 +557,16 @@ class DAController(SwitchController):
                 self.get_frame(), self.speed_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_speed in self.expected_speed_stats.split(','):
+            for ii, expected_speed in enumerate(self.expected_speed_stats):
+                expected_speed = str(expected_speed)
                 nature_plus_expected = False
                 nature_minus_expected = False
-                if '+' in expected_speed:
-                    nature_plus_expected = True
-                    expected_speed = expected_speed.strip('+')
-                elif '-' in expected_speed:
+                # first index is minus expected
+                if ii == 0:
                     nature_minus_expected = True
-                    expected_speed = expected_speed.strip('-')
+                # last index is plus expected
+                elif ii == 2:
+                    nature_plus_expected = True
                 if expected_speed in read_speed:
                     if (
                         (nature_minus_expected and self.check_rect_HSV_match(
