@@ -121,9 +121,9 @@ CHECK_SPEED_STAT = false
 # These should remain in the brakets even if only one value is searched for.
 # Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
 [stats.ATTACK_STATS]
-positive = [131, 132]
+positive = [160, 161]
 neutral = [146, 147]
-negative = [160, 161]
+negative = [131, 132]
 
 # === SPEED_STATS ===
 # Enter the values for Speed stats you want to search for. 
@@ -131,9 +131,9 @@ negative = [160, 161]
 # These should remain in the brakets even if only one value is searched for.
 # Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
 [stats.SPEED_STATS]
-positive = [81, 82]
+positive = [99, 100]
 neutral = [90, 91]
-negative = [99, 100]
+negative = [81, 82]
 
 # ==========
 # === DISCORD SETTINGS
