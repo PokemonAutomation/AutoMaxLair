@@ -430,7 +430,9 @@ def backpacker(ctrlr) -> str:
         items.append(item)
         ctrlr.log(f'Detected item: {item}', 'DEBUG')
 
-    ctrlr.push_button(b'a', 5)
+    # Note: a long delay is required here so the bot doesn't think a battle
+    # started.
+    ctrlr.push_button(b'a', 7)
 
     ctrlr.log('Finished choosing an item.', 'DEBUG')
     return 'detect'
@@ -476,11 +478,15 @@ def scientist(ctrlr) -> str:
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
     if run.pokemon is None or average_score > existing_score:
-        ctrlr.push_buttons((None, 3), (b'a', 1))
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'a', 7))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
-        ctrlr.push_buttons((None, 3), (b'b', 1))
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'b', 7))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
     return 'detect'
 
