@@ -50,7 +50,7 @@ class DAController(SwitchController):
         self.base_ball = config['BASE_BALL']
         self.base_balls = int(config['BASE_BALLS'])
         self.legendary_ball = config['LEGENDARY_BALL']
-        self.legendary_balls = int(config['LEGENDARY_BALLS'])
+        self.legendary_balls = config['LEGENDARY_BALLS']
         self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.data_paths = (

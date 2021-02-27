@@ -32,8 +32,9 @@ BASE_BALLS = 600
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
 #   This can be a string for the ball name, or it can be DEFAULT to always choose 
-#   the first ball in the catch menu. Enter the name as seen in your bag.
-LEGENDARY_BALL = "Premier Ball"
+#   the first ball in the catch menu. Enter the name as seen in your bag. No need
+#   to include "Ball" in the name.
+LEGENDARY_BALL = "Premier"
 # === LEGENDARY_BALLS ===
 # This is the current quantity of the ball that you selected in LEGENDARY_BALL.
 #   The program will end if this ever hits zero.
