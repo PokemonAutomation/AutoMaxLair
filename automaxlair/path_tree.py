@@ -76,7 +76,7 @@ class PathTree():
         the current legendary, the first type in the path, the second
         type in the path, and then the third type in the path.
 
-        The results can then be combined 
+        The results can then be combined
 
         boss: 'articuno'
         path: ['type1', 'type2', 'type3']
@@ -93,7 +93,7 @@ class PathTree():
                 # the type in, so deeper paths might be more useful
                 # since you get a PP restore *and* type advantage
                 outscore += (1.0 + (ii * 0.1)) * base_score
-            
+
             return outscore
 
         else:
@@ -147,7 +147,7 @@ class PathTree():
             #     ))
             # else:
             #     current_node.add_node(type_name, current_score + type_score)
-            
+
             # FOR NOW, NO RECURSION - TODO: modify algorithm for this to make sense
             current_node.add_node(type_name, type_score)
 
@@ -180,10 +180,10 @@ class TreeNode:
     def traverse_node(self, list_of_decisions, current_idx=0):
 
         if type(self.hash_table[list_of_decisions[current_idx]]) == TreeNode:
-            return self.hash_table[list_of_decisions[current_idx]].traverse_node(list_of_decisions, current_idx+1)
+            return self.hash_table[list_of_decisions[current_idx]].traverse_node(list_of_decisions, current_idx + 1)
         else:
             return self.hash_table[list_of_decisions[current_idx]]
-        
+
     def get_node_for_key(self, key):
         # no matter what, this only returns what is assigned to the hash table
         # for that particular key

@@ -88,7 +88,7 @@ class MaxLairInstance:
             self.rental_scores = jsonpickle.decode(file.read())
         with open(data_paths[5], 'r', encoding='utf8') as file:
             self.path_tree = jsonpickle.decode(file.read())
-        
+
     def __str__(self) -> str:
         """Print information about the current instance."""
         fork_symbols = [
@@ -134,8 +134,7 @@ class MaxLairInstance:
         self.dmax_timer = -1
         self.opponent = None
         self.dynamax_available = False
-        self.weather = Weather()
-        self.terrain = Terrain()
+        self.field = Field()
         if self.pokemon is not None:
             if self.pokemon.name_id == 'ditto':
                 self.pokemon = self.rental_pokemon['ditto']
@@ -157,7 +156,7 @@ class MaxLairInstance:
                     node for node in path if node.name not in (
                         'START', self.boss)])
             paths = new_paths
-        
+
         if name_only:
             # Return a list of strings inatead of object references.
             new_paths = []
@@ -214,7 +213,7 @@ class MaxLairInstance:
             # Standard values provided by MaruBatsu72
             standard_vals = {135: '2x2', 180: '2x3', 65: '3x2'}
             closest_match = min(
-                standard_vals.keys(), key=lambda x: abs(x-diff))
+                standard_vals.keys(), key=lambda x: abs(x - diff))
             self.path_type = standard_vals[closest_match]
 
         # Rebuild the path network after reassigning all of the nodes.
@@ -244,7 +243,7 @@ class MaxLairInstance:
                 self.paths[2][1].downstream_nodes.append(self.paths[3][2])
             elif self.path_type == '3x2':
                 self.paths[1][0].downstream_nodes.append(self.paths[2][2])
-                self.paths[2][1].downstream_nodes.append(0, self.paths[3][0])
+                self.paths[2][1].downstream_nodes.insert(0, self.paths[3][0])
                 self.paths[2][2].downstream_nodes.insert(0, self.paths[3][1])
                 self.paths[2][3].downstream_nodes.insert(0, self.paths[3][1])
             elif self.path_type == '2x2':
@@ -254,87 +253,67 @@ class MaxLairInstance:
                 self.paths[2][3].downstream_nodes.insert(0, self.paths[3][1])
 
 
-class Weather(object):
-    clear = 0
-    sunlight = 1
-    rain = 2
-    sandstorm = 3
-    hail = 4
+class Field(object):
+    def __init__(self) -> None:
+        self.weather = "clear"
+        self.terrain = "clear"
 
-    def __init__(
-        self
-    ) -> None:
-        self.weather_index = 0
+    def is_weather_clear(self) -> bool:
+        return self.weather == "clear"
 
-    def is_clear(self) -> bool:
-        return self.weather_index == self.clear
+    def is_weather_sunlight(self) -> bool:
+        return self.weather == "sunlight"
 
-    def is_sunlight(self) -> bool:
-        return self.weather_index == self.sunlight
+    def is_weather_rain(self) -> bool:
+        return self.weather == "rain"
 
-    def is_rain(self) -> bool:
-        return self.weather_index == self.rain
+    def is_weather_sandstorm(self) -> bool:
+        return self.weather == "sandstorm"
 
-    def is_sandstorm(self) -> bool:
-        return self.weather_index == self.sandstorm
+    def is_weather_hail(self) -> bool:
+        return self.weather == "hail"
 
-    def is_hail(self) -> bool:
-        return self.weather_index == self.hail
+    def set_weather_clear(self) -> bool:
+        self.weather = "clear"
 
-    def set_clear(self) -> bool:
-        self.weather_index = self.clear
+    def set_weather_sunlight(self) -> bool:
+        self.weather = "sunlight"
 
-    def set_sunlight(self) -> bool:
-        self.weather_index = self.sunlight
+    def set_weather_rain(self) -> bool:
+        self.weather = "rain"
 
-    def set_rain(self) -> bool:
-        self.weather_index = self.rain
+    def set_weather_sandstorm(self) -> bool:
+        self.weather = "sandstorm"
 
-    def set_sandstorm(self) -> bool:
-        self.weather_index = self.sandstorm
+    def set_weather_hail(self) -> bool:
+        self.weather = "hail"
 
-    def set_hail(self) -> bool:
-        self.weather_index = self.hail
+    def is_terrain_clear(self) -> bool:
+        return self.terrain == "clear"
 
+    def is_terrain_electric(self) -> bool:
+        return self.terrain == "electric"
 
-class Terrain(object):
-    clear = 0
-    electric = 1
-    grassy = 2
-    misty = 3
-    psychic = 4
+    def is_terrain_grassy(self) -> bool:
+        return self.terrain == "grassy"
 
-    def __init__(
-        self
-    ) -> None:
-        self.terrain_index = 0
+    def is_terrain_misty(self) -> bool:
+        return self.terrain == "misty"
 
-    def is_clear(self) -> bool:
-        return self.terrain_index == self.clear
+    def is_terrain_psychic(self) -> bool:
+        return self.terrain == "psychic"
 
-    def is_electric(self) -> bool:
-        return self.terrain_index == self.electric
+    def set_terrain_clear(self) -> bool:
+        self.terrain = "clear"
 
-    def is_grassy(self) -> bool:
-        return self.terrain_index == self.grassy
+    def set_terrain_electric(self) -> bool:
+        self.terrain = "electric"
 
-    def is_misty(self) -> bool:
-        return self.terrain_index == self.misty
+    def set_terrain_grassy(self) -> bool:
+        self.terrain = "grassy"
 
-    def is_psychic(self) -> bool:
-        return self.terrain_index == self.psychic
+    def set_terrain_misty(self) -> bool:
+        self.terrain = "misty"
 
-    def set_clear(self) -> bool:
-        self.terrain_index = self.clear
-
-    def set_electric(self) -> bool:
-        self.weather_index = self.electric
-
-    def set_grassy(self) -> bool:
-        self.weather_index = self.grassy
-
-    def set_misty(self) -> bool:
-        self.weather_index = self.misty
-
-    def set_psychic(self) -> bool:
-        self.weather_index = self.psychic
+    def set_terrain_psychic(self) -> bool:
+        self.terrain = "psychic"
