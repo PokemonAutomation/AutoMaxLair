@@ -14,8 +14,6 @@ sys.path.insert(1, base_dir)
 import jsonpickle
 from automaxlair.path_tree import PathTree
 
-from scripts.package_pokemon import pokemon_from_txt
-
 
 def argmax(pairs):
     """Function to return the argmax of a set of pairs"""
