@@ -52,7 +52,7 @@ LEGENDARY_BALLS = 500
 #   "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
 #       This mode is useful for locking on a seed that is capable of beating the boss, but will
 #       still take non-legendary shinies.
-#   "FORCE PATH" - Will force the game to always reset on a pre-saved path.
+#   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
 MODE = "STRONG BOSS"
