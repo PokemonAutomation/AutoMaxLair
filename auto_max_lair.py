@@ -99,10 +99,10 @@ def join(ctrlr) -> str:
 
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
