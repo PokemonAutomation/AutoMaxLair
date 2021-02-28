@@ -208,7 +208,7 @@ class SwitchController:
         # Process image according to instructions
         if threshold:
             img = cv2.inRange(cv2.cvtColor(
-                img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
+                img, cv2.COLOR_BGR2HSV), (0, 0, 160), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
         img = self.get_image_slice(img, section)

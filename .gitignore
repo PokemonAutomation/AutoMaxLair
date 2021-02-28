@@ -5,3 +5,4 @@ Config.toml
 logs/*
 itemsList.txt
 data/type_icons
+scripts/*.png

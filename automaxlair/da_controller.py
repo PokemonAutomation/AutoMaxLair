@@ -490,7 +490,7 @@ class DAController(SwitchController):
                 return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 200, img
+            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img
         ) and self.check_rect_HSV_match(
             self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
         ):
