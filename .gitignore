@@ -1,5 +1,6 @@
 *.pyc
 Config.ini
+Config.toml
 .vscode/*
 logs/*
 itemsList.txt
