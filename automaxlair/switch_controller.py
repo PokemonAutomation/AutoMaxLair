@@ -326,7 +326,8 @@ class SwitchController:
 
         # Commands are supplied as tuples consisting of a character
         # corresponding to a button push, a delay that follows the push, and an
-        # optional number of repeats (default is 1).
+        # optional length of time to hold the button (default is 0.08 seconds
+        # or 10 ticks).
         for command in commands:
             self.push_button(*command)
 
