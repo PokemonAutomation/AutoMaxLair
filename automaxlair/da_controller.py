@@ -555,8 +555,8 @@ class DAController(SwitchController):
                 segmentation_mode='--psm 8'
             )
             for nature_type, expected_attacks in self.expected_attack_stats.items():
-                nature_plus_expected = False if nature_type is not 'positive' else True
-                nature_minus_expected = False if nature_type is not 'negative' else True
+                nature_plus_expected = False if nature_type != 'positive' else True
+                nature_minus_expected = False if nature_type != 'negative' else True
                 
                 # then iterate through the stats
                 for expected_attack in expected_attacks:
@@ -593,8 +593,8 @@ class DAController(SwitchController):
                 segmentation_mode='--psm 8'
             )
             for nature_type, expected_speeds in self.expected_speed_stats.items():
-                nature_plus_expected = False if nature_type is not 'positive' else True
-                nature_minus_expected = False if nature_type is not 'negative' else True
+                nature_plus_expected = False if nature_type != 'positive' else True
+                nature_minus_expected = False if nature_type != 'negative' else True
             
                 for expected_speed in expected_speeds:
                     expected_speed = str(expected_speed)

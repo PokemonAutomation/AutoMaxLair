@@ -52,7 +52,7 @@ LEGENDARY_BALLS = 500
 #   "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
 #       This mode is useful for locking on a seed that is capable of beating the boss, but will
 #       still take non-legendary shinies.
-#   "FORCE PATH" - Will force the game to always reset on a pre-saved path.
+#   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
 MODE = "STRONG BOSS"
@@ -226,16 +226,16 @@ SCIENTIST = "intéresse"
 PATH = "Quel chemin"
 FAINT = "au-dessus|intenable"
 START_PHRASE = "vous lancer"
-WEATHER_CLEAR = "PLACEHOLDER"
-WEATHER_SUNLIGHT = "PLACEHOLDER"
-WEATHER_RAIN = "PLACEHOLDER"
-WEATHER_SANDSTORM = "PLACEHOLDER"
-WEATHER_HAIL = "PLACEHOLDER"
-TERRAIN_CLEAR = "PLACEHOLDER"
-TERRAIN_ELECTRIC = "PLACEHOLDER"
-TERRAIN_GRASSY = "PLACEHOLDER"
-TERRAIN_MISTY = "PLACEHOLDER"
-TERRAIN_PSYCHIC = "PLACEHOLDER"
+WEATHER_CLEAR = "est arrêtée"
+WEATHER_SUNLIGHT = "soleil"
+WEATHER_RAIN = "pleuvoir"
+WEATHER_SANDSTORM = "tempête de sable"
+WEATHER_HAIL = "grêler"
+TERRAIN_CLEAR = "est dissipée"
+TERRAIN_ELECTRIC = "électricité parcourt"
+TERRAIN_GRASSY = "beau gazon"
+TERRAIN_MISTY = "de brume"
+TERRAIN_PSYCHIC = "réagir de"
 
 [Korean]
 TESSERACT_LANG_NAME = "kor"
