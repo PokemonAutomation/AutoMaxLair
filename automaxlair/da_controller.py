@@ -45,13 +45,13 @@ class DAController(SwitchController):
         self.window_name = 'AutoMaxLair Output'
 
         # Read values from the config.
-        self.boss = config['default']['BOSS'].lower().replace(' ', '-')
+        self.boss = config['BOSS'].lower().replace(' ', '-')
 
-        self.base_ball = config['default']['BASE_BALL']
-        self.base_balls = int(config['default']['BASE_BALLS'])
-        self.legendary_ball = config['default']['LEGENDARY_BALL']
-        self.legendary_balls = int(config['default']['LEGENDARY_BALLS'])
-        self.mode = config['default']['MODE'].lower()
+        self.base_ball = config['BASE_BALL']
+        self.base_balls = int(config['BASE_BALLS'])
+        self.legendary_ball = config['LEGENDARY_BALL']
+        self.legendary_balls = config['LEGENDARY_BALLS']
+        self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
@@ -62,12 +62,27 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['path_tree_path']
         )
 
-        self.check_attack_stat = (
-            config['stats']['CHECK_ATTACK_STAT'].lower() == 'true')
+        self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        self.check_speed_stat = (
-            config['stats']['CHECK_SPEED_STAT'].lower() == 'true')
+        # only need to run this assertion if we're checking the attack stat
+        if self.check_attack_stat:
+            assert 'positive' in self.expected_attack_stats.keys(), "No positive value found in expected attack stats"
+            assert 'negative' in self.expected_attack_stats.keys(), "No negative value found in expected attack stats"
+            assert 'neutral' in self.expected_attack_stats.keys(), "No neutral value found in expected attack stats"
+            assert type(self.expected_attack_stats['positive']) is list, "You must provide multiple values for positive attack stats"
+            assert type(self.expected_attack_stats['negative']) is list, "You must provide multiple values for negative attack stats"
+            assert type(self.expected_attack_stats['neutral']) is list, "You must provide multiple values for neutral attack stats"
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
         self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # only need to run this assertion if we're checking the speed stat
+        if self.check_speed_stat:
+            assert 'positive' in self.expected_speed_stats.keys(), "No positive value found in expected speed stats"
+            assert 'negative' in self.expected_speed_stats.keys(), "No negative value found in expected speed stats"
+            assert 'neutral' in self.expected_speed_stats.keys(), "No neutral value found in expected speed stats"
+            assert type(self.expected_speed_stats['positive']) is list, "You must provide multiple values for positive speed stats"
+            assert type(self.expected_speed_stats['negative']) is list, "You must provide multiple values for negative speed stats"
+            assert type(self.expected_speed_stats['neutral']) is list, "You must provide multiple values for neutral speed stats"
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -145,7 +160,7 @@ class DAController(SwitchController):
             )
         if self.boss not in self.current_run.boss_pokemon:
             raise KeyError(
-                f'Incorrect value: {config["default"]["BOSS"]} for BOSS '
+                f'Incorrect value: {config["BOSS"]} for BOSS '
                 'supplied in Config.ini'
             )
 
@@ -475,7 +490,7 @@ class DAController(SwitchController):
                 return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 200, img
+            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img
         ) and self.check_rect_HSV_match(
             self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
         ):
@@ -539,29 +554,28 @@ class DAController(SwitchController):
                 self.get_frame(), self.attack_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_attack in self.expected_attack_stats.split(','):
-                nature_plus_expected = False
-                nature_minus_expected = False
-                if '+' in expected_attack:
-                    nature_plus_expected = True
-                    expected_attack = expected_attack.strip('+')
-                elif '-' in expected_attack:
-                    nature_minus_expected = True
-                    expected_attack = expected_attack.strip('-')
-                if expected_attack in read_attack:
-                    if (
-                        (nature_minus_expected and self.check_rect_HSV_match(
-                            self.attack_label_rect, (80, 30, 0),
-                            (110, 255, 255), 10)) or (
-                            nature_plus_expected and self.check_rect_HSV_match(
-                                self.attack_label_rect, (150, 30, 0),
-                                (180, 255, 255), 10)
-                        )
-                        or (
-                            not nature_minus_expected
-                            and not nature_plus_expected)
-                    ):
-                        is_attack_matching = True
+            for nature_type, expected_attacks in self.expected_attack_stats.items():
+                nature_plus_expected = False if nature_type is not 'positive' else True
+                nature_minus_expected = False if nature_type is not 'negative' else True
+                
+                # then iterate through the stats
+                for expected_attack in expected_attacks:
+                    expected_attack = str(expected_attack)
+                
+                    if expected_attack in read_attack:
+                        if (
+                            (nature_minus_expected and self.check_rect_HSV_match(
+                                self.attack_label_rect, (80, 30, 0),
+                                (110, 255, 255), 10)) or (
+                                nature_plus_expected and self.check_rect_HSV_match(
+                                    self.attack_label_rect, (150, 30, 0),
+                                    (180, 255, 255), 10)
+                            )
+                            or (
+                                not nature_minus_expected
+                                and not nature_plus_expected)
+                        ):
+                            is_attack_matching = True
 
             if is_attack_matching:
                 self.log(
@@ -578,28 +592,25 @@ class DAController(SwitchController):
                 self.get_frame(), self.speed_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_speed in self.expected_speed_stats.split(','):
-                nature_plus_expected = False
-                nature_minus_expected = False
-                if '+' in expected_speed:
-                    nature_plus_expected = True
-                    expected_speed = expected_speed.strip('+')
-                elif '-' in expected_speed:
-                    nature_minus_expected = True
-                    expected_speed = expected_speed.strip('-')
-                if expected_speed in read_speed:
-                    if (
-                        (nature_minus_expected and self.check_rect_HSV_match(
-                            self.speed_label_rect, (80, 30, 0),
-                            (110, 255, 255), 10))
-                        or (nature_plus_expected and self.check_rect_HSV_match(
-                           self.speed_label_rect, (150, 30, 0),
-                           (180, 255, 255), 10))
-                        or (
-                           not nature_minus_expected
-                           and not nature_plus_expected)
-                    ):
-                        is_speed_matching = True
+            for nature_type, expected_speeds in self.expected_speed_stats.items():
+                nature_plus_expected = False if nature_type is not 'positive' else True
+                nature_minus_expected = False if nature_type is not 'negative' else True
+            
+                for expected_speed in expected_speeds:
+                    expected_speed = str(expected_speed)
+                    if expected_speed in read_speed:
+                        if (
+                            (nature_minus_expected and self.check_rect_HSV_match(
+                                self.speed_label_rect, (80, 30, 0),
+                                (110, 255, 255), 10))
+                            or (nature_plus_expected and self.check_rect_HSV_match(
+                            self.speed_label_rect, (150, 30, 0),
+                            (180, 255, 255), 10))
+                            or (
+                            not nature_minus_expected
+                            and not nature_plus_expected)
+                        ):
+                            is_speed_matching = True
 
             if is_speed_matching:
                 self.log(
