@@ -365,17 +365,19 @@ class SwitchController:
                 self.log(key + ': ' + str(value))
             i += 1
 
-        # Display
-        cv2.imshow(self.window_name, frame)
-
         if log or screenshot:
             # Save a screenshot
+            self.log(f"Saving a screenshot to logs/{self.log_name}_cap_{self.num_saved_images}.png", "DEBUG")
             self.num_saved_images += 1
             cv2.imwrite(
                 f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+        else:
+            # if it's not a screenshot, we'll display the frame
+            # Display
+            cv2.imshow(self.window_name, frame)
 
     def send_discord_message(
-        self, ping_yourself: bool, text: str, path_to_picture: str
+        self, ping_yourself: bool, text: str, path_to_picture: str = None
     ) -> None:
         """Send a notification via Discord."""
         # Do nothing if user did not setup the Discord information.
@@ -392,15 +394,20 @@ class SwitchController:
             self.webhook_id, self.webhook_token,
             adapter=discord.RequestsWebhookAdapter())
 
-        # Open the image to be sent.
-        with open(file=f'{path_to_picture}', mode='rb') as f:
-            my_file = discord.File(f)
-
         # Send the message with optional ping.
         ping_str = ''
         if ping_yourself:
             ping_str = f'<@{self.user_id}>: '
-        webhook.send(f'{ping_str}{text}', file=my_file)
+        
+        send_str = f'{ping_str}{text}'
+        
+        # Open the image to be sent.
+        if path_to_picture is not None:
+            with open(file=f'{path_to_picture}', mode='rb') as f:
+                my_file = discord.File(f)
+            webhook.send(send_str, file=my_file)
+        else:
+            webhook.send(send_str)
 
 
 class VideoCaptureHelper:
