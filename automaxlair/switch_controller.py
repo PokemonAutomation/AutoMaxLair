@@ -50,6 +50,9 @@ class SwitchController:
         self.webhook_id = config['discord']['WEBHOOK_ID']
         self.webhook_token = config['discord']['WEBHOOK_TOKEN']
         self.user_id = config['discord']['USER_ID']
+        self.user_nickname = config['discord'].get('USER_SHORT_NAME', "")
+        self.discord_level = config['discord'].get('UPDATE_LEVELS', "none")
+        self.discord_embed_color = discord.Color.random()
 
         self.actions = actions
         self.info = {}  # To be overwritten later.
@@ -377,9 +380,39 @@ class SwitchController:
             cv2.imshow(self.window_name, frame)
 
     def send_discord_message(
-        self, ping_yourself: bool, text: str, path_to_picture: str = None
-    ) -> None:
-        """Send a notification via Discord."""
+        self, ping_yourself: bool, text: str, path_to_picture: str = None,
+        embed_fields: dict = None, level: str = "update") -> None:
+        """Send a notification via Discord.
+        
+        Parameters
+        ----------
+        ping_yourself : bool
+            This input controls if you want to send a ping to the user in the
+            settings.
+        text : str
+            The basic text string to send to the webhook, not included in
+            the embed.
+        path_to_picture : str, optional
+            The path to the picture that should be uploaded and thrown inside
+            the embed object.
+        embed_fields : dict, optional
+            Fields to add to the embed object, should be a dictionary
+            where the keys are the titles to give and the items are the text
+            for that field.
+        level : str, optional
+            What type of update this is. Currently accepts "update", "shiny", and
+            "critical", which helps the program determine if it should send based
+            on settings provided by the user.
+        """
+
+        if self.discord_level == 'none':
+            # if they don't want discord information, just return and pass by
+            return
+        elif self.discord_level == 'only_shiny' and level == "update":
+            # if they don't want the discord update information, we can also
+            # return
+            return
+
         # Do nothing if user did not setup the Discord information.
         if self.webhook_id == '' or self.webhook_token == '' or (
             self.user_id == '' and ping_yourself
@@ -389,25 +422,44 @@ class SwitchController:
                 'ping feature.', 'DEBUG')
             return
 
-        # Create a webhook where the message can be sent to.
+        # construct the webhook object
         webhook = discord.Webhook.partial(
             self.webhook_id, self.webhook_token,
-            adapter=discord.RequestsWebhookAdapter())
+            adapter=discord.RequestsWebhookAdapter(),
+            timestamp=datetime.utcnow()
+        )
 
-        # Send the message with optional ping.
-        ping_str = ''
-        if ping_yourself:
-            ping_str = f'<@{self.user_id}>: '
-        
-        send_str = f'{ping_str}{text}'
-        
-        # Open the image to be sent.
+        # then build up our embed object
+        embed = discord.Embed(
+            title="AutoMaxLair Update", 
+            colour=self.discord_embed_color,
+            )
+
+        embed.set_thumbnail(url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png")
+        embed.set_footer(text="AutoMaxLair")
+
+        # if we have fields that we want to add, we can!
+        if embed_fields:
+            for name, item in embed_fields.items():
+                embed.add_field(name=name, value=item, inline=True)
+
+        # construct the proper string
+        send_str = f"<@{self.user_id}>" if ping_yourself else f'{self.user_nickname}'
+        send_str += f': {text}'
+
+        # add the image to the embed if it was included
         if path_to_picture is not None:
             with open(file=f'{path_to_picture}', mode='rb') as f:
-                my_file = discord.File(f)
-            webhook.send(send_str, file=my_file)
+                my_file = discord.File(f, filename="image.png")
+            embed.set_image(url="attachment://image.png")
         else:
-            webhook.send(send_str)
+            my_file = None
+        
+        # Open the image to be sent.
+        try:
+            webhook.send(send_str, embed=embed, file=my_file)
+        except Exception as e:
+            self.log("The Discord webhook failed to send: " + str(e), "ERROR")
 
 
 class VideoCaptureHelper:

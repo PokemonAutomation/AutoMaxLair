@@ -763,3 +763,24 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
+        
+    def get_stats_for_discord(self) -> dict:
+        """This method takes information from the run and returns a nice dictionary
+        for embedding to Discord
+        
+        increment_one is only for a win with a shiny, so that we can get the nice
+        status screen with the screenshot.
+        """
+
+        the_dict = {
+            "Boss": self.boss,
+            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Base Balls": self.base_balls,
+            "Legendary Balls": self.legendary_balls,
+            "Dynite Ore": self.dynite_ore,
+        }
+
+        if self.shinies_found > 0:
+            the_dict["Shinies Found"] = self.shinies_found
+        
+        return the_dict
