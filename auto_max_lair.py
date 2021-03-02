@@ -145,7 +145,7 @@ def path(ctrlr) -> str:
     # Then, move the cursor onto that boss and select it.
     for __ in range(offset):
         ctrlr.push_button(b'>', 1)
-    ctrlr.push_buttons((b'a', 4))
+    ctrlr.push_button(b'a', 4 + VIDEO_EXTRA_DELAY)
     run.advance_node()
     ctrlr.log(
         f'Chose path with index {offset} from the left, towards type '
@@ -444,7 +444,7 @@ def backpacker(ctrlr) -> str:
 
     # Note: a long delay is required here so the bot doesn't think a battle
     # started.
-    ctrlr.push_button(b'a', 7)
+    ctrlr.push_button(b'a', 7 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log('Finished choosing an item.', 'DEBUG')
     return 'detect'
@@ -492,13 +492,13 @@ def scientist(ctrlr) -> str:
     if run.pokemon is None or average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'a', 7))
+        ctrlr.push_buttons((None, 3), (b'a', 7 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 7))
+        ctrlr.push_buttons((None, 3), (b'b', 7 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
     return 'detect'
 
