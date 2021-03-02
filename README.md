@@ -143,3 +143,7 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Improved config file
 * Improved stats checking
 * More improvements on the way!
+
+## Acknowledgements
+
+Thanks to [pokemondb.net](https://pokemondb.net/) for hosting the sprites of the bosses.

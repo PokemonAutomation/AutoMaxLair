@@ -145,12 +145,23 @@ negative = [81, 82]
 # Set USER_ID as explained here https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
 # === WEBHOOK_ID and WEBHOOK_TOKEN ===
 # Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
-WEBHOOK_ID = ""
-WEBHOOK_TOKEN = ""
+WEBHOOK_ID = "PLACE_ID_WITHIN_QUOTES"
+WEBHOOK_TOKEN = "PLACE_TOKEN_WITHIN_QUOTES"
 # === USER_ID ===
 # This is your Discord User ID for mentioning you.
 # More info: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-USER_ID = ""
+USER_ID = "PLACE_ID_WITHIN_QUOTES"
+# === USER_SHORT_NAME ===
+# To personalize your messages, please include a name for the webhooks to use.
+# Could be your actual name.
+USER_SHORT_NAME = "YOUR_SHORT_NAME_WITHIN_QUOTES"
+# === UPDATE_LEVELS ===
+# There are multiple types of levels that can be sent via the Discord Webhook to inform
+# your progress,
+#   "all" - provides all possible updates to your webhook, includes stats after a completed run
+#   "only_shiny" - will only push updates if shinies are found
+#   "none" - ignores all discord messages
+UPDATE_LEVELS = "all"
 
 # ==========
 # === LANGUAGE SETTINGS
