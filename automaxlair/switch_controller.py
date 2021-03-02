@@ -45,8 +45,7 @@ class SwitchController:
         self.phrases = config[config['language']['LANGUAGE']]
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
-        self.enable_debug_logs = (
-            config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true')
+        self.enable_debug_logs = config['advanced']['ENABLE_DEBUG_LOGS']
 
         self.webhook_id = config['discord']['WEBHOOK_ID']
         self.webhook_token = config['discord']['WEBHOOK_TOKEN']
@@ -60,17 +59,22 @@ class SwitchController:
 
         # Connect to the Teensy over a serial port.
         self.com = serial.Serial(
-            config['default']['COM_PORT'], 9600, timeout=0.05)
+            config['COM_PORT'], 9600, timeout=0.05)
         self.logger.info(f'Attempting to connect to {self.com.port}.')
+        timeout_fails = 0
         while not self.com.is_open:
             try:
                 self.com.open()
             except serial.SerialException:
+                if timeout_fails > 10:
+                    # if the serial device won't open after 10 times, we might as well raise and exception and abort
+                    raise Exception("Could not connect to the serial device. Check your device.")
+                timeout_fails += 1
                 pass
         self.logger.info('Connected to the serial device successfully.')
 
         # Open the video capture.
-        vid_index = int(config['default']['VIDEO_INDEX'])
+        vid_index = config['VIDEO_INDEX']
         vid_scale = float(config['advanced']['VIDEO_SCALE'])
         self.cap = VideoCaptureHelper(
             vid_index, (1920, 1080), log_name, vid_scale)
@@ -204,7 +208,7 @@ class SwitchController:
         # Process image according to instructions
         if threshold:
             img = cv2.inRange(cv2.cvtColor(
-                img, cv2.COLOR_BGR2HSV), (0, 0, 100), (180, 15, 255))
+                img, cv2.COLOR_BGR2HSV), (0, 0, 160), (180, 15, 255))
         if invert:
             img = cv2.bitwise_not(img)
         img = self.get_image_slice(img, section)
@@ -326,7 +330,8 @@ class SwitchController:
 
         # Commands are supplied as tuples consisting of a character
         # corresponding to a button push, a delay that follows the push, and an
-        # optional number of repeats (default is 1).
+        # optional length of time to hold the button (default is 0.08 seconds
+        # or 10 ticks).
         for command in commands:
             self.push_button(*command)
 
@@ -360,17 +365,19 @@ class SwitchController:
                 self.log(key + ': ' + str(value))
             i += 1
 
-        # Display
-        cv2.imshow(self.window_name, frame)
-
         if log or screenshot:
             # Save a screenshot
+            self.log(f"Saving a screenshot to logs/{self.log_name}_cap_{self.num_saved_images}.png", "DEBUG")
             self.num_saved_images += 1
             cv2.imwrite(
                 f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+        else:
+            # if it's not a screenshot, we'll display the frame
+            # Display
+            cv2.imshow(self.window_name, frame)
 
     def send_discord_message(
-        self, ping_yourself: bool, text: str, path_to_picture: str
+        self, ping_yourself: bool, text: str, path_to_picture: str = None
     ) -> None:
         """Send a notification via Discord."""
         # Do nothing if user did not setup the Discord information.
@@ -387,15 +394,20 @@ class SwitchController:
             self.webhook_id, self.webhook_token,
             adapter=discord.RequestsWebhookAdapter())
 
-        # Open the image to be sent.
-        with open(file=f'{path_to_picture}', mode='rb') as f:
-            my_file = discord.File(f)
-
         # Send the message with optional ping.
         ping_str = ''
         if ping_yourself:
-            ping_str = f'<@{self.user_id}> '
-        webhook.send(f'{ping_str}{text}', file=my_file)
+            ping_str = f'<@{self.user_id}>: '
+        
+        send_str = f'{ping_str}{text}'
+        
+        # Open the image to be sent.
+        if path_to_picture is not None:
+            with open(file=f'{path_to_picture}', mode='rb') as f:
+                my_file = discord.File(f)
+            webhook.send(send_str, file=my_file)
+        else:
+            webhook.send(send_str)
 
 
 class VideoCaptureHelper:

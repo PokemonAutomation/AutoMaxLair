@@ -5,41 +5,42 @@
 #           Discord user pifopi, and Discord user denvoros
 #       Created 2020-11-20
 
-import configparser
 import logging
 import logging.handlers
 import os
 import sys
-
 from datetime import datetime
 
 import pytesseract
+import toml
 
 import automaxlair
-
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-beta'
+VERSION = 'v0.7-release-candidate'
 
-# Load configuration from config file
-config = configparser.ConfigParser()
+# load configuration from the config file
+try:
+    config = toml.load("Config.toml")
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
+except:
+    raise SyntaxError(
+        "Something went wrong parsing Config.toml\n" +
+        "Please make sure you entered the information right " +
+        "and did not modify \" or . symbols or have uppercase true or false in the settings.")
 
-# Configparser doesn't complain if it can't find the config file,
-# so manually raise an error if the file was not read.
-if not config.read('Config.ini', 'utf8'):
-    raise FileNotFoundError('Failed to locate the Config.ini file.')
-
-COM_PORT = config['default']['COM_PORT']
-VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
-VIDEO_EXTRA_DELAY = float(config['advanced']['VIDEO_EXTRA_DELAY'])
-BOSS = config['default']['BOSS'].lower().replace(' ', '-')
-BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
-pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+COM_PORT = config['COM_PORT']
+VIDEO_INDEX = config['VIDEO_INDEX']
+VIDEO_EXTRA_DELAY = config['advanced']['VIDEO_EXTRA_DELAY']
+BOSS = config['BOSS'].lower().replace(' ', '-')
+BOSS_INDEX = config['advanced']['BOSS_INDEX']
+pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
+ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
 
 # Set the log name
-LOG_NAME = ''.join(
-    (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 
 
 def initialize(__) -> str:
@@ -98,10 +99,10 @@ def join(ctrlr) -> str:
 
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -516,8 +517,8 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            True, f'You got a winning path for {run.caught_pokemon[3]} with '
-            f'{run.lives} lives remaining !!!',
+            True, f'Found a winning path for {run.caught_pokemon[3]} with '
+            f'{run.lives} lives remaining!',
             f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
         ctrlr.log(f'This path won with {run.lives} lives remaining.')
         return None  # Return None to signal the program to end.
@@ -542,7 +543,7 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
-                True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
+                True, f'Matching stats found for {run.caught_pokemon[3]}!',
                 f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
             return None  # End whenever a matching stats legendary is found
 
@@ -578,13 +579,13 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
                 ctrlr.send_discord_message(
-                    True, f'You got a shiny {run.caught_pokemon[3]} !!!',
+                    True, f'Found a shiny {run.caught_pokemon[3]}!',
                     f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'You got a shiny '
-                    f'{run.caught_pokemon[run.num_caught - 1 - i]} !!!',
+                    False, f'Found a shiny '
+                    f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
                     f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
                 take_pokemon = True
                 break
@@ -679,10 +680,15 @@ if __name__ == '__main__':
         '%(asctime)s | %(levelname)s: %(message)s'
     )
 
+    # make the console formatter easier to read with fewer bits of info
+    console_formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s: %(message)s", "%H:%M:%S"
+    )
+
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    console.setFormatter(formatter)
+    console.setFormatter(console_formatter)
 
     # Configure the file handler, which will save logged information.
     fileHandler = logging.FileHandler(
