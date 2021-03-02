@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-beta'
+VERSION = 'v0.7-release-candidate'
 
 # load configuration from the config file
 try:
@@ -145,7 +145,7 @@ def path(ctrlr) -> str:
     # Then, move the cursor onto that boss and select it.
     for __ in range(offset):
         ctrlr.push_button(b'>', 1)
-    ctrlr.push_button(b'a', 4 + VIDEO_EXTRA_DELAY)
+    ctrlr.push_buttons((b'a', 4 + VIDEO_EXTRA_DELAY))
     run.advance_node()
     ctrlr.log(
         f'Chose path with index {offset} from the left, towards type '
