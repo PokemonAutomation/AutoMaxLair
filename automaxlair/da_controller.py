@@ -766,27 +766,23 @@ class DAController(SwitchController):
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
         
-    def get_stats_for_discord(self, increment_one=False) -> dict:
+    def get_stats_for_discord(self) -> dict:
         """This method takes information from the run and returns a nice dictionary
-        for embedding to Discord"""
-
+        for embedding to Discord
+        
+        increment_one is only for a win with a shiny, so that we can get the nice
+        status screen with the screenshot.
+        """
 
         the_dict = {
             "Boss": self.boss,
-            "Runs": self.runs,
-            "Wins": self.wins,
-            "Mode": self.mode,
+            "Wins/Runs": f"{self.wins}/{self.runs}",
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
-            "Shinies Found": self.shinies_found
         }
 
-        # if we have to increment one, we need to adjust the final stats!
-        if increment_one:
-            the_dict["Runs"] += 1
-            the_dict["Wins"] += 1
-            the_dict["Legendary Balls"] -= 1
-            the_dict["Base Balls"] -= 1
+        if self.shinies_found > 0:
+            the_dict["Shinies Found"] = self.shinies_found
         
         return the_dict

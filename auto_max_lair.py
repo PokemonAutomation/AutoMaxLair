@@ -607,7 +607,7 @@ def select_pokemon(ctrlr) -> str:
                 ctrlr.send_discord_message(
                     True, f'Found a shiny {run.caught_pokemon[3]}!',
                     path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
-                    embed_fields=ctrlr.get_stats_for_discord(increment_one=True),
+                    embed_fields=ctrlr.get_stats_for_discord(),
                     level="shiny"
                 )
                 return None  # End whenever a shiny legendary is found.
