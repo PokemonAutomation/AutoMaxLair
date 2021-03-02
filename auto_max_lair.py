@@ -53,7 +53,7 @@ def initialize(ctrlr) -> str:
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
     ctrlr.push_buttons(
-        (b'a', 2), (b'h', 2.0), (b'h', 2.0)
+        (b'a', 2), (b'h', 2.0), (b'h', 2.0), (b'b', 1.5), (b'b', 1.5)
     )
 
     return 'join'
