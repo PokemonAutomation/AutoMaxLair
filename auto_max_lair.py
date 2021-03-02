@@ -285,14 +285,14 @@ def battle(ctrlr) -> str:
             # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
-                    run.pokemon, run.opponent, teammates=run.rental_pokemon)
+                    run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     matchup_scoring.select_best_move(
-                        run.pokemon, run.opponent, run.rental_pokemon)
+                        run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
