@@ -455,7 +455,10 @@ class SwitchController:
             my_file = None
         
         # Open the image to be sent.
-        webhook.send(send_str, embed=embed, file=my_file)
+        try:
+            webhook.send(send_str, embed=embed, file=my_file)
+        except Exception as e:
+            self.log("The Discord webhook failed to send: " + str(e), "ERROR")
 
 
 class VideoCaptureHelper:
