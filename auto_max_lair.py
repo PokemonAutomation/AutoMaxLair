@@ -535,7 +535,7 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            False, 
+            True,
             f"Found a winning path for {ctrlr.boss} with {run.lives} remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
