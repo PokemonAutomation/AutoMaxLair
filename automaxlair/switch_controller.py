@@ -425,14 +425,14 @@ class SwitchController:
         # construct the webhook object
         webhook = discord.Webhook.partial(
             self.webhook_id, self.webhook_token,
-            adapter=discord.RequestsWebhookAdapter(),
-            timestamp=datetime.utcnow()
+            adapter=discord.RequestsWebhookAdapter()
         )
 
         # then build up our embed object
         embed = discord.Embed(
             title="AutoMaxLair Update", 
             colour=self.discord_embed_color,
+            timestamp=datetime.utcnow()
             )
 
         embed.set_thumbnail(url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png")
