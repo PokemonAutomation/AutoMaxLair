@@ -109,7 +109,7 @@ class DAController(SwitchController):
         self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
         self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
         self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
-        self.battle_text_rect = ((0, 0.805), (1, 0.95))
+        self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
@@ -186,9 +186,7 @@ class DAController(SwitchController):
         if not self.enable_debug_logs or rectangle_set is None:
             pass
         elif rectangle_set == 'detect':
-            self.outline_regions(
-                img, (self.menu_rect_1, self.menu_rect_2, self.den_text_rect),
-                (255, 255, 0))
+            self.outline_region(img, self.den_text_rect, (255, 255, 0))
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
                 img, (
@@ -497,7 +495,7 @@ class DAController(SwitchController):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 55, 255), 240, img
+            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
