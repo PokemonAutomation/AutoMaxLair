@@ -425,7 +425,8 @@ class SwitchController:
         # construct the webhook object
         webhook = discord.Webhook.partial(
             self.webhook_id, self.webhook_token,
-            adapter=discord.RequestsWebhookAdapter()
+            adapter=discord.RequestsWebhookAdapter(),
+            timestamp=datetime.utcnow()
         )
 
         # then build up our embed object
