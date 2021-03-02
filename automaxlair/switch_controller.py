@@ -298,7 +298,7 @@ class SwitchController:
         # Send the command to the microcontroller using the serial port.
         if char is not None:
             self.com.write(char)
-            hold_ticks = bytes([int(hold_time * 12.5)])
+            hold_ticks = bytes([round(hold_time * 12.5)])
             self.com.write(hold_ticks)
             char_echo = self.com.read()
             hold_echo = self.com.read()
