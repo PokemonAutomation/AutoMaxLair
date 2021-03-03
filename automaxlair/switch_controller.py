@@ -238,7 +238,8 @@ class SwitchController:
         lower_threshold: Tuple[int, int, int],
         upper_threshold: Tuple[int, int, int],
         mean_value_threshold: float,
-        img: Image = None
+        img: Image = None,
+        already_HSV: bool = False
     ) -> bool:
         """Check a specified section of the screen for values within a certain
         HSV range.
@@ -248,7 +249,8 @@ class SwitchController:
         # is white (value 255) and everything else appears black (0)
         if img is None:
             img = self.get_frame()
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        if not already_HSV:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
                            round(rect[0][0] * w):round(rect[1][0] * w)]
