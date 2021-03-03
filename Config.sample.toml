@@ -161,7 +161,7 @@ USER_SHORT_NAME = "YOUR_SHORT_NAME_WITHIN_QUOTES"
 #   "all" - provides all possible updates to your webhook, includes stats after a completed run
 #   "only_shiny" - will only push updates if shinies are found
 #   "none" - ignores all discord messages
-UPDATE_LEVELS = "all"
+UPDATE_LEVELS = "none"
 
 # ==========
 # === LANGUAGE SETTINGS
