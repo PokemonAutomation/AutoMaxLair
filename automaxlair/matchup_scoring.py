@@ -103,6 +103,29 @@ def terrain_damage_multiplier(
     attacker: Pokemon, move: Move, defender: Pokemon, field: Field
 ) -> float:
     modifier = 1.0
+
+    if 'flying' not in attacker.type_ids or 'levitate' != attacker.ability_name_id:
+        if field.is_terrain_electric():
+            if move.type_id == 'electric':
+                modifier *= 1.3
+        elif field.is_terrain_grassy():
+            if move.type_id == 'grass':
+                modifier *= 1.3
+        elif field.is_terrain_psychic():
+            if move.type_id == 'psychic':
+                modifier *= 1.3
+
+            if move.name_id == 'expanding-force':
+                modifier *= 1.5
+        elif field.is_terrain_misty():
+            if move.type_id == 'dragon':
+                modifier *= 0.5
+
+    if 'flying' not in defender.type_ids or 'levitate' != defender.ability_name_id:
+        if field.is_terrain_electric():
+            if move.name_id == 'rising-voltage':
+                modifier *= 2
+
     return modifier
 
 
@@ -251,7 +274,7 @@ def calculate_damage(
         numerator = attacker.stats[3]
         if move.name_id not in ('psystrike', 'psyshock'):
             denominator = defender.stats[4]
-            if field.is_weather_sandstorm():
+            if field.is_weather_sandstorm() and 'rock' in defender.type_ids:
                 denominator *= 1.5
         else:
             denominator = defender.stats[2]

@@ -34,6 +34,31 @@ def test_terrain(rental_pokemon, boss_pokemon):
         dmg = matchup_scoring.calculate_damage(rental_pokemon['electabuzz'], 1, boss_pokemon['guzzlord'], field)
         print(f'Damage is {dmg}')
 
+    print('rising voltage (clear / electric / psychic / grassy / misty)')
+    for field in [field_clear, field_electric, field_psychic, field_grassy, field_misty]:
+        dmg = matchup_scoring.calculate_damage(rental_pokemon['electabuzz'], 0, boss_pokemon['guzzlord'], field)
+        print(f'Damage is {dmg}')
+
+    print('psychic move (clear / electric / psychic / grassy / misty)')
+    for field in [field_clear, field_electric, field_psychic, field_grassy, field_misty]:
+        dmg = matchup_scoring.calculate_damage(rental_pokemon['slowbro'], 3, rental_pokemon['electabuzz'], field)
+        print(f'Damage is {dmg}')
+
+    print('expanding force (clear / electric / psychic / grassy / misty)')
+    for field in [field_clear, field_electric, field_psychic, field_grassy, field_misty]:
+        dmg = matchup_scoring.calculate_damage(rental_pokemon['slowbro'], 0, rental_pokemon['electabuzz'], field)
+        print(f'Damage is {dmg}')
+
+    print('dragon move (clear / electric / psychic / grassy / misty)')
+    for field in [field_clear, field_electric, field_psychic, field_grassy, field_misty]:
+        dmg = matchup_scoring.calculate_damage(rental_pokemon['charmeleon'], 1, rental_pokemon['electabuzz'], field)
+        print(f'Damage is {dmg}')
+
+    print('grass move (clear / electric / psychic / grassy / misty)')
+    for field in [field_clear, field_electric, field_psychic, field_grassy, field_misty]:
+        dmg = matchup_scoring.calculate_damage(rental_pokemon['tangela'], 2, rental_pokemon['electabuzz'], field)
+        print(f'Damage is {dmg}')
+
 
 def test_weather(rental_pokemon, boss_pokemon):
     print('Weather tests')
