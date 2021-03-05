@@ -12,6 +12,7 @@ Specific use cases can inherit from this class and add specific functionality.
 # 2021-02-13
 
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -370,14 +371,24 @@ class SwitchController:
 
         if log or screenshot:
             # Save a screenshot
-            self.log(f"Saving a screenshot to logs/{self.log_name}_cap_{self.num_saved_images}.png", "DEBUG")
-            self.num_saved_images += 1
-            cv2.imwrite(
-                f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+            self.save_screenshot(frame)
         else:
             # if it's not a screenshot, we'll display the frame
             # Display
             cv2.imshow(self.window_name, frame)
+
+    def save_screenshot(
+        self,
+        img: Image,
+        title: str = 'cap'
+    ) -> None:
+        """Save a screenshot in the logs folder."""
+        filename = os.path.join(
+            'logs', f'{self.log_name}_{title}_{self.num_saved_images}.png')
+        self.num_saved_images += 1
+        self.log(
+            f'Saving a screenshot to {filename}', 'DEBUG')
+        cv2.imwrite(filename, img)
 
     def send_discord_message(
         self, ping_yourself: bool, text: str, path_to_picture: str = None,

@@ -112,6 +112,14 @@ class DAController(SwitchController):
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
+        self.team_poke_rect_1 = ((0.01, 0.345), (0.06, 0.445))
+        self.team_poke_rect_2 = ((0.01, 0.51), (0.06, 0.61))
+        self.team_poke_rect_3 = ((0.01, 0.672), (0.06, 0.772))
+        self.team_poke_rect_4 = ((0.01, 0.835), (0.06, 0.935))
+        self.team_HP_rect_1 = ((0.073, 0.432), (0.127, 0.44))
+        self.team_HP_rect_2 = ((0.073, 0.592), (0.118, 0.601))
+        self.team_HP_rect_3 = ((0.073, 0.76), (0.118, 0.768))
+        self.team_HP_rect_4 = ((0.073, 0.923), (0.118, 0.929))
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
         self.paths_2_1_rect = ((0.2, 0), (0.4, 1))
         self.paths_2_2_rect = ((0.6, 0), (0.8, 1))
@@ -203,6 +211,12 @@ class DAController(SwitchController):
             self.outline_regions(
                 img, (self.moves_rect_1, self.moves_rect_2, self.moves_rect_3),
                 (255, 255, 0))
+            self.outline_regions(img, (
+                self.team_HP_rect_1, self.team_HP_rect_2,
+                self.team_HP_rect_3, self.team_HP_rect_4,
+                self.team_poke_rect_1, self.team_poke_rect_2,
+                self.team_poke_rect_3, self.team_poke_rect_4
+            ), (0, 0, 255))
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0, 255, 0))
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
@@ -266,7 +280,7 @@ class DAController(SwitchController):
 
         # Check every type image for a match within the image
         # TODO: try to look at the shadow of the Pokemon for more hints
-        best_match_value = 0
+        best_match_value = -1
         for type_id in (
             'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting',
             'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
