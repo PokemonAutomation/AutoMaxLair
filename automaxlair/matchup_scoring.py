@@ -106,18 +106,34 @@ def terrain_damage_multiplier(
 
     if 'flying' not in attacker.type_ids or 'levitate' != attacker.ability_name_id:
         if field.is_terrain_electric():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'electric'
+                modifier *= 1.5
+
             if move.type_id == 'electric':
                 modifier *= 1.3
         elif field.is_terrain_grassy():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'grass'
+                modifier *= 1.5
+
             if move.type_id == 'grass':
                 modifier *= 1.3
         elif field.is_terrain_psychic():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'psychic'
+                modifier *= 1.5
+            elif move.name_id == 'expanding-force':
+                modifier *= 1.5
+
             if move.type_id == 'psychic':
                 modifier *= 1.3
 
-            if move.name_id == 'expanding-force':
-                modifier *= 1.5
         elif field.is_terrain_misty():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'fairy'
+                modifier *= 1.5
+
             if move.type_id == 'dragon':
                 modifier *= 0.5
 
