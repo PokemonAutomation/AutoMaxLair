@@ -289,14 +289,14 @@ def battle(ctrlr) -> str:
             # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
-                    run.pokemon, run.opponent, teammates=run.rental_pokemon)
+                    run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     matchup_scoring.select_best_move(
-                        run.pokemon, run.opponent, run.rental_pokemon)
+                        run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
@@ -551,7 +551,7 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            False, 
+            True,
             f"Found a winning path for {ctrlr.boss} with {run.lives} remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),

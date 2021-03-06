@@ -851,9 +851,12 @@ class DAController(SwitchController):
         status screen with the screenshot.
         """
 
+        wins_updated = self.wins + 1 if self.current_run.lives != 0 else self.wins
+        runs_updated = self.runs + 1
+
         the_dict = {
             "Boss": self.boss,
-            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Wins/Runs": f"{wins_updated}/{runs_updated}",
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
