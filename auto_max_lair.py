@@ -499,17 +499,18 @@ def scientist(ctrlr) -> str:
     if run.pokemon is None or average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'a', 7 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'a', 3 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 7 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'b', 3 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
 
     # Read teammates.
     ctrlr.identify_team_pokemon()
+    ctrlr.push_button(None, 4)
     # If we took a Pokemon from the scientist, try to identify it.
     if run.pokemon is None:
         run.pokemon = run.team_pokemon[0]

@@ -322,18 +322,22 @@ class DAController(SwitchController):
             # even if it's poor quality.
             match_value = -1
             match_name_id = ''
+            match_value_2nd = -1
+            match_name_id_2nd = ''
             # Crop and threshold the image in the same way as the stored binary
             # sprite images.
             read_image = self.get_image_slice(img, rectangle)
             HP_bar_image = self.get_image_slice(img, HP_rects[i])
             read_image_binary = cv2.inRange(
                 cv2.cvtColor(read_image, cv2.COLOR_BGR2HSV), (0, 0, 10),
-                (180, 10, 255)
+                (180, 20, 255)
             )
             for name_id, sprite in self.pokemon_sprites:
                 # Check match value against stored Pokemon sprites
                 value, __ = self.match_template(sprite, read_image_binary)
                 if value > match_value:
+                    match_value_2nd = match_value
+                    match_name_id_2nd = match_name_id
                     match_value = value
                     match_name_id = name_id
 
@@ -346,6 +350,12 @@ class DAController(SwitchController):
                 f'Identified team member {i+1} as {match_name_id} with match '
                 f'score of {match_value:.3f} and HP of '
                 f'{round(pokemon.HP * 100)}%.', 'DEBUG')
+            if match_value < 0.75:
+                self.log(
+                    f'Could not find a great match for team member {i+1}. The '
+                    f'next best match was {match_name_id_2nd} with match value'
+                    f' of {match_value_2nd:.3f}.', 'WARNING'
+                )
 
         # Update the storage with the read Pokemon.
         self.current_run.team_pokemon = team_pokemon
