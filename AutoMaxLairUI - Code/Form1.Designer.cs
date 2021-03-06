@@ -1085,10 +1085,11 @@ namespace AutoDA
             this.boxSpeedNeg.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxSpeedNeg.Location = new System.Drawing.Point(218, 94);
             this.boxSpeedNeg.Name = "boxSpeedNeg";
-            this.boxSpeedNeg.Size = new System.Drawing.Size(30, 25);
+            this.boxSpeedNeg.Size = new System.Drawing.Size(62, 25);
             this.boxSpeedNeg.TabIndex = 26;
             this.boxSpeedNeg.Text = "81";
             this.boxSpeedNeg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.boxSpeedNeg.TextChanged += new System.EventHandler(this.boxSpeedNeg_TextChanged);
             // 
             // boxSpeedNeut
             // 
@@ -1097,7 +1098,7 @@ namespace AutoDA
             this.boxSpeedNeut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxSpeedNeut.Location = new System.Drawing.Point(218, 63);
             this.boxSpeedNeut.Name = "boxSpeedNeut";
-            this.boxSpeedNeut.Size = new System.Drawing.Size(30, 25);
+            this.boxSpeedNeut.Size = new System.Drawing.Size(61, 25);
             this.boxSpeedNeut.TabIndex = 25;
             this.boxSpeedNeut.Text = "90";
             this.boxSpeedNeut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1170,7 +1171,7 @@ namespace AutoDA
             this.boxSpeedPos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxSpeedPos.Location = new System.Drawing.Point(218, 32);
             this.boxSpeedPos.Name = "boxSpeedPos";
-            this.boxSpeedPos.Size = new System.Drawing.Size(30, 25);
+            this.boxSpeedPos.Size = new System.Drawing.Size(61, 25);
             this.boxSpeedPos.TabIndex = 17;
             this.boxSpeedPos.Text = "99";
             this.boxSpeedPos.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1182,10 +1183,11 @@ namespace AutoDA
             this.boxAttackNeg.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxAttackNeg.Location = new System.Drawing.Point(81, 94);
             this.boxAttackNeg.Name = "boxAttackNeg";
-            this.boxAttackNeg.Size = new System.Drawing.Size(30, 25);
+            this.boxAttackNeg.Size = new System.Drawing.Size(58, 25);
             this.boxAttackNeg.TabIndex = 19;
             this.boxAttackNeg.Text = "131";
             this.boxAttackNeg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.boxAttackNeg.TextChanged += new System.EventHandler(this.boxAttackNeg_TextChanged);
             // 
             // boxAttackNeut
             // 
@@ -1194,7 +1196,7 @@ namespace AutoDA
             this.boxAttackNeut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxAttackNeut.Location = new System.Drawing.Point(81, 63);
             this.boxAttackNeut.Name = "boxAttackNeut";
-            this.boxAttackNeut.Size = new System.Drawing.Size(30, 25);
+            this.boxAttackNeut.Size = new System.Drawing.Size(58, 25);
             this.boxAttackNeut.TabIndex = 18;
             this.boxAttackNeut.Text = "146";
             this.boxAttackNeut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1206,7 +1208,7 @@ namespace AutoDA
             this.boxAttackPos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxAttackPos.Location = new System.Drawing.Point(81, 32);
             this.boxAttackPos.Name = "boxAttackPos";
-            this.boxAttackPos.Size = new System.Drawing.Size(30, 25);
+            this.boxAttackPos.Size = new System.Drawing.Size(58, 25);
             this.boxAttackPos.TabIndex = 17;
             this.boxAttackPos.Text = "160";
             this.boxAttackPos.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1256,8 +1258,7 @@ namespace AutoDA
             // 
             // AutoDA
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(104)))), ((int)(((byte)(104)))));
             this.ClientSize = new System.Drawing.Size(584, 702);
             this.Controls.Add(this.panel1);
@@ -1266,6 +1267,7 @@ namespace AutoDA
             this.Controls.Add(this.panelSideMenu);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "AutoDA";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Automation: Dynamax Adventure";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoDA_FormClosing);
             this.Load += new System.EventHandler(this.AutoDA_Load);
