@@ -383,9 +383,9 @@ class SwitchController:
         title: str = 'cap'
     ) -> None:
         """Save a screenshot in the logs folder."""
+        self.num_saved_images += 1
         filename = os.path.join(
             'logs', f'{self.log_name}_{title}_{self.num_saved_images}.png')
-        self.num_saved_images += 1
         self.log(
             f'Saving a screenshot to {filename}', 'DEBUG')
         cv2.imwrite(filename, img)
