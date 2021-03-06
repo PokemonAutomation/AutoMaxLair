@@ -108,6 +108,9 @@ def join(ctrlr) -> str:
     run.pokemon = pokemon_list[selection_index]
     ctrlr.push_button(b'a', 22 + VIDEO_EXTRA_DELAY)
 
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+
     # Read the path.
     ctrlr.read_path_information(1)
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
@@ -132,18 +135,6 @@ def join(ctrlr) -> str:
     ctrlr.log(
         f'Target path at index {best_path_index} selected with score '
         f'{score_list[best_path_index]:.3f}: {target_path_str}.')
-
-    # DEBUG: save images of team for matching later
-    if ENABLE_DEBUG_LOGS:
-        img = ctrlr.get_frame()
-        ctrlr.save_screenshot(
-            ctrlr.get_image_slice(img, ctrlr.team_poke_rect_1))
-        ctrlr.save_screenshot(
-            ctrlr.get_image_slice(img, ctrlr.team_poke_rect_2))
-        ctrlr.save_screenshot(
-            ctrlr.get_image_slice(img, ctrlr.team_poke_rect_3))
-        ctrlr.save_screenshot(
-            ctrlr.get_image_slice(img, ctrlr.team_poke_rect_4))
 
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
@@ -424,6 +415,9 @@ def catch(ctrlr) -> str:
             # battle started.
             ctrlr.push_button(b'b', 7)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
+        
+        # Re-read teammates in case something changed.
+        ctrlr.identify_team_pokemon()
 
         # Move on to the detect stage.
         return 'detect'
@@ -513,6 +507,14 @@ def scientist(ctrlr) -> str:
         # battle started.
         ctrlr.push_buttons((None, 3), (b'b', 7 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
+
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+    # If we took a Pokemon from the scientist, try to identify it.
+    if run.pokemon is None:
+        run.pokemon = run.team_pokemon[0]
+        ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
+    
     return 'detect'
 
 

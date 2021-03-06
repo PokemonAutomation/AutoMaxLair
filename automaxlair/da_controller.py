@@ -112,12 +112,12 @@ class DAController(SwitchController):
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
-        self.team_poke_rect_1 = ((0.01, 0.345), (0.06, 0.445))
-        self.team_poke_rect_2 = ((0.01, 0.51), (0.06, 0.61))
-        self.team_poke_rect_3 = ((0.01, 0.672), (0.06, 0.772))
-        self.team_poke_rect_4 = ((0.01, 0.835), (0.06, 0.935))
+        self.team_poke_rect_1 = ((0.015, 0.375), (0.055, 0.435))
+        self.team_poke_rect_2 = ((0.015, 0.54), (0.055, 0.6))
+        self.team_poke_rect_3 = ((0.015, 0.702), (0.055, 0.762))
+        self.team_poke_rect_4 = ((0.015, 0.865), (0.055, 0.925))
         self.team_HP_rect_1 = ((0.073, 0.432), (0.127, 0.44))
-        self.team_HP_rect_2 = ((0.073, 0.592), (0.118, 0.601))
+        self.team_HP_rect_2 = ((0.073, 0.592), (0.118, 0.6))
         self.team_HP_rect_3 = ((0.073, 0.76), (0.118, 0.768))
         self.team_HP_rect_4 = ((0.073, 0.923), (0.118, 0.929))
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
@@ -157,8 +157,13 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['type_icon_path'], 'rb'
         ) as image_file:
             self.type_icons = pickle.load(image_file)
+        with open(
+            self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
+        ) as image_file:
+            self.pokemon_sprites = pickle.load(image_file)
 
         # Validate starting values.
+        # TODO: check with assert keyword??
         if self.mode not in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ):
@@ -294,6 +299,56 @@ class DAController(SwitchController):
                 match_result = (type_id, result)
 
         return match_result
+
+    def identify_team_pokemon(self) -> None:
+        """Read the Pokemon held by all team members from the sprites that are
+        shown in the den.
+        """
+
+        # First, grab the image so we can read it.
+        img = self.get_frame()
+
+        # Then, collect a list of the 4 Pokemon (with yours first).
+        team_pokemon = []
+        HP_rects = (
+            self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
+            self.team_HP_rect_4)
+        for i, rectangle in enumerate((
+            self.team_poke_rect_1, self.team_poke_rect_2,
+            self.team_poke_rect_3, self.team_poke_rect_4
+        )):
+            # Initialize default values
+            # Note that a match_value of -1 guarantees at least one match,
+            # even if it's poor quality.
+            match_value = -1
+            match_name_id = ''
+            # Crop and threshold the image in the same way as the stored binary
+            # sprite images.
+            read_image = self.get_image_slice(img, rectangle)
+            HP_bar_image = self.get_image_slice(img, HP_rects[i])
+            read_image_binary = cv2.inRange(
+                cv2.cvtColor(read_image, cv2.COLOR_BGR2HSV), (0, 0, 10),
+                (180, 10, 255)
+            )
+            for name_id, sprite in self.pokemon_sprites:
+                # Check match value against stored Pokemon sprites
+                value, __ = self.match_template(sprite, read_image_binary)
+                if value > match_value:
+                    match_value = value
+                    match_name_id = name_id
+
+            # Record the match for the team member
+            pokemon = self.current_run.rental_pokemon[match_name_id]
+            pokemon.HP = self.get_rect_HSV_value(
+                HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
+            team_pokemon.append(pokemon)
+            self.log(
+                f'Identified team member {i+1} as {match_name_id} with match '
+                f'score of {match_value:.3f} and HP of '
+                f'{round(pokemon.HP * 100)}%.', 'DEBUG')
+
+        # Update the storage with the read Pokemon.
+        self.current_run.team_pokemon = team_pokemon
 
     def identify_pokemon(
         self,

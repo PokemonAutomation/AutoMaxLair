@@ -60,6 +60,7 @@ class MaxLairInstance:
     def __init__(self, boss: str, data_paths: List[str]) -> None:
         self.boss = boss
         self.pokemon = None
+        self.team_pokemon = []
         self.HP = 1  # 1 = 100%
         self.num_caught = 0
         self.caught_pokemon = []
