@@ -1,5 +1,7 @@
 """Script for testing and viewing stored Pokemon and matchups."""
 
+import os
+import pickle
 import sys
 import jsonpickle
 
@@ -7,7 +9,7 @@ import jsonpickle
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
-sys.path.insert(1, base_dir + '\\automaxlair')
+sys.path.insert(1, os.path.join(base_dir, 'automaxlair'))
 
 from automaxlair import matchup_scoring  # noqa: E402
 from automaxlair.field import Field
@@ -120,23 +122,28 @@ def test_field(rental_pokemon, boss_pokemon):
 
 def main():
     with open(
-        base_dir + '/data/boss_pokemon.json', 'r', encoding='utf8'
+        os.path.join(base_dir, 'data', 'boss_pokemon.json'), 'r',
+        encoding='utf8'
     ) as file:
         boss_pokemon = jsonpickle.decode(file.read())
     with open(
-        base_dir + '/data/rental_pokemon.json', 'r', encoding='utf8'
+        os.path.join(base_dir, 'data', 'rental_pokemon.json'), 'r',
+        encoding='utf8'
     ) as file:
         rental_pokemon = jsonpickle.decode(file.read())
     with open(
-        base_dir + '/data/boss_matchup_LUT.json', 'r', encoding='utf8'
+        os.path.join(base_dir, 'data', 'boss_matchup_LUT.json'), 'r',
+        encoding='utf8'
     ) as file:
         boss_matchups = jsonpickle.decode(file.read())
     with open(
-        base_dir + '/data/rental_matchup_LUT.json', 'r', encoding='utf8'
+        os.path.join(base_dir, 'data', 'rental_matchup_LUT.json'), 'r',
+        encoding='utf8'
     ) as file:
         rental_matchups = jsonpickle.decode(file.read())
     with open(
-        base_dir + '/data/rental_pokemon_scores.json', 'r', encoding='utf8'
+        os.path.join(base_dir, 'data', 'rental_pokemon_scores.json'), 'r',
+        encoding='utf8'
     ) as file:
         rental_scores = jsonpickle.decode(file.read())
 
@@ -192,6 +199,19 @@ def main():
     )
     print('________________________________________')
 
+
+    # Ensure all rental Pokemon have sprites
+    with open(
+        os.path.join(base_dir, 'data', 'pokemon_sprites.pickle'), 'rb'
+    ) as file:
+        pokemon_sprites = pickle.load(file)
+    pokemon_sprites_dict = dict(pokemon_sprites)
+    for name_id in rental_pokemon:
+        if pokemon_sprites_dict.get(name_id) is None:
+            raise KeyError(f'ERROR: no image found for: {name_id}')
+    print('Successfully tested Pokemon sprite importing without errors.')
+
+    print('________________________________________')
     test_field(rental_pokemon, boss_pokemon)
 
 

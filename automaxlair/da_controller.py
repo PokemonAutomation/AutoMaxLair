@@ -3,9 +3,8 @@ Inherits basic methods from SwitchController and adds others for navigating the
 den.
 """
 
-#   MaxLairInstance
 #       Eric Donders
-#       Contributions from Miguel Tavera and Discord users denvoros and pifopi
+#       Contributions from denvoros, pifopi, and Miguel Tavera
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
@@ -64,25 +63,6 @@ class DAController(SwitchController):
 
         self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        # only need to run this assertion if we're checking the attack stat
-        if self.check_attack_stat:
-            assert 'positive' in self.expected_attack_stats.keys(), "No positive value found in expected attack stats"
-            assert 'negative' in self.expected_attack_stats.keys(), "No negative value found in expected attack stats"
-            assert 'neutral' in self.expected_attack_stats.keys(), "No neutral value found in expected attack stats"
-            assert type(self.expected_attack_stats['positive']) is list, "You must provide multiple values for positive attack stats"
-            assert type(self.expected_attack_stats['negative']) is list, "You must provide multiple values for negative attack stats"
-            assert type(self.expected_attack_stats['neutral']) is list, "You must provide multiple values for neutral attack stats"
-
-        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
-        self.expected_speed_stats = config['stats']['SPEED_STATS']
-        # only need to run this assertion if we're checking the speed stat
-        if self.check_speed_stat:
-            assert 'positive' in self.expected_speed_stats.keys(), "No positive value found in expected speed stats"
-            assert 'negative' in self.expected_speed_stats.keys(), "No negative value found in expected speed stats"
-            assert 'neutral' in self.expected_speed_stats.keys(), "No neutral value found in expected speed stats"
-            assert type(self.expected_speed_stats['positive']) is list, "You must provide multiple values for positive speed stats"
-            assert type(self.expected_speed_stats['negative']) is list, "You must provide multiple values for negative speed stats"
-            assert type(self.expected_speed_stats['neutral']) is list, "You must provide multiple values for neutral speed stats"
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -112,14 +92,14 @@ class DAController(SwitchController):
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
-        self.team_poke_rect_1 = ((0.01, 0.345), (0.06, 0.445))
-        self.team_poke_rect_2 = ((0.01, 0.51), (0.06, 0.61))
-        self.team_poke_rect_3 = ((0.01, 0.672), (0.06, 0.772))
-        self.team_poke_rect_4 = ((0.01, 0.835), (0.06, 0.935))
-        self.team_HP_rect_1 = ((0.073, 0.432), (0.127, 0.44))
-        self.team_HP_rect_2 = ((0.073, 0.592), (0.118, 0.601))
-        self.team_HP_rect_3 = ((0.073, 0.76), (0.118, 0.768))
-        self.team_HP_rect_4 = ((0.073, 0.923), (0.118, 0.929))
+        self.team_poke_rect_1 = ((0.015, 0.375), (0.055, 0.435))
+        self.team_poke_rect_2 = ((0.015, 0.54), (0.055, 0.6))
+        self.team_poke_rect_3 = ((0.015, 0.702), (0.055, 0.762))
+        self.team_poke_rect_4 = ((0.015, 0.865), (0.055, 0.925))
+        self.team_HP_rect_1 = ((0.073, 0.433), (0.127, 0.439))
+        self.team_HP_rect_2 = ((0.073, 0.594), (0.118, 0.6))
+        self.team_HP_rect_3 = ((0.073, 0.761), (0.118, 0.767))
+        self.team_HP_rect_4 = ((0.073, 0.924), (0.118, 0.928))
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
         self.paths_2_1_rect = ((0.2, 0), (0.4, 1))
         self.paths_2_2_rect = ((0.6, 0), (0.8, 1))
@@ -157,20 +137,49 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['type_icon_path'], 'rb'
         ) as image_file:
             self.type_icons = pickle.load(image_file)
+        with open(
+            self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
+        ) as image_file:
+            self.pokemon_sprites = pickle.load(image_file)
 
         # Validate starting values.
-        if self.mode not in (
+        assert self.boss in self.current_run.boss_pokemon, (
+            f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
+        )
+        assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
-        ):
-            self.log(
-                f'Supplied mode {self.mode} not understood; '
-                'using default mode.', 'WARNING'
-            )
-        if self.boss not in self.current_run.boss_pokemon:
-            raise KeyError(
-                f'Incorrect value: {config["BOSS"]} for BOSS '
-                'supplied in Config.ini'
-            )
+        ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
+        # Only need to run this assertion if we're checking the attack stat.
+        if self.check_attack_stat:
+            assert 'positive' in self.expected_attack_stats.keys(), (
+                "No positive value found in expected attack stats")
+            assert 'negative' in self.expected_attack_stats.keys(), (
+                "No negative value found in expected attack stats")
+            assert 'neutral' in self.expected_attack_stats.keys(), (
+                "No neutral value found in expected attack stats")
+            assert type(self.expected_attack_stats['positive']) is list, (
+                "You must provide multiple values for positive attack stats")
+            assert type(self.expected_attack_stats['negative']) is list, (
+                "You must provide multiple values for negative attack stats")
+            assert type(self.expected_attack_stats['neutral']) is list, (
+                "You must provide multiple values for neutral attack stats")
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
+        self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # Only need to run this assertion if we're checking the speed stat.
+        if self.check_speed_stat:
+            assert 'positive' in self.expected_speed_stats.keys(), (
+                "No positive value found in expected speed stats")
+            assert 'negative' in self.expected_speed_stats.keys(), (
+                "No negative value found in expected speed stats")
+            assert 'neutral' in self.expected_speed_stats.keys(), (
+                "No neutral value found in expected speed stats")
+            assert type(self.expected_speed_stats['positive']) is list, (
+                "You must provide multiple values for positive speed stats")
+            assert type(self.expected_speed_stats['negative']) is list, (
+                "You must provide multiple values for negative speed stats")
+            assert type(self.expected_speed_stats['neutral']) is list, (
+                "You must provide multiple values for neutral speed stats")
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
@@ -294,6 +303,66 @@ class DAController(SwitchController):
                 match_result = (type_id, result)
 
         return match_result
+
+    def identify_team_pokemon(self) -> None:
+        """Read the Pokemon held by all team members from the sprites that are
+        shown in the den.
+        """
+
+        # First, grab the image so we can read it.
+        img = self.get_frame()
+
+        # Then, collect a list of the 4 Pokemon (with yours first).
+        team_pokemon = []
+        HP_rects = (
+            self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
+            self.team_HP_rect_4)
+        for i, rectangle in enumerate((
+            self.team_poke_rect_1, self.team_poke_rect_2,
+            self.team_poke_rect_3, self.team_poke_rect_4
+        )):
+            # Initialize default values
+            # Note that a match_value of -1 guarantees at least one match,
+            # even if it's poor quality.
+            match_value = -1
+            match_name_id = ''
+            match_value_2nd = -1
+            match_name_id_2nd = ''
+            # Crop and threshold the image in the same way as the stored binary
+            # sprite images.
+            read_image = self.get_image_slice(img, rectangle)
+            HP_bar_image = self.get_image_slice(img, HP_rects[i])
+            read_image_binary = cv2.inRange(
+                cv2.cvtColor(read_image, cv2.COLOR_BGR2HSV), (0, 0, 10),
+                (180, 20, 255)
+            )
+            for name_id, sprite in self.pokemon_sprites:
+                # Check match value against stored Pokemon sprites
+                value, __ = self.match_template(sprite, read_image_binary)
+                if value > match_value:
+                    match_value_2nd = match_value
+                    match_name_id_2nd = match_name_id
+                    match_value = value
+                    match_name_id = name_id
+
+            # Record the match for the team member
+            pokemon = self.current_run.rental_pokemon[match_name_id]
+            pokemon.HP = self.get_rect_HSV_value(
+                HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
+            team_pokemon.append(pokemon)
+            self.log(
+                f'Identified team member {i+1} as {match_name_id} with match '
+                f'score of {match_value:.3f} and HP of '
+                f'{round(pokemon.HP * 100)}%.', 'DEBUG')
+            if match_value < 0.75:
+                self.log(
+                    f'Could not find a great match for team member {i+1}. The '
+                    f'next best match was {match_name_id_2nd} with match value'
+                    f' of {match_value_2nd:.3f}.', 'WARNING'
+                )
+
+        # Update the storage with the read Pokemon.
+        self.current_run.team_pokemon = team_pokemon
 
     def identify_pokemon(
         self,

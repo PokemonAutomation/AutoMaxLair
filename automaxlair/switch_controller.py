@@ -233,6 +233,20 @@ class SwitchController:
         # Finally, return the OCRed text.
         return text
 
+    def get_rect_HSV_value(
+        self,
+        img: Image,
+        lower_threshold: Tuple[int, int, int],
+        upper_threshold: Tuple[int, int, int],
+        is_HSV: bool = False
+    ) -> float:
+        """Threshold an image and return the average value afterwards."""
+        if not is_HSV:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        img_thresholded = cv2.inRange(img, lower_threshold, upper_threshold)
+
+        return img_thresholded.mean()
+
     def check_rect_HSV_match(
         self,
         rect: Rectangle,
@@ -249,12 +263,11 @@ class SwitchController:
         # is white (value 255) and everything else appears black (0)
         if img is None:
             img = self.get_frame()
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
                            round(rect[0][0] * w):round(rect[1][0] * w)]
-        measured_value = cv2.inRange(
-            cropped_area, lower_threshold, upper_threshold).mean()
+        measured_value = self.get_rect_HSV_value(
+            cropped_area, lower_threshold, upper_threshold)
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
