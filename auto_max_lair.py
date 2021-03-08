@@ -47,8 +47,8 @@ def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
     ctrlr.send_discord_message(False, f"Starting a new full run for {ctrlr.boss}!",
-        embed_fields=ctrlr.get_stats_for_discord(), level="update"
-    )
+                               embed_fields=ctrlr.get_stats_for_discord(), level="update"
+                               )
 
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
@@ -683,7 +683,7 @@ def select_pokemon(ctrlr) -> str:
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
         ctrlr.send_discord_message(
-            False, f'Preparing for another run.',
+            False, 'Preparing for another run.',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
@@ -691,7 +691,7 @@ def select_pokemon(ctrlr) -> str:
     else:
         ctrlr.log('Out of balls. Quitting.')
         ctrlr.send_discord_message(
-            True, f'You ran out of legendary balls! The program has exited!',
+            True, 'You ran out of legendary balls! The program has exited!',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="critical"
         )

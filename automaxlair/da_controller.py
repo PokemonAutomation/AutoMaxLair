@@ -638,11 +638,11 @@ class DAController(SwitchController):
             for nature_type, expected_attacks in self.expected_attack_stats.items():
                 nature_plus_expected = False if nature_type != 'positive' else True
                 nature_minus_expected = False if nature_type != 'negative' else True
-                
+
                 # then iterate through the stats
                 for expected_attack in expected_attacks:
                     expected_attack = str(expected_attack)
-                
+
                     if expected_attack in read_attack:
                         if (
                             (nature_minus_expected and self.check_rect_HSV_match(
@@ -676,7 +676,8 @@ class DAController(SwitchController):
             for nature_type, expected_speeds in self.expected_speed_stats.items():
                 nature_plus_expected = False if nature_type != 'positive' else True
                 nature_minus_expected = False if nature_type != 'negative' else True
-            
+
+                # then iterate through the stats
                 for expected_speed in expected_speeds:
                     expected_speed = str(expected_speed)
                     if expected_speed in read_speed:
@@ -846,11 +847,11 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
-        
+
     def get_stats_for_discord(self) -> dict:
         """This method takes information from the run and returns a nice dictionary
         for embedding to Discord
-        
+
         increment_one is only for a win with a shiny, so that we can get the nice
         status screen with the screenshot.
         """
@@ -868,5 +869,5 @@ class DAController(SwitchController):
 
         if self.shinies_found > 0:
             the_dict["Shinies Found"] = self.shinies_found
-        
+
         return the_dict
