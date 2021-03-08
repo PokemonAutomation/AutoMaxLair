@@ -184,6 +184,7 @@ Rental_Matchup_LUT = "data/rental_matchup_LUT.json"
 Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
 path_tree_path = "data/path_tree.json"
 type_icon_path = "data/type_icons.pickle"
+pokemon_sprite_path = "data/pokemon_sprites.pickle"
 
 # ==========
 # === OTHER LANGUAGE SETTINGS

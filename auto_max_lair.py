@@ -108,12 +108,15 @@ def join(ctrlr) -> str:
     run.pokemon = pokemon_list[selection_index]
     ctrlr.push_button(b'a', 22 + VIDEO_EXTRA_DELAY)
 
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.6)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -132,6 +135,7 @@ def join(ctrlr) -> str:
     ctrlr.log(
         f'Target path at index {best_path_index} selected with score '
         f'{score_list[best_path_index]:.3f}: {target_path_str}.')
+
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
@@ -285,14 +289,14 @@ def battle(ctrlr) -> str:
             # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
-                    run.pokemon, run.opponent, teammates=run.rental_pokemon)
+                    run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     matchup_scoring.select_best_move(
-                        run.pokemon, run.opponent, run.rental_pokemon)
+                        run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
@@ -411,6 +415,9 @@ def catch(ctrlr) -> str:
             # battle started.
             ctrlr.push_button(b'b', 7)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
+        
+        # Re-read teammates in case something changed.
+        ctrlr.identify_team_pokemon()
 
         # Move on to the detect stage.
         return 'detect'
@@ -492,14 +499,23 @@ def scientist(ctrlr) -> str:
     if run.pokemon is None or average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'a', 7 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'a', 3 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 7 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'b', 3 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
+
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+    ctrlr.push_button(None, 4)
+    # If we took a Pokemon from the scientist, try to identify it.
+    if run.pokemon is None:
+        run.pokemon = run.team_pokemon[0]
+        ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
+    
     return 'detect'
 
 
@@ -535,7 +551,7 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            False, 
+            True,
             f"Found a winning path for {ctrlr.boss} with {run.lives} remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
