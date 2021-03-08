@@ -415,7 +415,7 @@ def catch(ctrlr) -> str:
             # battle started.
             ctrlr.push_button(b'b', 7)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
-        
+
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
 
@@ -515,7 +515,7 @@ def scientist(ctrlr) -> str:
     if run.pokemon is None:
         run.pokemon = run.team_pokemon[0]
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    
+
     return 'detect'
 
 
