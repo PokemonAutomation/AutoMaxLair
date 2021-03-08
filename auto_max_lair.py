@@ -197,7 +197,7 @@ def battle(ctrlr) -> str:
         elif battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
-            ctrlr.push_button(None, 4)
+            ctrlr.push_button(None, 3)
         elif battle_state == 'LOSS':
             ctrlr.log('You lose and the battle is finished.')
             run.lives -= 1
