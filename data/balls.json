@@ -1,0 +1,402 @@
+[
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "beast-ball",
+        "names": {
+            "ja-Hrkt": "\u30a6\u30eb\u30c8\u30e9\u30dc\u30fc\u30eb",
+            "ko": "\uc6b8\ud2b8\ub77c\ubcfc",
+            "zh-Hant": "\u7a76\u6975\u7403",
+            "fr": "Ultra Ball",
+            "de": "Ultraball",
+            "es": "Ente Ball",
+            "it": "UC Ball",
+            "en": "Beast Ball",
+            "ja": "\u30a6\u30eb\u30c8\u30e9\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u7a76\u6781\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "dive-ball",
+        "names": {
+            "ja-Hrkt": "\u30c0\u30a4\u30d6\u30dc\u30fc\u30eb",
+            "ko": "\ub2e4\uc774\ube0c\ubcfc",
+            "zh-Hant": "\u6f5b\u6c34\u7403",
+            "fr": "Scuba Ball",
+            "de": "Tauchball",
+            "es": "Buceo Ball",
+            "it": "Sub Ball",
+            "en": "Dive Ball",
+            "ja": "\u30c0\u30a4\u30d6\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u6f5c\u6c34\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "dream-ball",
+        "names": {
+            "ja-Hrkt": "\u30c9\u30ea\u30fc\u30e0\u30dc\u30fc\u30eb",
+            "ko": "\ub4dc\ub9bc\ubcfc",
+            "zh-Hant": "\u5922\u5883\u7403",
+            "fr": "R\u00eave Ball",
+            "de": "Traumball",
+            "es": "Ensue\u00f1o Ball",
+            "it": "Dream Ball",
+            "en": "Dream Ball",
+            "ja": "\u30c9\u30ea\u30fc\u30e0\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u68a6\u5883\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "dusk-ball",
+        "names": {
+            "ja-Hrkt": "\u30c0\u30fc\u30af\u30dc\u30fc\u30eb",
+            "ko": "\ub2e4\ud06c\ubcfc",
+            "zh-Hant": "\u9ed1\u6697\u7403",
+            "fr": "Sombre Ball",
+            "de": "Finsterball",
+            "es": "Ocaso Ball",
+            "it": "Scuro Ball",
+            "en": "Dusk Ball",
+            "ja": "\u30c0\u30fc\u30af\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u9ed1\u6697\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "fast-ball",
+        "names": {
+            "ja-Hrkt": "\u30b9\u30d4\u30fc\u30c9\u30dc\u30fc\u30eb",
+            "ko": "\uc2a4\ud53c\ub4dc\ubcfc",
+            "zh-Hant": "\u901f\u5ea6\u7403",
+            "fr": "Speed Ball",
+            "de": "Turboball",
+            "es": "Rapid Ball",
+            "it": "Rapid Ball",
+            "en": "Fast Ball",
+            "ja": "\u30b9\u30d4\u30fc\u30c9\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u901f\u5ea6\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "friend-ball",
+        "names": {
+            "ja-Hrkt": "\u30d5\u30ec\u30f3\u30c9\u30dc\u30fc\u30eb",
+            "ko": "\ud504\ub80c\ub4dc\ubcfc",
+            "zh-Hant": "\u53cb\u53cb\u7403",
+            "fr": "Copain Ball",
+            "de": "Freundesball",
+            "es": "Amigo Ball",
+            "it": "Friend Ball",
+            "en": "Friend Ball",
+            "ja": "\u30d5\u30ec\u30f3\u30c9\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u53cb\u53cb\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "great-ball",
+        "names": {
+            "ja-Hrkt": "\u30b9\u30fc\u30d1\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\uc218\ud37c\ubcfc",
+            "zh-Hant": "\u8d85\u7d1a\u7403",
+            "fr": "Super Ball",
+            "de": "Superball",
+            "es": "Super Ball",
+            "it": "Mega Ball",
+            "en": "Great Ball",
+            "ja": "\u30b9\u30fc\u30d1\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u8d85\u7ea7\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "heal-ball",
+        "names": {
+            "ja-Hrkt": "\u30d2\u30fc\u30eb\u30dc\u30fc\u30eb",
+            "ko": "\ud790\ubcfc",
+            "zh-Hant": "\u6cbb\u7652\u7403",
+            "fr": "Soin Ball",
+            "de": "Heilball",
+            "es": "Sana Ball",
+            "it": "Cura Ball",
+            "en": "Heal Ball",
+            "ja": "\u30d2\u30fc\u30eb\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u6cbb\u6108\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "heavy-ball",
+        "names": {
+            "ja-Hrkt": "\u30d8\u30d3\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ud5e4\ube44\ubcfc",
+            "zh-Hant": "\u6c89\u91cd\u7403",
+            "fr": "Masse Ball",
+            "de": "Schwerball",
+            "es": "Peso Ball",
+            "it": "Peso Ball",
+            "en": "Heavy Ball",
+            "ja": "\u30d8\u30d3\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u6c89\u91cd\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "level-ball",
+        "names": {
+            "ja-Hrkt": "\u30ec\u30d9\u30eb\u30dc\u30fc\u30eb",
+            "ko": "\ub808\ubca8\ubcfc",
+            "zh-Hant": "\u7b49\u7d1a\u7403",
+            "fr": "Niveau Ball",
+            "de": "Levelball",
+            "es": "Nivel Ball",
+            "it": "Level Ball",
+            "en": "Level Ball",
+            "ja": "\u30ec\u30d9\u30eb\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u7b49\u7ea7\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "love-ball",
+        "names": {
+            "ja-Hrkt": "\u30e9\u30d6\u30e9\u30d6\u30dc\u30fc\u30eb",
+            "ko": "\ub7ec\ube0c\ub7ec\ube0c\ubcfc",
+            "zh-Hant": "\u751c\u871c\u7403",
+            "fr": "Love Ball",
+            "de": "Sympaball",
+            "es": "Amor Ball",
+            "it": "Love Ball",
+            "en": "Love Ball",
+            "ja": "\u30e9\u30d6\u30e9\u30d6\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u751c\u871c\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "lure-ball",
+        "names": {
+            "ja-Hrkt": "\u30eb\u30a2\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ub8e8\uc5b4\ubcfc",
+            "zh-Hant": "\u8a98\u990c\u7403",
+            "fr": "App\u00e2t Ball",
+            "de": "K\u00f6derball",
+            "es": "Cebo Ball",
+            "it": "Esca Ball",
+            "en": "Lure Ball",
+            "ja": "\u30eb\u30a2\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u8bf1\u9975\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "luxury-ball",
+        "names": {
+            "ja-Hrkt": "\u30b4\u30fc\u30b8\u30e3\u30b9\u30dc\u30fc\u30eb",
+            "ko": "\ub7ed\uc154\ub9ac\ubcfc",
+            "zh-Hant": "\u8c6a\u83ef\u7403",
+            "fr": "Luxe Ball",
+            "de": "Luxusball",
+            "es": "Lujo Ball",
+            "it": "Chic Ball",
+            "en": "Luxury Ball",
+            "ja": "\u30b4\u30fc\u30b8\u30e3\u30b9\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u8c6a\u534e\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "master-ball",
+        "names": {
+            "ja-Hrkt": "\u30de\u30b9\u30bf\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ub9c8\uc2a4\ud130\ubcfc",
+            "zh-Hant": "\u5927\u5e2b\u7403",
+            "fr": "Master Ball",
+            "de": "Meisterball",
+            "es": "Master Ball",
+            "it": "Master Ball",
+            "en": "Master Ball",
+            "ja": "\u30de\u30b9\u30bf\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u5927\u5e08\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "moon-ball",
+        "names": {
+            "ja-Hrkt": "\u30e0\u30fc\u30f3\u30dc\u30fc\u30eb",
+            "ko": "\ubb38\ubcfc",
+            "zh-Hant": "\u6708\u4eae\u7403",
+            "fr": "Lune Ball",
+            "de": "Mondball",
+            "es": "Luna Ball",
+            "it": "Luna Ball",
+            "en": "Moon Ball",
+            "ja": "\u30e0\u30fc\u30f3\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u6708\u4eae\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "nest-ball",
+        "names": {
+            "ja-Hrkt": "\u30cd\u30b9\u30c8\u30dc\u30fc\u30eb",
+            "ko": "\ub124\uc2a4\ud2b8\ubcfc",
+            "zh-Hant": "\u5de2\u7a74\u7403",
+            "fr": "Faiblo Ball",
+            "de": "Nestball",
+            "es": "Nido Ball",
+            "it": "Minor Ball",
+            "en": "Nest Ball",
+            "ja": "\u30cd\u30b9\u30c8\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u5de2\u7a74\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "net-ball",
+        "names": {
+            "ja-Hrkt": "\u30cd\u30c3\u30c8\u30dc\u30fc\u30eb",
+            "ko": "\ub137\ud2b8\ubcfc",
+            "zh-Hant": "\u6355\u7db2\u7403",
+            "fr": "Filet Ball",
+            "de": "Netzball",
+            "es": "Malla Ball",
+            "it": "Rete Ball",
+            "en": "Net Ball",
+            "ja": "\u30cd\u30c3\u30c8\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u6355\u7f51\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "poke-ball",
+        "names": {
+            "ja-Hrkt": "\u30e2\u30f3\u30b9\u30bf\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ubaac\uc2a4\ud130\ubcfc",
+            "zh-Hant": "\u7cbe\u9748\u7403",
+            "fr": "Pok\u00e9 Ball",
+            "de": "Pok\u00e9ball",
+            "es": "Pok\u00e9 Ball",
+            "it": "Pok\u00e9 Ball",
+            "en": "Pok\u00e9 Ball",
+            "ja": "\u30e2\u30f3\u30b9\u30bf\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u7cbe\u7075\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "premier-ball",
+        "names": {
+            "ja-Hrkt": "\u30d7\u30ec\u30df\u30a2\u30dc\u30fc\u30eb",
+            "ko": "\ud504\ub808\ubbf8\uc5b4\ubcfc",
+            "zh-Hant": "\u7d00\u5ff5\u7403",
+            "fr": "Honor Ball",
+            "de": "Premierball",
+            "es": "Honor Ball",
+            "it": "Premier Ball",
+            "en": "Premier Ball",
+            "ja": "\u30d7\u30ec\u30df\u30a2\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u7eaa\u5ff5\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "quick-ball",
+        "names": {
+            "ja-Hrkt": "\u30af\u30a4\u30c3\u30af\u30dc\u30fc\u30eb",
+            "ko": "\ud035\ubcfc",
+            "zh-Hant": "\u5148\u6a5f\u7403",
+            "fr": "Rapide Ball",
+            "de": "Flottball",
+            "es": "Veloz Ball",
+            "it": "Velox Ball",
+            "en": "Quick Ball",
+            "ja": "\u30af\u30a4\u30c3\u30af\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u5148\u673a\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "repeat-ball",
+        "names": {
+            "ja-Hrkt": "\u30ea\u30d4\u30fc\u30c8\u30dc\u30fc\u30eb",
+            "ko": "\ub9ac\ud53c\ub4dc\ubcfc",
+            "zh-Hant": "\u91cd\u8907\u7403",
+            "fr": "Bis Ball",
+            "de": "Wiederball",
+            "es": "Acopio Ball",
+            "it": "Bis Ball",
+            "en": "Repeat Ball",
+            "ja": "\u30ea\u30d4\u30fc\u30c8\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u91cd\u590d\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "safari-ball",
+        "names": {
+            "ja-Hrkt": "\u30b5\u30d5\u30a1\u30ea\u30dc\u30fc\u30eb",
+            "ko": "\uc0ac\ud30c\ub9ac\ubcfc",
+            "zh-Hant": "\u72e9\u7375\u7403",
+            "fr": "Safari Ball",
+            "de": "Safariball",
+            "es": "Safari Ball",
+            "it": "Safari Ball",
+            "en": "Safari Ball",
+            "ja": "\u30b5\u30d5\u30a1\u30ea\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u72e9\u730e\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "sport-ball",
+        "names": {
+            "ja-Hrkt": "\u30b3\u30f3\u30da\u30dc\u30fc\u30eb",
+            "ko": "\ucf64\ud398\ubcfc",
+            "zh-Hant": "\u7af6\u8cfd\u7403",
+            "fr": "Comp\u00e9t\u2019Ball",
+            "de": "Turnierball",
+            "es": "Competi Ball",
+            "it": "Gara Ball",
+            "en": "Sport Ball",
+            "ja": "\u30b3\u30f3\u30da\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u7ade\u8d5b\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "timer-ball",
+        "names": {
+            "ja-Hrkt": "\u30bf\u30a4\u30de\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ud0c0\uc774\ub9c8\ubcfc",
+            "zh-Hant": "\u8a08\u6642\u7403",
+            "fr": "Chrono Ball",
+            "de": "Timerball",
+            "es": "Turno Ball",
+            "it": "Timer Ball",
+            "en": "Timer Ball",
+            "ja": "\u30bf\u30a4\u30de\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u8ba1\u65f6\u7403"
+        }
+    },
+    {
+        "py/object": "automaxlair.ball.Ball",
+        "name_id": "ultra-ball",
+        "names": {
+            "ja-Hrkt": "\u30cf\u30a4\u30d1\u30fc\u30dc\u30fc\u30eb",
+            "ko": "\ud558\uc774\ud37c\ubcfc",
+            "zh-Hant": "\u9ad8\u7d1a\u7403",
+            "fr": "Hyper Ball",
+            "de": "Hyperball",
+            "es": "Ultra Ball",
+            "it": "Ultra Ball",
+            "en": "Ultra Ball",
+            "ja": "\u30cf\u30a4\u30d1\u30fc\u30dc\u30fc\u30eb",
+            "zh-Hans": "\u9ad8\u7ea7\u7403"
+        }
+    }
+]
