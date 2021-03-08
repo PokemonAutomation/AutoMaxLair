@@ -57,7 +57,18 @@ namespace AutoDA
         {
             // Read from Config.toml file
             string path = Directory.GetCurrentDirectory();
-            string configData = path + @"\Config.toml";
+            string configData = "";
+
+            // Check if Config.toml exist, if not use Config.sample.toml
+            if (File.Exists(path + @"\Config.toml"))
+            {
+                configData = path + @"\Config.toml";
+            }
+            else
+            {
+                configData = path + @"\Config.sample.toml";
+            }
+            
 
             using (StreamReader reader = new StreamReader(File.OpenRead(configData)))
             {
@@ -486,6 +497,24 @@ namespace AutoDA
         private void boxSpeedNeg_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolTip_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnTesseract_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.RootFolder = Environment.SpecialFolder.ProgramFiles;
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                boxTesseract.Text = fbd.SelectedPath;
         }
     }
 }

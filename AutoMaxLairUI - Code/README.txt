@@ -1,6 +1,6 @@
 If you don't have a program to compile, here is a link for a published version:
 
-https://we.tl/t-hTP0G5C0sq
+https://we.tl/t-XeT040FraF
 
-To use the UI just place the AutoMaxLair.exe and to the root 
+To use the UI just place the AutoMaxLair.exe to the root 
 of the automaxlair folder
