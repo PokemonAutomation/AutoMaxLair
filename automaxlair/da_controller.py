@@ -146,9 +146,22 @@ class DAController(SwitchController):
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
+        if self.base_ball == self.legendary_ball:
+            assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
+            assert self.base_balls >= 4, 'Not enough base ball'
+            assert self.base_balls <= 999, 'Too much base ball'
+        else:
+            assert self.base_balls >= 3, 'Not enough base ball'
+            assert self.base_balls <= 999, 'Too much base ball'
+            assert self.legendary_balls >= 1, 'Not enough legendary ball'
+            assert self.legendary_balls <= 999, 'Too much legendary ball'
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
+        assert self.discord_level in ['all', 'only_shiny', 'none'], 'Invalid discord level'
+        # Do not assert for negative dynite ore. That way it can be used to farm ore.
+        assert self.dynite_ore <= 999, 'Too much dynite ore'
+        assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
         # Only need to run this assertion if we're checking the attack stat.
         if self.check_attack_stat:
             assert 'positive' in self.expected_attack_stats.keys(), (
