@@ -14,6 +14,7 @@ sys.path.insert(1, os.path.join(base_dir, 'automaxlair'))
 from automaxlair import matchup_scoring  # noqa: E402
 from automaxlair.field import Field
 
+
 def test_terrain(rental_pokemon, boss_pokemon):
     print('Terrain tests')
     field_clear = Field()
@@ -197,7 +198,6 @@ def main():
         rental_pokemon['tsareena'], rental_pokemon['azumarill'], Field(), rental_pokemon
     )
     print('________________________________________')
-
 
     # Ensure all rental Pokemon have sprites
     with open(
