@@ -657,18 +657,17 @@ class DAController(SwitchController):
                     expected_attack = str(expected_attack)
 
                     if expected_attack in read_attack:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.attack_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10)) or (
-                                nature_plus_expected and self.check_rect_HSV_match(
-                                    self.attack_label_rect, (150, 30, 0),
-                                    (180, 255, 255), 10)
-                            )
-                            or (
-                                not nature_minus_expected
-                                and not nature_plus_expected)
-                        ):
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_attack_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.attack_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_attack_matching = True
+                        elif (not nature_minus_expected and not nature_plus_expected):
                             is_attack_matching = True
 
             if is_attack_matching:
@@ -694,17 +693,17 @@ class DAController(SwitchController):
                 for expected_speed in expected_speeds:
                     expected_speed = str(expected_speed)
                     if expected_speed in read_speed:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.speed_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10))
-                            or (nature_plus_expected and self.check_rect_HSV_match(
-                            self.speed_label_rect, (150, 30, 0),
-                            (180, 255, 255), 10))
-                            or (
-                            not nature_minus_expected
-                            and not nature_plus_expected)
-                        ):
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_speed_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.speed_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_speed_matching = True
+                        elif (not nature_minus_expected and not nature_plus_expected):
                             is_speed_matching = True
 
             if is_speed_matching:
