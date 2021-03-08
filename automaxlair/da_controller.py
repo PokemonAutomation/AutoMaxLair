@@ -3,9 +3,8 @@ Inherits basic methods from SwitchController and adds others for navigating the
 den.
 """
 
-#   MaxLairInstance
 #       Eric Donders
-#       Contributions from Miguel Tavera and Discord users denvoros and pifopi
+#       Contributions from denvoros, pifopi, and Miguel Tavera
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
@@ -64,25 +63,6 @@ class DAController(SwitchController):
 
         self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        # only need to run this assertion if we're checking the attack stat
-        if self.check_attack_stat:
-            assert 'positive' in self.expected_attack_stats.keys(), "No positive value found in expected attack stats"
-            assert 'negative' in self.expected_attack_stats.keys(), "No negative value found in expected attack stats"
-            assert 'neutral' in self.expected_attack_stats.keys(), "No neutral value found in expected attack stats"
-            assert type(self.expected_attack_stats['positive']) is list, "You must provide multiple values for positive attack stats"
-            assert type(self.expected_attack_stats['negative']) is list, "You must provide multiple values for negative attack stats"
-            assert type(self.expected_attack_stats['neutral']) is list, "You must provide multiple values for neutral attack stats"
-
-        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
-        self.expected_speed_stats = config['stats']['SPEED_STATS']
-        # only need to run this assertion if we're checking the speed stat
-        if self.check_speed_stat:
-            assert 'positive' in self.expected_speed_stats.keys(), "No positive value found in expected speed stats"
-            assert 'negative' in self.expected_speed_stats.keys(), "No negative value found in expected speed stats"
-            assert 'neutral' in self.expected_speed_stats.keys(), "No neutral value found in expected speed stats"
-            assert type(self.expected_speed_stats['positive']) is list, "You must provide multiple values for positive speed stats"
-            assert type(self.expected_speed_stats['negative']) is list, "You must provide multiple values for negative speed stats"
-            assert type(self.expected_speed_stats['neutral']) is list, "You must provide multiple values for neutral speed stats"
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -163,19 +143,43 @@ class DAController(SwitchController):
             self.pokemon_sprites = pickle.load(image_file)
 
         # Validate starting values.
-        # TODO: check with assert keyword??
-        if self.mode not in (
+        assert self.boss in self.current_run.boss_pokemon, (
+            f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
+        )
+        assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
-        ):
-            self.log(
-                f'Supplied mode {self.mode} not understood; '
-                'using default mode.', 'WARNING'
-            )
-        if self.boss not in self.current_run.boss_pokemon:
-            raise KeyError(
-                f'Incorrect value: {config["BOSS"]} for BOSS '
-                'supplied in Config.ini'
-            )
+        ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
+        # Only need to run this assertion if we're checking the attack stat.
+        if self.check_attack_stat:
+            assert 'positive' in self.expected_attack_stats.keys(), (
+                "No positive value found in expected attack stats")
+            assert 'negative' in self.expected_attack_stats.keys(), (
+                "No negative value found in expected attack stats")
+            assert 'neutral' in self.expected_attack_stats.keys(), (
+                "No neutral value found in expected attack stats")
+            assert type(self.expected_attack_stats['positive']) is list, (
+                "You must provide multiple values for positive attack stats")
+            assert type(self.expected_attack_stats['negative']) is list, (
+                "You must provide multiple values for negative attack stats")
+            assert type(self.expected_attack_stats['neutral']) is list, (
+                "You must provide multiple values for neutral attack stats")
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
+        self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # Only need to run this assertion if we're checking the speed stat.
+        if self.check_speed_stat:
+            assert 'positive' in self.expected_speed_stats.keys(), (
+                "No positive value found in expected speed stats")
+            assert 'negative' in self.expected_speed_stats.keys(), (
+                "No negative value found in expected speed stats")
+            assert 'neutral' in self.expected_speed_stats.keys(), (
+                "No neutral value found in expected speed stats")
+            assert type(self.expected_speed_stats['positive']) is list, (
+                "You must provide multiple values for positive speed stats")
+            assert type(self.expected_speed_stats['negative']) is list, (
+                "You must provide multiple values for negative speed stats")
+            assert type(self.expected_speed_stats['neutral']) is list, (
+                "You must provide multiple values for neutral speed stats")
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
