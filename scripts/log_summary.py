@@ -65,3 +65,5 @@ print(f'Global losses: {global_losses}')
 print(f'Global wins: {global_wins}')
 print(f'Global runs: {global_runs}')
 print(f'Global Win percentage: {global_win_percentage:.0f} %\n')
+
+input('Press Enter to exit.')
