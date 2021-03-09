@@ -9,6 +9,7 @@ den.
 #       Created 2020-11-20
 
 import re
+import os
 import pickle
 
 from datetime import datetime
@@ -86,10 +87,9 @@ class DAController(SwitchController):
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        self.menu_rect_1 = ((0.84, 0.685), (0.91, 0.695))
-        self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
-        self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
-        self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
+        self.catch_dialogue_rect_1 = ((0.82, 0.85), (0.98, 0.88))
+        self.catch_dialogue_rect_2 = ((0.82, 0.93), (0.98, 0.96))
+        self.battle_symbol_rect = ((0.9, 0.65), (0.99, 0.77))
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
@@ -142,6 +142,13 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
         ) as image_file:
             self.pokemon_sprites = pickle.load(image_file)
+        self.misc_icons = {}
+        directory = self.config['pokemon_data_paths']['misc_icon_dir']
+        for filename in os.listdir(directory):
+            if '.png' in filename:
+                self.misc_icons[filename.split('.png')[0]] = cv2.imread(
+                    os.path.join(directory, filename)
+                )
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
@@ -252,9 +259,9 @@ class DAController(SwitchController):
             self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
                 img, (
-                    self.type_rect_1, self.type_rect_2, self.menu_rect_1,
-                    self.menu_rect_2, self.menu_rect_3, self.menu_rect_4,
-                    self.dmax_symbol_rect, self.battle_text_rect
+                    self.type_rect_1, self.type_rect_2, self.catch_dialogue_rect_1,
+                    self.catch_dialogue_rect_2, self.dmax_symbol_rect,
+                    self.battle_text_rect, self.battle_symbol_rect
                 ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
@@ -572,22 +579,26 @@ class DAController(SwitchController):
         if self.check_black_screen(img):
             return 'LOSS'
         # Then, check for the presence of the Fight or Cheer menu.
-        if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img
-        ):
-            if self.check_rect_HSV_match(
-                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
-            ):
-                return 'FIGHT'
-            elif self.check_rect_HSV_match(
-                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img
-            ):
-                return 'CHEER'
+        fight_menu_image = self.get_image_slice(img, self.battle_symbol_rect)
+        fight_match = self.match_template(
+            fight_menu_image, self.misc_icons['fight'])[0]
+        if fight_match >= 0.92:
+            self.log(
+                f'Detected "Fight" symbol with match value of {fight_match}.',
+                'DEBUG')
+            return 'FIGHT'
+        cheer_match = self.match_template(
+            fight_menu_image, self.misc_icons['cheer'])[0]
+        if cheer_match >= 0.92:
+            self.log(
+                f'Detected "Cheer" symbol with match value of {cheer_match}.',
+                'DEBUG')
+            return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img
         ) and self.check_rect_HSV_match(
-            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img
         ):
             return 'CATCH'
         # Finally, check for other text.
