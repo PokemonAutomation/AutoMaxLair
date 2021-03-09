@@ -1,5 +1,5 @@
-[
-    {
+{
+    "beast-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "beast-ball",
         "names": {
@@ -15,7 +15,7 @@
             "zh-Hans": "\u7a76\u6781\u7403"
         }
     },
-    {
+    "dive-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "dive-ball",
         "names": {
@@ -31,7 +31,7 @@
             "zh-Hans": "\u6f5c\u6c34\u7403"
         }
     },
-    {
+    "dream-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "dream-ball",
         "names": {
@@ -47,7 +47,7 @@
             "zh-Hans": "\u68a6\u5883\u7403"
         }
     },
-    {
+    "dusk-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "dusk-ball",
         "names": {
@@ -63,7 +63,7 @@
             "zh-Hans": "\u9ed1\u6697\u7403"
         }
     },
-    {
+    "fast-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "fast-ball",
         "names": {
@@ -79,7 +79,7 @@
             "zh-Hans": "\u901f\u5ea6\u7403"
         }
     },
-    {
+    "friend-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "friend-ball",
         "names": {
@@ -95,7 +95,7 @@
             "zh-Hans": "\u53cb\u53cb\u7403"
         }
     },
-    {
+    "great-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "great-ball",
         "names": {
@@ -111,7 +111,7 @@
             "zh-Hans": "\u8d85\u7ea7\u7403"
         }
     },
-    {
+    "heal-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "heal-ball",
         "names": {
@@ -127,7 +127,7 @@
             "zh-Hans": "\u6cbb\u6108\u7403"
         }
     },
-    {
+    "heavy-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "heavy-ball",
         "names": {
@@ -143,7 +143,7 @@
             "zh-Hans": "\u6c89\u91cd\u7403"
         }
     },
-    {
+    "level-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "level-ball",
         "names": {
@@ -159,7 +159,7 @@
             "zh-Hans": "\u7b49\u7ea7\u7403"
         }
     },
-    {
+    "love-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "love-ball",
         "names": {
@@ -175,7 +175,7 @@
             "zh-Hans": "\u751c\u871c\u7403"
         }
     },
-    {
+    "lure-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "lure-ball",
         "names": {
@@ -191,7 +191,7 @@
             "zh-Hans": "\u8bf1\u9975\u7403"
         }
     },
-    {
+    "luxury-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "luxury-ball",
         "names": {
@@ -207,7 +207,7 @@
             "zh-Hans": "\u8c6a\u534e\u7403"
         }
     },
-    {
+    "master-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "master-ball",
         "names": {
@@ -223,7 +223,7 @@
             "zh-Hans": "\u5927\u5e08\u7403"
         }
     },
-    {
+    "moon-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "moon-ball",
         "names": {
@@ -239,7 +239,7 @@
             "zh-Hans": "\u6708\u4eae\u7403"
         }
     },
-    {
+    "nest-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "nest-ball",
         "names": {
@@ -255,7 +255,7 @@
             "zh-Hans": "\u5de2\u7a74\u7403"
         }
     },
-    {
+    "net-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "net-ball",
         "names": {
@@ -271,7 +271,7 @@
             "zh-Hans": "\u6355\u7f51\u7403"
         }
     },
-    {
+    "poke-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "poke-ball",
         "names": {
@@ -287,7 +287,7 @@
             "zh-Hans": "\u7cbe\u7075\u7403"
         }
     },
-    {
+    "premier-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "premier-ball",
         "names": {
@@ -303,7 +303,7 @@
             "zh-Hans": "\u7eaa\u5ff5\u7403"
         }
     },
-    {
+    "quick-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "quick-ball",
         "names": {
@@ -319,7 +319,7 @@
             "zh-Hans": "\u5148\u673a\u7403"
         }
     },
-    {
+    "repeat-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "repeat-ball",
         "names": {
@@ -335,7 +335,7 @@
             "zh-Hans": "\u91cd\u590d\u7403"
         }
     },
-    {
+    "safari-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "safari-ball",
         "names": {
@@ -351,7 +351,7 @@
             "zh-Hans": "\u72e9\u730e\u7403"
         }
     },
-    {
+    "sport-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "sport-ball",
         "names": {
@@ -367,7 +367,7 @@
             "zh-Hans": "\u7ade\u8d5b\u7403"
         }
     },
-    {
+    "timer-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "timer-ball",
         "names": {
@@ -383,7 +383,7 @@
             "zh-Hans": "\u8ba1\u65f6\u7403"
         }
     },
-    {
+    "ultra-ball": {
         "py/object": "automaxlair.ball.Ball",
         "name_id": "ultra-ball",
         "names": {
@@ -399,4 +399,4 @@
             "zh-Hans": "\u9ad8\u7ea7\u7403"
         }
     }
-]
+}

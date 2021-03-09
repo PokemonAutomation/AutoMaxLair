@@ -1,7 +1,7 @@
 import sys
 import jsonpickle
 import pokebase as pb
-from typing import List
+from typing import Dict
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
@@ -20,7 +20,7 @@ def main():
                 'net-ball', 'poke-ball', 'premier-ball', 'quick-ball',
                 'repeat-ball', 'safari-ball', 'sport-ball', 'timer-ball',
                 'ultra-ball']
-    balls: List[Ball] = []
+    balls: Dict[str, Ball] = {}
 
     for ball_id in balls_id:
         resource = pb.APIResource('item', ball_id)
@@ -28,7 +28,7 @@ def main():
         names = {}
         for entry in resource.names:
             names[entry.language.name] = entry.name
-        balls.append(Ball(resource.name, names))
+        balls[resource.name] = Ball(resource.name, names)
         print(f'Finished loading {ball_id}')
 
     # Pickle the Pokemon dictionaries for later use.

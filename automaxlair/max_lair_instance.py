@@ -90,6 +90,8 @@ class MaxLairInstance:
             self.rental_scores = jsonpickle.decode(file.read())
         with open(data_paths[5], 'r', encoding='utf8') as file:
             self.path_tree = jsonpickle.decode(file.read())
+        with open(data_paths[6], 'r', encoding='utf8') as file:
+            self.balls = jsonpickle.decode(file.read())
 
     def __str__(self) -> str:
         """Print information about the current instance."""

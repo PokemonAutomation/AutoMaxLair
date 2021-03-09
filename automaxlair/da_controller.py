@@ -58,7 +58,8 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['Boss_Matchup_LUT'],
             config['pokemon_data_paths']['Rental_Matchup_LUT'],
             config['pokemon_data_paths']['Rental_Pokemon_Scores'],
-            config['pokemon_data_paths']['path_tree_path']
+            config['pokemon_data_paths']['path_tree_path'],
+            config['pokemon_data_paths']['balls_path']
         )
 
         self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
@@ -146,6 +147,8 @@ class DAController(SwitchController):
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
+        assert self.current_run.balls[self.base_ball], 'Unknown base ball id'
+        assert self.current_run.balls[self.legendary_ball], 'Unknown legendary ball id'
         if self.base_ball == self.legendary_ball:
             assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
             assert self.base_balls >= 4, 'Not enough base ball'
@@ -734,9 +737,12 @@ class DAController(SwitchController):
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
-        return (
-            self.base_ball if self.current_run.num_caught < 3
-            else self.legendary_ball)
+        if self.current_run.num_caught < 3:
+            ball_id = self.base_ball
+        else:
+            ball_id = self.legendary_ball
+
+        return self.current_run.balls[ball_id].names[self.lang]
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of the

@@ -361,9 +361,7 @@ def catch(ctrlr) -> str:
     # Start by navigating to the ball selection screen
     ctrlr.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
-    while (ctrlr.get_target_ball().lower() != 'default'
-           and ctrlr.get_target_ball() not in ctrlr.check_ball()
-           ):
+    while (ctrlr.get_target_ball() not in ctrlr.check_ball()):
         ctrlr.push_button(b'<', 2 + VIDEO_EXTRA_DELAY)
     ctrlr.push_button(b'a', 30)
     ctrlr.record_ball_use()
