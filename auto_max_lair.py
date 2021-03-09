@@ -215,15 +215,6 @@ def battle(ctrlr) -> str:
                 run.dmax_timer = 0
             ctrlr.push_buttons((b'a', 1.5), (b'b', 1 + VIDEO_EXTRA_DELAY))
         elif battle_state == 'FIGHT':
-            # If we got the pokemon from the scientist, we don't know what
-            # our current pokemon is, so check it first.
-            if run.pokemon is None:
-                ctrlr.push_buttons((b'y', 1), (b'a', 1 + VIDEO_EXTRA_DELAY))
-                run.pokemon = ctrlr.read_selectable_pokemon('battle')[0]
-                ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                ctrlr.log(
-                    f'Received {run.pokemon.name_id} from the scientist.')
-
             # Before the bot makes a decision, it needs to know what the boss
             # is.
             if run.opponent is None:
@@ -242,12 +233,15 @@ def battle(ctrlr) -> str:
 
                     if run.opponent.name_id == 'ditto':
                         if run.current_node.name != 'normal':
-                            ctrlr.log(f'We were expecting a {run.current_node.name} type'
-                                      ' pokemon and we got ditto.', 'WARNING')
+                            ctrlr.log(
+                                f'We were expecting a {run.current_node.name} '
+                                'type pokemon and we got ditto.', 'WARNING')
                     else:
                         if run.current_node.name not in run.opponent.type_ids:
-                            ctrlr.log(f'We were expecting a {run.current_node.name} type '
-                                      f'pokemon and we got {run.opponent.name_id}.', 'WARNING')
+                            ctrlr.log(
+                                f'We were expecting a {run.current_node.name} '
+                                'type pokemon and we got '
+                                f'{run.opponent.name_id}.', 'WARNING')
 
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
@@ -289,14 +283,16 @@ def battle(ctrlr) -> str:
             # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
-                    run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
+                    run.pokemon, run.opponent, run.field,
+                    teammates=run.team_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     matchup_scoring.select_best_move(
-                        run.pokemon, run.opponent, run.field, teammates=run.rental_pokemon)
+                        run.pokemon, run.opponent, run.field,
+                        teammates=run.team_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
@@ -408,16 +404,17 @@ def catch(ctrlr) -> str:
             run.pokemon = pokemon
             # Note: a long delay is required here so the bot doesn't think a
             # battle started.
-            ctrlr.push_button(b'a', 7)
+            ctrlr.push_button(b'a', 6)
             ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
         else:
             # Note: a long delay is required here so the bot doesn't think a
             # battle started.
-            ctrlr.push_button(b'b', 7)
+            ctrlr.push_button(b'b', 6)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
         
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
+        ctrlr.push_button(None, 1)
 
         # Move on to the detect stage.
         return 'detect'
@@ -513,9 +510,11 @@ def scientist(ctrlr) -> str:
     ctrlr.push_button(None, 4)
     # If we took a Pokemon from the scientist, try to identify it.
     if run.pokemon is None:
-        run.pokemon = run.team_pokemon[0]
+        # Note: as of Python 3.6, dicts remember insertion order so using an
+        # OrderedDict is unnecessary.
+        run.pokemon = run.team_pokemon.values()[0]
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    
+
     return 'detect'
 
 
@@ -552,8 +551,10 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
             True,
-            f"Found a winning path for {ctrlr.boss} with {run.lives} remaining.",
-            path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+            f"Found a winning path for {ctrlr.boss} with {run.lives} "
+            "remaining.",
+            path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+            f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
@@ -581,7 +582,8 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
                 True, f"Matching stats found for {ctrlr.boss}!",
-                path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                f'{ctrlr.num_saved_images}.png',
                 embed_fields=ctrlr.get_stats_for_discord(),
                 level="shiny"
             )
@@ -611,7 +613,8 @@ def select_pokemon(ctrlr) -> str:
                 f'Shiny {run.caught_pokemon[run.num_caught - 1 - i]} will be '
                 'kept.'
             )
-            ctrlr.log("Adding information to the number of found shinies", "DEBUG")
+            ctrlr.log(
+                "Adding information to the number of found shinies", "DEBUG")
             ctrlr.caught_shinies.append(
                 run.caught_pokemon[run.num_caught - 1 - i]
             )
@@ -622,15 +625,18 @@ def select_pokemon(ctrlr) -> str:
             if run.num_caught == 4 and i == 0:
                 ctrlr.send_discord_message(
                     True, f'Found a shiny {run.caught_pokemon[3]}!',
-                    path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                    f'{ctrlr.num_saved_images}.png',
                     embed_fields=ctrlr.get_stats_for_discord(),
                     level="shiny"
                 )
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'Found a shiny {run.caught_pokemon[run.num_caught - 1 - i]}!',
-                    path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                    False, f'Found a shiny '
+                    f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                    f'{ctrlr.num_saved_images}.png',
                     embed_fields=ctrlr.get_stats_for_discord(),
                     level="shiny"
                 )
