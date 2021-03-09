@@ -93,10 +93,10 @@ class DAController(SwitchController):
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
-        self.team_poke_rect_1 = ((0.015, 0.375), (0.055, 0.435))
-        self.team_poke_rect_2 = ((0.015, 0.54), (0.055, 0.6))
-        self.team_poke_rect_3 = ((0.015, 0.702), (0.055, 0.762))
-        self.team_poke_rect_4 = ((0.015, 0.865), (0.055, 0.925))
+        self.team_poke_rect_1 = ((0.012, 0.375), (0.05, 0.44))
+        self.team_poke_rect_2 = ((0.012, 0.54), (0.05, 0.6))
+        self.team_poke_rect_3 = ((0.012, 0.702), (0.05, 0.77))
+        self.team_poke_rect_4 = ((0.012, 0.865), (0.05, 0.93))
         self.team_HP_rect_1 = ((0.073, 0.433), (0.127, 0.439))
         self.team_HP_rect_2 = ((0.073, 0.594), (0.118, 0.6))
         self.team_HP_rect_3 = ((0.073, 0.761), (0.118, 0.767))
@@ -329,7 +329,7 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # Then, collect a list of the 4 Pokemon (with yours first).
-        team_pokemon = []
+        team_pokemon = {}
         HP_rects = (
             self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
             self.team_HP_rect_4)
@@ -348,13 +348,9 @@ class DAController(SwitchController):
             # sprite images.
             read_image = self.get_image_slice(img, rectangle)
             HP_bar_image = self.get_image_slice(img, HP_rects[i])
-            read_image_binary = cv2.inRange(
-                cv2.cvtColor(read_image, cv2.COLOR_BGR2HSV), (0, 0, 10),
-                (180, 20, 255)
-            )
             for name_id, sprite in self.pokemon_sprites:
                 # Check match value against stored Pokemon sprites
-                value, __ = self.match_template(sprite, read_image_binary)
+                value, __ = self.match_template(sprite, read_image)
                 if value > match_value:
                     match_value_2nd = match_value
                     match_name_id_2nd = match_name_id
@@ -365,7 +361,9 @@ class DAController(SwitchController):
             pokemon = self.current_run.rental_pokemon[match_name_id]
             pokemon.HP = self.get_rect_HSV_value(
                 HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
-            team_pokemon.append(pokemon)
+            # Note: as of Python 3.6, dicts remember insertion order so using
+            # an OrderedDict is unnecessary.
+            team_pokemon[pokemon.name_id] = pokemon
             self.log(
                 f'Identified team member {i+1} as {match_name_id} with match '
                 f'score of {match_value:.3f} and HP of '

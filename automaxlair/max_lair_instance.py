@@ -61,7 +61,7 @@ class MaxLairInstance:
     def __init__(self, boss: str, data_paths: List[str]) -> None:
         self.boss = boss
         self.pokemon = None
-        self.team_pokemon = []
+        self.team_pokemon = {}
         self.HP = 1  # 1 = 100%
         self.num_caught = 0
         self.caught_pokemon = []
@@ -222,28 +222,47 @@ class MaxLairInstance:
 
         # Rebuild the path network after reassigning all of the nodes.
         if index == 3 and self.path_type is not None:
-            self.paths[0][0].downstream_nodes = [self.paths[1][0], self.paths[1][1]]
+            self.paths[0][0].downstream_nodes = [
+                self.paths[1][0], self.paths[1][1]]
             if self.path_type == '2x3':
-                self.paths[1][0].downstream_nodes = [self.paths[2][0], self.paths[2][1]]
-                self.paths[1][1].downstream_nodes = [self.paths[2][1], self.paths[2][2], self.paths[2][3]]
-                self.paths[2][0].downstream_nodes = [self.paths[3][0], self.paths[3][1], self.paths[3][2]]
-                self.paths[2][1].downstream_nodes = [self.paths[3][0], self.paths[3][1], self.paths[3][2]]
-                self.paths[2][2].downstream_nodes = [self.paths[3][2], self.paths[3][3]]
-                self.paths[2][3].downstream_nodes = [self.paths[3][2], self.paths[3][3]]
+                self.paths[1][0].downstream_nodes = [
+                    self.paths[2][0], self.paths[2][1]]
+                self.paths[1][1].downstream_nodes = [
+                    self.paths[2][1], self.paths[2][2], self.paths[2][3]]
+                self.paths[2][0].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1], self.paths[3][2]]
+                self.paths[2][1].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1], self.paths[3][2]]
+                self.paths[2][2].downstream_nodes = [
+                    self.paths[3][2], self.paths[3][3]]
+                self.paths[2][3].downstream_nodes = [
+                    self.paths[3][2], self.paths[3][3]]
             elif self.path_type == '3x2':
-                self.paths[1][0].downstream_nodes = [self.paths[2][0], self.paths[2][1], self.paths[2][2]]
-                self.paths[1][1].downstream_nodes = [self.paths[2][2], self.paths[2][3]]
-                self.paths[2][0].downstream_nodes = [self.paths[3][0], self.paths[3][1]]
-                self.paths[2][1].downstream_nodes = [self.paths[3][0], self.paths[3][1]]
-                self.paths[2][2].downstream_nodes = [self.paths[3][0], self.paths[3][1]]
-                self.paths[2][3].downstream_nodes = [self.paths[3][1], self.paths[3][2], self.paths[3][3]]
+                self.paths[1][0].downstream_nodes = [
+                    self.paths[2][0], self.paths[2][1], self.paths[2][2]]
+                self.paths[1][1].downstream_nodes = [
+                    self.paths[2][2], self.paths[2][3]]
+                self.paths[2][0].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1]]
+                self.paths[2][1].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1]]
+                self.paths[2][2].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1]]
+                self.paths[2][3].downstream_nodes = [
+                    self.paths[3][1], self.paths[3][2], self.paths[3][3]]
             elif self.path_type == '2x2':
-                self.paths[1][0].downstream_nodes = [self.paths[2][0], self.paths[2][1]]
-                self.paths[1][1].downstream_nodes = [self.paths[2][2], self.paths[2][3]]
-                self.paths[2][0].downstream_nodes = [self.paths[3][0], self.paths[3][1]]
-                self.paths[2][1].downstream_nodes = [self.paths[3][1], self.paths[3][2], self.paths[3][3]]
-                self.paths[2][2].downstream_nodes = [self.paths[3][1], self.paths[3][2], self.paths[3][3]]
-                self.paths[2][3].downstream_nodes = [self.paths[3][1], self.paths[3][2], self.paths[3][3]]
+                self.paths[1][0].downstream_nodes = [
+                    self.paths[2][0], self.paths[2][1]]
+                self.paths[1][1].downstream_nodes = [
+                    self.paths[2][2], self.paths[2][3]]
+                self.paths[2][0].downstream_nodes = [
+                    self.paths[3][0], self.paths[3][1]]
+                self.paths[2][1].downstream_nodes = [
+                    self.paths[3][1], self.paths[3][2], self.paths[3][3]]
+                self.paths[2][2].downstream_nodes = [
+                    self.paths[3][1], self.paths[3][2], self.paths[3][3]]
+                self.paths[2][3].downstream_nodes = [
+                    self.paths[3][1], self.paths[3][2], self.paths[3][3]]
             self.paths[3][0].downstream_nodes = [self.paths[4][0]]
             self.paths[3][1].downstream_nodes = [self.paths[4][0]]
             self.paths[3][2].downstream_nodes = [self.paths[4][0]]
