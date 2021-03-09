@@ -120,7 +120,6 @@ def join(ctrlr) -> str:
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
-    print(all_paths_str)
 
     # Choose the best path out of the options.
     # TODO: Improve path selection algorithm.
