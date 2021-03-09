@@ -566,14 +566,14 @@ class DAController(SwitchController):
         fight_menu_image = self.get_image_slice(img, self.battle_symbol_rect)
         fight_match = self.match_template(
             fight_menu_image, self.misc_icons['fight'])[0]
-        if fight_match >= 0.92:
+        if fight_match >= 0.85:
             self.log(
                 f'Detected "Fight" symbol with match value of {fight_match}.',
                 'DEBUG')
             return 'FIGHT'
         cheer_match = self.match_template(
             fight_menu_image, self.misc_icons['cheer'])[0]
-        if cheer_match >= 0.92:
+        if cheer_match >= 0.85:
             self.log(
                 f'Detected "Cheer" symbol with match value of {cheer_match}.',
                 'DEBUG')
