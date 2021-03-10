@@ -146,6 +146,97 @@ namespace AutoDA
             }
         }
 
+        private void validate()
+        {
+
+            string[] atkPos = boxAttackPos.Text.Split(',').ToArray();
+            string[] atkNeut = boxAttackNeut.Text.Split(',').ToArray();
+            string[] atkNeg = boxAttackNeg.Text.Split(',').ToArray();
+            string[] speedPos = boxSpeedPos.Text.Split(',').ToArray();
+            string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
+            string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
+
+            int i, x, y, z, q, w, t, u, o, p, l, k, j, h, g;
+            float a, b;
+
+            bool bossValue = int.TryParse(boxBossIndex.Text, out i);
+            bool baseBall = int.TryParse(boxBaseBallValue.Text, out x);
+            bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
+            bool videoIndex = int.TryParse(boxVideoIndex.Text, out z);
+            bool dynite = int.TryParse(boxDyniteOre.Text, out q);
+            bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
+            bool webhookID = int.TryParse(boxWebhookID.Text, out j);
+            bool webhookToken = int.TryParse(boxWebhookToken.Text, out h);
+            bool userID = int.TryParse(boxWebhookToken.Text, out g);
+
+            bool videoScale = float.TryParse(boxVideoScale.Text, out a);
+            bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
+
+            bool aPosInts = atkPos.All(x => int.TryParse(x.ToString(), out t));
+            bool aNeutInts = atkNeut.All(x => int.TryParse(x.ToString(), out u));
+            bool aNegInts = atkNeg.All(x => int.TryParse(x.ToString(), out o));
+            bool sPosInts = speedPos.All(x => int.TryParse(x.ToString(), out p));
+            bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out l));
+            bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out k));
+
+            // Base Ball Validation
+            if (baseBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || int.Parse(boxBaseBallValue.Text) < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
+                || int.Parse(boxBaseBallValue.Text) > 999 && boxBaseBall.Text.Equals(boxLegendBall.Text))
+                MessageBox.Show("Your Base Ball Value needs to be a number between 4 and 999!", "Error: Base Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (baseBall == false || int.Parse(boxBaseBallValue.Text) < 3 || int.Parse(boxBaseBallValue.Text) > 999)
+                MessageBox.Show("Your Base Ball Value needs to be a number between 3 and 999!", "Error: Base Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Legendary Ball Validation
+            else if (legendBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || int.Parse(boxLegendBallValue.Text) < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
+                || int.Parse(boxLegendBallValue.Text) > 999 && boxBaseBall.Text.Equals(boxLegendBall.Text))
+                MessageBox.Show("Your Legend Ball Value needs to be a number between 4 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (legendBall == false || int.Parse(boxLegendBallValue.Text) < 1 || int.Parse(boxLegendBallValue.Text) > 999)
+                MessageBox.Show("Your Legend Ball Value needs to be a number between 1 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Video Index Validation
+            else if (videoIndex == false)
+                MessageBox.Show("Your Video Index needs to be a number!", "Error: Video Index", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Video Scale Validation
+            else if (videoScale == false)
+                MessageBox.Show("Your Video Scale must be a number (e.g. 0.5).", "Error: Video Scale", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Video Delay Validation
+            else if (videoDelay == false)
+                MessageBox.Show("Your Video Delay must be a number (e.g. 0.5).", "Error: Video Extra Delay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Dynite Ore Validation
+            else if (dynite == false && boxMode.Text == "Keep Path" || int.Parse(boxDyniteOre.Text) < 0 && boxMode.Text == "Keep Path" || int.Parse(boxDyniteOre.Text) > 999 && boxMode.Text == "Keep Path")
+                MessageBox.Show("Your Dynite Ore needs to be a number between 0 and 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (dynite == false || int.Parse(boxDyniteOre.Text) > 999)
+                MessageBox.Show("Your Dynite Ore needs to be a number less than 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Consecutive Resets Validation
+            else if (resets == false || int.Parse(boxLegendBallValue.Text) < 0)
+                MessageBox.Show("Your Consecutive Resets needs to be a number which is 0 or greater than 0!", "Error: Consecutive Resets", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Attack Stats Validation
+            else if (aPosInts == false || aNeutInts == false || aNegInts == false)
+                MessageBox.Show("Your Attack Stats need to be a number and be split with a comma (e.g. 120, 121).", "Error: Attack Stats", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Speed Stats Validation
+            else if (sPosInts == false || sNeutInts == false || sNegInts == false)
+                MessageBox.Show("Your Speed Stats need to be a number and be split with a comma (e.g. 120, 121).", "Error: Speed Stats", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Webhook Validation
+            else if (webhookID == false)
+                MessageBox.Show("Your Webhook ID should be a string of numbers.", "Error: Webhook ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (webhookToken == false)
+                MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Discord Validation
+            else if (userID == false || boxUserID.Text.Length != 18)
+                MessageBox.Show("Your Discord User ID should be a string of numbers with the length 18.", "Error: User ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            else
+                setConfig();
+        }
+
         // Method to change the Config.toml
         private void setConfig()
         {
@@ -170,7 +261,7 @@ namespace AutoDA
             TomlTable t = new TomlTable();
             
             // Get all values in a string-array
-            string[] atkPos = boxAttackPos.Text.Split(",").ToArray();
+            string[] atkPos = boxAttackPos.Text.Split(',').ToArray();
             string[] atkNeut = boxAttackNeut.Text.Split(',').ToArray();
             string[] atkNeg = boxAttackNeg.Text.Split(',').ToArray();
             string[] speedPos = boxSpeedPos.Text.Split(',').ToArray();
@@ -183,7 +274,7 @@ namespace AutoDA
             t["BASE_BALLS"] = int.Parse(boxBaseBallValue.Text);
             t["LEGENDARY_BALL"] = boxLegendBall.Text;
             t["LEGENDARY_BALLS"] = int.Parse(boxLegendBallValue.Text);
-            t["MODE"] = boxMode.Text;
+            t["MODE"] = boxMode.Text.ToUpper();
             t["COM_PORT"] = boxComPort.Text;
             t["VIDEO_INDEX"] = int.Parse(boxVideoIndex.Text);
             t["TESSERACT_PATH"] = boxTesseract.Text;
@@ -271,7 +362,10 @@ namespace AutoDA
             t["pokemon_data_paths"]["Rental_Matchup_LUT"] = "data/rental_matchup_LUT.json";
             t["pokemon_data_paths"]["Rental_Pokemon_Scores"] = "data/rental_pokemon_scores.json";
             t["pokemon_data_paths"]["path_tree_path"] = "data/path_tree.json";
+            t["pokemon_data_paths"]["balls_path"] = "data/balls.json";
             t["pokemon_data_paths"]["type_icon_path"] = "data/type_icons.pickle";
+            t["pokemon_data_paths"]["pokemon_sprite_path"] = "data/pokemon_sprites.pickle";
+            t["pokemon_data_paths"]["misc_icon_dir"] = "data/misc_icons/";
 
             // Other Language Settings
             // English
@@ -457,7 +551,7 @@ namespace AutoDA
         // Does the setConfig() Method when you press the "Save-Button"
         private void btnSave_Click(object sender, EventArgs e)
         {
-            setConfig();
+            validate();
         }
 
         /* private void boxVideoCapture_SelectedIndexChanged(object sender, EventArgs e)
