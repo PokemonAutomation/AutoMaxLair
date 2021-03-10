@@ -751,7 +751,13 @@ class DAController(SwitchController):
         else:
             ball_id = self.legendary_ball
 
-        return self.current_run.balls[ball_id].names[self.lang]
+        ball_name = self.current_run.balls[ball_id].names[self.lang]
+        ball_name.replace('ball', '')  # de
+        ball_name.replace(' Ball', '')  # en / es  / fr / it
+        ball_name.replace('ボール', '')  # ja / ja-Hrkt
+        ball_name.replace('볼', '')   # ko
+        ball_name.replace('球', '')   # zh-Hans / zh-Hant
+        return ball_name
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of the
