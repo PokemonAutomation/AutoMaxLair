@@ -47,8 +47,8 @@ def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
     ctrlr.send_discord_message(False, f"Starting a new full run for {ctrlr.boss}!",
-        embed_fields=ctrlr.get_stats_for_discord(), level="update"
-    )
+                               embed_fields=ctrlr.get_stats_for_discord(), level="update"
+                               )
 
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
@@ -113,10 +113,10 @@ def join(ctrlr) -> str:
 
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -196,7 +196,7 @@ def battle(ctrlr) -> str:
         elif battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
-            ctrlr.push_button(None, 4)
+            ctrlr.push_button(None, 3)
         elif battle_state == 'LOSS':
             ctrlr.log('You lose and the battle is finished.')
             run.lives -= 1
@@ -356,9 +356,7 @@ def catch(ctrlr) -> str:
     # Start by navigating to the ball selection screen
     ctrlr.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
-    while (ctrlr.get_target_ball().lower() != 'default'
-           and ctrlr.get_target_ball() not in ctrlr.check_ball()
-           ):
+    while (ctrlr.get_target_ball() not in ctrlr.check_ball()):
         ctrlr.push_button(b'<', 2 + VIDEO_EXTRA_DELAY)
     ctrlr.push_button(b'a', 30)
     ctrlr.record_ball_use()
@@ -410,7 +408,7 @@ def catch(ctrlr) -> str:
             # battle started.
             ctrlr.push_button(b'b', 6)
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
-        
+
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
         ctrlr.push_button(None, 1)
@@ -688,7 +686,7 @@ def select_pokemon(ctrlr) -> str:
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
         ctrlr.send_discord_message(
-            False, f'Preparing for another run.',
+            False, 'Preparing for another run.',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
@@ -696,7 +694,7 @@ def select_pokemon(ctrlr) -> str:
     else:
         ctrlr.log('Out of balls. Quitting.')
         ctrlr.send_discord_message(
-            True, f'You ran out of legendary balls! The program has exited!',
+            True, 'You ran out of legendary balls! The program has exited!',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="critical"
         )

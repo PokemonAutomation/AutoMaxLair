@@ -174,9 +174,9 @@ namespace AutoDA
             "Top",
             "Middle",
             "Bottom"});
-            this.boxBossIndex.Location = new System.Drawing.Point(157, 74);
+            this.boxBossIndex.Location = new System.Drawing.Point(142, 74);
             this.boxBossIndex.Name = "boxBossIndex";
-            this.boxBossIndex.Size = new System.Drawing.Size(68, 25);
+            this.boxBossIndex.Size = new System.Drawing.Size(95, 25);
             this.boxBossIndex.TabIndex = 20;
             this.boxBossIndex.Text = "Top";
             this.toolTip.SetToolTip(this.boxBossIndex, "The position of the legendary Pokémon you are hunting on the menu.");
@@ -429,7 +429,7 @@ namespace AutoDA
             this.boxLegendBallValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
             this.boxLegendBallValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxLegendBallValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxLegendBallValue.Location = new System.Drawing.Point(203, 72);
+            this.boxLegendBallValue.Location = new System.Drawing.Point(237, 72);
             this.boxLegendBallValue.Name = "boxLegendBallValue";
             this.boxLegendBallValue.Size = new System.Drawing.Size(30, 25);
             this.boxLegendBallValue.TabIndex = 18;
@@ -455,7 +455,7 @@ namespace AutoDA
             this.boxBaseBallValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
             this.boxBaseBallValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxBaseBallValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxBaseBallValue.Location = new System.Drawing.Point(203, 41);
+            this.boxBaseBallValue.Location = new System.Drawing.Point(237, 41);
             this.boxBaseBallValue.Name = "boxBaseBallValue";
             this.boxBaseBallValue.Size = new System.Drawing.Size(30, 25);
             this.boxBaseBallValue.TabIndex = 17;
@@ -504,10 +504,11 @@ namespace AutoDA
             "Keep Path"});
             this.boxMode.Location = new System.Drawing.Point(112, 102);
             this.boxMode.Name = "boxMode";
-            this.boxMode.Size = new System.Drawing.Size(82, 25);
+            this.boxMode.Size = new System.Drawing.Size(113, 25);
             this.boxMode.TabIndex = 14;
             this.boxMode.Text = "Default";
             this.toolTip.SetToolTip(this.boxMode, resources.GetString("boxMode.ToolTip"));
+            this.boxMode.SelectedIndexChanged += new System.EventHandler(this.boxMode_SelectedIndexChanged);
             // 
             // labelVideoIndex
             // 
@@ -576,8 +577,7 @@ namespace AutoDA
             this.boxLegendBall.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxLegendBall.FormattingEnabled = true;
             this.boxLegendBall.Items.AddRange(new object[] {
-            "Default",
-            "Poké",
+            "Poke",
             "Premier",
             "Beast",
             "Great",
@@ -602,7 +602,7 @@ namespace AutoDA
             "Fast"});
             this.boxLegendBall.Location = new System.Drawing.Point(112, 71);
             this.boxLegendBall.Name = "boxLegendBall";
-            this.boxLegendBall.Size = new System.Drawing.Size(82, 25);
+            this.boxLegendBall.Size = new System.Drawing.Size(113, 25);
             this.boxLegendBall.TabIndex = 7;
             this.boxLegendBall.Text = "Premier";
             this.toolTip.SetToolTip(this.boxLegendBall, "This is the Pokéball for the legendary Pokémon. \r\nWith the \"Default\" option it wi" +
@@ -615,8 +615,7 @@ namespace AutoDA
             this.boxBaseBall.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxBaseBall.FormattingEnabled = true;
             this.boxBaseBall.Items.AddRange(new object[] {
-            "Default",
-            "Poké",
+            "Poke",
             "Premier",
             "Beast",
             "Great",
@@ -641,7 +640,7 @@ namespace AutoDA
             "Fast"});
             this.boxBaseBall.Location = new System.Drawing.Point(112, 40);
             this.boxBaseBall.Name = "boxBaseBall";
-            this.boxBaseBall.Size = new System.Drawing.Size(82, 25);
+            this.boxBaseBall.Size = new System.Drawing.Size(113, 25);
             this.boxBaseBall.TabIndex = 6;
             this.boxBaseBall.Text = "Premier";
             this.toolTip.SetToolTip(this.boxBaseBall, "This is the Pokéball that you use for non legendary Pokémon. \r\nWith the \"Default\"" +
@@ -674,17 +673,17 @@ namespace AutoDA
             "Dialga",
             "Palkia",
             "Heatran",
-            "Giratina-altered",
+            "Giratina",
             "Cresselia",
-            "Tornadus-incarnate",
-            "Thundurus-incarnate",
-            "Landorus-incarnate",
+            "Tornadus",
+            "Thundurus",
+            "Landorus",
             "Reshiram",
             "Zekrom",
             "Kyurem",
             "Xerneas",
             "Yveltal",
-            "Zygarde-50",
+            "Zygarde",
             "Tapu-Koko",
             "Tapu-Lele",
             "Tapu-Bulu",
@@ -703,7 +702,7 @@ namespace AutoDA
             "Blacephalon"});
             this.boxPokemon.Location = new System.Drawing.Point(112, 9);
             this.boxPokemon.Name = "boxPokemon";
-            this.boxPokemon.Size = new System.Drawing.Size(82, 25);
+            this.boxPokemon.Size = new System.Drawing.Size(113, 25);
             this.boxPokemon.TabIndex = 5;
             this.boxPokemon.Text = "Articuno";
             this.toolTip.SetToolTip(this.boxPokemon, "This is the legendary you are resetting for.");
@@ -933,7 +932,7 @@ namespace AutoDA
             "all"});
             this.boxPingSettings.Location = new System.Drawing.Point(128, 136);
             this.boxPingSettings.Name = "boxPingSettings";
-            this.boxPingSettings.Size = new System.Drawing.Size(120, 25);
+            this.boxPingSettings.Size = new System.Drawing.Size(151, 25);
             this.boxPingSettings.TabIndex = 21;
             this.boxPingSettings.Text = "none";
             this.toolTip.SetToolTip(this.boxPingSettings, resources.GetString("boxPingSettings.ToolTip"));
@@ -945,7 +944,7 @@ namespace AutoDA
             this.boxPingName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxPingName.Location = new System.Drawing.Point(128, 107);
             this.boxPingName.Name = "boxPingName";
-            this.boxPingName.Size = new System.Drawing.Size(120, 25);
+            this.boxPingName.Size = new System.Drawing.Size(151, 25);
             this.boxPingName.TabIndex = 20;
             this.boxPingName.Text = "ShinyHunter";
             this.boxPingName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -958,7 +957,7 @@ namespace AutoDA
             this.boxUserID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxUserID.Location = new System.Drawing.Point(128, 75);
             this.boxUserID.Name = "boxUserID";
-            this.boxUserID.Size = new System.Drawing.Size(120, 25);
+            this.boxUserID.Size = new System.Drawing.Size(151, 25);
             this.boxUserID.TabIndex = 19;
             this.boxUserID.Text = "123456789987654321";
             this.boxUserID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -971,7 +970,7 @@ namespace AutoDA
             this.boxWebhookToken.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxWebhookToken.Location = new System.Drawing.Point(128, 43);
             this.boxWebhookToken.Name = "boxWebhookToken";
-            this.boxWebhookToken.Size = new System.Drawing.Size(120, 25);
+            this.boxWebhookToken.Size = new System.Drawing.Size(151, 25);
             this.boxWebhookToken.TabIndex = 18;
             this.boxWebhookToken.Text = "123456789987654321";
             this.boxWebhookToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -984,7 +983,7 @@ namespace AutoDA
             this.boxWebhookID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxWebhookID.Location = new System.Drawing.Point(128, 13);
             this.boxWebhookID.Name = "boxWebhookID";
-            this.boxWebhookID.Size = new System.Drawing.Size(120, 25);
+            this.boxWebhookID.Size = new System.Drawing.Size(151, 25);
             this.boxWebhookID.TabIndex = 17;
             this.boxWebhookID.Text = "123456789987654321";
             this.boxWebhookID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1339,6 +1338,7 @@ namespace AutoDA
             this.Controls.Add(this.boxVideoOutput);
             this.Controls.Add(this.panelSideMenu);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "AutoDA";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Automation: Dynamax Adventure";
