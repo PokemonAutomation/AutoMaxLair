@@ -377,16 +377,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             216,
             134.0,
@@ -775,16 +773,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             216,
             141.0,
@@ -1173,16 +1169,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             216,
             155.0,
@@ -1561,16 +1555,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             238,
             169.0,
@@ -1949,16 +1941,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             216,
             134.0,
@@ -2337,16 +2327,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             251,
             176.0,
@@ -2725,16 +2713,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             120.0,
@@ -3123,16 +3109,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             238,
             141.0,
@@ -3521,16 +3505,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             238,
             197.0,
@@ -3919,16 +3901,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             202,
             127.0,
@@ -4317,16 +4297,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             202,
             141.0,
@@ -4705,16 +4683,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             155.0,
@@ -5093,16 +5069,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             225.0,
@@ -5491,16 +5465,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             237,
             225.0,
@@ -5879,16 +5851,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             195,
             120.0,
@@ -6267,16 +6237,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             202,
             162.0,
@@ -6655,16 +6623,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             195,
             190.0,
@@ -7053,16 +7019,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             183.0,
@@ -7451,16 +7415,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             216,
             183.0,
@@ -7849,16 +7811,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             217,
             141.0,
@@ -8247,16 +8207,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             300,
             155.0,
@@ -8635,16 +8593,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             258,
             113.0,
@@ -9022,16 +8978,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             201,
             176.0,
@@ -9419,16 +9373,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             201,
             176.0,
@@ -9816,16 +9768,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             183.0,
@@ -10213,16 +10163,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             230,
             225.0,
@@ -10610,16 +10558,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             215,
             190.0,
@@ -11007,16 +10953,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             265,
             197.0,
@@ -11394,16 +11338,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             266,
             198.0,
@@ -11791,16 +11733,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             266,
             198.0,
@@ -12188,16 +12128,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             241,
             155.0,
@@ -12585,16 +12523,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             188,
             176.0,
@@ -12982,16 +12918,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             188,
             134.0,
@@ -13379,16 +13313,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             188,
             197.0,
@@ -13776,16 +13708,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             188,
             120.0,
@@ -14173,16 +14103,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             282,
             207.0,
@@ -14570,16 +14498,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             282,
             173.0,
@@ -14967,16 +14893,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             243,
             89.0,
@@ -15364,16 +15288,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             240,
             210.0,
@@ -15761,16 +15683,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             189,
             207.0,
@@ -16148,16 +16068,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             206,
             140.0,
@@ -16545,16 +16463,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             226,
             156.0,
@@ -16942,16 +16858,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             173,
             268.0,
@@ -17339,16 +17253,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             402,
             156.0,
@@ -17726,16 +17638,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             226,
             165.0,
@@ -18123,16 +18033,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             175,
             198.0,
@@ -18520,16 +18428,14 @@
         ],
         "HP": 1,
         "status": null,
-        "stat_modifiers": {
-            "py/tuple": [
-                null,
-                0,
-                0,
-                0,
-                0,
-                0
-            ]
-        },
+        "stat_modifiers": [
+            null,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "stats": [
             164,
             193.0,
