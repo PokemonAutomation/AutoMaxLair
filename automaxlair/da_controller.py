@@ -11,6 +11,7 @@ den.
 import re
 import os
 import pickle
+import jsonpickle
 
 from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
@@ -59,8 +60,7 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['Boss_Matchup_LUT'],
             config['pokemon_data_paths']['Rental_Matchup_LUT'],
             config['pokemon_data_paths']['Rental_Pokemon_Scores'],
-            config['pokemon_data_paths']['path_tree_path'],
-            config['pokemon_data_paths']['balls_path']
+            config['pokemon_data_paths']['path_tree_path']
         )
 
         self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
@@ -149,13 +149,15 @@ class DAController(SwitchController):
                 self.misc_icons[filename.split('.png')[0]] = cv2.imread(
                     os.path.join(directory, filename)
                 )
+        with open(config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8') as file:
+            self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
-        assert self.current_run.balls[self.base_ball], 'Unknown base ball id'
-        assert self.current_run.balls[self.legendary_ball], 'Unknown legendary ball id'
+        assert self.balls[self.base_ball], 'Unknown base ball id'
+        assert self.balls[self.legendary_ball], 'Unknown legendary ball id'
         if self.base_ball == self.legendary_ball:
             assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
             assert self.base_balls >= 4, 'Not enough base balls.'
@@ -751,7 +753,7 @@ class DAController(SwitchController):
         else:
             ball_id = self.legendary_ball
 
-        ball_name = self.current_run.balls[ball_id].names[self.lang]
+        ball_name = self.balls[ball_id].names[self.lang]
         ball_name.replace('ball', '')  # de
         ball_name.replace(' Ball', '')  # en / es  / fr / it
         ball_name.replace('ボール', '')  # ja / ja-Hrkt
