@@ -291,7 +291,7 @@ class SwitchController:
         self,
         char: Optional[str],
         delay: float,  # Seconds
-        hold_time: float = 0.08  # Seconds
+        hold_ticks: int = 1  # Ticks @ 12.5 tick/s
     ) -> None:
         """Send a message to the microcontroller telling it to press buttons on
         the Switch.
@@ -315,7 +315,7 @@ class SwitchController:
         # Send the command to the microcontroller using the serial port.
         if char is not None:
             self.com.write(char)
-            hold_ticks = bytes([round(hold_time * 12.5)])
+            hold_ticks = bytes([round(hold_ticks)])
             self.com.write(hold_ticks)
             char_echo = self.com.read()
             hold_echo = self.com.read()

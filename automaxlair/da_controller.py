@@ -9,6 +9,7 @@ den.
 #       Created 2020-11-20
 
 import re
+import os
 import pickle
 
 from datetime import datetime
@@ -85,17 +86,16 @@ class DAController(SwitchController):
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        self.menu_rect_1 = ((0.84, 0.685), (0.91, 0.695))
-        self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
-        self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
-        self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
+        self.catch_dialogue_rect_1 = ((0.82, 0.85), (0.98, 0.88))
+        self.catch_dialogue_rect_2 = ((0.82, 0.93), (0.98, 0.96))
+        self.battle_symbol_rect = ((0.9, 0.65), (0.99, 0.77))
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
-        self.team_poke_rect_1 = ((0.015, 0.375), (0.055, 0.435))
-        self.team_poke_rect_2 = ((0.015, 0.54), (0.055, 0.6))
-        self.team_poke_rect_3 = ((0.015, 0.702), (0.055, 0.762))
-        self.team_poke_rect_4 = ((0.015, 0.865), (0.055, 0.925))
+        self.team_poke_rect_1 = ((0.012, 0.375), (0.05, 0.44))
+        self.team_poke_rect_2 = ((0.012, 0.54), (0.05, 0.6))
+        self.team_poke_rect_3 = ((0.012, 0.702), (0.05, 0.77))
+        self.team_poke_rect_4 = ((0.012, 0.865), (0.05, 0.93))
         self.team_HP_rect_1 = ((0.073, 0.433), (0.127, 0.439))
         self.team_HP_rect_2 = ((0.073, 0.594), (0.118, 0.6))
         self.team_HP_rect_3 = ((0.073, 0.761), (0.118, 0.767))
@@ -141,6 +141,13 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
         ) as image_file:
             self.pokemon_sprites = pickle.load(image_file)
+        self.misc_icons = {}
+        directory = self.config['pokemon_data_paths']['misc_icon_dir']
+        for filename in os.listdir(directory):
+            if '.png' in filename:
+                self.misc_icons[filename.split('.png')[0]] = cv2.imread(
+                    os.path.join(directory, filename)
+                )
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
@@ -236,9 +243,9 @@ class DAController(SwitchController):
             self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
                 img, (
-                    self.type_rect_1, self.type_rect_2, self.menu_rect_1,
-                    self.menu_rect_2, self.menu_rect_3, self.menu_rect_4,
-                    self.dmax_symbol_rect, self.battle_text_rect
+                    self.type_rect_1, self.type_rect_2, self.catch_dialogue_rect_1,
+                    self.catch_dialogue_rect_2, self.dmax_symbol_rect,
+                    self.battle_text_rect, self.battle_symbol_rect
                 ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
@@ -313,7 +320,7 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # Then, collect a list of the 4 Pokemon (with yours first).
-        team_pokemon = []
+        team_pokemon = {}
         HP_rects = (
             self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
             self.team_HP_rect_4)
@@ -332,13 +339,9 @@ class DAController(SwitchController):
             # sprite images.
             read_image = self.get_image_slice(img, rectangle)
             HP_bar_image = self.get_image_slice(img, HP_rects[i])
-            read_image_binary = cv2.inRange(
-                cv2.cvtColor(read_image, cv2.COLOR_BGR2HSV), (0, 0, 10),
-                (180, 20, 255)
-            )
             for name_id, sprite in self.pokemon_sprites:
                 # Check match value against stored Pokemon sprites
-                value, __ = self.match_template(sprite, read_image_binary)
+                value, __ = self.match_template(sprite, read_image)
                 if value > match_value:
                     match_value_2nd = match_value
                     match_name_id_2nd = match_name_id
@@ -349,7 +352,9 @@ class DAController(SwitchController):
             pokemon = self.current_run.rental_pokemon[match_name_id]
             pokemon.HP = self.get_rect_HSV_value(
                 HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
-            team_pokemon.append(pokemon)
+            # Note: as of Python 3.6, dicts remember insertion order so using
+            # an OrderedDict is unnecessary.
+            team_pokemon[pokemon.name_id] = pokemon
             self.log(
                 f'Identified team member {i+1} as {match_name_id} with match '
                 f'score of {match_value:.3f} and HP of '
@@ -558,22 +563,26 @@ class DAController(SwitchController):
         if self.check_black_screen(img):
             return 'LOSS'
         # Then, check for the presence of the Fight or Cheer menu.
-        if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img
-        ):
-            if self.check_rect_HSV_match(
-                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
-            ):
-                return 'FIGHT'
-            elif self.check_rect_HSV_match(
-                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img
-            ):
-                return 'CHEER'
+        fight_menu_image = self.get_image_slice(img, self.battle_symbol_rect)
+        fight_match = self.match_template(
+            fight_menu_image, self.misc_icons['fight'])[0]
+        if fight_match >= 0.85:
+            self.log(
+                f'Detected "Fight" symbol with match value of {fight_match}.',
+                'DEBUG')
+            return 'FIGHT'
+        cheer_match = self.match_template(
+            fight_menu_image, self.misc_icons['cheer'])[0]
+        if cheer_match >= 0.85:
+            self.log(
+                f'Detected "Cheer" symbol with match value of {cheer_match}.',
+                'DEBUG')
+            return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img
         ) and self.check_rect_HSV_match(
-            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img
         ):
             return 'CATCH'
         # Finally, check for other text.

@@ -185,6 +185,7 @@ Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
 path_tree_path = "data/path_tree.json"
 type_icon_path = "data/type_icons.pickle"
 pokemon_sprite_path = "data/pokemon_sprites.pickle"
+misc_icon_dir = "data/misc_icons/"
 
 # ==========
 # === OTHER LANGUAGE SETTINGS
