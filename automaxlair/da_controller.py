@@ -158,13 +158,13 @@ class DAController(SwitchController):
         assert self.current_run.balls[self.legendary_ball], 'Unknown legendary ball id'
         if self.base_ball == self.legendary_ball:
             assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
-            assert self.base_balls >= 4, 'Not enough base ball'
-            assert self.base_balls <= 999, 'Too much base ball'
+            assert self.base_balls >= 4, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
         else:
-            assert self.base_balls >= 3, 'Not enough base ball'
-            assert self.base_balls <= 999, 'Too much base ball'
-            assert self.legendary_balls >= 1, 'Not enough legendary ball'
-            assert self.legendary_balls <= 999, 'Too much legendary ball'
+            assert self.base_balls >= 3, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
+            assert self.legendary_balls >= 1, 'Not enough legendary balls.'
+            assert self.legendary_balls <= 999, 'Too many legendary balls.'
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"

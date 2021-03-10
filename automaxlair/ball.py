@@ -2,7 +2,7 @@ from typing import Dict
 
 
 class Ball():
-    """Represent a ball. Contains one id and one translation for each language"""
+    """Represents a ball. Contains one id and names in multiple languages."""
 
     def __init__(
         self,
@@ -11,3 +11,6 @@ class Ball():
     ) -> None:
         self.name_id = name_id
         self.names = names
+
+    def __str__(self) -> str:
+        return self.name_id
