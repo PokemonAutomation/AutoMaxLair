@@ -23,19 +23,15 @@
 BOSS = "dialga"
 # === BASE_BALL ===
 # This is the Pokéball that should be used for all Pokémon except for the boss.
-#   This can be a string for the ball name, or it can be DEFAULT to always choose 
-#   the first ball in the catch menu. Enter the name as seen in your bag. No need
-#   to include "Ball" in the name.
-BASE_BALL = "DEFAULT"
+#   This is the id of the ball to use (in english)
+BASE_BALL = "premier-ball"
 # === BASE_BALLS ===
 # This is the current quantity of the ball that you selected in BASE_BALL
 BASE_BALLS = 600
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
-#   This can be a string for the ball name, or it can be DEFAULT to always choose 
-#   the first ball in the catch menu. Enter the name as seen in your bag. No need
-#   to include "Ball" in the name.
-LEGENDARY_BALL = "Premier"
+#   This is the id of the ball to use (in english)
+LEGENDARY_BALL = "premier-ball"
 # === LEGENDARY_BALLS ===
 # This is the current quantity of the ball that you selected in LEGENDARY_BALL.
 #   The program will end if this ever hits zero.
@@ -56,6 +52,9 @@ LEGENDARY_BALLS = 500
 #   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
+#   "FIND PATH" - Will run like default mode but will stop as soon as it win once. It can be used
+#       alongside KEEP PATH to find a winning path. It's up  to the user to check if the path was
+#       good or not.
 MODE = "STRONG BOSS"
 
 # === COM_PORT ===
@@ -183,6 +182,7 @@ Boss_Matchup_LUT = "data/boss_matchup_LUT.json"
 Rental_Matchup_LUT = "data/rental_matchup_LUT.json"
 Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
 path_tree_path = "data/path_tree.json"
+balls_path = "data/balls.json"
 type_icon_path = "data/type_icons.pickle"
 pokemon_sprite_path = "data/pokemon_sprites.pickle"
 misc_icon_dir = "data/misc_icons/"

@@ -201,7 +201,6 @@ def main():
     )
     print('________________________________________')
 
-
     # Ensure all rental Pokemon have sprites
     with open(
         os.path.join(base_dir, 'data', 'pokemon_sprites.pickle'), 'rb'

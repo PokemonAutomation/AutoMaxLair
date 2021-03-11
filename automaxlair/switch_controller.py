@@ -407,7 +407,7 @@ class SwitchController:
         self, ping_yourself: bool, text: str, path_to_picture: str = None,
         embed_fields: dict = None, level: str = "update") -> None:
         """Send a notification via Discord.
-        
+
         Parameters
         ----------
         ping_yourself : bool
@@ -454,7 +454,7 @@ class SwitchController:
 
         # then build up our embed object
         embed = discord.Embed(
-            title="AutoMaxLair Update", 
+            title="AutoMaxLair Update",
             colour=self.discord_embed_color,
             timestamp=datetime.utcnow()
             )
@@ -478,7 +478,7 @@ class SwitchController:
             embed.set_image(url="attachment://image.png")
         else:
             my_file = None
-        
+
         # Open the image to be sent.
         try:
             webhook.send(send_str, embed=embed, file=my_file)

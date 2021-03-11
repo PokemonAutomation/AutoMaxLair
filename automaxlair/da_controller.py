@@ -11,6 +11,7 @@ den.
 import re
 import os
 import pickle
+import jsonpickle
 
 from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
@@ -148,14 +149,31 @@ class DAController(SwitchController):
                 self.misc_icons[filename.split('.png')[0]] = cv2.imread(
                     os.path.join(directory, filename)
                 )
+        with open(config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8') as file:
+            self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
+        assert self.balls[self.base_ball], 'Unknown base ball id'
+        assert self.balls[self.legendary_ball], 'Unknown legendary ball id'
+        if self.base_ball == self.legendary_ball:
+            assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
+            assert self.base_balls >= 4, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
+        else:
+            assert self.base_balls >= 3, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
+            assert self.legendary_balls >= 1, 'Not enough legendary balls.'
+            assert self.legendary_balls <= 999, 'Too many legendary balls.'
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
+        assert self.discord_level in ['all', 'only_shiny', 'none'], 'Invalid discord level'
+        # Do not assert for negative dynite ore. That way it can be used to farm ore.
+        assert self.dynite_ore <= 999, 'Too much dynite ore'
+        assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
         # Only need to run this assertion if we're checking the attack stat.
         if self.check_attack_stat:
             assert 'positive' in self.expected_attack_stats.keys(), (
@@ -649,24 +667,23 @@ class DAController(SwitchController):
             for nature_type, expected_attacks in self.expected_attack_stats.items():
                 nature_plus_expected = False if nature_type != 'positive' else True
                 nature_minus_expected = False if nature_type != 'negative' else True
-                
+
                 # then iterate through the stats
                 for expected_attack in expected_attacks:
                     expected_attack = str(expected_attack)
-                
+
                     if expected_attack in read_attack:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.attack_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10)) or (
-                                nature_plus_expected and self.check_rect_HSV_match(
-                                    self.attack_label_rect, (150, 30, 0),
-                                    (180, 255, 255), 10)
-                            )
-                            or (
-                                not nature_minus_expected
-                                and not nature_plus_expected)
-                        ):
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_attack_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.attack_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_attack_matching = True
+                        elif (not nature_minus_expected and not nature_plus_expected):
                             is_attack_matching = True
 
             if is_attack_matching:
@@ -687,21 +704,22 @@ class DAController(SwitchController):
             for nature_type, expected_speeds in self.expected_speed_stats.items():
                 nature_plus_expected = False if nature_type != 'positive' else True
                 nature_minus_expected = False if nature_type != 'negative' else True
-            
+
+                # then iterate through the stats
                 for expected_speed in expected_speeds:
                     expected_speed = str(expected_speed)
                     if expected_speed in read_speed:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.speed_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10))
-                            or (nature_plus_expected and self.check_rect_HSV_match(
-                            self.speed_label_rect, (150, 30, 0),
-                            (180, 255, 255), 10))
-                            or (
-                            not nature_minus_expected
-                            and not nature_plus_expected)
-                        ):
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_speed_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.speed_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_speed_matching = True
+                        elif (not nature_minus_expected and not nature_plus_expected):
                             is_speed_matching = True
 
             if is_speed_matching:
@@ -732,9 +750,18 @@ class DAController(SwitchController):
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
-        return (
-            self.base_ball if self.current_run.num_caught < 3
-            else self.legendary_ball)
+        if self.current_run.num_caught < 3:
+            ball_id = self.base_ball
+        else:
+            ball_id = self.legendary_ball
+
+        ball_name = self.balls[ball_id].names[self.lang]
+        ball_name.replace('ball', '')  # de
+        ball_name.replace(' Ball', '')  # en / es  / fr / it
+        ball_name.replace('ボール', '')  # ja / ja-Hrkt
+        ball_name.replace('볼', '')   # ko
+        ball_name.replace('球', '')   # zh-Hans / zh-Hant
+        return ball_name
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of the
@@ -857,11 +884,11 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
-        
+
     def get_stats_for_discord(self) -> dict:
         """This method takes information from the run and returns a nice dictionary
         for embedding to Discord
-        
+
         increment_one is only for a win with a shiny, so that we can get the nice
         status screen with the screenshot.
         """
@@ -879,5 +906,5 @@ class DAController(SwitchController):
 
         if self.shinies_found > 0:
             the_dict["Shinies Found"] = self.shinies_found
-        
+
         return the_dict
