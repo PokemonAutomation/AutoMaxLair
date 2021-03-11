@@ -25,7 +25,7 @@ This project is based on auto-controller code written by brianuuuuSonic
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include <stdint.h>
-#include "../../Joystick.h"
+#include "Joystick.h"
 #include "Config.h"
 #include "uart.h"
 
@@ -108,6 +108,7 @@ typedef enum {
 } State_t;
 State_t state = PROCESS;
 char received_command = 'a';
+unsigned int command_duration = 1;
 
 // Process and deliver data from IN and OUT endpoints.
 void HID_Task(void) {
@@ -150,18 +151,16 @@ void HID_Task(void) {
 		Endpoint_ClearIN();
 	}
 	// Lastly we'll check the serial port for incoming messages from the computer
-	while (uart_available() > 1) {
-		uart_getchar();
-	}
-	if (uart_available()) {
+	if (uart_available() > 1) {
 		received_command = uart_getchar();
+		command_duration = (unsigned int) uart_getchar();
 		state = PROCESS;
 		uart_putchar(received_command); // DEBUG echo incoming messages back to computer
+		uart_putchar(command_duration);
 	}
 }
 
-#define ECHOES 5
-int echoes = ECHOES;
+unsigned int echoes = 10;
 USB_JoystickReport_Input_t last_report;
 
 // Prepare the next report for the host.
@@ -203,6 +202,22 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
 				case '>':
 					ReportData->LX = STICK_MAX;				
+					break;
+					
+				case '8':
+					ReportData->RY = STICK_MIN;				
+					break;
+
+				case '4':
+					ReportData->RX = STICK_MIN;				
+					break;
+
+				case '2':
+					ReportData->RY = STICK_MAX;				
+					break;
+
+				case '6':
+					ReportData->RX = STICK_MAX;				
 					break;
 
 				case 'x':
@@ -267,6 +282,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
 				default:
 					// really nothing lol
+					command_duration = 1;
 					break;
 			}
 			
@@ -281,5 +297,5 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 	// Prepare to echo this report
 	memcpy(&last_report, ReportData, sizeof(USB_JoystickReport_Input_t));
 	
-	echoes = ECHOES;
+	echoes = command_duration * 10;
 }

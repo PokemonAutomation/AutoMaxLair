@@ -1,7 +1,8 @@
-numpy==1.19.2
-opencv-python==4.4.0.44
-pyenchant==3.1.1
-pyserial==3.3
-pytesseract==0.3.6
-python-dateutil==2.6.0
-pokebase
+jsonpickle>=2.0.0,<3
+discord.py>=1.6.0,<2
+pytesseract>=0.3.6,<1
+pokebase>=1.3.0,<2
+opencv_python>=4.4.0.44,<5
+pyenchant>=3.2.0,<4
+pyserial>=3.5,<4
+toml>=0.10.2,<1

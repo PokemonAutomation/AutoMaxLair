@@ -7,7 +7,7 @@ if __name__ == '__main__':
     package_pokemon.main()
     end = time.time()
     print(f'package_pokemon took {end - start}')
-    
+
     start = time.time()
     score_pokemon.main()
     end = time.time()

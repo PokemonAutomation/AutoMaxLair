@@ -3,13 +3,12 @@
 #   Eric Donders
 #   2021-01-10
 #   Read information on rental and boss Pokemon and construct dictionaries
-#   which are stored as pickle files
+#   which are stored as JSON files
 
 import sys
-import pickle
+import jsonpickle
 
 from typing import Tuple
-from automaxlair import Pokemon, Move
 
 import pokebase as pb
 
@@ -17,6 +16,8 @@ import pokebase as pb
 from os.path import dirname, abspath
 base_dir = dirname(dirname(abspath(__file__)))
 sys.path.insert(1, base_dir)
+
+from automaxlair.pokemon_classes import Pokemon, Move
 
 
 def extract_name_dict(names_resource) -> dict:
@@ -56,7 +57,7 @@ def calculate_power(power, name_id: str) -> Tuple[float, float]:
         factor = 0.3
     # Account for conditional moves that require certain conditions
     # (Steel Roller, Dream Eater, Belch, etc.).
-    elif name_id in ('steel-roller', 'dream-eater', 'belch'):
+    elif name_id in ('steel-roller', 'dream-eater', 'belch', 'last-resort'):
         factor = 0
     elif name_id == 'focus-punch':
         factor = 0.75
@@ -277,14 +278,15 @@ def main():
     results.
     """
 
-    rental_pokemon = pokemon_from_txt(base_dir+'/data/rental_pokemon.txt', 65)
-    boss_pokemon = pokemon_from_txt(base_dir+'/data/boss_pokemon.txt', 70)
+    rental_pokemon = pokemon_from_txt(
+        base_dir + '/data/rental_pokemon.txt', 65)
+    boss_pokemon = pokemon_from_txt(base_dir + '/data/boss_pokemon.txt', 70)
 
     # Pickle the Pokemon dictionaries for later use.
-    with open(base_dir+'/data/rental_pokemon.pickle', 'wb') as file:
-        pickle.dump(rental_pokemon, file)
-    with open(base_dir+'/data/boss_pokemon.pickle', 'wb') as file:
-        pickle.dump(boss_pokemon, file)
+    with open(base_dir + '/data/rental_pokemon.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(rental_pokemon, indent=4))
+    with open(base_dir + '/data/boss_pokemon.json', 'w', encoding='utf8') as file:
+        file.write(jsonpickle.encode(boss_pokemon, indent=4))
     print('Finished packaging Pokemon!')
 
 

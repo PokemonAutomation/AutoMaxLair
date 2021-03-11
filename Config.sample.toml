@@ -1,0 +1,288 @@
+# ========== Configuration file for AutoMaxLair ==========
+# What follows is the set of configurations for the AutoMaxLair program.
+# Please be sure to read carefully the descriptions of the settings and
+# adjust them as necessary for your circumstances.
+#
+# PLEASE NOTE that you will need to review the settings after each run.
+#
+# TOML also has specific formatting (useful so that the program runs properly!)
+# so please be sure to not add or remove decimal points or quotes
+# and do not modify the style in this file. Also, `true` and `false`
+# should ALWAYS be lower case!
+# ========================================================
+
+# === BOSS ===
+# This is the boss that you are resetting for. This is a string for the name.
+#   NOTE: this allows the program to properly select Pokémon and Moves throughout the run.
+#   IMPORTANT: Use entirely lower case letters and replace all spaces with hyphens.
+#       e.g. "moltres" "kyurem" "tapu-koko" "tapu-lele"
+#   The boss name also needs to be its English name due to internal storage.
+#   Bosses with multiple formes need to have the forme specified.
+#   This includes the following:
+#       "giratina-altered", "thundurus-incarnate", "tornadus-incarnate", "landorus-incarnate", "zygarde-50"
+BOSS = "dialga"
+# === BASE_BALL ===
+# This is the Pokéball that should be used for all Pokémon except for the boss.
+#   This can be a string for the ball name, or it can be DEFAULT to always choose 
+#   the first ball in the catch menu. Enter the name as seen in your bag. No need
+#   to include "Ball" in the name.
+BASE_BALL = "DEFAULT"
+# === BASE_BALLS ===
+# This is the current quantity of the ball that you selected in BASE_BALL
+BASE_BALLS = 600
+# === LEGENDARY_BALL ===
+# This is the Pokéball that should be used for just the legendary boss Pokémon.
+#   This can be a string for the ball name, or it can be DEFAULT to always choose 
+#   the first ball in the catch menu. Enter the name as seen in your bag. No need
+#   to include "Ball" in the name.
+LEGENDARY_BALL = "Premier"
+# === LEGENDARY_BALLS ===
+# This is the current quantity of the ball that you selected in LEGENDARY_BALL.
+#   The program will end if this ever hits zero.
+LEGENDARY_BALLS = 500
+# === MODE ===
+# This is the mode that the program should use.
+# These are the options:
+#   "DEFAULT" - The default mode of the script.
+#       This will never reset the game. This is perfect if you have many legendary Pokéballs
+#       and would like to accumulate Dynite Ore.
+#   "BALL SAVER" - Resets the game if the legendary is caught and it isn't shiny.
+#       It will also keep track of your Dynite Ore so that if you cannot pay the fee
+#       for multiple resets, it will skip catching the legendary. Use this if you have
+#       a small number of Pokéballs to use with the legendary.
+#   "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
+#       This mode is useful for locking on a seed that is capable of beating the boss, but will
+#       still take non-legendary shinies.
+#   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
+#       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
+#       This will deplete your Ore quickly.
+MODE = "STRONG BOSS"
+
+# === COM_PORT ===
+# The COM Port is how your system internally connects to your Serial connection.
+#   On Windows it will be of the form `COMX` where X is some number. 
+#       View your available devices for the exact string.
+#   On Mac and Linux, it will be a path that begins with `/dev/`. See the documenation for more information.
+COM_PORT = "COM4"
+# === VIDEO_INDEX ===
+# The video index is which index OpenCV uses in your input devices to read from your capture card.
+#   For most users this number will be either 0 or 1 depending on the number of cameras you have plugged in.
+VIDEO_INDEX = 1
+# === TESSERACT_PATH ===
+# This is the path to the Tesseract executable. This is NOT where the pytesseract
+# package is installed but where tesseract is installed.
+# On Windows this is likely inside Program Files\\Tesseract-OCR.
+# On Mac and Linux, it will likely be in a place like /usr/bin (run `which tesseract` in your terminal to get the path)
+TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+
+# ==========
+# === ADVANCED SETTINGS
+[advanced]
+# === VIDEO_SCALE ===
+# The scaling for the live display of the script.
+#   Set to less than 1 if you want the image smaller than the default size (1920x1080).
+#   Please make sure there's always a decimal at the end of this value even if setting to 1 (e.g. 1.0).
+VIDEO_SCALE = 0.5
+# === VIDEO_EXTRA_DELAY ===
+# Input a time (in seconds) if your capture card has any significant delay.
+#   Most configurations can leave this value at 0 but people using 
+#   OBS virtual camera may have to increase this value to 1 or 2 (seconds).
+#   Please make sure there's always a decimal at the end of this value.
+VIDEO_EXTRA_DELAY = 0.0
+# === BOSS_INDEX ===
+# The position of the boss you're hunting on the menu. 
+#   0 is the top, 1 is the middle, and 2 is the bottom.
+BOSS_INDEX = 0
+# === DYNITE_ORE ===
+# The current amount of Dynite Ore in your bag. Not necessary if using DEFAULT mode
+DYNITE_ORE = 0
+# === CONSECUTIVE_RESETS ==
+# If you had to stop the script and have not reset your reset counter by clearing
+# an adventure, set this number to how many you previously had.
+CONSECUTIVE_RESETS = 0
+# === ENABLE_DEBUG_LOGS ===
+# This enables the debug logs in your Python console. This can be very useful when
+# you're running into problems and need to report to the developers what's happening.
+ENABLE_DEBUG_LOGS = false
+
+# ==========
+# === POKEMON STAT FINDING SETTINGS
+# The following settings are to enable the program to check for specific stats
+# on the boss. If these are met, it ends the program.
+[stats]
+# === CHECK_ATTACK_STAT ===
+# Enables checking the Attack stat
+CHECK_ATTACK_STAT = false
+# === CHECK_SPEED_STAT ===
+# Enables checking the Speed stat
+CHECK_SPEED_STAT = false
+
+# === ATTACK_STATS ===
+# Enter the values for Attack stats you want to search for.
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
+# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
+[stats.ATTACK_STATS]
+positive = [160, 161]
+neutral = [146, 147]
+negative = [131, 132]
+
+# === SPEED_STATS ===
+# Enter the values for Speed stats you want to search for. 
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
+# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
+[stats.SPEED_STATS]
+positive = [99, 100]
+neutral = [90, 91]
+negative = [81, 82]
+
+# ==========
+# === DISCORD SETTINGS
+# Fill out these values to enable Discord notifications to webhooks
+[discord]
+# If you're willing to setup the ping system (be warned when you found a shiny, etc). You'll need some setup
+# Set WEBHOOK_ID and WEBHOOK_TOKEN as explained here https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
+# Set USER_ID as explained here https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+# === WEBHOOK_ID and WEBHOOK_TOKEN ===
+# Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
+WEBHOOK_ID = "PLACE_ID_WITHIN_QUOTES"
+WEBHOOK_TOKEN = "PLACE_TOKEN_WITHIN_QUOTES"
+# === USER_ID ===
+# This is your Discord User ID for mentioning you.
+# More info: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+USER_ID = "PLACE_ID_WITHIN_QUOTES"
+# === USER_SHORT_NAME ===
+# To personalize your messages, please include a name for the webhooks to use.
+# Could be your actual name.
+USER_SHORT_NAME = "YOUR_SHORT_NAME_WITHIN_QUOTES"
+# === UPDATE_LEVELS ===
+# There are multiple types of levels that can be sent via the Discord Webhook to inform
+# your progress,
+#   "all" - provides all possible updates to your webhook, includes stats after a completed run
+#   "only_shiny" - will only push updates if shinies are found
+#   "none" - ignores all discord messages
+UPDATE_LEVELS = "none"
+
+# ==========
+# === LANGUAGE SETTINGS
+[language]
+# === LANGUAGE ===
+# Set the language of your game here.
+# Currently we support English, Spanish, French, Korean, and German
+LANGUAGE = "English"
+
+# ==========
+# === POKEMON DATA SETTINGS
+# These paths are if you are not using the pre-calculated values included with the program
+# and should not be modfied unless you know what you are doing.
+[pokemon_data_paths]
+Boss_Pokemon = "data/boss_pokemon.json"
+Rental_Pokemon = "data/rental_pokemon.json"
+Boss_Matchup_LUT = "data/boss_matchup_LUT.json"
+Rental_Matchup_LUT = "data/rental_matchup_LUT.json"
+Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
+path_tree_path = "data/path_tree.json"
+type_icon_path = "data/type_icons.pickle"
+
+# ==========
+# === OTHER LANGUAGE SETTINGS
+# What follows are how to set the various phrases that allow
+# the program to detect what is currently happening in your game.
+# These may need to be modified if your capture card adds extra noise,
+# modifies your colors, or other weird things. Feel free to reach out to
+# a developer if you're having issues.
+[English]
+TESSERACT_LANG_NAME = "eng"
+DATA_LANG_NAME = "en"
+BACKPACKER = "backpacker"
+SCIENTIST = "swapping"
+PATH = "path"
+FAINT = "The storm"
+START_PHRASE = "Would you like to embark"
+WEATHER_CLEAR = "sunlight faded|rain stopped|sandstorm subsided|hail stopped"
+WEATHER_SUNLIGHT = "sunlight turned"
+WEATHER_RAIN = "started to rain"
+WEATHER_SANDSTORM = "sandstorm kicked"
+WEATHER_HAIL = "started to hail"
+TERRAIN_CLEAR = "electricity disappeared|grass disappeared|mist disappeared|weirdness disappeared"
+TERRAIN_ELECTRIC = "electric current ran"
+TERRAIN_GRASSY = "Grass grew"
+TERRAIN_MISTY = "Mist swirled"
+TERRAIN_PSYCHIC = "got weird"
+
+[Spanish]
+TESSERACT_LANG_NAME = "spa"
+DATA_LANG_NAME = "sp"
+BACKPACKER = "mis objetos"
+SCIENTIST = "préstamo"
+PATH = "quieres seguir"
+FAINT = "La tormenta"
+START_PHRASE = "emprender"
+WEATHER_CLEAR = "PLACEHOLDER"
+WEATHER_SUNLIGHT = "PLACEHOLDER"
+WEATHER_RAIN = "PLACEHOLDER"
+WEATHER_SANDSTORM = "PLACEHOLDER"
+WEATHER_HAIL = "PLACEHOLDER"
+TERRAIN_CLEAR = "PLACEHOLDER"
+TERRAIN_ELECTRIC = "PLACEHOLDER"
+TERRAIN_GRASSY = "PLACEHOLDER"
+TERRAIN_MISTY = "PLACEHOLDER"
+TERRAIN_PSYCHIC = "PLACEHOLDER"
+
+[French]
+TESSERACT_LANG_NAME = "fra"
+DATA_LANG_NAME = "fr"
+BACKPACKER = "Randonneuse"
+SCIENTIST = "intéresse"
+PATH = "Quel chemin"
+FAINT = "au-dessus|intenable"
+START_PHRASE = "vous lancer"
+WEATHER_CLEAR = "affaiblissent|est arrêtée|sable se calme"
+WEATHER_SUNLIGHT = "soleil brillent"
+WEATHER_RAIN = "pleuvoir"
+WEATHER_SANDSTORM = "tempête de sable se prépare"
+WEATHER_HAIL = "gr.ler"
+TERRAIN_CLEAR = "est dissipée|gazon disparaît|brume qui recouvrait|redevient normal"
+TERRAIN_ELECTRIC = "électricité parcourt"
+TERRAIN_GRASSY = "beau gazon"
+TERRAIN_MISTY = "couvre de brume"
+TERRAIN_PSYCHIC = "réagir de"
+
+[Korean]
+TESSERACT_LANG_NAME = "kor"
+DATA_LANG_NAME = "ko"
+BACKPACKER = "백팩커"
+SCIENTIST = "교환하|교핟하 "
+PATH = "길로"
+FAINT = "폭풍이|폭풍을|폭품이|폭품을"
+START_PHRASE = "시작하시겠습니까"
+WEATHER_CLEAR = "PLACEHOLDER"
+WEATHER_SUNLIGHT = "PLACEHOLDER"
+WEATHER_RAIN = "PLACEHOLDER"
+WEATHER_SANDSTORM = "PLACEHOLDER"
+WEATHER_HAIL = "PLACEHOLDER"
+TERRAIN_CLEAR = "PLACEHOLDER"
+TERRAIN_ELECTRIC = "PLACEHOLDER"
+TERRAIN_GRASSY = "PLACEHOLDER"
+TERRAIN_MISTY = "PLACEHOLDER"
+TERRAIN_PSYCHIC = "PLACEHOLDER"
+
+[German]
+TESSERACT_LANG_NAME = "deu"
+DATA_LANG_NAME = "de"
+BACKPACKER = "Backpackerin"
+SCIENTIST = "austauschen"
+PATH = "Weg"
+FAINT = "Eure Gruppe wurde vom Sturm"
+START_PHRASE = "Möchtest du zu einem"
+WEATHER_CLEAR = "Sonnenlicht verliert|auf zu regnen|Sandsturm legt sich|auf zu hageln"
+WEATHER_SUNLIGHT = "Sonnenlicht wird"
+WEATHER_RAIN = "an zu regnen"
+WEATHER_SANDSTORM = "Sandsturm kommt auf"
+WEATHER_HAIL = "an zu hageln"
+TERRAIN_CLEAR = "feld ist wieder"
+TERRAIN_ELECTRIC = "Elektrische Energie"
+TERRAIN_GRASSY = "Dichtes Gras"
+TERRAIN_MISTY = "Nebel aus"
+TERRAIN_PSYCHIC = "seltsam an"
