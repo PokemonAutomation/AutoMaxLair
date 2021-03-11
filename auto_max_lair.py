@@ -371,49 +371,71 @@ def catch(ctrlr) -> str:
         #
         # In this stage the list contains only 1 item.
         pokemon = ctrlr.read_selectable_pokemon('catch')[0]
+        run.caught_pokemon.append(pokemon.name_id)
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
         # difficult than the other bosses.
         rental_weight = 3 - run.num_caught
         boss_weight = 2
-        # Calculate scores for the new and existing Pokemon.
-        # TODO: actually read the current Pokemon's health so the bot can
-        # decide to switch if it's low.
-        score = matchup_scoring.get_weighted_score(
-            run.rental_scores[pokemon.name_id], rental_weight,
-            run.boss_matchups[pokemon.name_id][ctrlr.boss], boss_weight
-        )
-        existing_score = matchup_scoring.get_weighted_score(
-            run.rental_scores[run.pokemon.name_id], rental_weight,
-            matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
-            ), boss_weight
-        ) * run.HP
-        ctrlr.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
-        ctrlr.log(
-            f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
-        )
 
-        run.caught_pokemon.append(pokemon.name_id)
+        # Calculate scores for every potential team resulting from the decision
+        # to take or leave the new Pokemon.
+        # TODO: decide how to weigh Pokemon HP.
+        team = run.team_pokemon
+        team_scores = []
+        potential_teams = (
+            (pokemon, team[0], team[1], team[2]),
+            (run.pokemon, team[0], team[1], team[2]),
+            (run.pokemon, pokemon, team[1], team[2]),
+            (run.pokemon, team[0], pokemon, team[2]),
+            (run.pokemon, team[0], team[1], pokemon)
+        )
+        for potential_team in potential_teams:
+            score = matchup_scoring.get_weighted_score(
+                matchup_scoring.evaluate_average_matchup(
+                    potential_team[0], run.rental_pokemon.values(),
+                    potential_team[1:]
+                ), rental_weight,
+                matchup_scoring.evaluate_matchup(
+                    potential_team[0], run.boss_pokemon[run.boss],
+                    potential_team[1:]
+                ), boss_weight
+            )
+            ctrlr.log(
+                f'Score for potential team: {potential_team}: {score:.2f}',
+                'DEBUG')
+            team_scores.append(score)
+        # Choosing not to take the Pokemon may result in a teammate choosing
+        # it, or none may choose it. The mechanics of your teammates choosing
+        # is currently not known. Qualitatively, it seems like they choose yes
+        # or no randomly with about 50% chance. Using this assumption, the
+        # chance that none of them take the Pokemon is (1/2)^3 or 12.5%.
+        choose_score = team_scores[0]
+        leave_score = 0.125 * team_scores[1] + 0.875 * sum(team_scores[2:]) / 3
+        ctrlr.log(
+            f'Score for taking {pokemon.name_id}: {choose_score:.2f}', 'DEBUG')
+        ctrlr.log(
+            f'Score for declining {pokemon.name_id}: {leave_score:.2f}',
+            'DEBUG')
 
         # Compare the scores for the two options and choose the best one.
-        if score > existing_score:
+        if choose_score > leave_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
             run.pokemon = pokemon
+            ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
             # Note: a long delay is required here so the bot doesn't think a
             # battle started.
             ctrlr.push_button(b'a', 6)
-            ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
+
         else:
+            ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
             # Note: a long delay is required here so the bot doesn't think a
             # battle started.
             ctrlr.push_button(b'b', 6)
-            ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
-        
+
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
-        ctrlr.push_button(None, 1)
 
         # Move on to the detect stage.
         return 'detect'
@@ -459,40 +481,37 @@ def scientist(ctrlr) -> str:
 
     ctrlr.log('Scientist encountered.', 'DEBUG')
 
-    if run.pokemon is not None:
-        # Consider the amount of remaining minibosses when scoring each rental
-        # Pokemon, at the start of the run, there are 3 - num_caught minibosses
-        # and 1 final boss. We weigh the boss more heavily because it is more
-        # difficult than the other bosses.
-        rental_weight = 3 - run.num_caught
-        boss_weight = 2
+    # Consider the amount of remaining minibosses when scoring each rental
+    # Pokemon, at the start of the run, there are 3 - num_caught minibosses
+    # and 1 final boss. We weigh the boss more heavily because it is more
+    # difficult than the other bosses.
+    rental_weight = 3 - run.num_caught
+    boss_weight = 2
 
-        # Calculate scores for an average and existing Pokemon.
-        pokemon_scores = []
-        for name_id in run.rental_pokemon:
-            score = matchup_scoring.get_weighted_score(
-                run.rental_scores[name_id], rental_weight,
-                run.boss_matchups[name_id][ctrlr.boss], boss_weight
-            )
-            pokemon_scores.append(score)
-        average_score = sum(pokemon_scores) / len(pokemon_scores)
+    # Calculate scores for an average and existing Pokemon.
+    pokemon_scores = []
+    for name_id in run.rental_pokemon:
+        score = matchup_scoring.get_weighted_score(
+            run.rental_scores[name_id], rental_weight,
+            run.boss_matchups[name_id][ctrlr.boss], boss_weight
+        )
+        pokemon_scores.append(score)
+    average_score = sum(pokemon_scores) / len(pokemon_scores)
 
-        # TODO: actually read the current Pokemon's health so the bot can
-        # decide to switch if it's low.
-        existing_score = matchup_scoring.get_weighted_score(
-            run.rental_scores[run.pokemon.name_id], rental_weight,
-            matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
-            ), boss_weight
-        ) * run.HP
-        ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
-        ctrlr.log(
-            f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
+    # TODO: actually read the current Pokemon's health so the bot can
+    # decide to switch if it's low.
+    existing_score = matchup_scoring.get_weighted_score(
+        run.rental_scores[run.pokemon.name_id], rental_weight,
+        matchup_scoring.evaluate_matchup(
+            run.pokemon, run.boss_pokemon[ctrlr.boss],
+            run.team_pokemon
+        ), boss_weight
+    ) * run.HP
+    ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
+    ctrlr.log(
+        f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
 
-    # If current pokemon is None, it means we just already talked to scientist
-    # Also it means we took the pokemon from scientist.
-    # So let's try to pick it up again
-    if run.pokemon is None or average_score > existing_score:
+    if average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
         ctrlr.push_buttons((None, 3), (b'a', 3 + VIDEO_EXTRA_DELAY))
@@ -506,13 +525,12 @@ def scientist(ctrlr) -> str:
 
     # Read teammates.
     ctrlr.identify_team_pokemon()
-    ctrlr.push_button(None, 4)
     # If we took a Pokemon from the scientist, try to identify it.
-    if run.pokemon is None:
-        # Note: as of Python 3.6, dicts remember insertion order so using an
-        # OrderedDict is unnecessary.
-        run.pokemon = run.team_pokemon.values()[0]
+    # Note: as of Python 3.6, dicts remember insertion order so using an
+    # OrderedDict is unnecessary.
+    if average_score > existing_score:
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
+    ctrlr.push_button(None, 4)
 
     return 'detect'
 

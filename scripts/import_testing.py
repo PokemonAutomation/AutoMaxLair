@@ -12,7 +12,7 @@ sys.path.insert(1, base_dir)
 sys.path.insert(1, os.path.join(base_dir, 'automaxlair'))
 
 from automaxlair import matchup_scoring  # noqa: E402
-from automaxlair.field import Field
+from automaxlair.field import Field  # noqa: E402
 
 
 def test_terrain(rental_pokemon, boss_pokemon):
@@ -181,21 +181,23 @@ def main():
     # Test move selection
     print('Wide Guard utility:')
     matchup_scoring.print_matchup_summary(
-        rental_pokemon['pelipper'], boss_pokemon['groudon'], Field(), rental_pokemon
+        rental_pokemon['pelipper'], boss_pokemon['groudon'], Field(),
+        rental_pokemon.values()
     )
     salazzle = rental_pokemon['salazzle']
     print('Regular matchup:')
     matchup_scoring.print_matchup_summary(
-        salazzle, boss_pokemon['kartana'], Field(), rental_pokemon
+        salazzle, boss_pokemon['kartana'], Field(), rental_pokemon.values()
     )
     print('Max move scores:')
     salazzle.dynamax = True
     matchup_scoring.print_matchup_summary(
-        salazzle, boss_pokemon['kartana'], Field(), rental_pokemon
+        salazzle, boss_pokemon['kartana'], Field(), rental_pokemon.values()
     )
     print('Sap Sipper:')
     matchup_scoring.print_matchup_summary(
-        rental_pokemon['tsareena'], rental_pokemon['azumarill'], Field(), rental_pokemon
+        rental_pokemon['tsareena'], rental_pokemon['azumarill'], Field(),
+        rental_pokemon.values()
     )
     print('________________________________________')
 
