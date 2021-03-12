@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-release-candidate'
+VERSION = 'v0.8-alpha'
 
 # load configuration from the config file
 try:
@@ -121,7 +121,9 @@ def join(ctrlr) -> str:
     ctrlr.log(f'Path type identified as: {run.path_type}')
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
     ctrlr.read_path_information(3)
-    ctrlr.log(str(run), 'DEBUG')
+    #ctrlr.log(str(run), 'DEBUG')
+    for line in run.get_output_strings():
+        ctrlr.log(line)
     all_paths_str = run.get_paths(truncate=True, name_only=True)
 
     # Choose the best path out of the options.
@@ -378,8 +380,13 @@ def catch(ctrlr) -> str:
         # in the den.
         run.prune_potential_minibosses()
         ctrlr.log(
+            'The following Pokemon have been encountered and will not appear '
+            f'again: {run.all_encountered_pokemon}', 'DEBUG'
+        )
+        ctrlr.log(
             'The following Pokemon may still appear along the target path: '
-            f'{[x for x in run.potential_boss_pokemon]}', 'DEBUG')
+            f'{[x for x in run.potential_boss_pokemon]}', 'DEBUG'
+        )
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
@@ -399,15 +406,16 @@ def catch(ctrlr) -> str:
             (run.pokemon, team[0], pokemon, team[2]),
             (run.pokemon, team[0], team[1], pokemon)
         )
+        ctrlr.log(f'HP of current team: {[x.HP for x in team]}.', 'DEBUG')
         for potential_team in potential_teams:
             score = matchup_scoring.get_weighted_score(
                 matchup_scoring.evaluate_average_matchup(
                     potential_team[0], run.potential_boss_pokemon.values(),
-                    potential_team[1:]
+                    potential_team[1:], run.lives
                 ), rental_weight,
                 matchup_scoring.evaluate_matchup(
                     potential_team[0], run.boss_pokemon[run.boss],
-                    potential_team[1:]
+                    potential_team[1:], run.lives
                 ), boss_weight
             )
             ctrlr.log(
@@ -513,9 +521,9 @@ def scientist(ctrlr) -> str:
         run.rental_scores[run.pokemon.name_id], rental_weight,
         matchup_scoring.evaluate_matchup(
             run.pokemon, run.boss_pokemon[ctrlr.boss],
-            run.team_pokemon
+            run.team_pokemon, run.lives
         ), boss_weight
-    ) * run.HP
+    )
     ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
     ctrlr.log(
         f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')

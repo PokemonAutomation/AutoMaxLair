@@ -432,21 +432,24 @@ def calculate_move_score(
 
 
 def evaluate_matchup(
-    attacker: Pokemon, boss: Pokemon, teammates: Iterable[Pokemon] = []
+    attacker: Pokemon, boss: Pokemon, teammates: Iterable[Pokemon] = [],
+    num_lives: int = 1
 ) -> float:
     """Return a matchup score between an attacker and defender, with the
     attacker using optimal moves and the defender using average moves.
     """
 
+    # Transform Ditto (Dynamax Adventure Ditto has Imposter).
     if attacker.name_id == 'ditto':
         attacker = transform_ditto(attacker, boss)
     elif boss.name_id == 'ditto':
         boss = transform_ditto(boss, attacker)
+
+    # Calculate scores for base and Dynamaxed versions of the attacker.
     base_version = copy.copy(attacker)
     base_version.dynamax = False
     dmax_version = copy.copy(attacker)
     dmax_version.dynamax = True
-
     base_version_score = select_best_move(
         base_version, boss, Field(), teammates)[2]
     dmax_version_score = select_best_move(
@@ -454,12 +457,18 @@ def evaluate_matchup(
     score = max(
         base_version_score, (base_version_score + dmax_version_score) / 2)
 
-    return score
+    # Adjust the score depending on the Pokemon's HP. If there are multiple
+    # lives left, fainting is less important.
+    assert 1 <= num_lives <= 4, 'num_lives should be between 1 and 4.'
+    HP_correction = ((5 - num_lives) * attacker.HP + num_lives - 1) / 4
+    #print(HP_correction)
+
+    return score * HP_correction
 
 
 def evaluate_average_matchup(
     attacker: Pokemon, bosses: Iterable[Pokemon],
-    teammates: Iterable[Pokemon] = []
+    teammates: Iterable[Pokemon] = [], num_lives: int = 1
 ) -> float:
     """Return an average matchup score between an attacker and multiple
     defenders. Wrapper for the evaluate_matchup function which scores a single
@@ -468,7 +477,7 @@ def evaluate_average_matchup(
 
     total_score = 0
     for boss in bosses:
-        total_score += evaluate_matchup(attacker, boss, teammates)
+        total_score += evaluate_matchup(attacker, boss, teammates, num_lives)
 
     return 1 if len(bosses) == 0 else total_score / len(bosses)
 

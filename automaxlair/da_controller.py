@@ -377,6 +377,13 @@ class DAController(SwitchController):
 
             # Update the storage with the read Pokemon.
             if i == 0:
+                if self.current_run.pokemon not in (None, pokemon):
+                    self.log(
+                        "The bot's Pokemon detected from the sprite, "
+                        f"{pokemon.name}, did not match with the previously "
+                        f"known value of {self.current_run.pokemon.name}.",
+                        'WARNING'
+                    )
                 self.current_run.pokemon = pokemon
             else:
                 self.current_run.team_pokemon.append(pokemon)
