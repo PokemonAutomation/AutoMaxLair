@@ -242,7 +242,7 @@ namespace AutoDA
                 //MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Discord Validation
-            else if (userID == false || boxUserID.Text.Length != 18)
+            else if (userID == false || userID == true && boxUserID.Text.Length != 18)
                 MessageBox.Show("Your Discord User ID should be a string of numbers with the length 18.", "Error: User ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             else
