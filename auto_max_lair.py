@@ -24,12 +24,14 @@ try:
     config = toml.load("Config.toml")
 except FileNotFoundError:
     raise FileNotFoundError(
-        "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
+        "The Config.toml file was not found! Be sure to copy "
+        "Config.sample.toml as Config.toml and edit it!")
 except:
     raise SyntaxError(
-        "Something went wrong parsing Config.toml\n" +
-        "Please make sure you entered the information right " +
-        "and did not modify \" or . symbols or have uppercase true or false in the settings.")
+        "Something went wrong parsing Config.toml\n"
+        "Please make sure you entered the information right "
+        "and did not modify \" or . symbols or have uppercase true or false "
+        "in the settings.")
 
 COM_PORT = config['COM_PORT']
 VIDEO_INDEX = config['VIDEO_INDEX']
@@ -46,9 +48,10 @@ LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
-    ctrlr.send_discord_message(False, f"Starting a new full run for {ctrlr.boss}!",
-                               embed_fields=ctrlr.get_stats_for_discord(), level="update"
-                               )
+    ctrlr.send_discord_message(
+        False, f"Starting a new full run for {ctrlr.boss}!",
+        embed_fields=ctrlr.get_stats_for_discord(), level="update"
+    )
 
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
@@ -370,6 +373,13 @@ def catch(ctrlr) -> str:
         # In this stage the list contains only 1 item.
         pokemon = ctrlr.read_selectable_pokemon('catch')[0]
         run.caught_pokemon.append(pokemon.name_id)
+
+        # Update the list of potential minibosses that we might encounter later
+        # in the den.
+        run.prune_potential_minibosses()
+        ctrlr.log(
+            'The following Pokemon may still appear along the target path: '
+            f'{[x for x in run.potential_boss_pokemon]}', 'DEBUG')
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
@@ -392,7 +402,7 @@ def catch(ctrlr) -> str:
         for potential_team in potential_teams:
             score = matchup_scoring.get_weighted_score(
                 matchup_scoring.evaluate_average_matchup(
-                    potential_team[0], run.rental_pokemon.values(),
+                    potential_team[0], run.potential_boss_pokemon.values(),
                     potential_team[1:]
                 ), rental_weight,
                 matchup_scoring.evaluate_matchup(
@@ -401,8 +411,8 @@ def catch(ctrlr) -> str:
                 ), boss_weight
             )
             ctrlr.log(
-                f'Score for potential team: {potential_team}: {score:.2f}',
-                'DEBUG')
+                'Score for potential team: '
+                f'{[x.name_id for x in potential_team]}: {score:.2f}', 'DEBUG')
             team_scores.append(score)
         # Choosing not to take the Pokemon may result in a teammate choosing
         # it, or none may choose it. The mechanics of your teammates choosing
@@ -434,6 +444,7 @@ def catch(ctrlr) -> str:
 
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
+        run.prune_potential_minibosses()
 
         # Move on to the detect stage.
         return 'detect'

@@ -371,12 +371,14 @@ class DAController(SwitchController):
             pokemon.HP = self.get_rect_HSV_value(
                 HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
 
+            # Mark the Pokemon as "encountered" so we know it won't appear
+            # later in the den.
+            self.current_run.all_encountered_pokemon.add(pokemon.name_id)
+
             # Update the storage with the read Pokemon.
             if i == 0:
                 self.current_run.pokemon = pokemon
             else:
-                # Note: as of Python 3.6, dicts remember insertion order so
-                # using an OrderedDict is unnecessary.
                 self.current_run.team_pokemon.append(pokemon)
             self.log(
                 f'Identified team member {i+1} as {match_name_id} with match '
@@ -436,6 +438,10 @@ class DAController(SwitchController):
                 match_value = distance
                 best_match = pokemon
                 matched_text = string_to_match
+
+        # Mark the Pokemon as "encountered" so we know it won't appear later in
+        # the den.
+        self.current_run.all_encountered_pokemon.add(best_match.name_id)
 
         # Raise a warning if the OCRed text didn't closely match any stored
         # value.
@@ -588,15 +594,15 @@ class DAController(SwitchController):
             fight_menu_image, self.misc_icons['fight'])[0]
         if fight_match >= 0.85:
             self.log(
-                f'Detected "Fight" symbol with match value of {fight_match}.',
-                'DEBUG')
+                'Detected "Fight" symbol with match value of '
+                f'{fight_match:.3f}.', 'DEBUG')
             return 'FIGHT'
         cheer_match = self.match_template(
             fight_menu_image, self.misc_icons['cheer'])[0]
         if cheer_match >= 0.85:
             self.log(
-                f'Detected "Cheer" symbol with match value of {cheer_match}.',
-                'DEBUG')
+                'Detected "Cheer" symbol with match value of '
+                f'{cheer_match:.3f}.', 'DEBUG')
             return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
@@ -664,9 +670,11 @@ class DAController(SwitchController):
                 self.get_frame(), self.attack_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for nature_type, expected_attacks in self.expected_attack_stats.items():
-                nature_plus_expected = False if nature_type != 'positive' else True
-                nature_minus_expected = False if nature_type != 'negative' else True
+            for nature_type, expected_attacks in (
+                self.expected_attack_stats.items()
+            ):
+                nature_plus_expected = nature_type == 'positive'
+                nature_minus_expected = nature_type == 'negative'
 
                 # then iterate through the stats
                 for expected_attack in expected_attacks:
@@ -683,7 +691,10 @@ class DAController(SwitchController):
                                 (180, 255, 255), 10)):
                             if nature_plus_expected:
                                 is_attack_matching = True
-                        elif (not nature_minus_expected and not nature_plus_expected):
+                        elif (
+                            not nature_minus_expected
+                            and not nature_plus_expected
+                        ):
                             is_attack_matching = True
 
             if is_attack_matching:
@@ -701,9 +712,11 @@ class DAController(SwitchController):
                 self.get_frame(), self.speed_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for nature_type, expected_speeds in self.expected_speed_stats.items():
-                nature_plus_expected = False if nature_type != 'positive' else True
-                nature_minus_expected = False if nature_type != 'negative' else True
+            for nature_type, expected_speeds in (
+                self.expected_speed_stats.items()
+            ):
+                nature_plus_expected = nature_type == 'positive'
+                nature_minus_expected = nature_type == 'negative'
 
                 # then iterate through the stats
                 for expected_speed in expected_speeds:
@@ -719,7 +732,10 @@ class DAController(SwitchController):
                                 (180, 255, 255), 10)):
                             if nature_plus_expected:
                                 is_speed_matching = True
-                        elif (not nature_minus_expected and not nature_plus_expected):
+                        elif (
+                            not nature_minus_expected
+                            and not nature_plus_expected
+                        ):
                             is_speed_matching = True
 
             if is_speed_matching:
@@ -764,8 +780,8 @@ class DAController(SwitchController):
         return ball_name
 
     def check_ball(self) -> str:
-        """Detect the currently selected Poke Ball during the catch phase of the
-        game.
+        """Detect the currently selected Poke Ball during the catch phase of
+        the game.
         """
 
         return self.read_text(
@@ -886,14 +902,15 @@ class DAController(SwitchController):
             screenshot=screenshot)
 
     def get_stats_for_discord(self) -> dict:
-        """This method takes information from the run and returns a nice dictionary
-        for embedding to Discord
+        """This method takes information from the run and returns a nice
+        dictionary for embedding to Discord
 
-        increment_one is only for a win with a shiny, so that we can get the nice
-        status screen with the screenshot.
+        increment_one is only for a win with a shiny, so that we can get the
+        nice status screen with the screenshot.
         """
 
-        wins_updated = self.wins + 1 if self.current_run.lives != 0 else self.wins
+        wins_updated = (
+            self.wins + 1 if self.current_run.lives != 0 else self.wins)
         runs_updated = self.runs + 1
 
         the_dict = {

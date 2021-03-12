@@ -459,7 +459,7 @@ def evaluate_matchup(
 
 def evaluate_average_matchup(
     attacker: Pokemon, bosses: Iterable[Pokemon],
-    teammates: Iterable[Pokemon] = {}
+    teammates: Iterable[Pokemon] = []
 ) -> float:
     """Return an average matchup score between an attacker and multiple
     defenders. Wrapper for the evaluate_matchup function which scores a single
@@ -470,7 +470,7 @@ def evaluate_average_matchup(
     for boss in bosses:
         total_score += evaluate_matchup(attacker, boss, teammates)
 
-    return total_score / len(bosses)
+    return 1 if len(bosses) == 0 else total_score / len(bosses)
 
 
 def select_best_move(

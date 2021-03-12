@@ -65,6 +65,7 @@ class MaxLairInstance:
         self.HP = 1  # 1 = 100%
         self.num_caught = 0
         self.caught_pokemon = []
+        self.all_encountered_pokemon = set()
         self.lives = 4
         self.paths = [
             [BossNode(('START', (0, (0, 0))), 0, 0)],
@@ -90,6 +91,8 @@ class MaxLairInstance:
             self.rental_scores = jsonpickle.decode(file.read())
         with open(data_paths[5], 'r', encoding='utf8') as file:
             self.path_tree = jsonpickle.decode(file.read())
+
+        self.potential_boss_pokemon = self.rental_pokemon.copy()
 
     def __str__(self) -> str:
         """Print information about the current instance."""
@@ -142,6 +145,25 @@ class MaxLairInstance:
                 self.pokemon = self.rental_pokemon['ditto']
             self.pokemon.dynamax = False
 
+    def prune_potential_minibosses(self) -> None:
+        """Update the dict of rental Pokemon that may appear as future bosses.
+        """
+
+        # Start with a fresh copy of all rental Pokemon.
+        self.potential_boss_pokemon = self.rental_pokemon.copy()
+        # Then, remove all Pokemon that have previously been encountered
+        for name_id in self.all_encountered_pokemon:
+            self.potential_boss_pokemon.pop(name_id, None)
+        # Finally, remove any Pokemon that doesn't fit the types of the
+        # remaining chosen path.
+        types_left = set([
+            node.name for node in 
+            self.target_path[self.current_node_index + 1:]
+        ])
+        for name_id, pokemon in self.rental_pokemon.items():
+            if types_left.isdisjoint(pokemon.type_ids):
+                self.potential_boss_pokemon.pop(name_id, None)
+
     def get_paths(
         self,
         truncate: bool = False,
@@ -160,7 +182,7 @@ class MaxLairInstance:
             paths = new_paths
 
         if name_only:
-            # Return a list of strings inatead of object references.
+            # Return a list of strings instead of object references.
             new_paths = []
             for path in paths:
                 new_paths.append(list(map(str, path)))
