@@ -94,7 +94,7 @@ class DAController(SwitchController):
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
         self.team_poke_rect_1 = ((0.012, 0.375), (0.05, 0.44))
-        self.team_poke_rect_2 = ((0.012, 0.54), (0.05, 0.6))
+        self.team_poke_rect_2 = ((0.012, 0.545), (0.05, 0.6))
         self.team_poke_rect_3 = ((0.012, 0.702), (0.05, 0.77))
         self.team_poke_rect_4 = ((0.012, 0.865), (0.05, 0.93))
         self.team_HP_rect_1 = ((0.073, 0.433), (0.127, 0.439))
@@ -338,7 +338,7 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # Then, collect a list of the 4 Pokemon (with yours first).
-        team_pokemon = {}
+        self.current_run.team_pokemon = []
         HP_rects = (
             self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
             self.team_HP_rect_4)
@@ -370,9 +370,14 @@ class DAController(SwitchController):
             pokemon = self.current_run.rental_pokemon[match_name_id]
             pokemon.HP = self.get_rect_HSV_value(
                 HP_bar_image, (0, 50, 0), (180, 255, 255)) / 255
-            # Note: as of Python 3.6, dicts remember insertion order so using
-            # an OrderedDict is unnecessary.
-            team_pokemon[pokemon.name_id] = pokemon
+
+            # Update the storage with the read Pokemon.
+            if i == 0:
+                self.current_run.pokemon = pokemon
+            else:
+                # Note: as of Python 3.6, dicts remember insertion order so
+                # using an OrderedDict is unnecessary.
+                self.current_run.team_pokemon.append(pokemon)
             self.log(
                 f'Identified team member {i+1} as {match_name_id} with match '
                 f'score of {match_value:.3f} and HP of '
@@ -383,9 +388,6 @@ class DAController(SwitchController):
                     f'next best match was {match_name_id_2nd} with match value'
                     f' of {match_value_2nd:.3f}.', 'WARNING'
                 )
-
-        # Update the storage with the read Pokemon.
-        self.current_run.team_pokemon = team_pokemon
 
     def identify_pokemon(
         self,

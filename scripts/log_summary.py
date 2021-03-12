@@ -7,15 +7,16 @@ log_path = os.path.join(base_dir, 'logs')
 file_list = os.listdir(log_path)
 
 # Modify this list with whatever bosses you want to look at.
-bosses = ['articuno', 'zapdos', 'moltres', 'mewtwo', 'raikou', 'entei',
-          'suicune', 'lugia', 'ho-oh', 'latias', 'latios', 'kyogre', 'groudon',
-          'rayquaza', 'uxie', 'mesprit', 'azelf', 'dialga', 'palkia', 'heatran',
-          'giratina', 'cresselia', 'tornadus', 'thundurus', 'reshiram', 'zekrom',
-          'landorus', 'kyurem', 'xerneas', 'yveltal', 'zygarde', 'koko', 'lele',
-          'bulu', 'fini', 'solgaleo', 'lunala', 'necrozma', 'nihilego', 'xurkitree',
-          'buzzwole', 'pheromosa', 'celesteela', 'kartana', 'guzzlord', 'stakataka',
-          'blacephalon'
-          ]
+bosses = [
+    'articuno', 'zapdos', 'moltres', 'mewtwo', 'raikou', 'entei',
+    'suicune', 'lugia', 'ho-oh', 'latias', 'latios', 'kyogre', 'groudon',
+    'rayquaza', 'uxie', 'mesprit', 'azelf', 'dialga', 'palkia', 'heatran',
+    'giratina', 'cresselia', 'tornadus', 'thundurus', 'reshiram', 'zekrom',
+    'landorus', 'kyurem', 'xerneas', 'yveltal', 'zygarde', 'koko', 'lele',
+    'bulu', 'fini', 'solgaleo', 'lunala', 'necrozma', 'nihilego', 'xurkitree',
+    'buzzwole', 'pheromosa', 'celesteela', 'kartana', 'guzzlord', 'stakataka',
+    'blacephalon'
+]
 global_losses = 0
 global_wins = 0
 
