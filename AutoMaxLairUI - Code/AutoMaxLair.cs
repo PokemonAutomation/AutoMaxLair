@@ -168,8 +168,8 @@ namespace AutoDA
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
-            int i, x, y, z, q, w, t, u, o, p, l, k, j, h, g;
-            float a, b;
+            int i, x, y, z, q, w, t, u, o, p, l, k, h;
+            float a, b, j, g;
 
             bool bossValue = int.TryParse(boxBossIndex.Text, out i);
             bool baseBall = int.TryParse(boxBaseBallValue.Text, out x);
@@ -177,9 +177,9 @@ namespace AutoDA
             bool videoIndex = int.TryParse(boxVideoIndex.Text, out z);
             bool dynite = int.TryParse(boxDyniteOre.Text, out q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
-            bool webhookID = int.TryParse(boxWebhookID.Text, out j);
-            bool webhookToken = int.TryParse(boxWebhookToken.Text, out h);
-            bool userID = int.TryParse(boxWebhookToken.Text, out g);
+            bool webhookID = float.TryParse(boxWebhookID.Text, out j);
+            //bool webhookToken = int.TryParse(boxWebhookToken.Text, out h);
+            bool userID = float.TryParse(boxWebhookToken.Text, out g);
 
             bool videoScale = float.TryParse(boxVideoScale.Text, out a);
             bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
@@ -238,8 +238,8 @@ namespace AutoDA
             // Webhook Validation
             else if (webhookID == false)
                 MessageBox.Show("Your Webhook ID should be a string of numbers.", "Error: Webhook ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (webhookToken == false)
-                MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //else if (webhookToken == false)
+                //MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Discord Validation
             else if (userID == false || boxUserID.Text.Length != 18)
