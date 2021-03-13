@@ -461,7 +461,6 @@ def evaluate_matchup(
     # lives left, fainting is less important.
     assert 1 <= num_lives <= 4, 'num_lives should be between 1 and 4.'
     HP_correction = ((5 - num_lives) * attacker.HP + num_lives - 1) / 4
-    #print(HP_correction)
 
     return score * HP_correction
 

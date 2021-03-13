@@ -52,6 +52,7 @@ def initialize(ctrlr) -> str:
         False, f"Starting a new full run for {ctrlr.boss}!",
         embed_fields=ctrlr.get_stats_for_discord(), level="update"
     )
+    ctrlr.log(f'Initializing AutoMaxLair {VERSION}.')
 
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
@@ -396,8 +397,13 @@ def catch(ctrlr) -> str:
 
         # Calculate scores for every potential team resulting from the decision
         # to take or leave the new Pokemon.
-        # TODO: decide how to weigh Pokemon HP.
         team = run.team_pokemon
+        # Re-measure team HP.
+        for i, HP in enumerate(ctrlr.measure_team_HP()):
+            if i == 0:
+                run.pokemon.HP = HP
+            else:
+                team[i-1].HP = HP
         team_scores = []
         potential_teams = (
             (pokemon, team[0], team[1], team[2]),
