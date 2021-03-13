@@ -606,7 +606,10 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # First, check if a battle started.
-        if self.check_black_screen(img):
+        if self.check_black_screen(img) or self.match_template(
+            self.get_image_slice(img, self.battle_symbol_rect),
+            self.misc_icons['fight']
+        )[0] >= 0.85:
             return 'battle'
         # Otherwise, check for other text.
         if self.check_rect_HSV_match(
