@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-alpha'
+VERSION = 'v0.8-beta'
 
 # load configuration from the config file
 try:
