@@ -25,7 +25,7 @@ try:
 except FileNotFoundError:
     raise FileNotFoundError(
         "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
-except:
+except Exception:
     raise SyntaxError(
         "Something went wrong parsing Config.toml\n" +
         "Please make sure you entered the information right " +
