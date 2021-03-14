@@ -458,7 +458,7 @@ class SwitchController:
             title="AutoMaxLair Update",
             colour=self.discord_embed_color,
             timestamp=datetime.utcnow()
-            )
+        )
 
         embed.set_thumbnail(url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png")
         embed.set_footer(text="AutoMaxLair")
