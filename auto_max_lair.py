@@ -25,7 +25,7 @@ try:
 except FileNotFoundError:
     raise FileNotFoundError(
         "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
-except:
+except Exception:
     raise SyntaxError(
         "Something went wrong parsing Config.toml\n" +
         "Please make sure you entered the information right " +
@@ -116,7 +116,7 @@ def join(ctrlr) -> str:
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)

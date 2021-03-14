@@ -4,8 +4,6 @@ ready-to-use pickle file.
 
 import pickle
 import os
-import pickle
-import sys
 
 import cv2
 import jsonpickle

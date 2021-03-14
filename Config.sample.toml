@@ -93,12 +93,17 @@ VIDEO_EXTRA_DELAY = 0.0
 #   0 is the top, 1 is the middle, and 2 is the bottom.
 BOSS_INDEX = 0
 # === DYNITE_ORE ===
-# The current amount of Dynite Ore in your bag. Not necessary if using DEFAULT mode
+# The current amount of Dynite Ore you're willing to lose by resetting.
+# If this value is negative, the bot will first collect ore before spending any.
+# Not necessary if using DEFAULT mode.
 DYNITE_ORE = 0
-# === CONSECUTIVE_RESETS ==
+# === CONSECUTIVE_RESETS ===
 # If you had to stop the script and have not reset your reset counter by clearing
 # an adventure, set this number to how many you previously had.
 CONSECUTIVE_RESETS = 0
+# === MAXIMUM_ORE_COST ===
+# The maximum ore cost you're willing to pay in order to reset once.
+MAXIMUM_ORE_COST = 10
 # === ENABLE_DEBUG_LOGS ===
 # This enables the debug logs in your Python console. This can be very useful when
 # you're running into problems and need to report to the developers what's happening.
