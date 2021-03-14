@@ -206,7 +206,7 @@ namespace AutoDA
             this.boxDyniteOre.TabIndex = 19;
             this.boxDyniteOre.Text = "0";
             this.boxDyniteOre.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of Dynite Ore that you have.");
+            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of maximum Dynite Ore that you want the program to use.");
             // 
             // boxVideoDelay
             // 
