@@ -357,7 +357,7 @@ class DAController(SwitchController):
             self.team_poke_rect_3, self.team_poke_rect_4
         )):
             # Initialize default values
-            # Note that an initialmatch_value of -1 guarantees at least one
+            # Note that an initial match_value of -1 guarantees at least one
             # match, even if it's poor quality.
             match_value = -1
             match_name_id = ''
