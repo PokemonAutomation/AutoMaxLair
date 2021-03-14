@@ -23,33 +23,26 @@ namespace AutoDA
         public AutoDA()
         {
             InitializeComponent();
-            customizeDesign();
             getConfig();
         }
 
-        //FilterInfoCollection filterInfoCollection;
-        //VideoCaptureDevice videoCaptureDevice;
+        FilterInfoCollection filterInfoCollection;
 
 
         private void AutoDA_Load(object sender, EventArgs e)
         {
-            //Code to see a video capture of the Switch - currently reducing the .exe to only toml changing.
-            /* boxVideoOutput.SizeMode = PictureBoxSizeMode.StretchImage;
+            int i = 0;
+            // Get every Video Capture device and put it into the combobox (with right order)
             filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo filterInfo in filterInfoCollection)
-                boxVideoCapture.Items.Add(filterInfo.Name);
+            {
+                boxVideoCapture.Items.Insert(i, filterInfo.Name);
+                i = i++;
+            }
+                
+            
             boxVideoCapture.SelectedIndex = 0;
-            videoCaptureDevice = new VideoCaptureDevice(); */
-        }
-
-        private void VideoCaptureDevice_NewForm(object sender, NewFrameEventArgs eventArgs)
-        {
-            boxVideoOutput.Image = (Bitmap)eventArgs.Frame.Clone();
-        }
-
-        private void customizeDesign()
-        {
-            btnStop.Visible = false;
+            //Add(filterInfo.Name);
         }
 
         // Method to get the preset for the UI from the Config.toml
@@ -122,24 +115,43 @@ namespace AutoDA
 
                 string poke = "";
                 if (t["BOSS"] == "tornadus-incarnate")
+                {
                     poke = "tornadus";
-                if (t["BOSS"] == "landorus-incarnate")
+                    boxPokemon.Text = poke;
+                }
+                    
+                else if (t["BOSS"] == "landorus-incarnate")
+                { 
                     poke = "landorus";
-                if (t["BOSS"] == "thundurus-incarnate")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "thundurus-incarnate")
+                { 
                     poke = "thundurus";
-                if (t["BOSS"] == "giratina-altered")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "giratina-altered") 
+                { 
                     poke = "giratina";
-                if (t["BOSS"] == "zygarde-50")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "zygarde-50")
+                { 
                     poke = "zygarde";
-
-                boxPokemon.Text = poke;
-                boxBaseBall.Text = t["BASE_BALL"];
+                    boxPokemon.Text = poke;
+                }
+                else
+                {
+                    boxPokemon.Text = t["BOSS"];
+                }
+                string baseball = t["BASE_BALL"];
+                string legendball = t["LEGENDARY_BALL"];
+                boxBaseBall.Text = baseball.Substring(0, baseball.Length - 5);
                 boxBaseBallValue.Text = t["BASE_BALLS"];
-                boxLegendBall.Text = t["LEGENDARY_BALL"];
+                boxLegendBall.Text = legendball.Substring(0, legendball.Length - 5);
                 boxLegendBallValue.Text = t["LEGENDARY_BALLS"];
                 boxMode.Text = t["MODE"];
                 boxComPort.Text = t["COM_PORT"];
-                boxVideoIndex.Text = t["VIDEO_INDEX"];
                 boxTesseract.Text = t["TESSERACT_PATH"];
                 boxVideoScale.Text = t["advanced"]["VIDEO_SCALE"];
                 boxVideoDelay.Text = t["advanced"]["VIDEO_EXTRA_DELAY"];
@@ -154,7 +166,7 @@ namespace AutoDA
                 boxUserID.Text = t["discord"]["USER_ID"];
                 boxPingName.Text = t["discord"]["USER_SHORT_NAME"];
                 boxPingSettings.Text = t["discord"]["UPDATE_LEVELS"];
-                boxGameLanguage.Text = t["language"]["LANGUAGE"];
+                boxGameLanguage.Text = t["language"]["LANGUAGE"]; 
             }
         }
 
@@ -168,18 +180,16 @@ namespace AutoDA
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
-            int i, x, y, z, q, w, t, u, o, p, l, k, h;
+            int i, x, y, q, w, t, u, o, p, l, k;
             float a, b, j, g;
 
             bool bossValue = int.TryParse(boxBossIndex.Text, out i);
             bool baseBall = int.TryParse(boxBaseBallValue.Text, out x);
             bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
-            bool videoIndex = int.TryParse(boxVideoIndex.Text, out z);
             bool dynite = int.TryParse(boxDyniteOre.Text, out q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
             bool webhookID = float.TryParse(boxWebhookID.Text, out j);
-            //bool webhookToken = int.TryParse(boxWebhookToken.Text, out h);
-            bool userID = float.TryParse(boxWebhookToken.Text, out g);
+            bool userID = float.TryParse(boxUserID.Text, out g);
 
             bool videoScale = float.TryParse(boxVideoScale.Text, out a);
             bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
@@ -203,11 +213,7 @@ namespace AutoDA
                 || legendBall == true && y > 999 && boxBaseBall.Text.Equals(boxLegendBall.Text))
                 MessageBox.Show("Your Legend Ball Value needs to be a number between 4 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (legendBall == false || legendBall == true && y < 1 || legendBall == true && y > 999)
-                MessageBox.Show("Your Legend Ball Value needs to be a number between 1 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Video Index Validation
-            else if (videoIndex == false)
-                MessageBox.Show("Your Video Index needs to be a number!", "Error: Video Index", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Your Legend Ball Value needs to be a number between 1 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);  
 
             // Video Scale Validation
             else if (videoScale == false)
@@ -281,6 +287,8 @@ namespace AutoDA
 
                 TomlTable t = new TomlTable();
 
+                t = tt;
+
                 // Get all values in a string-array
                 string[] atkPos = boxAttackPos.Text.Split(',').ToArray();
                 string[] atkNeut = boxAttackNeut.Text.Split(',').ToArray();
@@ -305,27 +313,27 @@ namespace AutoDA
                 else
                     poke = boxPokemon.Text;
 
-                t["BOSS"] = poke.ToLower();
-                t["BASE_BALL"] = boxBaseBall.Text.ToLower() + "-ball";
-                t["BASE_BALLS"] = int.Parse(boxBaseBallValue.Text);
-                t["LEGENDARY_BALL"] = boxLegendBall.Text.ToLower() + "-ball";
-                t["LEGENDARY_BALLS"] = int.Parse(boxLegendBallValue.Text);
-                t["MODE"] = boxMode.Text.ToUpper();
-                t["COM_PORT"] = boxComPort.Text;
-                t["VIDEO_INDEX"] = int.Parse(boxVideoIndex.Text);
+                t["BOSS"].AsString.Value = poke.ToLower();
+                t["BASE_BALL"].AsString.Value = boxBaseBall.Text.ToLower() + "-ball";
+                t["BASE_BALLS"].AsInteger.Value = int.Parse(boxBaseBallValue.Text);
+                t["LEGENDARY_BALL"].AsString.Value = boxLegendBall.Text.ToLower() + "-ball";
+                t["LEGENDARY_BALLS"].AsInteger.Value = int.Parse(boxLegendBallValue.Text);
+                t["MODE"].AsString.Value = boxMode.Text.ToUpper();
+                t["COM_PORT"].AsString.Value = boxComPort.Text;
+                t["VIDEO_INDEX"].AsInteger.Value = boxVideoCapture.SelectedIndex;
                 t["TESSERACT_PATH"] = boxTesseract.Text;
 
                 // Advanced Settings
-                t["advanced"]["VIDEO_SCALE"] = float.Parse(boxVideoScale.Text);
-                t["advanced"]["VIDEO_EXTRA_DELAY"] = float.Parse(boxVideoDelay.Text);
-                t["advanced"]["BOSS_INDEX"] = boss;
-                t["advanced"]["DYNITE_ORE"] = int.Parse(boxDyniteOre.Text);
-                t["advanced"]["CONSECUTIVE_RESETS"] = int.Parse(boxConsecutiveResets.Text);
-                t["advanced"]["ENABLE_DEBUG_LOGS"] = checkBoxDebugLogs.Checked;
+                t["advanced"]["VIDEO_SCALE"].AsFloat.Value = float.Parse(boxVideoScale.Text);
+                t["advanced"]["VIDEO_EXTRA_DELAY"].AsFloat.Value = float.Parse(boxVideoDelay.Text);
+                t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
+                t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
+                t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
+                t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
                 // Stat Settings
-                t["stats"]["CHECK_ATTACK_STAT"] = boxCheckAttack.Checked;
-                t["stats"]["CHECK_SPEED_STAT"] = boxCheckSpeed.Checked;
+                t["stats"]["CHECK_ATTACK_STAT"].AsBoolean.Value = boxCheckAttack.Checked;
+                t["stats"]["CHECK_SPEED_STAT"].AsBoolean.Value = boxCheckSpeed.Checked;
 
                 // Create TomlNodes for each stat +,=,-
                 TomlNode node = new TomlNode[] { };
@@ -382,224 +390,23 @@ namespace AutoDA
                 t["stats"]["SPEED_STATS"]["negative"] = node5;
 
                 // Discord Settings
-                t["discord"]["WEBHOOK_ID"] = boxWebhookID.Text;
-                t["discord"]["WEBHOOK_TOKEN"] = boxWebhookToken.Text;
-                t["discord"]["USER_ID"] = boxUserID.Text;
-                t["discord"]["USER_SHORT_NAME"] = boxPingName.Text;
-                t["discord"]["UPDATE_LEVELS"] = boxPingSettings.Text;
+                t["discord"]["WEBHOOK_ID"].AsString.Value = boxWebhookID.Text;
+                t["discord"]["WEBHOOK_TOKEN"].AsString.Value = boxWebhookToken.Text;
+                t["discord"]["USER_ID"].AsString.Value = boxUserID.Text;
+                t["discord"]["USER_SHORT_NAME"].AsString.Value = boxPingName.Text;
+                t["discord"]["UPDATE_LEVELS"].AsString.Value = boxPingSettings.Text;
 
                 // Pokémon Data Settings
-                string dataPathBoss = tt["pokemon_data_paths"]["Boss_Pokemon"];
-                string dataPathRental = tt["pokemon_data_paths"]["Rental_Pokemon"];
-                string dataPathBossMatchup = tt["pokemon_data_paths"]["Boss_Matchup_LUT"];
-                string dataPathRentalMatchup = tt["pokemon_data_paths"]["Rental_Matchup_LUT"];
-                string dataPathRentalScore = tt["pokemon_data_paths"]["Rental_Pokemon_Scores"];
-                string dataPathTree = tt["pokemon_data_paths"]["path_tree_path"];
-                string dataPathBalls = tt["pokemon_data_paths"]["balls_path"];
-                string dataPathIcon = tt["pokemon_data_paths"]["type_icon_path"];
-                string dataPathSprite = tt["pokemon_data_paths"]["pokemon_sprite_path"];
-                string dataPathMiscIcon = tt["pokemon_data_paths"]["misc_icon_dir"];
-
-
-                t["pokemon_data_paths"]["Boss_Pokemon"] = dataPathBoss;
-                t["pokemon_data_paths"]["Rental_Pokemon"] = dataPathRental;
-                t["pokemon_data_paths"]["Boss_Matchup_LUT"] = dataPathBossMatchup;
-                t["pokemon_data_paths"]["Rental_Matchup_LUT"] = dataPathRentalMatchup;
-                t["pokemon_data_paths"]["Rental_Pokemon_Scores"] = dataPathRentalScore;
-                t["pokemon_data_paths"]["path_tree_path"] = dataPathTree;
-                t["pokemon_data_paths"]["balls_path"] = dataPathBalls;
-                t["pokemon_data_paths"]["type_icon_path"] = dataPathIcon;
-                t["pokemon_data_paths"]["pokemon_sprite_path"] = dataPathSprite;
-                t["pokemon_data_paths"]["misc_icon_dir"] = dataPathMiscIcon;
+                t["pokemon_data_paths"] = tt["pokemon_data_paths"];
 
                 // Game Language Settings
                 t["language"]["LANGUAGE"] = boxGameLanguage.Text;
 
-                // English
-                string engTess = tt["English"]["TESSERACT_LANG_NAME"];
-                string engData = tt["English"]["DATA_LANG_NAME"];
-                string engBack = tt["English"]["BACKPACKER"];
-                string engScience = tt["English"]["SCIENTIST"];
-                string engPath = tt["English"]["PATH"];
-                string engFaint = tt["English"]["FAINT"];
-                string engStart = tt["English"]["START_PHRASE"];
-                string engClear = tt["English"]["WEATHER_CLEAR"];
-                string engSun = tt["English"]["WEATHER_SUNLIGHT"];
-                string engRain = tt["English"]["WEATHER_RAIN"];
-                string engSand = tt["English"]["WEATHER_SANDSTORM"];
-                string engHail = tt["English"]["WEATHER_HAIL"];
-                string engTClear = tt["English"]["TERRAIN_CLEAR"];
-                string engElectric = tt["English"]["TERRAIN_ELECTRIC"];
-                string engGrassy = tt["English"]["TERRAIN_GRASSY"];
-                string engMisty = tt["English"]["TERRAIN_MISTY"];
-                string engPsychic = tt["English"]["TERRAIN_PSYCHIC"];
-
-                t["English"]["TESSERACT_LANG_NAME"] = engTess;
-                t["English"]["DATA_LANG_NAME"] = engData;
-                t["English"]["BACKPACKER"] = engBack;
-                t["English"]["SCIENTIST"] = engScience;
-                t["English"]["PATH"] = engPath;
-                t["English"]["FAINT"] = engFaint;
-                t["English"]["START_PHRASE"] = engStart;
-                t["English"]["WEATHER_CLEAR"] = engClear;
-                t["English"]["WEATHER_SUNLIGHT"] = engSun;
-                t["English"]["WEATHER_RAIN"] = engRain;
-                t["English"]["WEATHER_SANDSTORM"] = engSand;
-                t["English"]["WEATHER_HAIL"] = engHail;
-                t["English"]["TERRAIN_CLEAR"] = engTClear;
-                t["English"]["TERRAIN_ELECTRIC"] = engElectric;
-                t["English"]["TERRAIN_GRASSY"] = engGrassy;
-                t["English"]["TERRAIN_MISTY"] = engMisty;
-                t["English"]["TERRAIN_PSYCHIC"] = engPsychic;
-
-                // Spanish
-                string spaTess = tt["Spanish"]["TESSERACT_LANG_NAME"];
-                string spaData = tt["Spanish"]["DATA_LANG_NAME"];
-                string spaBack = tt["Spanish"]["BACKPACKER"];
-                string spaScience = tt["Spanish"]["SCIENTIST"];
-                string spaPath = tt["Spanish"]["PATH"];
-                string spaFaint = tt["Spanish"]["FAINT"];
-                string spaStart = tt["Spanish"]["START_PHRASE"];
-                string spaClear = tt["Spanish"]["WEATHER_CLEAR"];
-                string spaSun = tt["Spanish"]["WEATHER_SUNLIGHT"];
-                string spaRain = tt["Spanish"]["WEATHER_RAIN"];
-                string spaSand = tt["Spanish"]["WEATHER_SANDSTORM"];
-                string spaHail = tt["Spanish"]["WEATHER_HAIL"];
-                string spaTClear = tt["Spanish"]["TERRAIN_CLEAR"];
-                string spaElectric = tt["Spanish"]["TERRAIN_ELECTRIC"];
-                string spaGrassy = tt["Spanish"]["TERRAIN_GRASSY"];
-                string spaMisty = tt["Spanish"]["TERRAIN_MISTY"];
-                string spaPsychic = tt["Spanish"]["TERRAIN_PSYCHIC"];
-
-                t["Spanish"]["TESSERACT_LANG_NAME"] = spaTess;
-                t["Spanish"]["DATA_LANG_NAME"] = spaData;
-                t["Spanish"]["BACKPACKER"] = spaBack;
-                t["Spanish"]["SCIENTIST"] = spaScience;
-                t["Spanish"]["PATH"] = spaPath;
-                t["Spanish"]["FAINT"] = spaFaint;
-                t["Spanish"]["START_PHRASE"] = spaStart;
-                t["Spanish"]["WEATHER_CLEAR"] = spaClear;
-                t["Spanish"]["WEATHER_SUNLIGHT"] = spaSun;
-                t["Spanish"]["WEATHER_RAIN"] = spaRain;
-                t["Spanish"]["WEATHER_SANDSTORM"] = spaSand;
-                t["Spanish"]["WEATHER_HAIL"] = spaHail;
-                t["Spanish"]["TERRAIN_CLEAR"] = spaTClear;
-                t["Spanish"]["TERRAIN_ELECTRIC"] = spaElectric;
-                t["Spanish"]["TERRAIN_GRASSY"] = spaGrassy;
-                t["Spanish"]["TERRAIN_MISTY"] = spaMisty;
-                t["Spanish"]["TERRAIN_PSYCHIC"] = spaPsychic;
-
-                // French
-                string freTess = tt["French"]["TESSERACT_LANG_NAME"];
-                string freData = tt["French"]["DATA_LANG_NAME"];
-                string freBack = tt["French"]["BACKPACKER"];
-                string freScience = tt["French"]["SCIENTIST"];
-                string frePath = tt["French"]["PATH"];
-                string freFaint = tt["French"]["FAINT"];
-                string freStart = tt["French"]["START_PHRASE"];
-                string freClear = tt["French"]["WEATHER_CLEAR"];
-                string freSun = tt["French"]["WEATHER_SUNLIGHT"];
-                string freRain = tt["French"]["WEATHER_RAIN"];
-                string freSand = tt["French"]["WEATHER_SANDSTORM"];
-                string freHail = tt["French"]["WEATHER_HAIL"];
-                string freTClear = tt["French"]["TERRAIN_CLEAR"];
-                string freElectric = tt["French"]["TERRAIN_ELECTRIC"];
-                string freGrassy = tt["French"]["TERRAIN_GRASSY"];
-                string freMisty = tt["French"]["TERRAIN_MISTY"];
-                string frePsychic = tt["French"]["TERRAIN_PSYCHIC"];
-
-                t["French"]["TESSERACT_LANG_NAME"] = freTess;
-                t["French"]["DATA_LANG_NAME"] = freData;
-                t["French"]["BACKPACKER"] = freBack;
-                t["French"]["SCIENTIST"] = freScience;
-                t["French"]["PATH"] = frePath;
-                t["French"]["FAINT"] = freFaint;
-                t["French"]["START_PHRASE"] = freStart;
-                t["French"]["WEATHER_CLEAR"] = freClear;
-                t["French"]["WEATHER_SUNLIGHT"] = freSun;
-                t["French"]["WEATHER_RAIN"] = freRain;
-                t["French"]["WEATHER_SANDSTORM"] = freSand;
-                t["French"]["WEATHER_HAIL"] = freHail;
-                t["French"]["TERRAIN_CLEAR"] = freTClear;
-                t["French"]["TERRAIN_ELECTRIC"] = freElectric;
-                t["French"]["TERRAIN_GRASSY"] = freGrassy;
-                t["French"]["TERRAIN_MISTY"] = freMisty;
-                t["French"]["TERRAIN_PSYCHIC"] = frePsychic;
-
-                // Korean
-                string korTess = tt["Korean"]["TESSERACT_LANG_NAME"];
-                string korData = tt["Korean"]["DATA_LANG_NAME"];
-                string korBack = tt["Korean"]["BACKPACKER"];
-                string korScience = tt["Korean"]["SCIENTIST"];
-                string korPath = tt["Korean"]["PATH"];
-                string korFaint = tt["Korean"]["FAINT"];
-                string korStart = tt["Korean"]["START_PHRASE"];
-                string korClear = tt["Korean"]["WEATHER_CLEAR"];
-                string korSun = tt["Korean"]["WEATHER_SUNLIGHT"];
-                string korRain = tt["Korean"]["WEATHER_RAIN"];
-                string korSand = tt["Korean"]["WEATHER_SANDSTORM"];
-                string korHail = tt["Korean"]["WEATHER_HAIL"];
-                string korTClear = tt["Korean"]["TERRAIN_CLEAR"];
-                string korElectric = tt["Korean"]["TERRAIN_ELECTRIC"];
-                string korGrassy = tt["Korean"]["TERRAIN_GRASSY"];
-                string korMisty = tt["Korean"]["TERRAIN_MISTY"];
-                string korPsychic = tt["Korean"]["TERRAIN_PSYCHIC"];
-
-                t["Korean"]["TESSERACT_LANG_NAME"] = korTess;
-                t["Korean"]["DATA_LANG_NAME"] = korData;
-                t["Korean"]["BACKPACKER"] = korBack;
-                t["Korean"]["SCIENTIST"] = korScience;
-                t["Korean"]["PATH"] = korPath;
-                t["Korean"]["FAINT"] = korFaint;
-                t["Korean"]["START_PHRASE"] = korStart;
-                t["Korean"]["WEATHER_CLEAR"] = korClear;
-                t["Korean"]["WEATHER_SUNLIGHT"] = korSun;
-                t["Korean"]["WEATHER_RAIN"] = korRain;
-                t["Korean"]["WEATHER_SANDSTORM"] = korSand;
-                t["Korean"]["WEATHER_HAIL"] = korHail;
-                t["Korean"]["TERRAIN_CLEAR"] = korTClear;
-                t["Korean"]["TERRAIN_ELECTRIC"] = korElectric;
-                t["Korean"]["TERRAIN_GRASSY"] = korGrassy;
-                t["Korean"]["TERRAIN_MISTY"] = korMisty;
-                t["Korean"]["TERRAIN_PSYCHIC"] = korPsychic;
-
-                // German
-                string gerTess = tt["German"]["TESSERACT_LANG_NAME"];
-                string gerData = tt["German"]["DATA_LANG_NAME"];
-                string gerBack = tt["German"]["BACKPACKER"];
-                string gerScience = tt["German"]["SCIENTIST"];
-                string gerPath = tt["German"]["PATH"];
-                string gerFaint = tt["German"]["FAINT"];
-                string gerStart = tt["German"]["START_PHRASE"];
-                string gerClear = tt["German"]["WEATHER_CLEAR"];
-                string gerSun = tt["German"]["WEATHER_SUNLIGHT"];
-                string gerRain = tt["German"]["WEATHER_RAIN"];
-                string gerSand = tt["German"]["WEATHER_SANDSTORM"];
-                string gerHail = tt["German"]["WEATHER_HAIL"];
-                string gerTClear = tt["German"]["TERRAIN_CLEAR"];
-                string gerElectric = tt["German"]["TERRAIN_ELECTRIC"];
-                string gerGrassy = tt["German"]["TERRAIN_GRASSY"];
-                string gerMisty = tt["German"]["TERRAIN_MISTY"];
-                string gerPsychic = tt["German"]["TERRAIN_PSYCHIC"];
-
-                t["German"]["TESSERACT_LANG_NAME"] = gerTess;
-                t["German"]["DATA_LANG_NAME"] = gerData;
-                t["German"]["BACKPACKER"] = gerBack;
-                t["German"]["SCIENTIST"] = gerScience;
-                t["German"]["PATH"] = gerPath;
-                t["German"]["FAINT"] = gerFaint;
-                t["German"]["START_PHRASE"] = gerStart;
-                t["German"]["WEATHER_CLEAR"] = gerClear;
-                t["German"]["WEATHER_SUNLIGHT"] = gerSun;
-                t["German"]["WEATHER_RAIN"] = gerRain;
-                t["German"]["WEATHER_SANDSTORM"] = gerSand;
-                t["German"]["WEATHER_HAIL"] = gerHail;
-                t["German"]["TERRAIN_CLEAR"] = gerTClear;
-                t["German"]["TERRAIN_ELECTRIC"] = gerElectric;
-                t["German"]["TERRAIN_GRASSY"] = gerGrassy;
-                t["German"]["TERRAIN_MISTY"] = gerMisty;
-                t["German"]["TERRAIN_PSYCHIC"] = gerPsychic;
-
+                var languages = new List<String> { "English", "Spanish", "French", "Korean", "German" };
+                foreach (string language in languages)
+                {
+                    t[language] = tt[language];
+                }
 
                 using (StreamWriter writer = new StreamWriter(File.Open(configData, FileMode.Create)))
                 {
@@ -622,128 +429,16 @@ namespace AutoDA
                 subMenu.Visible = false;
         }
 
-
-        private void btnSetting_Click(object sender, EventArgs e)
-        {
-            //showSubMenu(panelSettingSubmenu);
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            btnStart.Visible = false;
-            btnStop.Visible = true;
-
-            //runAutoMaxLair();
-
-        }
-        // Method to start the auto_max_lair.py script. After opening py, console insta crashes. Not sure why.
-        private void runAutoMaxLair()
-        {
-            string pythonPath = Directory.GetCurrentDirectory() + @"\auto_max_lair.py";
-            string python = "PATH_TO_PYTHON.EXE"; //placeholder
-            string test = "PATH_TO_PYTHON.PY"; //placeholder
-
-            ProcessStartInfo info = new ProcessStartInfo();
-            Process pythonee;
-            info.FileName = python;
-            info.Arguments = test;
-            info.CreateNoWindow = false;
-            info.UseShellExecute = true;
-
-            Console.WriteLine("Python is starting");
-            pythonee = Process.Start(info);
-            pythonee.WaitForExit();
-            pythonee.Close();
-
-            /* Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(python, test)
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-                //CreateNoWindow = true
-            };
-            p.Start();
-
-            string output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-
-            Console.WriteLine(output);
-
-            Console.ReadLine(); */
-        }
-
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            btnStart.Visible = true;
-            btnStop.Visible = false;
-        }
-
-        private void boxPokemon_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnAdvancedSettings_Click(object sender, EventArgs e)
-        {
-            //showSubMenu(panelAdvancedSettingsSubmenu);
-        }
-
         // Does the setConfig() Method when you press the "Save-Button"
         private void btnSave_Click(object sender, EventArgs e)
         {
             validate();
         }
 
-        /* private void boxVideoCapture_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (videoCaptureDevice != null)
-                videoCaptureDevice.SignalToStop();
-            videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[boxVideoCapture.SelectedIndex].MonikerString);
-            videoCaptureDevice.NewFrame += VideoCaptureDevice_NewForm;
-            videoCaptureDevice.Start();
-        } */
-
-        private void AutoDA_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //     videoCaptureDevice.SignalToStop();
-        }
-
-        private void btnDiscord_Click(object sender, EventArgs e)
-        {
-            //showSubMenu(panelDiscordSubmenu);
-        }
-
-        private void btnStats_Click(object sender, EventArgs e)
-        {
-            //showSubMenu(panelStatSubmenu);
-        }
-
-        private void boxVideoCapture_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void boxAttackNeg_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void boxSpeedNeg_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void toolTip_Popup(object sender, PopupEventArgs e)
         {
 
         }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnTesseract_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -752,7 +447,22 @@ namespace AutoDA
                 boxTesseract.Text = fbd.SelectedPath;
         }
 
-        private void boxMode_SelectedIndexChanged(object sender, EventArgs e)
+        private void labelTessaract_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void boxTesseract_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelGameLanguage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void boxGameLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
