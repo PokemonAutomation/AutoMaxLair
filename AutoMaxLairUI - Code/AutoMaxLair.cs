@@ -122,17 +122,36 @@ namespace AutoDA
 
                 string poke = "";
                 if (t["BOSS"] == "tornadus-incarnate")
+                {
                     poke = "tornadus";
-                if (t["BOSS"] == "landorus-incarnate")
+                    boxPokemon.Text = poke;
+                }
+                    
+                else if (t["BOSS"] == "landorus-incarnate")
+                { 
                     poke = "landorus";
-                if (t["BOSS"] == "thundurus-incarnate")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "thundurus-incarnate")
+                { 
                     poke = "thundurus";
-                if (t["BOSS"] == "giratina-altered")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "giratina-altered") 
+                { 
                     poke = "giratina";
-                if (t["BOSS"] == "zygarde-50")
+                    boxPokemon.Text = poke;
+                }
+                else if (t["BOSS"] == "zygarde-50")
+                { 
                     poke = "zygarde";
+                    boxPokemon.Text = poke;
+                }
+                else
+                {
+                    boxPokemon.Text = t["BOSS"];
+                }
 
-                boxPokemon.Text = poke;
                 boxBaseBall.Text = t["BASE_BALL"];
                 boxBaseBallValue.Text = t["BASE_BALLS"];
                 boxLegendBall.Text = t["LEGENDARY_BALL"];
@@ -178,8 +197,7 @@ namespace AutoDA
             bool dynite = int.TryParse(boxDyniteOre.Text, out q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
             bool webhookID = float.TryParse(boxWebhookID.Text, out j);
-            //bool webhookToken = int.TryParse(boxWebhookToken.Text, out h);
-            bool userID = float.TryParse(boxWebhookToken.Text, out g);
+            bool userID = float.TryParse(boxUserID.Text, out g);
 
             bool videoScale = float.TryParse(boxVideoScale.Text, out a);
             bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
@@ -242,7 +260,7 @@ namespace AutoDA
                 //MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Discord Validation
-            else if (userID == false || userID == true && boxUserID.Text.Length != 18)
+            else if (userID == false || boxUserID.Text.Length != 18)
                 MessageBox.Show("Your Discord User ID should be a string of numbers with the length 18.", "Error: User ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             else
