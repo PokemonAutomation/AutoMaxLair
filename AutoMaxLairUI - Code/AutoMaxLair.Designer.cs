@@ -113,7 +113,7 @@ namespace AutoDA
             this.btnStats = new System.Windows.Forms.Button();
             this.panelRightTop = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.panelSideMenu.SuspendLayout();
+            //this.panelSideMenu.SuspendLayout();
             this.panelAdvancedSettingsSubmenu.SuspendLayout();
             this.panelSettingSubmenu.SuspendLayout();
             this.panelLogo.SuspendLayout();
@@ -1315,7 +1315,7 @@ namespace AutoDA
         }
 
         #endregion
-
+        public System.Windows.Forms.Panel panelSideMenu;
         public System.Windows.Forms.Panel panelSettingSubmenu;
         public System.Windows.Forms.Button btnSetting;
         public System.Windows.Forms.Panel panelLogo;
