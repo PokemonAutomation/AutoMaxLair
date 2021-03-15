@@ -1398,3 +1398,4 @@ namespace AutoDA
         public System.Windows.Forms.TextBox boxTesseract;
         public System.Windows.Forms.Button btnSettings;
     }
+}
