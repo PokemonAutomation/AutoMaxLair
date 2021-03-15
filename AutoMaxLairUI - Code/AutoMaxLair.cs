@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -62,6 +62,10 @@ namespace AutoDA
             }
 
             
+                
+            
+            boxVideoCapture.SelectedIndex = 0;
+            //Add(filterInfo.Name);
         }
 
         // Method to get the preset for the UI from the Config.toml

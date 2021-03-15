@@ -1,4 +1,4 @@
-﻿
+
 namespace AutoDA
 {
     partial class MainWindow
@@ -868,7 +868,7 @@ namespace AutoDA
             this.panelDiscordSubmenu.Controls.Add(this.button1);
             this.panelDiscordSubmenu.Controls.Add(this.button4);
             this.panelDiscordSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 390);
+            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 350);
             this.panelDiscordSubmenu.Name = "panelDiscordSubmenu";
             this.panelDiscordSubmenu.Size = new System.Drawing.Size(292, 183);
             this.panelDiscordSubmenu.TabIndex = 25;
@@ -1023,7 +1023,7 @@ namespace AutoDA
             this.btnDiscord.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDiscord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDiscord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnDiscord.Location = new System.Drawing.Point(0, 345);
+            this.btnDiscord.Location = new System.Drawing.Point(0, 305);
             this.btnDiscord.Name = "btnDiscord";
             this.btnDiscord.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnDiscord.Size = new System.Drawing.Size(292, 45);
@@ -1054,7 +1054,7 @@ namespace AutoDA
             this.panelStatSubmenu.Controls.Add(this.labelAttackPos);
             this.panelStatSubmenu.Controls.Add(this.labelAtk);
             this.panelStatSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 145);
+            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 105);
             this.panelStatSubmenu.Name = "panelStatSubmenu";
             this.panelStatSubmenu.Size = new System.Drawing.Size(292, 200);
             this.panelStatSubmenu.TabIndex = 23;
@@ -1256,7 +1256,7 @@ namespace AutoDA
             this.btnStats.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnStats.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnStats.Location = new System.Drawing.Point(0, 100);
+            this.btnStats.Location = new System.Drawing.Point(0, 60);
             this.btnStats.Name = "btnStats";
             this.btnStats.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnStats.Size = new System.Drawing.Size(292, 45);
@@ -1316,7 +1316,6 @@ namespace AutoDA
 
         #endregion
 
-        public System.Windows.Forms.Panel panelSideMenu;
         public System.Windows.Forms.Panel panelSettingSubmenu;
         public System.Windows.Forms.Button btnSetting;
         public System.Windows.Forms.Panel panelLogo;
@@ -1399,5 +1398,3 @@ namespace AutoDA
         public System.Windows.Forms.TextBox boxTesseract;
         public System.Windows.Forms.Button btnSettings;
     }
-}
-
