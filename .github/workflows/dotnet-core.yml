@@ -24,7 +24,7 @@ jobs:
         dotnet build "AutoMaxLairUI - Code.sln" --configuration Debug --no-restore
         dotnet build "AutoMaxLairUI - Code.sln" --configuration Release --no-restore
     - name: Publish
-      run: dotnet publish "AutoMaxLairUI - Code.sln" --configuration Release --no-restore -p:DebugType=None -p:DebugSymbols=false
+      run: dotnet publish "AutoMaxLairUI - Code.sln" --configuration Release --no-restore -debugType=None -debugSymbols=false
     - uses: actions/upload-artifact@v2
       with:
         name: Auto Max Lair UI
