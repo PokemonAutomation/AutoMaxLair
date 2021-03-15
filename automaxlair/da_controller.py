@@ -54,6 +54,7 @@ class DAController(SwitchController):
         self.legendary_balls = config['LEGENDARY_BALLS']
         self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
+        self.maximum_ore_cost = int(config['advanced']['MAXIMUM_ORE_COST'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
             config['pokemon_data_paths']['Rental_Pokemon'],
@@ -179,6 +180,8 @@ class DAController(SwitchController):
         # Do not assert for negative dynite ore. That way it can be used to farm ore.
         assert self.dynite_ore <= 999, 'Too much dynite ore'
         assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
+        assert self.maximum_ore_cost >= 0, 'Maximum ore cost cannot be negative'
+        assert self.maximum_ore_cost <= 10, 'Maximum ore cost cannot be greater than 10'
         # Only need to run this assertion if we're checking the attack stat.
         if self.check_attack_stat:
             assert 'positive' in self.expected_attack_stats.keys(), (
@@ -875,12 +878,18 @@ class DAController(SwitchController):
         without saving.
         """
 
-        # If the ore cost of resetting is zero, resett regardless of the ore
+        # If the ore cost of resetting is zero, reset regardless of the ore
         # count.
         if self.calculate_ore_cost(
             self.consecutive_resets + additionnal_reset_count
         ) == 0:
             return True
+        # If the ore cost of resetting is above a threshold, reset
+        # regardless of the ore count.
+        elif self.calculate_ore_cost(
+            self.consecutive_resets + 1
+        ) > self.maximum_ore_cost:
+            return False
         # Otherwise, calculate whether the ore amount would still be positive
         # after resetting.
         ore_after_resets = self.dynite_ore
