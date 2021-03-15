@@ -160,7 +160,7 @@ class MaxLairInstance:
         # Finally, remove any Pokemon that doesn't fit the types of the
         # remaining chosen path.
         types_left = set([
-            node.name for node in 
+            node.name for node in
             self.target_path[self.current_node_index + 1:]
         ])
         for name_id, pokemon in self.rental_pokemon.items():
