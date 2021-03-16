@@ -136,42 +136,10 @@ namespace AutoDA
                 boxSpeedNeut.Text = String.Join(",", arr4);
                 boxSpeedNeg.Text = String.Join(",", arr5);
 
-                string poke = "";
-                if (t["BOSS"] == "tornadus-incarnate")
-                {
-                    poke = "tornadus";
-                    boxPokemon.Text = poke;
-                }
-                    
-                else if (t["BOSS"] == "landorus-incarnate")
-                { 
-                    poke = "landorus";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "thundurus-incarnate")
-                { 
-                    poke = "thundurus";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "giratina-altered") 
-                { 
-                    poke = "giratina";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "zygarde-50")
-                { 
-                    poke = "zygarde";
-                    boxPokemon.Text = poke;
-                }
-                else
-                {
-                    boxPokemon.Text = t["BOSS"];
-                }
-                string baseball = t["BASE_BALL"];
-                string legendball = t["LEGENDARY_BALL"];
-                boxBaseBall.Text = baseball.Substring(0, baseball.Length - 5);
+                boxPokemon.Text = Utils.ConvertBossIdToBossName(t["BOSS"]);
+                boxBaseBall.Text = Utils.ConvertBallIdToBallName(t["BASE_BALL"]);
                 boxBaseBallValue.Text = t["BASE_BALLS"];
-                boxLegendBall.Text = legendball.Substring(0, legendball.Length - 5);
+                boxLegendBall.Text = Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]);
                 boxLegendBallValue.Text = t["LEGENDARY_BALLS"];
                 boxMode.Text = t["MODE"];
                 boxComPort.Text = t["COM_PORT"];
@@ -204,27 +172,25 @@ namespace AutoDA
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
-            int i, x, y, q, w, t, u, o, p, l, k, h;
-            float a, b, j, g;
 
-            bool bossValue = int.TryParse(boxBossIndex.Text, out i);
-            bool baseBall = int.TryParse(boxBaseBallValue.Text, out x);
-            bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
-            bool dynite = int.TryParse(boxDyniteOre.Text, out q);
-            bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
-            bool maxdynite = int.TryParse(boxMaxDynite.Text, out h);
-            bool webhookID = float.TryParse(boxWebhookID.Text, out j);
-            bool userID = float.TryParse(boxUserID.Text, out g);
+            bool bossValue = int.TryParse(boxBossIndex.Text, out int i);
+            bool baseBall = int.TryParse(boxBaseBallValue.Text, out int x);
+            bool legendBall = int.TryParse(boxLegendBallValue.Text, out int y);
+            bool dynite = int.TryParse(boxDyniteOre.Text, out int q);
+            bool resets = int.TryParse(boxConsecutiveResets.Text, out int w);
+            bool maxdynite = int.TryParse(boxMaxDynite.Text, out int h);
+            bool webhookID = float.TryParse(boxWebhookID.Text, out float j);
+            bool userID = float.TryParse(boxUserID.Text, out float g);
 
-            bool videoScale = float.TryParse(boxVideoScale.Text, out a);
-            bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
+            bool videoScale = float.TryParse(boxVideoScale.Text, out float a);
+            bool videoDelay = float.TryParse(boxVideoDelay.Text, out float b);
 
-            bool aPosInts = atkPos.All(x => int.TryParse(x.ToString(), out t));
-            bool aNeutInts = atkNeut.All(x => int.TryParse(x.ToString(), out u));
-            bool aNegInts = atkNeg.All(x => int.TryParse(x.ToString(), out o));
-            bool sPosInts = speedPos.All(x => int.TryParse(x.ToString(), out p));
-            bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out l));
-            bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out k));
+            bool aPosInts = atkPos.All(x => int.TryParse(x.ToString(), out int t));
+            bool aNeutInts = atkNeut.All(x => int.TryParse(x.ToString(), out int u));
+            bool aNegInts = atkNeg.All(x => int.TryParse(x.ToString(), out int o));
+            bool sPosInts = speedPos.All(x => int.TryParse(x.ToString(), out int p));
+            bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out int l));
+            bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out int k));
 
             // Base Ball Validation
             if (baseBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || baseBall == true && x < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
@@ -325,30 +291,15 @@ namespace AutoDA
                 string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
                 // General Settings
-                string poke = "";
-
-                if (boxPokemon.Text == "Tornadus")
-                    poke = "tornadus-incarnate";
-                else if (boxPokemon.Text == "Thundurus")
-                    poke = "thundurus-incarnate";
-                else if (boxPokemon.Text == "Landorus")
-                    poke = "landorus-incarnate";
-                else if (boxPokemon.Text == "Giratina")
-                    poke = "giratina-altered";
-                else if (boxPokemon.Text == "Zygarde")
-                    poke = "zygarde-50";
-                else
-                    poke = boxPokemon.Text;
-
-                t["BOSS"].AsString.Value = poke.ToLower();
-                t["BASE_BALL"].AsString.Value = boxBaseBall.Text.ToLower() + "-ball";
+                t["BOSS"].AsString.Value = Utils.ConvertBossNameToBossId(boxPokemon.Text);
+                t["BASE_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxBaseBall.Text);
                 t["BASE_BALLS"].AsInteger.Value = int.Parse(boxBaseBallValue.Text);
-                t["LEGENDARY_BALL"].AsString.Value = boxLegendBall.Text.ToLower() + "-ball";
+                t["LEGENDARY_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxLegendBall.Text);
                 t["LEGENDARY_BALLS"].AsInteger.Value = int.Parse(boxLegendBallValue.Text);
                 t["MODE"].AsString.Value = boxMode.Text.ToUpper();
                 t["COM_PORT"].AsString.Value = boxComPort.Text;
                 t["VIDEO_INDEX"].AsInteger.Value = boxVideoCapture.SelectedIndex;
-                t["TESSERACT_PATH"] = boxTesseract.Text;
+                t["TESSERACT_PATH"].AsString.Value = boxTesseract.Text;
 
                 // Advanced Settings
                 t["advanced"]["VIDEO_SCALE"].AsFloat.Value = float.Parse(boxVideoScale.Text);
@@ -356,7 +307,7 @@ namespace AutoDA
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
-                t["advanced"]["MAXIMUM_ORE_COST"].AsString.Value = boxMaxDynite.Text;
+                t["advanced"]["MAXIMUM_ORE_COST"].AsInteger.Value = int.Parse(boxMaxDynite.Text);
                 t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
                 // Stat Settings
@@ -424,17 +375,8 @@ namespace AutoDA
                 t["discord"]["USER_SHORT_NAME"].AsString.Value = boxPingName.Text;
                 t["discord"]["UPDATE_LEVELS"].AsString.Value = boxPingSettings.Text;
 
-                // Pokémon Data Settings
-                t["pokemon_data_paths"] = tt["pokemon_data_paths"];
-
                 // Game Language Settings
-                t["language"]["LANGUAGE"] = boxGameLanguage.Text;
-
-                var languages = new List<String> { "English", "Spanish", "French", "Korean", "German" };
-                foreach (string language in languages)
-                {
-                    t[language] = tt[language];
-                }
+                t["language"]["LANGUAGE"].AsString.Value = boxGameLanguage.Text;
 
                 using (StreamWriter writer = new StreamWriter(File.Open(configData, FileMode.Create)))
                 {
