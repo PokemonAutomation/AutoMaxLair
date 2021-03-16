@@ -33,6 +33,8 @@ namespace AutoDA
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.panelSideMenu = new System.Windows.Forms.Panel();
             this.panelAdvancedSettingsSubmenu = new System.Windows.Forms.Panel();
+            this.labelMaxDynite = new System.Windows.Forms.Label();
+            this.boxMaxDynite = new System.Windows.Forms.TextBox();
             this.boxBossIndex = new System.Windows.Forms.ComboBox();
             this.boxConsecutiveResets = new System.Windows.Forms.TextBox();
             this.boxDyniteOre = new System.Windows.Forms.TextBox();
@@ -113,7 +115,7 @@ namespace AutoDA
             this.btnStats = new System.Windows.Forms.Button();
             this.panelRightTop = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            //this.panelSideMenu.SuspendLayout();
+            this.panelSideMenu.SuspendLayout();
             this.panelAdvancedSettingsSubmenu.SuspendLayout();
             this.panelSettingSubmenu.SuspendLayout();
             this.panelLogo.SuspendLayout();
@@ -143,6 +145,8 @@ namespace AutoDA
             // panelAdvancedSettingsSubmenu
             // 
             this.panelAdvancedSettingsSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelMaxDynite);
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxMaxDynite);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxBossIndex);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxConsecutiveResets);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxDyniteOre);
@@ -157,8 +161,31 @@ namespace AutoDA
             this.panelAdvancedSettingsSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelAdvancedSettingsSubmenu.Location = new System.Drawing.Point(0, 457);
             this.panelAdvancedSettingsSubmenu.Name = "panelAdvancedSettingsSubmenu";
-            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 211);
+            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 233);
             this.panelAdvancedSettingsSubmenu.TabIndex = 8;
+            // 
+            // labelMaxDynite
+            // 
+            this.labelMaxDynite.AutoSize = true;
+            this.labelMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelMaxDynite.Location = new System.Drawing.Point(13, 170);
+            this.labelMaxDynite.Name = "labelMaxDynite";
+            this.labelMaxDynite.Size = new System.Drawing.Size(141, 19);
+            this.labelMaxDynite.TabIndex = 22;
+            this.labelMaxDynite.Text = "Maximum Dynite Ore";
+            // 
+            // boxMaxDynite
+            // 
+            this.boxMaxDynite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.boxMaxDynite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.boxMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.boxMaxDynite.Location = new System.Drawing.Point(175, 168);
+            this.boxMaxDynite.Name = "boxMaxDynite";
+            this.boxMaxDynite.Size = new System.Drawing.Size(30, 25);
+            this.boxMaxDynite.TabIndex = 21;
+            this.boxMaxDynite.Text = "0";
+            this.boxMaxDynite.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.boxMaxDynite, "The maximum amount of Dynite Ore the program\r\nshall use.");
             // 
             // boxBossIndex
             // 
@@ -202,7 +229,7 @@ namespace AutoDA
             this.boxDyniteOre.TabIndex = 19;
             this.boxDyniteOre.Text = "0";
             this.boxDyniteOre.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of maximum Dynite Ore that you want the program to use.");
+            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of Dynite Ore the program can use or \r\nyou want to recover.");
             // 
             // boxVideoDelay
             // 
@@ -235,7 +262,7 @@ namespace AutoDA
             // 
             this.checkBoxDebugLogs.AutoSize = true;
             this.checkBoxDebugLogs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.checkBoxDebugLogs.Location = new System.Drawing.Point(13, 172);
+            this.checkBoxDebugLogs.Location = new System.Drawing.Point(12, 196);
             this.checkBoxDebugLogs.Name = "checkBoxDebugLogs";
             this.checkBoxDebugLogs.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxDebugLogs.Size = new System.Drawing.Size(146, 23);
@@ -868,7 +895,7 @@ namespace AutoDA
             this.panelDiscordSubmenu.Controls.Add(this.button1);
             this.panelDiscordSubmenu.Controls.Add(this.button4);
             this.panelDiscordSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 350);
+            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 390);
             this.panelDiscordSubmenu.Name = "panelDiscordSubmenu";
             this.panelDiscordSubmenu.Size = new System.Drawing.Size(292, 183);
             this.panelDiscordSubmenu.TabIndex = 25;
@@ -1023,7 +1050,7 @@ namespace AutoDA
             this.btnDiscord.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDiscord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDiscord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnDiscord.Location = new System.Drawing.Point(0, 305);
+            this.btnDiscord.Location = new System.Drawing.Point(0, 345);
             this.btnDiscord.Name = "btnDiscord";
             this.btnDiscord.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnDiscord.Size = new System.Drawing.Size(292, 45);
@@ -1054,7 +1081,7 @@ namespace AutoDA
             this.panelStatSubmenu.Controls.Add(this.labelAttackPos);
             this.panelStatSubmenu.Controls.Add(this.labelAtk);
             this.panelStatSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 105);
+            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 145);
             this.panelStatSubmenu.Name = "panelStatSubmenu";
             this.panelStatSubmenu.Size = new System.Drawing.Size(292, 200);
             this.panelStatSubmenu.TabIndex = 23;
@@ -1256,7 +1283,7 @@ namespace AutoDA
             this.btnStats.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnStats.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnStats.Location = new System.Drawing.Point(0, 60);
+            this.btnStats.Location = new System.Drawing.Point(0, 100);
             this.btnStats.Name = "btnStats";
             this.btnStats.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnStats.Size = new System.Drawing.Size(292, 45);
@@ -1397,5 +1424,7 @@ namespace AutoDA
         public System.Windows.Forms.Button btnTesseract;
         public System.Windows.Forms.TextBox boxTesseract;
         public System.Windows.Forms.Button btnSettings;
+        public System.Windows.Forms.Label labelMaxDynite;
+        public System.Windows.Forms.TextBox boxMaxDynite;
     }
 }

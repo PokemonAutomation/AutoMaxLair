@@ -181,6 +181,7 @@ namespace AutoDA
                 boxBossIndex.Text = t["advanced"]["BOSS_INDEX"];
                 boxDyniteOre.Text = t["advanced"]["DYNITE_ORE"];
                 boxConsecutiveResets.Text = t["advanced"]["CONSECUTIVE_RESETS"];
+                boxMaxDynite.Text = t["advanced"]["MAXIMUM_ORE_COST"];
                 checkBoxDebugLogs.Checked = t["advanced"]["ENABLE_DEBUG_LOGS"];
                 boxCheckAttack.Checked = t["stats"]["CHECK_ATTACK_STAT"];
                 boxCheckSpeed.Checked = t["stats"]["CHECK_SPEED_STAT"];
@@ -203,7 +204,7 @@ namespace AutoDA
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
-            int i, x, y, q, w, t, u, o, p, l, k;
+            int i, x, y, q, w, t, u, o, p, l, k, h;
             float a, b, j, g;
 
             bool bossValue = int.TryParse(boxBossIndex.Text, out i);
@@ -211,6 +212,7 @@ namespace AutoDA
             bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
             bool dynite = int.TryParse(boxDyniteOre.Text, out q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
+            bool maxdynite = int.TryParse(boxMaxDynite.Text, out h);
             bool webhookID = float.TryParse(boxWebhookID.Text, out j);
             bool userID = float.TryParse(boxUserID.Text, out g);
 
@@ -251,6 +253,8 @@ namespace AutoDA
                 MessageBox.Show("Your Dynite Ore needs to be a number between 0 and 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (dynite == false || dynite == true && q > 999)
                 MessageBox.Show("Your Dynite Ore needs to be a number less than 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (maxdynite == false | maxdynite == true && h > 10 | maxdynite == true && h < 0)
+                MessageBox.Show("Your maximum Dynite Ore needs to be a number between 0 and 10!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Consecutive Resets Validation
             else if (resets == false || resets == true && w < 0)
@@ -352,6 +356,7 @@ namespace AutoDA
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
+                t["advanced"]["MAXIMUM_ORE_COST"].AsString.Value = boxMaxDynite.Text;
                 t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
                 // Stat Settings
