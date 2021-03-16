@@ -17,19 +17,21 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-release-candidate'
+VERSION = 'v0.8-beta'
 
 # load configuration from the config file
 try:
     config = toml.load("Config.toml")
 except FileNotFoundError:
     raise FileNotFoundError(
-        "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
+        "The Config.toml file was not found! Be sure to copy "
+        "Config.sample.toml as Config.toml and edit it!")
 except Exception:
     raise SyntaxError(
-        "Something went wrong parsing Config.toml\n" +
-        "Please make sure you entered the information right " +
-        "and did not modify \" or . symbols or have uppercase true or false in the settings.")
+        "Something went wrong parsing Config.toml\n"
+        "Please make sure you entered the information right "
+        "and did not modify \" or . symbols or have uppercase true or false "
+        "in the settings.")
 
 COM_PORT = config['COM_PORT']
 VIDEO_INDEX = config['VIDEO_INDEX']
@@ -46,9 +48,11 @@ LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
-    ctrlr.send_discord_message(False, f"Starting a new full run for {ctrlr.boss}!",
-                               embed_fields=ctrlr.get_stats_for_discord(), level="update"
-                               )
+    ctrlr.send_discord_message(
+        False, f"Starting a new full run for {ctrlr.boss}!",
+        embed_fields=ctrlr.get_stats_for_discord(), level="update"
+    )
+    ctrlr.log(f'Initializing AutoMaxLair {VERSION}.')
 
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
@@ -118,7 +122,9 @@ def join(ctrlr) -> str:
     ctrlr.log(f'Path type identified as: {run.path_type}')
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
     ctrlr.read_path_information(3)
-    ctrlr.log(str(run), 'DEBUG')
+    #ctrlr.log(str(run), 'DEBUG')
+    for line in run.get_output_strings():
+        ctrlr.log(line)
     all_paths_str = run.get_paths(truncate=True, name_only=True)
 
     # Choose the best path out of the options.
@@ -370,6 +376,18 @@ def catch(ctrlr) -> str:
         # In this stage the list contains only 1 item.
         pokemon = ctrlr.read_selectable_pokemon('catch')[0]
         run.caught_pokemon.append(pokemon.name_id)
+
+        # Update the list of potential minibosses that we might encounter later
+        # in the den.
+        run.prune_potential_minibosses()
+        ctrlr.log(
+            'The following Pokemon have been encountered and will not appear '
+            f'again: {run.all_encountered_pokemon}', 'DEBUG'
+        )
+        ctrlr.log(
+            'The following Pokemon may still appear along the target path: '
+            f'{[x for x in run.potential_boss_pokemon]}', 'DEBUG'
+        )
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
@@ -379,8 +397,13 @@ def catch(ctrlr) -> str:
 
         # Calculate scores for every potential team resulting from the decision
         # to take or leave the new Pokemon.
-        # TODO: decide how to weigh Pokemon HP.
         team = run.team_pokemon
+        # Re-measure team HP.
+        for i, HP in enumerate(ctrlr.measure_team_HP()):
+            if i == 0:
+                run.pokemon.HP = HP
+            else:
+                team[i-1].HP = HP
         team_scores = []
         potential_teams = (
             (pokemon, team[0], team[1], team[2]),
@@ -389,20 +412,21 @@ def catch(ctrlr) -> str:
             (run.pokemon, team[0], pokemon, team[2]),
             (run.pokemon, team[0], team[1], pokemon)
         )
+        ctrlr.log(f'HP of current team: {[x.HP for x in team]}.', 'DEBUG')
         for potential_team in potential_teams:
             score = matchup_scoring.get_weighted_score(
                 matchup_scoring.evaluate_average_matchup(
-                    potential_team[0], run.rental_pokemon.values(),
-                    potential_team[1:]
+                    potential_team[0], run.potential_boss_pokemon.values(),
+                    potential_team[1:], run.lives
                 ), rental_weight,
                 matchup_scoring.evaluate_matchup(
                     potential_team[0], run.boss_pokemon[run.boss],
-                    potential_team[1:]
+                    potential_team[1:], run.lives
                 ), boss_weight
             )
             ctrlr.log(
-                f'Score for potential team: {potential_team}: {score:.2f}',
-                'DEBUG')
+                'Score for potential team: '
+                f'{[x.name_id for x in potential_team]}: {score:.2f}', 'DEBUG')
             team_scores.append(score)
         # Choosing not to take the Pokemon may result in a teammate choosing
         # it, or none may choose it. The mechanics of your teammates choosing
@@ -434,6 +458,7 @@ def catch(ctrlr) -> str:
 
         # Re-read teammates in case something changed.
         ctrlr.identify_team_pokemon()
+        run.prune_potential_minibosses()
 
         # Move on to the detect stage.
         return 'detect'
@@ -502,9 +527,9 @@ def scientist(ctrlr) -> str:
         run.rental_scores[run.pokemon.name_id], rental_weight,
         matchup_scoring.evaluate_matchup(
             run.pokemon, run.boss_pokemon[ctrlr.boss],
-            run.team_pokemon
+            run.team_pokemon, run.lives
         ), boss_weight
-    ) * run.HP
+    )
     ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
     ctrlr.log(
         f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
