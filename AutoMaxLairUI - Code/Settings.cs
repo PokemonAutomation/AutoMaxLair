@@ -51,6 +51,7 @@ namespace AutoMaxLair
             panels2.Add(main.panelDiscordSubmenu);
             panels2.Add(main.panelSettingSubmenu);
             panels2.Add(main.panelStatSubmenu);
+            panels2.Add(panel1);
 
             buttons.Add(main.btnAdvancedSettings);
             buttons.Add(main.btnDiscord);
@@ -71,6 +72,7 @@ namespace AutoMaxLair
             labels.Add(main.labelComPort);
             labels.Add(main.labelConsecutiveResets);
             labels.Add(main.labelDyniteOre);
+            labels.Add(main.labelMaxDynite);
             labels.Add(main.labelGameLanguage);
             labels.Add(main.labelHuntingPoke);
             labels.Add(main.labelLegendBall);
@@ -109,6 +111,7 @@ namespace AutoMaxLair
             textboxes.Add(main.boxVideoScale);
             textboxes.Add(main.boxVideoDelay);
             textboxes.Add(main.boxDyniteOre);
+            textboxes.Add(main.boxMaxDynite);
             textboxes.Add(main.boxConsecutiveResets);
             textboxes.Add(main.boxAttackNeg);
             textboxes.Add(main.boxAttackNeut);
