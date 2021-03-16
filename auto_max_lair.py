@@ -122,7 +122,6 @@ def join(ctrlr) -> str:
     ctrlr.log(f'Path type identified as: {run.path_type}')
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
     ctrlr.read_path_information(3)
-    #ctrlr.log(str(run), 'DEBUG')
     for line in run.get_output_strings():
         ctrlr.log(line)
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -403,7 +402,7 @@ def catch(ctrlr) -> str:
             if i == 0:
                 run.pokemon.HP = HP
             else:
-                team[i-1].HP = HP
+                team[i - 1].HP = HP
         team_scores = []
         potential_teams = (
             (pokemon, team[0], team[1], team[2]),
