@@ -1,7 +1,7 @@
-﻿
+
 namespace AutoDA
 {
-    partial class AutoDA
+    partial class MainWindow
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,9 +30,11 @@ namespace AutoDA
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoDA));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.panelSideMenu = new System.Windows.Forms.Panel();
             this.panelAdvancedSettingsSubmenu = new System.Windows.Forms.Panel();
+            this.labelMaxDynite = new System.Windows.Forms.Label();
+            this.boxMaxDynite = new System.Windows.Forms.TextBox();
             this.boxBossIndex = new System.Windows.Forms.ComboBox();
             this.boxConsecutiveResets = new System.Windows.Forms.TextBox();
             this.boxDyniteOre = new System.Windows.Forms.TextBox();
@@ -77,18 +79,19 @@ namespace AutoDA
             this.labelWinPercentage = new System.Windows.Forms.Label();
             this.labelHuntingPoke = new System.Windows.Forms.Label();
             this.labelRun = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelRightSide = new System.Windows.Forms.Panel();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.panelDiscordSubmenu = new System.Windows.Forms.Panel();
             this.boxPingSettings = new System.Windows.Forms.ComboBox();
             this.boxPingName = new System.Windows.Forms.TextBox();
             this.boxUserID = new System.Windows.Forms.TextBox();
             this.boxWebhookToken = new System.Windows.Forms.TextBox();
             this.boxWebhookID = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelMessages = new System.Windows.Forms.Label();
+            this.labelUser = new System.Windows.Forms.Label();
+            this.labelID = new System.Windows.Forms.Label();
+            this.labelWebToken = new System.Windows.Forms.Label();
+            this.labelWebID = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.btnDiscord = new System.Windows.Forms.Button();
@@ -97,10 +100,10 @@ namespace AutoDA
             this.boxCheckAttack = new System.Windows.Forms.CheckBox();
             this.boxSpeedNeg = new System.Windows.Forms.TextBox();
             this.boxSpeedNeut = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelSpeedNeg = new System.Windows.Forms.Label();
+            this.labelSpeedNeut = new System.Windows.Forms.Label();
+            this.labelSpeedPos = new System.Windows.Forms.Label();
+            this.labelSpeed = new System.Windows.Forms.Label();
             this.labelAttackNeg = new System.Windows.Forms.Label();
             this.labelAttackNeut = new System.Windows.Forms.Label();
             this.boxSpeedPos = new System.Windows.Forms.TextBox();
@@ -108,9 +111,9 @@ namespace AutoDA
             this.boxAttackNeut = new System.Windows.Forms.TextBox();
             this.boxAttackPos = new System.Windows.Forms.TextBox();
             this.labelAttackPos = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
+            this.labelAtk = new System.Windows.Forms.Label();
             this.btnStats = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.panelRightTop = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.panelSideMenu.SuspendLayout();
             this.panelAdvancedSettingsSubmenu.SuspendLayout();
@@ -119,7 +122,7 @@ namespace AutoDA
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.boxVideoOutput)).BeginInit();
             this.panelLogs.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panelRightSide.SuspendLayout();
             this.panelDiscordSubmenu.SuspendLayout();
             this.panelStatSubmenu.SuspendLayout();
             this.SuspendLayout();
@@ -142,6 +145,8 @@ namespace AutoDA
             // panelAdvancedSettingsSubmenu
             // 
             this.panelAdvancedSettingsSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelMaxDynite);
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxMaxDynite);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxBossIndex);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxConsecutiveResets);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxDyniteOre);
@@ -156,8 +161,31 @@ namespace AutoDA
             this.panelAdvancedSettingsSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelAdvancedSettingsSubmenu.Location = new System.Drawing.Point(0, 457);
             this.panelAdvancedSettingsSubmenu.Name = "panelAdvancedSettingsSubmenu";
-            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 211);
+            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 233);
             this.panelAdvancedSettingsSubmenu.TabIndex = 8;
+            // 
+            // labelMaxDynite
+            // 
+            this.labelMaxDynite.AutoSize = true;
+            this.labelMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelMaxDynite.Location = new System.Drawing.Point(13, 170);
+            this.labelMaxDynite.Name = "labelMaxDynite";
+            this.labelMaxDynite.Size = new System.Drawing.Size(141, 19);
+            this.labelMaxDynite.TabIndex = 22;
+            this.labelMaxDynite.Text = "Maximum Dynite Ore";
+            // 
+            // boxMaxDynite
+            // 
+            this.boxMaxDynite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.boxMaxDynite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.boxMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.boxMaxDynite.Location = new System.Drawing.Point(175, 168);
+            this.boxMaxDynite.Name = "boxMaxDynite";
+            this.boxMaxDynite.Size = new System.Drawing.Size(30, 25);
+            this.boxMaxDynite.TabIndex = 21;
+            this.boxMaxDynite.Text = "0";
+            this.boxMaxDynite.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.boxMaxDynite, "The maximum amount of Dynite Ore the program\r\nshall use.");
             // 
             // boxBossIndex
             // 
@@ -201,7 +229,7 @@ namespace AutoDA
             this.boxDyniteOre.TabIndex = 19;
             this.boxDyniteOre.Text = "0";
             this.boxDyniteOre.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of maximum Dynite Ore that you want the program to use.");
+            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of Dynite Ore the program can use or \r\nyou want to recover.");
             // 
             // boxVideoDelay
             // 
@@ -234,7 +262,7 @@ namespace AutoDA
             // 
             this.checkBoxDebugLogs.AutoSize = true;
             this.checkBoxDebugLogs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.checkBoxDebugLogs.Location = new System.Drawing.Point(13, 172);
+            this.checkBoxDebugLogs.Location = new System.Drawing.Point(12, 196);
             this.checkBoxDebugLogs.Name = "checkBoxDebugLogs";
             this.checkBoxDebugLogs.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxDebugLogs.Size = new System.Drawing.Size(146, 23);
@@ -727,7 +755,7 @@ namespace AutoDA
             // 
             // btnSave
             // 
-            this.btnSave.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSave.BackgroundImage")));
+            this.btnSave.BackgroundImage = global::AutoMaxLair.Properties.Resources.Save1;
             this.btnSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -820,21 +848,36 @@ namespace AutoDA
             this.labelRun.Text = "Run #:";
             this.labelRun.Visible = false;
             // 
-            // panel1
+            // panelRightSide
             // 
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(8)))), ((int)(((byte)(20)))));
-            this.panel1.Controls.Add(this.panelDiscordSubmenu);
-            this.panel1.Controls.Add(this.btnSave);
-            this.panel1.Controls.Add(this.btnDiscord);
-            this.panel1.Controls.Add(this.panelStatSubmenu);
-            this.panel1.Controls.Add(this.btnStats);
-            this.panel1.Controls.Add(this.panel6);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(292, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(292, 702);
-            this.panel1.TabIndex = 22;
+            this.panelRightSide.AutoScroll = true;
+            this.panelRightSide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(8)))), ((int)(((byte)(20)))));
+            this.panelRightSide.Controls.Add(this.btnSettings);
+            this.panelRightSide.Controls.Add(this.panelDiscordSubmenu);
+            this.panelRightSide.Controls.Add(this.btnSave);
+            this.panelRightSide.Controls.Add(this.btnDiscord);
+            this.panelRightSide.Controls.Add(this.panelStatSubmenu);
+            this.panelRightSide.Controls.Add(this.btnStats);
+            this.panelRightSide.Controls.Add(this.panelRightTop);
+            this.panelRightSide.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelRightSide.Location = new System.Drawing.Point(292, 0);
+            this.panelRightSide.Name = "panelRightSide";
+            this.panelRightSide.Size = new System.Drawing.Size(292, 702);
+            this.panelRightSide.TabIndex = 22;
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.BackgroundImage = global::AutoMaxLair.Properties.Resources.Settings1;
+            this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Location = new System.Drawing.Point(18, 630);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(42, 46);
+            this.btnSettings.TabIndex = 26;
+            this.toolTip.SetToolTip(this.btnSettings, "Settings for the AutoMaxLair-UI.");
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // panelDiscordSubmenu
             // 
@@ -844,15 +887,15 @@ namespace AutoDA
             this.panelDiscordSubmenu.Controls.Add(this.boxUserID);
             this.panelDiscordSubmenu.Controls.Add(this.boxWebhookToken);
             this.panelDiscordSubmenu.Controls.Add(this.boxWebhookID);
-            this.panelDiscordSubmenu.Controls.Add(this.label1);
-            this.panelDiscordSubmenu.Controls.Add(this.label2);
-            this.panelDiscordSubmenu.Controls.Add(this.label3);
-            this.panelDiscordSubmenu.Controls.Add(this.label4);
-            this.panelDiscordSubmenu.Controls.Add(this.label5);
+            this.panelDiscordSubmenu.Controls.Add(this.labelMessages);
+            this.panelDiscordSubmenu.Controls.Add(this.labelUser);
+            this.panelDiscordSubmenu.Controls.Add(this.labelID);
+            this.panelDiscordSubmenu.Controls.Add(this.labelWebToken);
+            this.panelDiscordSubmenu.Controls.Add(this.labelWebID);
             this.panelDiscordSubmenu.Controls.Add(this.button1);
             this.panelDiscordSubmenu.Controls.Add(this.button4);
             this.panelDiscordSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 350);
+            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 390);
             this.panelDiscordSubmenu.Name = "panelDiscordSubmenu";
             this.panelDiscordSubmenu.Size = new System.Drawing.Size(292, 183);
             this.panelDiscordSubmenu.TabIndex = 25;
@@ -926,55 +969,55 @@ namespace AutoDA
             this.boxWebhookID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip.SetToolTip(this.boxWebhookID, "The Webhook ID to setup the webhook.");
             // 
-            // label1
+            // labelMessages
             // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label1.Location = new System.Drawing.Point(13, 139);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 19);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Messages";
+            this.labelMessages.AutoSize = true;
+            this.labelMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelMessages.Location = new System.Drawing.Point(13, 139);
+            this.labelMessages.Name = "labelMessages";
+            this.labelMessages.Size = new System.Drawing.Size(69, 19);
+            this.labelMessages.TabIndex = 13;
+            this.labelMessages.Text = "Messages";
             // 
-            // label2
+            // labelUser
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label2.Location = new System.Drawing.Point(13, 109);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 19);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Username";
+            this.labelUser.AutoSize = true;
+            this.labelUser.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelUser.Location = new System.Drawing.Point(13, 109);
+            this.labelUser.Name = "labelUser";
+            this.labelUser.Size = new System.Drawing.Size(71, 19);
+            this.labelUser.TabIndex = 12;
+            this.labelUser.Text = "Username";
             // 
-            // label3
+            // labelID
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label3.Location = new System.Drawing.Point(13, 77);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 19);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "User ID";
+            this.labelID.AutoSize = true;
+            this.labelID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelID.Location = new System.Drawing.Point(13, 77);
+            this.labelID.Name = "labelID";
+            this.labelID.Size = new System.Drawing.Size(55, 19);
+            this.labelID.TabIndex = 11;
+            this.labelID.Text = "User ID";
             // 
-            // label4
+            // labelWebToken
             // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label4.Location = new System.Drawing.Point(12, 45);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(107, 19);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Webhook Token";
+            this.labelWebToken.AutoSize = true;
+            this.labelWebToken.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelWebToken.Location = new System.Drawing.Point(12, 45);
+            this.labelWebToken.Name = "labelWebToken";
+            this.labelWebToken.Size = new System.Drawing.Size(107, 19);
+            this.labelWebToken.TabIndex = 10;
+            this.labelWebToken.Text = "Webhook Token";
             // 
-            // label5
+            // labelWebID
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label5.Location = new System.Drawing.Point(12, 15);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(85, 19);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Webhook ID";
+            this.labelWebID.AutoSize = true;
+            this.labelWebID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelWebID.Location = new System.Drawing.Point(12, 15);
+            this.labelWebID.Name = "labelWebID";
+            this.labelWebID.Size = new System.Drawing.Size(85, 19);
+            this.labelWebID.TabIndex = 9;
+            this.labelWebID.Text = "Webhook ID";
             // 
             // button1
             // 
@@ -1007,7 +1050,7 @@ namespace AutoDA
             this.btnDiscord.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDiscord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDiscord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnDiscord.Location = new System.Drawing.Point(0, 305);
+            this.btnDiscord.Location = new System.Drawing.Point(0, 345);
             this.btnDiscord.Name = "btnDiscord";
             this.btnDiscord.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnDiscord.Size = new System.Drawing.Size(292, 45);
@@ -1025,10 +1068,10 @@ namespace AutoDA
             this.panelStatSubmenu.Controls.Add(this.boxCheckAttack);
             this.panelStatSubmenu.Controls.Add(this.boxSpeedNeg);
             this.panelStatSubmenu.Controls.Add(this.boxSpeedNeut);
-            this.panelStatSubmenu.Controls.Add(this.label6);
-            this.panelStatSubmenu.Controls.Add(this.label7);
-            this.panelStatSubmenu.Controls.Add(this.label8);
-            this.panelStatSubmenu.Controls.Add(this.label9);
+            this.panelStatSubmenu.Controls.Add(this.labelSpeedNeg);
+            this.panelStatSubmenu.Controls.Add(this.labelSpeedNeut);
+            this.panelStatSubmenu.Controls.Add(this.labelSpeedPos);
+            this.panelStatSubmenu.Controls.Add(this.labelSpeed);
             this.panelStatSubmenu.Controls.Add(this.labelAttackNeg);
             this.panelStatSubmenu.Controls.Add(this.labelAttackNeut);
             this.panelStatSubmenu.Controls.Add(this.boxSpeedPos);
@@ -1036,9 +1079,9 @@ namespace AutoDA
             this.panelStatSubmenu.Controls.Add(this.boxAttackNeut);
             this.panelStatSubmenu.Controls.Add(this.boxAttackPos);
             this.panelStatSubmenu.Controls.Add(this.labelAttackPos);
-            this.panelStatSubmenu.Controls.Add(this.label13);
+            this.panelStatSubmenu.Controls.Add(this.labelAtk);
             this.panelStatSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 105);
+            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 145);
             this.panelStatSubmenu.Name = "panelStatSubmenu";
             this.panelStatSubmenu.Size = new System.Drawing.Size(292, 200);
             this.panelStatSubmenu.TabIndex = 23;
@@ -1097,46 +1140,46 @@ namespace AutoDA
             this.toolTip.SetToolTip(this.boxSpeedNeut, "Enter the values for Speed Stats you want to search for, \r\nwhen the legendary has" +
         " a neutral nature.\r\n");
             // 
-            // label6
+            // labelSpeedNeg
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label6.Location = new System.Drawing.Point(145, 96);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 19);
-            this.label6.TabIndex = 24;
-            this.label6.Text = "Negative";
+            this.labelSpeedNeg.AutoSize = true;
+            this.labelSpeedNeg.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelSpeedNeg.Location = new System.Drawing.Point(145, 96);
+            this.labelSpeedNeg.Name = "labelSpeedNeg";
+            this.labelSpeedNeg.Size = new System.Drawing.Size(63, 19);
+            this.labelSpeedNeg.TabIndex = 24;
+            this.labelSpeedNeg.Text = "Negative";
             // 
-            // label7
+            // labelSpeedNeut
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label7.Location = new System.Drawing.Point(145, 65);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(54, 19);
-            this.label7.TabIndex = 23;
-            this.label7.Text = "Neutral";
+            this.labelSpeedNeut.AutoSize = true;
+            this.labelSpeedNeut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelSpeedNeut.Location = new System.Drawing.Point(145, 65);
+            this.labelSpeedNeut.Name = "labelSpeedNeut";
+            this.labelSpeedNeut.Size = new System.Drawing.Size(54, 19);
+            this.labelSpeedNeut.TabIndex = 23;
+            this.labelSpeedNeut.Text = "Neutral";
             // 
-            // label8
+            // labelSpeedPos
             // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label8.Location = new System.Drawing.Point(145, 34);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(55, 19);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "Positive";
+            this.labelSpeedPos.AutoSize = true;
+            this.labelSpeedPos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelSpeedPos.Location = new System.Drawing.Point(145, 34);
+            this.labelSpeedPos.Name = "labelSpeedPos";
+            this.labelSpeedPos.Size = new System.Drawing.Size(55, 19);
+            this.labelSpeedPos.TabIndex = 22;
+            this.labelSpeedPos.Text = "Positive";
             // 
-            // label9
+            // labelSpeed
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label9.Location = new System.Drawing.Point(140, 6);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(79, 17);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "Speed Stats";
+            this.labelSpeed.AutoSize = true;
+            this.labelSpeed.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelSpeed.Location = new System.Drawing.Point(140, 6);
+            this.labelSpeed.Name = "labelSpeed";
+            this.labelSpeed.Size = new System.Drawing.Size(79, 17);
+            this.labelSpeed.TabIndex = 22;
+            this.labelSpeed.Text = "Speed Stats";
             // 
             // labelAttackNeg
             // 
@@ -1224,23 +1267,23 @@ namespace AutoDA
             this.labelAttackPos.TabIndex = 10;
             this.labelAttackPos.Text = "Positive";
             // 
-            // label13
+            // labelAtk
             // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.label13.Location = new System.Drawing.Point(10, 6);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(81, 17);
-            this.label13.TabIndex = 9;
-            this.label13.Text = "Attack Stats";
+            this.labelAtk.AutoSize = true;
+            this.labelAtk.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelAtk.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelAtk.Location = new System.Drawing.Point(10, 6);
+            this.labelAtk.Name = "labelAtk";
+            this.labelAtk.Size = new System.Drawing.Size(81, 17);
+            this.labelAtk.TabIndex = 9;
+            this.labelAtk.Text = "Attack Stats";
             // 
             // btnStats
             // 
             this.btnStats.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnStats.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnStats.Location = new System.Drawing.Point(0, 60);
+            this.btnStats.Location = new System.Drawing.Point(0, 100);
             this.btnStats.Name = "btnStats";
             this.btnStats.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnStats.Size = new System.Drawing.Size(292, 45);
@@ -1251,30 +1294,31 @@ namespace AutoDA
         " you want to use this feature.");
             this.btnStats.UseVisualStyleBackColor = true;
             // 
-            // panel6
+            // panelRightTop
             // 
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(292, 60);
-            this.panel6.TabIndex = 0;
+            this.panelRightTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelRightTop.Location = new System.Drawing.Point(0, 0);
+            this.panelRightTop.Name = "panelRightTop";
+            this.panelRightTop.Size = new System.Drawing.Size(292, 100);
+            this.panelRightTop.TabIndex = 0;
             // 
             // toolTip
             // 
             this.toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip_Popup);
             // 
-            // AutoDA
+            // MainWindow
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(104)))), ((int)(((byte)(104)))));
             this.ClientSize = new System.Drawing.Size(584, 702);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelRightSide);
             this.Controls.Add(this.panelLogs);
             this.Controls.Add(this.boxVideoOutput);
             this.Controls.Add(this.panelSideMenu);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "AutoDA";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Automation: Dynamax Adventure";
             this.Load += new System.EventHandler(this.AutoDA_Load);
@@ -1288,7 +1332,7 @@ namespace AutoDA
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.boxVideoOutput)).EndInit();
             this.panelLogs.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.panelRightSide.ResumeLayout(false);
             this.panelDiscordSubmenu.ResumeLayout(false);
             this.panelDiscordSubmenu.PerformLayout();
             this.panelStatSubmenu.ResumeLayout(false);
@@ -1298,88 +1342,89 @@ namespace AutoDA
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panelSideMenu;
-        private System.Windows.Forms.Panel panelSettingSubmenu;
-        private System.Windows.Forms.Button btnSetting;
-        private System.Windows.Forms.Panel panelLogo;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label labelLogo;
-        private System.Windows.Forms.Panel panelAdvancedSettingsSubmenu;
-        private System.Windows.Forms.Button btnAdvancedSettings;
-        private System.Windows.Forms.ComboBox boxPokemon;
-        private System.Windows.Forms.Label labelPokémon;
-        private System.Windows.Forms.ComboBox boxLegendBall;
-        private System.Windows.Forms.ComboBox boxBaseBall;
-        private System.Windows.Forms.TextBox boxComPort;
-        private System.Windows.Forms.ComboBox boxMode;
-        private System.Windows.Forms.Label labelVideoIndex;
-        private System.Windows.Forms.Label labelComPort;
-        private System.Windows.Forms.Label labelMode;
-        private System.Windows.Forms.Label labelLegendBall;
-        private System.Windows.Forms.Label labelBaseBall;
-        private System.Windows.Forms.Label labelConsecutiveResets;
-        private System.Windows.Forms.Label labelDyniteOre;
-        private System.Windows.Forms.Label labelBossIndex;
-        private System.Windows.Forms.Label labelVideoDelay;
-        private System.Windows.Forms.Label labelVideoScale;
-        private System.Windows.Forms.CheckBox checkBoxDebugLogs;
-        private System.Windows.Forms.TextBox boxConsecutiveResets;
-        private System.Windows.Forms.TextBox boxDyniteOre;
-        private System.Windows.Forms.TextBox boxVideoDelay;
-        private System.Windows.Forms.TextBox boxVideoScale;
-        private System.Windows.Forms.ComboBox boxBossIndex;
-        private System.Windows.Forms.TextBox boxLegendBallValue;
-        private System.Windows.Forms.TextBox boxBaseBallValue;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.ComboBox boxVideoCapture;
-        private System.Windows.Forms.PictureBox boxVideoOutput;
-        private System.Windows.Forms.Panel panelLogs;
-        private System.Windows.Forms.Label labelTessaract;
-        private System.Windows.Forms.ComboBox boxGameLanguage;
-        private System.Windows.Forms.Label labelGameLanguage;
-        private System.Windows.Forms.Label labelShinies;
-        private System.Windows.Forms.Label labelShiniesFound;
-        private System.Windows.Forms.Label labelWinPercentage;
-        private System.Windows.Forms.Label labelHuntingPoke;
-        private System.Windows.Forms.Label labelRun;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panelDiscordSubmenu;
-        private System.Windows.Forms.ComboBox boxPingSettings;
-        private System.Windows.Forms.TextBox boxPingName;
-        private System.Windows.Forms.TextBox boxUserID;
-        private System.Windows.Forms.TextBox boxWebhookToken;
-        private System.Windows.Forms.TextBox boxWebhookID;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button btnDiscord;
-        private System.Windows.Forms.Panel panelStatSubmenu;
-        private System.Windows.Forms.CheckBox boxCheckSpeed;
-        private System.Windows.Forms.CheckBox boxCheckAttack;
-        private System.Windows.Forms.TextBox boxSpeedNeg;
-        private System.Windows.Forms.TextBox boxSpeedNeut;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label labelAttackNeg;
-        private System.Windows.Forms.Label labelAttackNeut;
-        private System.Windows.Forms.TextBox boxSpeedPos;
-        private System.Windows.Forms.TextBox boxAttackNeg;
-        private System.Windows.Forms.TextBox boxAttackNeut;
-        private System.Windows.Forms.TextBox boxAttackPos;
-        private System.Windows.Forms.Label labelAttackPos;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Button btnStats;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.Button btnTesseract;
-        private System.Windows.Forms.TextBox boxTesseract;
+        public System.Windows.Forms.Panel panelSideMenu;
+        public System.Windows.Forms.Panel panelSettingSubmenu;
+        public System.Windows.Forms.Button btnSetting;
+        public System.Windows.Forms.Panel panelLogo;
+        public System.Windows.Forms.PictureBox pictureBox1;
+        public System.Windows.Forms.Label labelLogo;
+        public System.Windows.Forms.Panel panelAdvancedSettingsSubmenu;
+        public System.Windows.Forms.Button btnAdvancedSettings;
+        public System.Windows.Forms.ComboBox boxPokemon;
+        public System.Windows.Forms.Label labelPokémon;
+        public System.Windows.Forms.ComboBox boxLegendBall;
+        public System.Windows.Forms.ComboBox boxBaseBall;
+        public System.Windows.Forms.TextBox boxComPort;
+        public System.Windows.Forms.ComboBox boxMode;
+        public System.Windows.Forms.Label labelVideoIndex;
+        public System.Windows.Forms.Label labelComPort;
+        public System.Windows.Forms.Label labelMode;
+        public System.Windows.Forms.Label labelLegendBall;
+        public System.Windows.Forms.Label labelBaseBall;
+        public System.Windows.Forms.Label labelConsecutiveResets;
+        public System.Windows.Forms.Label labelDyniteOre;
+        public System.Windows.Forms.Label labelBossIndex;
+        public System.Windows.Forms.Label labelVideoDelay;
+        public System.Windows.Forms.Label labelVideoScale;
+        public System.Windows.Forms.CheckBox checkBoxDebugLogs;
+        public System.Windows.Forms.TextBox boxConsecutiveResets;
+        public System.Windows.Forms.TextBox boxDyniteOre;
+        public System.Windows.Forms.TextBox boxVideoDelay;
+        public System.Windows.Forms.TextBox boxVideoScale;
+        public System.Windows.Forms.ComboBox boxBossIndex;
+        public System.Windows.Forms.TextBox boxLegendBallValue;
+        public System.Windows.Forms.TextBox boxBaseBallValue;
+        public System.Windows.Forms.Button btnSave;
+        public System.Windows.Forms.ComboBox boxVideoCapture;
+        public System.Windows.Forms.PictureBox boxVideoOutput;
+        public System.Windows.Forms.Panel panelLogs;
+        public System.Windows.Forms.Label labelTessaract;
+        public System.Windows.Forms.ComboBox boxGameLanguage;
+        public System.Windows.Forms.Label labelGameLanguage;
+        public System.Windows.Forms.Label labelShinies;
+        public System.Windows.Forms.Label labelShiniesFound;
+        public System.Windows.Forms.Label labelWinPercentage;
+        public System.Windows.Forms.Label labelHuntingPoke;
+        public System.Windows.Forms.Label labelRun;
+        public System.Windows.Forms.Panel panelRightSide;
+        public System.Windows.Forms.Panel panelDiscordSubmenu;
+        public System.Windows.Forms.ComboBox boxPingSettings;
+        public System.Windows.Forms.TextBox boxPingName;
+        public System.Windows.Forms.TextBox boxUserID;
+        public System.Windows.Forms.TextBox boxWebhookToken;
+        public System.Windows.Forms.TextBox boxWebhookID;
+        public System.Windows.Forms.Label labelMessages;
+        public System.Windows.Forms.Label labelUser;
+        public System.Windows.Forms.Label labelID;
+        public System.Windows.Forms.Label labelWebToken;
+        public System.Windows.Forms.Label labelWebID;
+        public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button button4;
+        public System.Windows.Forms.Button btnDiscord;
+        public System.Windows.Forms.Panel panelStatSubmenu;
+        public System.Windows.Forms.CheckBox boxCheckSpeed;
+        public System.Windows.Forms.CheckBox boxCheckAttack;
+        public System.Windows.Forms.TextBox boxSpeedNeg;
+        public System.Windows.Forms.TextBox boxSpeedNeut;
+        public System.Windows.Forms.Label labelSpeedNeg;
+        public System.Windows.Forms.Label labelSpeedNeut;
+        public System.Windows.Forms.Label labelSpeedPos;
+        public System.Windows.Forms.Label labelSpeed;
+        public System.Windows.Forms.Label labelAttackNeg;
+        public System.Windows.Forms.Label labelAttackNeut;
+        public System.Windows.Forms.TextBox boxSpeedPos;
+        public System.Windows.Forms.TextBox boxAttackNeg;
+        public System.Windows.Forms.TextBox boxAttackNeut;
+        public System.Windows.Forms.TextBox boxAttackPos;
+        public System.Windows.Forms.Label labelAttackPos;
+        public System.Windows.Forms.Label labelAtk;
+        public System.Windows.Forms.Button btnStats;
+        public System.Windows.Forms.Panel panelRightTop;
+        public System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.Button btnTesseract;
+        public System.Windows.Forms.TextBox boxTesseract;
+        public System.Windows.Forms.Button btnSettings;
+        public System.Windows.Forms.Label labelMaxDynite;
+        public System.Windows.Forms.TextBox boxMaxDynite;
     }
 }
-

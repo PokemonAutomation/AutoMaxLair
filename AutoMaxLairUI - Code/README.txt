@@ -1,6 +1,5 @@
-If you don't have a program to compile, here is a link for a published version:
+For the executable go to:
 
-https://we.tl/t-FViqYTkYqk
+|> Actions
 
-To use the UI just place the AutoMaxLair.exe to the root 
-of the automaxlair folder
+and download the latest Auto Max Lair UI zip via the dotnet core pipeline.

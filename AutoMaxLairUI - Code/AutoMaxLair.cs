@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,12 +15,13 @@ using Microsoft.Scripting.Hosting;
 using System.Diagnostics;
 using Tommy;
 using System.Collections;
+using AutoMaxLair;
 
 namespace AutoDA
 {
-    public partial class AutoDA : Form
+    public partial class MainWindow : Form
     {
-        public AutoDA()
+        public MainWindow()
         {
             InitializeComponent();
             getConfig();
@@ -31,6 +32,7 @@ namespace AutoDA
 
         private void AutoDA_Load(object sender, EventArgs e)
         {
+            Initialize_Add();
             int i = 0;
             // Get every Video Capture device and put it into the combobox (with right order)
             filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -39,6 +41,27 @@ namespace AutoDA
                 boxVideoCapture.Items.Insert(i, filterInfo.Name);
                 i = i++;
             }
+
+            boxVideoCapture.SelectedIndex = 0;
+
+            
+            bool darktheme;
+            darktheme = AutoMaxLair.Properties.Settings.Default.DarkTheme;
+
+            if (darktheme == true)
+            {
+                ApplyTheme(zcolor(11, 8, 20), zcolor(11, 8, 20), zcolor(11, 8, 20), zcolor(36, 33, 40), zcolor(36, 33, 40), zcolor(36, 33, 40), zcolor(250, 63, 82));
+                btnSave.BackgroundImage = AutoMaxLair.Properties.Resources.Save1;
+                btnSettings.BackgroundImage = AutoMaxLair.Properties.Resources.Settings1;
+            }
+            else
+            {
+                ApplyTheme(Color.White, Color.LightGray, Color.LightGray, Color.White, Color.LightGray, Color.White, Color.Black);
+                btnSave.BackgroundImage = AutoMaxLair.Properties.Resources.Save2;
+                btnSettings.BackgroundImage = AutoMaxLair.Properties.Resources.Settings2;
+            }
+
+            
                 
             
             boxVideoCapture.SelectedIndex = 0;
@@ -158,6 +181,7 @@ namespace AutoDA
                 boxBossIndex.Text = t["advanced"]["BOSS_INDEX"];
                 boxDyniteOre.Text = t["advanced"]["DYNITE_ORE"];
                 boxConsecutiveResets.Text = t["advanced"]["CONSECUTIVE_RESETS"];
+                boxMaxDynite.Text = t["advanced"]["MAXIMUM_ORE_COST"];
                 checkBoxDebugLogs.Checked = t["advanced"]["ENABLE_DEBUG_LOGS"];
                 boxCheckAttack.Checked = t["stats"]["CHECK_ATTACK_STAT"];
                 boxCheckSpeed.Checked = t["stats"]["CHECK_SPEED_STAT"];
@@ -180,7 +204,7 @@ namespace AutoDA
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
-            int i, x, y, q, w, t, u, o, p, l, k;
+            int i, x, y, q, w, t, u, o, p, l, k, h;
             float a, b, j, g;
 
             bool bossValue = int.TryParse(boxBossIndex.Text, out i);
@@ -188,6 +212,7 @@ namespace AutoDA
             bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
             bool dynite = int.TryParse(boxDyniteOre.Text, out q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
+            bool maxdynite = int.TryParse(boxMaxDynite.Text, out h);
             bool webhookID = float.TryParse(boxWebhookID.Text, out j);
             bool userID = float.TryParse(boxUserID.Text, out g);
 
@@ -228,6 +253,8 @@ namespace AutoDA
                 MessageBox.Show("Your Dynite Ore needs to be a number between 0 and 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (dynite == false || dynite == true && q > 999)
                 MessageBox.Show("Your Dynite Ore needs to be a number less than 999!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (maxdynite == false | maxdynite == true && h > 10 | maxdynite == true && h < 0)
+                MessageBox.Show("Your maximum Dynite Ore needs to be a number between 0 and 10!", "Error: Dynite Ore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Consecutive Resets Validation
             else if (resets == false || resets == true && w < 0)
@@ -329,6 +356,7 @@ namespace AutoDA
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
+                t["advanced"]["MAXIMUM_ORE_COST"].AsString.Value = boxMaxDynite.Text;
                 t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
                 // Stat Settings
@@ -466,5 +494,168 @@ namespace AutoDA
         {
 
         }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            Settings form = new Settings();
+            form.Show(this);
+        }
+
+        Color zcolor(int r, int g, int b)
+        {
+            return Color.FromArgb(r, g, b);
+        }
+
+        List<Control> panels, panels2;
+        List<Control> buttons;
+        List<Control> labels;
+        List<Control> comboboxes;
+        List<Control> textboxes;
+        List<Control> checkboxes;
+
+        void Initialize_Add()
+        {
+            panels = new List<Control>();
+            panels2 = new List<Control>();
+            buttons = new List<Control>();
+            labels = new List<Control>();
+            comboboxes = new List<Control>();
+            textboxes = new List<Control>();
+            checkboxes = new List<Control>();
+
+
+            panels.Add(panelLogo);
+            panels.Add(panelSideMenu);
+            panels.Add(panelRightSide);
+            panels.Add(panelRightTop);
+
+            panels2.Add(panelAdvancedSettingsSubmenu);
+            panels2.Add(panelDiscordSubmenu);
+            panels2.Add(panelSettingSubmenu);
+            panels2.Add(panelStatSubmenu);
+
+            buttons.Add(btnAdvancedSettings);
+            buttons.Add(btnDiscord);
+            buttons.Add(btnSave);
+            buttons.Add(btnSetting);
+            buttons.Add(btnStats);
+            buttons.Add(btnTesseract);
+            buttons.Add(btnSettings);
+
+            labels.Add(labelAttackNeg);
+            labels.Add(labelAttackNeut);
+            labels.Add(labelAttackPos);
+            labels.Add(labelSpeedNeg);
+            labels.Add(labelSpeedNeut);
+            labels.Add(labelSpeedPos);
+            labels.Add(labelBaseBall);
+            labels.Add(labelBossIndex);
+            labels.Add(labelComPort);
+            labels.Add(labelConsecutiveResets);
+            labels.Add(labelDyniteOre);
+            labels.Add(labelGameLanguage);
+            labels.Add(labelHuntingPoke);
+            labels.Add(labelLegendBall);
+            panels.Add(labelLogo);
+            labels.Add(labelMode);
+            labels.Add(labelPokémon);
+            labels.Add(labelRun);
+            labels.Add(labelShinies);
+            labels.Add(labelShiniesFound);
+            labels.Add(labelTessaract);
+            labels.Add(labelVideoDelay);
+            labels.Add(labelVideoIndex);
+            labels.Add(labelVideoScale);
+            labels.Add(labelWinPercentage);
+            labels.Add(labelWebID);
+            labels.Add(labelWebToken);
+            labels.Add(labelUser);
+            labels.Add(labelID);
+            labels.Add(labelMessages);
+            labels.Add(labelAtk);
+            labels.Add(labelSpeed);
+
+            comboboxes.Add(boxBossIndex);
+            comboboxes.Add(boxPokemon);
+            comboboxes.Add(boxBaseBall);
+            comboboxes.Add(boxLegendBall);
+            comboboxes.Add(boxMode);
+            comboboxes.Add(boxVideoCapture);
+            comboboxes.Add(boxGameLanguage);
+            comboboxes.Add(boxPingSettings);
+
+            textboxes.Add(boxBaseBallValue);
+            textboxes.Add(boxLegendBallValue);
+            textboxes.Add(boxComPort);
+            textboxes.Add(boxTesseract);
+            textboxes.Add(boxVideoScale);
+            textboxes.Add(boxVideoDelay);
+            textboxes.Add(boxDyniteOre);
+            textboxes.Add(boxConsecutiveResets);
+            textboxes.Add(boxAttackNeg);
+            textboxes.Add(boxAttackNeut);
+            textboxes.Add(boxAttackPos);
+            textboxes.Add(boxSpeedNeg);
+            textboxes.Add(boxSpeedNeut);
+            textboxes.Add(boxSpeedPos);
+            textboxes.Add(boxWebhookID);
+            textboxes.Add(boxWebhookToken);
+            textboxes.Add(boxUserID);
+            textboxes.Add(boxPingName);
+
+            checkboxes.Add(checkBoxDebugLogs);
+            checkboxes.Add(boxCheckAttack);
+            checkboxes.Add(boxCheckSpeed);
+        }
+
+        public void ApplyTheme(Color back, Color pan, Color btn, Color lab, Color cbox, Color tbox, Color textC)
+        {
+            this.BackColor = lab;
+            this.ForeColor = textC;
+
+            foreach (Control item in panels)
+            {
+                item.BackColor = pan;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in panels2)
+            {
+                item.BackColor = tbox;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in buttons)
+            {
+                item.BackColor = btn;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in labels)
+            {
+                item.BackColor = lab;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in comboboxes)
+            {
+                item.BackColor = cbox;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in textboxes)
+            {
+                item.BackColor = tbox;
+                item.ForeColor = textC;
+            }
+
+            foreach (Control item in checkboxes)
+            {
+                item.BackColor = lab;
+                item.ForeColor = textC;
+            }
+        }
     }
+
+   
 }

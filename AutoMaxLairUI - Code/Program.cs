@@ -17,7 +17,7 @@ namespace AutoDA
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AutoDA());
+            Application.Run(new MainWindow());
         }
     }
 }
