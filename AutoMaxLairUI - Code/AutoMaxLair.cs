@@ -203,28 +203,25 @@ namespace AutoDA
             string[] speedPos = boxSpeedPos.Text.Split(',').ToArray();
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
+            
+            bool bossValue = int.TryParse(boxBossIndex.Text, out int i);
+            bool baseBall = int.TryParse(boxBaseBallValue.Text, out int x);
+            bool legendBall = int.TryParse(boxLegendBallValue.Text, out int y);
+            bool dynite = int.TryParse(boxDyniteOre.Text, out int q);
+            bool resets = int.TryParse(boxConsecutiveResets.Text, out int w);
+            bool maxdynite = int.TryParse(boxMaxDynite.Text, out int h);
+            bool webhookID = float.TryParse(boxWebhookID.Text, out float j);
+            bool userID = float.TryParse(boxUserID.Text, out float g);
 
-            int i, x, y, q, w, t, u, o, p, l, k, h;
-            float a, b, j, g;
+            bool videoScale = float.TryParse(boxVideoScale.Text, out float a);
+            bool videoDelay = float.TryParse(boxVideoDelay.Text, out float b);
 
-            bool bossValue = int.TryParse(boxBossIndex.Text, out i);
-            bool baseBall = int.TryParse(boxBaseBallValue.Text, out x);
-            bool legendBall = int.TryParse(boxLegendBallValue.Text, out y);
-            bool dynite = int.TryParse(boxDyniteOre.Text, out q);
-            bool resets = int.TryParse(boxConsecutiveResets.Text, out w);
-            bool maxdynite = int.TryParse(boxMaxDynite.Text, out h);
-            bool webhookID = float.TryParse(boxWebhookID.Text, out j);
-            bool userID = float.TryParse(boxUserID.Text, out g);
-
-            bool videoScale = float.TryParse(boxVideoScale.Text, out a);
-            bool videoDelay = float.TryParse(boxVideoDelay.Text, out b);
-
-            bool aPosInts = atkPos.All(x => int.TryParse(x.ToString(), out t));
-            bool aNeutInts = atkNeut.All(x => int.TryParse(x.ToString(), out u));
-            bool aNegInts = atkNeg.All(x => int.TryParse(x.ToString(), out o));
-            bool sPosInts = speedPos.All(x => int.TryParse(x.ToString(), out p));
-            bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out l));
-            bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out k));
+            bool aPosInts = atkPos.All(x => int.TryParse(x.ToString(), out int t));
+            bool aNeutInts = atkNeut.All(x => int.TryParse(x.ToString(), out int u));
+            bool aNegInts = atkNeg.All(x => int.TryParse(x.ToString(), out int o));
+            bool sPosInts = speedPos.All(x => int.TryParse(x.ToString(), out int p));
+            bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out int l));
+            bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out int k));
 
             // Base Ball Validation
             if (baseBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || baseBall == true && x < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
@@ -348,7 +345,7 @@ namespace AutoDA
                 t["MODE"].AsString.Value = boxMode.Text.ToUpper();
                 t["COM_PORT"].AsString.Value = boxComPort.Text;
                 t["VIDEO_INDEX"].AsInteger.Value = boxVideoCapture.SelectedIndex;
-                t["TESSERACT_PATH"] = boxTesseract.Text;
+                t["TESSERACT_PATH"].AsString.Value = boxTesseract.Text;
 
                 // Advanced Settings
                 t["advanced"]["VIDEO_SCALE"].AsFloat.Value = float.Parse(boxVideoScale.Text);
@@ -356,7 +353,7 @@ namespace AutoDA
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
-                t["advanced"]["MAXIMUM_ORE_COST"].AsString.Value = boxMaxDynite.Text;
+                t["advanced"]["MAXIMUM_ORE_COST"].AsInteger.Value = int.Parse(boxMaxDynite.Text);
                 t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
                 // Stat Settings
