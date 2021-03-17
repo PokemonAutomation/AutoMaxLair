@@ -12,6 +12,7 @@ Specific use cases can inherit from this class and add specific functionality.
 # 2021-02-13
 
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -226,11 +227,26 @@ class SwitchController:
         text = pytesseract.image_to_string(
             img, lang=self.tesseract_language, config=segmentation_mode
         ).replace('\n', '').strip()
-        self.log(f'Read text from screen: {text}', 'DEBUG')
+        if text:
+            self.log(f'Read text from screen: {text}', 'DEBUG')
         self.lock.acquire()
 
         # Finally, return the OCRed text.
         return text
+
+    def get_rect_HSV_value(
+        self,
+        img: Image,
+        lower_threshold: Tuple[int, int, int],
+        upper_threshold: Tuple[int, int, int],
+        is_HSV: bool = False
+    ) -> float:
+        """Threshold an image and return the average value afterwards."""
+        if not is_HSV:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        img_thresholded = cv2.inRange(img, lower_threshold, upper_threshold)
+
+        return img_thresholded.mean()
 
     def check_rect_HSV_match(
         self,
@@ -254,8 +270,8 @@ class SwitchController:
         h, w = img.shape[:2]
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
                            round(rect[0][0] * w):round(rect[1][0] * w)]
-        measured_value = cv2.inRange(
-            cropped_area, lower_threshold, upper_threshold).mean()
+        measured_value = self.get_rect_HSV_value(
+            cropped_area, lower_threshold, upper_threshold)
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
@@ -279,7 +295,7 @@ class SwitchController:
         self,
         char: Optional[str],
         delay: float,  # Seconds
-        hold_time: float = 0.08  # Seconds
+        hold_ticks: int = 1  # Ticks @ 12.5 tick/s
     ) -> None:
         """Send a message to the microcontroller telling it to press buttons on
         the Switch.
@@ -303,7 +319,7 @@ class SwitchController:
         # Send the command to the microcontroller using the serial port.
         if char is not None:
             self.com.write(char)
-            hold_ticks = bytes([round(hold_time * 12.5)])
+            hold_ticks = bytes([round(hold_ticks)])
             self.com.write(hold_ticks)
             char_echo = self.com.read()
             hold_echo = self.com.read()
@@ -372,20 +388,30 @@ class SwitchController:
 
         if log or screenshot:
             # Save a screenshot
-            self.log(f"Saving a screenshot to logs/{self.log_name}_cap_{self.num_saved_images}.png", "DEBUG")
-            self.num_saved_images += 1
-            cv2.imwrite(
-                f'logs/{self.log_name}_cap_{self.num_saved_images}.png', frame)
+            self.save_screenshot(frame)
         else:
             # if it's not a screenshot, we'll display the frame
             # Display
             cv2.imshow(self.window_name, frame)
 
+    def save_screenshot(
+        self,
+        img: Image,
+        title: str = 'cap'
+    ) -> None:
+        """Save a screenshot in the logs folder."""
+        self.num_saved_images += 1
+        filename = os.path.join(
+            'logs', f'{self.log_name}_{title}_{self.num_saved_images}.png')
+        self.log(
+            f'Saving a screenshot to {filename}', 'DEBUG')
+        cv2.imwrite(filename, img)
+
     def send_discord_message(
         self, ping_yourself: bool, text: str, path_to_picture: str = None,
         embed_fields: dict = None, level: str = "update") -> None:
         """Send a notification via Discord.
-        
+
         Parameters
         ----------
         ping_yourself : bool
@@ -432,10 +458,10 @@ class SwitchController:
 
         # then build up our embed object
         embed = discord.Embed(
-            title="AutoMaxLair Update", 
+            title="AutoMaxLair Update",
             colour=self.discord_embed_color,
             timestamp=datetime.utcnow()
-            )
+        )
 
         embed.set_thumbnail(url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png")
         embed.set_footer(text="AutoMaxLair")
@@ -456,7 +482,7 @@ class SwitchController:
             embed.set_image(url="attachment://image.png")
         else:
             my_file = None
-        
+
         # Open the image to be sent.
         try:
             webhook.send(send_str, embed=embed, file=my_file)

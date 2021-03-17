@@ -1,0 +1,39 @@
+name: .NET Core
+
+on: [push, pull_request, workflow_dispatch]
+
+defaults:
+  run:
+    working-directory: AutoMaxLairUI - Code
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1
+    - name: Install dependencies
+      run: dotnet restore "AutoMaxLairUI - Code.sln"
+    - name: Build
+      run: |
+        dotnet build "AutoMaxLairUI - Code.sln" --configuration Debug --no-restore
+        dotnet build "AutoMaxLairUI - Code.sln" --configuration Release --no-restore
+    - name: Publish
+      run: dotnet publish "AutoMaxLairUI - Code.sln" --configuration Release --no-restore -p:DebugType=None -p:DebugSymbols=false
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Auto Max Lair UI
+        path: AutoMaxLairUI - Code/bin/Release/netcoreapp3.1/win-x64/publish/AutoMaxLair.exe
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: AutoMaxLairUI - Code/bin/Release/netcoreapp3.1/win-x64/publish/AutoMaxLair.exe
+        asset_name: Auto Max Lair UI
+        tag: ${{ github.ref }}

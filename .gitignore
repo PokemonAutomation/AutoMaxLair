@@ -6,3 +6,10 @@ logs/*
 itemsList.txt
 data/type_icons
 scripts/*.png
+AutoMaxLairUI - Code/bin/*
+AutoMaxLairUI - Code/obj/*
+AutoMaxLairUI - Code/AutoMaxLair.csproj.user
+AutoMaxLairUI - Code/.vs
+AutoMaxLairUI - Code/Properties/launchSettings.json
+AutoMaxLairUI - Code/Properties/PublishProfiles
+AutoMaxLair.exe

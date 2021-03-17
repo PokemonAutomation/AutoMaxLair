@@ -3,14 +3,15 @@ Inherits basic methods from SwitchController and adds others for navigating the
 den.
 """
 
-#   MaxLairInstance
 #       Eric Donders
-#       Contributions from Miguel Tavera and Discord users denvoros and pifopi
+#       Contributions from denvoros, pifopi, and Miguel Tavera
 #       Last updated 2021-01-08
 #       Created 2020-11-20
 
 import re
+import os
 import pickle
+import jsonpickle
 
 from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
@@ -53,6 +54,7 @@ class DAController(SwitchController):
         self.legendary_balls = config['LEGENDARY_BALLS']
         self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
+        self.maximum_ore_cost = int(config['advanced']['MAXIMUM_ORE_COST'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
             config['pokemon_data_paths']['Rental_Pokemon'],
@@ -64,25 +66,6 @@ class DAController(SwitchController):
 
         self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        # only need to run this assertion if we're checking the attack stat
-        if self.check_attack_stat:
-            assert 'positive' in self.expected_attack_stats.keys(), "No positive value found in expected attack stats"
-            assert 'negative' in self.expected_attack_stats.keys(), "No negative value found in expected attack stats"
-            assert 'neutral' in self.expected_attack_stats.keys(), "No neutral value found in expected attack stats"
-            assert type(self.expected_attack_stats['positive']) is list, "You must provide multiple values for positive attack stats"
-            assert type(self.expected_attack_stats['negative']) is list, "You must provide multiple values for negative attack stats"
-            assert type(self.expected_attack_stats['neutral']) is list, "You must provide multiple values for neutral attack stats"
-
-        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
-        self.expected_speed_stats = config['stats']['SPEED_STATS']
-        # only need to run this assertion if we're checking the speed stat
-        if self.check_speed_stat:
-            assert 'positive' in self.expected_speed_stats.keys(), "No positive value found in expected speed stats"
-            assert 'negative' in self.expected_speed_stats.keys(), "No negative value found in expected speed stats"
-            assert 'neutral' in self.expected_speed_stats.keys(), "No neutral value found in expected speed stats"
-            assert type(self.expected_speed_stats['positive']) is list, "You must provide multiple values for positive speed stats"
-            assert type(self.expected_speed_stats['negative']) is list, "You must provide multiple values for negative speed stats"
-            assert type(self.expected_speed_stats['neutral']) is list, "You must provide multiple values for neutral speed stats"
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -105,13 +88,20 @@ class DAController(SwitchController):
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        self.menu_rect_1 = ((0.84, 0.685), (0.91, 0.695))
-        self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
-        self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
-        self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
+        self.catch_dialogue_rect_1 = ((0.82, 0.85), (0.98, 0.88))
+        self.catch_dialogue_rect_2 = ((0.82, 0.93), (0.98, 0.96))
+        self.battle_symbol_rect = ((0.9, 0.65), (0.99, 0.77))
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
+        self.team_poke_rect_1 = ((0.012, 0.375), (0.05, 0.44))
+        self.team_poke_rect_2 = ((0.012, 0.545), (0.05, 0.6))
+        self.team_poke_rect_3 = ((0.012, 0.702), (0.05, 0.77))
+        self.team_poke_rect_4 = ((0.012, 0.865), (0.05, 0.93))
+        self.team_HP_rect_1 = ((0.073, 0.433), (0.127, 0.439))
+        self.team_HP_rect_2 = ((0.073, 0.594), (0.118, 0.6))
+        self.team_HP_rect_3 = ((0.073, 0.761), (0.118, 0.767))
+        self.team_HP_rect_4 = ((0.073, 0.924), (0.118, 0.928))
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
         self.paths_2_1_rect = ((0.2, 0), (0.4, 1))
         self.paths_2_2_rect = ((0.6, 0), (0.8, 1))
@@ -129,6 +119,11 @@ class DAController(SwitchController):
         self.moves_rect_2 = ((0.71, 0.41), (0.91, 0.64))
         self.moves_rect_3 = ((0.71, 0.67), (0.91, 0.90))
         self.moves_rect_4 = ((0.71, 0.46), (0.91, 0.69))
+        # Team Pokemon HP rectangles (post battle).
+        self.team_HP_rect_5 = ((0.225, 0.34), (0.34, 0.348))
+        self.team_HP_rect_6 = ((0.225, 0.427), (0.34, 0.435))
+        self.team_HP_rect_7 = ((0.225, 0.518), (0.34, 0.525))
+        self.team_HP_rect_8 = ((0.225, 0.606), (0.34, 0.614))
         # Poke ball rectangles.
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
@@ -149,20 +144,75 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['type_icon_path'], 'rb'
         ) as image_file:
             self.type_icons = pickle.load(image_file)
+        with open(
+            self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
+        ) as image_file:
+            self.pokemon_sprites = pickle.load(image_file)
+        self.misc_icons = {}
+        directory = self.config['pokemon_data_paths']['misc_icon_dir']
+        for filename in os.listdir(directory):
+            if '.png' in filename:
+                self.misc_icons[filename.split('.png')[0]] = cv2.imread(
+                    os.path.join(directory, filename)
+                )
+        with open(config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8') as file:
+            self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
-        if self.mode not in (
+        assert self.boss in self.current_run.boss_pokemon, (
+            f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
+        )
+        assert self.balls[self.base_ball], 'Unknown base ball id'
+        assert self.balls[self.legendary_ball], 'Unknown legendary ball id'
+        if self.base_ball == self.legendary_ball:
+            assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
+            assert self.base_balls >= 4, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
+        else:
+            assert self.base_balls >= 3, 'Not enough base balls.'
+            assert self.base_balls <= 999, 'Too many base balls.'
+            assert self.legendary_balls >= 1, 'Not enough legendary balls.'
+            assert self.legendary_balls <= 999, 'Too many legendary balls.'
+        assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
-        ):
-            self.log(
-                f'Supplied mode {self.mode} not understood; '
-                'using default mode.', 'WARNING'
-            )
-        if self.boss not in self.current_run.boss_pokemon:
-            raise KeyError(
-                f'Incorrect value: {config["BOSS"]} for BOSS '
-                'supplied in Config.ini'
-            )
+        ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
+        assert self.discord_level in ['all', 'only_shiny', 'none'], 'Invalid discord level'
+        # Do not assert for negative dynite ore. That way it can be used to farm ore.
+        assert self.dynite_ore <= 999, 'Too much dynite ore'
+        assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
+        assert self.maximum_ore_cost >= 0, 'Maximum ore cost cannot be negative'
+        assert self.maximum_ore_cost <= 10, 'Maximum ore cost cannot be greater than 10'
+        # Only need to run this assertion if we're checking the attack stat.
+        if self.check_attack_stat:
+            assert 'positive' in self.expected_attack_stats.keys(), (
+                "No positive value found in expected attack stats")
+            assert 'negative' in self.expected_attack_stats.keys(), (
+                "No negative value found in expected attack stats")
+            assert 'neutral' in self.expected_attack_stats.keys(), (
+                "No neutral value found in expected attack stats")
+            assert type(self.expected_attack_stats['positive']) is list, (
+                "You must provide multiple values for positive attack stats")
+            assert type(self.expected_attack_stats['negative']) is list, (
+                "You must provide multiple values for negative attack stats")
+            assert type(self.expected_attack_stats['neutral']) is list, (
+                "You must provide multiple values for neutral attack stats")
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
+        self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # Only need to run this assertion if we're checking the speed stat.
+        if self.check_speed_stat:
+            assert 'positive' in self.expected_speed_stats.keys(), (
+                "No positive value found in expected speed stats")
+            assert 'negative' in self.expected_speed_stats.keys(), (
+                "No negative value found in expected speed stats")
+            assert 'neutral' in self.expected_speed_stats.keys(), (
+                "No neutral value found in expected speed stats")
+            assert type(self.expected_speed_stats['positive']) is list, (
+                "You must provide multiple values for positive speed stats")
+            assert type(self.expected_speed_stats['negative']) is list, (
+                "You must provide multiple values for negative speed stats")
+            assert type(self.expected_speed_stats['neutral']) is list, (
+                "You must provide multiple values for neutral speed stats")
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
@@ -203,19 +253,32 @@ class DAController(SwitchController):
             self.outline_regions(
                 img, (self.moves_rect_1, self.moves_rect_2, self.moves_rect_3),
                 (255, 255, 0))
+            self.outline_regions(img, (
+                self.team_HP_rect_1, self.team_HP_rect_2,
+                self.team_HP_rect_3, self.team_HP_rect_4,
+                self.team_poke_rect_1, self.team_poke_rect_2,
+                self.team_poke_rect_3, self.team_poke_rect_4
+            ), (0, 0, 255))
         elif rectangle_set == 'catch':
             self.outline_region(img, self.sel_rect_4, (0, 255, 0))
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
                 img, (self.ball_rect, self.ball_num_rect), (0, 0, 255))
+            self.outline_regions(
+                img, (
+                    self.team_HP_rect_5, self.team_HP_rect_6,
+                    self.team_HP_rect_7, self.team_HP_rect_8
+                ), (0, 255, 0)
+            )
         elif rectangle_set == 'battle':
             self.outline_region(img, self.sel_rect_5, (0, 255, 0))
             self.outline_regions(
                 img, (
-                    self.type_rect_1, self.type_rect_2, self.menu_rect_1,
-                    self.menu_rect_2, self.menu_rect_3, self.menu_rect_4,
-                    self.dmax_symbol_rect, self.battle_text_rect
+                    self.type_rect_1, self.type_rect_2,
+                    self.catch_dialogue_rect_1, self.catch_dialogue_rect_2,
+                    self.dmax_symbol_rect, self.battle_text_rect,
+                    self.battle_symbol_rect
                 ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
@@ -266,7 +329,7 @@ class DAController(SwitchController):
 
         # Check every type image for a match within the image
         # TODO: try to look at the shadow of the Pokemon for more hints
-        best_match_value = 0
+        best_match_value = -1
         for type_id in (
             'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting',
             'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
@@ -280,6 +343,102 @@ class DAController(SwitchController):
                 match_result = (type_id, result)
 
         return match_result
+
+    def identify_team_pokemon(self) -> None:
+        """Read the Pokemon held by all team members from the sprites that are
+        shown in the den.
+        """
+
+        # First, grab the image so we can read it.
+        img = self.get_frame()
+
+        # Then, collect a list of the 4 Pokemon (with yours first).
+        self.current_run.team_pokemon = []
+        HP_values = self.measure_team_HP()
+        for i, rectangle in enumerate((
+            self.team_poke_rect_1, self.team_poke_rect_2,
+            self.team_poke_rect_3, self.team_poke_rect_4
+        )):
+            # Initialize default values
+            # Note that an initial match_value of -1 guarantees at least one
+            # match, even if it's poor quality.
+            match_value = -1
+            match_name_id = ''
+            match_value_2nd = -1
+            match_name_id_2nd = ''
+            # Match the sprite on the screen against all the stored rental
+            # Pokemon sprites.
+            read_image = self.get_image_slice(img, rectangle)
+            for name_id, sprite in self.pokemon_sprites:
+                # Check match value against stored Pokemon sprites
+                value, __ = self.match_template(sprite, read_image)
+                if value > match_value:
+                    match_value_2nd = match_value
+                    match_name_id_2nd = match_name_id
+                    match_value = value
+                    match_name_id = name_id
+
+            # Record the match for the team member
+            pokemon = self.current_run.rental_pokemon[match_name_id]
+            pokemon.HP = HP_values[i]
+
+            # Mark the Pokemon as "encountered" so we know it won't appear
+            # later in the den.
+            self.current_run.all_encountered_pokemon.add(pokemon.name_id)
+
+            # Update the storage with the read Pokemon.
+            if i == 0:
+                if self.current_run.pokemon not in (None, pokemon):
+                    self.log(
+                        "The bot's Pokemon detected from the sprite, "
+                        f"{pokemon.name}, did not match with the previously "
+                        f"known value of {self.current_run.pokemon.name}.",
+                        'WARNING'
+                    )
+                self.current_run.pokemon = pokemon
+            else:
+                self.current_run.team_pokemon.append(pokemon)
+            self.log(
+                f'Identified team member {i+1} as {match_name_id} with match '
+                f'score of {match_value:.3f} and HP of '
+                f'{round(pokemon.HP * 100)}%.', 'DEBUG')
+            if match_value < 0.75:
+                self.log(
+                    f'Could not find a great match for team member {i+1}. The '
+                    f'next best match was {match_name_id_2nd} with match value'
+                    f' of {match_value_2nd:.3f}.', 'WARNING'
+                )
+
+    def measure_team_HP(self, img: Image = None) -> List[float]:
+        """Read HP bars on the screen and return a list of the 4 fractional HP
+        values (from 0 to 1).
+        """
+
+        # Fetch an image if it hasn't been passed in.
+        if img is None:
+            img = self.get_frame()
+        # Choose areas to measure the HP bars that are appropriate for the
+        # current stage.
+        if self.stage == 'catch':
+            HP_rects = (
+                self.team_HP_rect_5, self.team_HP_rect_6, self.team_HP_rect_7,
+                self.team_HP_rect_8
+            )
+        else:
+            if self.stage not in ('join', 'detect', 'scientist', 'path'):
+                self.log(
+                    'HP read at potentially inappropriate stage of '
+                    f'"{self.stage}"".', 'WARNING')
+            HP_rects = (
+                self.team_HP_rect_1, self.team_HP_rect_2, self.team_HP_rect_3,
+                self.team_HP_rect_4
+            )
+        # Read the HP bar values
+        return [
+            self.get_rect_HSV_value(
+                self.get_image_slice(img, rect), (0, 50, 0), (180, 255, 255)
+            ) / 255 for rect in HP_rects
+        ]
 
     def identify_pokemon(
         self,
@@ -328,6 +487,10 @@ class DAController(SwitchController):
                 match_value = distance
                 best_match = pokemon
                 matched_text = string_to_match
+
+        # Mark the Pokemon as "encountered" so we know it won't appear later in
+        # the den.
+        self.current_run.all_encountered_pokemon.add(best_match.name_id)
 
         # Raise a warning if the OCRed text didn't closely match any stored
         # value.
@@ -446,7 +609,10 @@ class DAController(SwitchController):
         img = self.get_frame()
 
         # First, check if a battle started.
-        if self.check_black_screen(img):
+        if self.check_black_screen(img) or self.match_template(
+            self.get_image_slice(img, self.battle_symbol_rect),
+            self.misc_icons['fight']
+        )[0] >= 0.85:
             return 'battle'
         # Otherwise, check for other text.
         if self.check_rect_HSV_match(
@@ -476,22 +642,26 @@ class DAController(SwitchController):
         if self.check_black_screen(img):
             return 'LOSS'
         # Then, check for the presence of the Fight or Cheer menu.
-        if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img_hsv, already_HSV=True
-        ):
-            if self.check_rect_HSV_match(
-                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img_hsv, already_HSV=True
-            ):
-                return 'FIGHT'
-            elif self.check_rect_HSV_match(
-                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img_hsv, already_HSV=True
-            ):
-                return 'CHEER'
+        fight_menu_image = self.get_image_slice(img, self.battle_symbol_rect)
+        fight_match = self.match_template(
+            fight_menu_image, self.misc_icons['fight'])[0]
+        if fight_match >= 0.85:
+            self.log(
+                'Detected "Fight" symbol with match value of '
+                f'{fight_match:.3f}.', 'DEBUG')
+            return 'FIGHT'
+        cheer_match = self.match_template(
+            fight_menu_image, self.misc_icons['cheer'])[0]
+        if cheer_match >= 0.85:
+            self.log(
+                'Detected "Cheer" symbol with match value of '
+                f'{cheer_match:.3f}.', 'DEBUG')
+            return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img_hsv, already_HSV=True
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img_hsv, already_HSV=True
         ) and self.check_rect_HSV_match(
-            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img_hsv, already_HSV=True
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img_hsv, already_HSV=True
         ):
             return 'CATCH'
         # Finally, check for other text.
@@ -553,26 +723,30 @@ class DAController(SwitchController):
                 self.get_frame(), self.attack_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for nature_type, expected_attacks in self.expected_attack_stats.items():
-                nature_plus_expected = False if nature_type != 'positive' else True
-                nature_minus_expected = False if nature_type != 'negative' else True
-                
+            for nature_type, expected_attacks in (
+                self.expected_attack_stats.items()
+            ):
+                nature_plus_expected = nature_type == 'positive'
+                nature_minus_expected = nature_type == 'negative'
+
                 # then iterate through the stats
                 for expected_attack in expected_attacks:
                     expected_attack = str(expected_attack)
-                
+
                     if expected_attack in read_attack:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.attack_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10)) or (
-                                nature_plus_expected and self.check_rect_HSV_match(
-                                    self.attack_label_rect, (150, 30, 0),
-                                    (180, 255, 255), 10)
-                            )
-                            or (
-                                not nature_minus_expected
-                                and not nature_plus_expected)
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_attack_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.attack_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_attack_matching = True
+                        elif (
+                            not nature_minus_expected
+                            and not nature_plus_expected
                         ):
                             is_attack_matching = True
 
@@ -591,23 +765,29 @@ class DAController(SwitchController):
                 self.get_frame(), self.speed_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for nature_type, expected_speeds in self.expected_speed_stats.items():
-                nature_plus_expected = False if nature_type != 'positive' else True
-                nature_minus_expected = False if nature_type != 'negative' else True
-            
+            for nature_type, expected_speeds in (
+                self.expected_speed_stats.items()
+            ):
+                nature_plus_expected = nature_type == 'positive'
+                nature_minus_expected = nature_type == 'negative'
+
+                # then iterate through the stats
                 for expected_speed in expected_speeds:
                     expected_speed = str(expected_speed)
                     if expected_speed in read_speed:
-                        if (
-                            (nature_minus_expected and self.check_rect_HSV_match(
+                        if (self.check_rect_HSV_match(
                                 self.speed_label_rect, (80, 30, 0),
-                                (110, 255, 255), 10))
-                            or (nature_plus_expected and self.check_rect_HSV_match(
-                            self.speed_label_rect, (150, 30, 0),
-                            (180, 255, 255), 10))
-                            or (
+                                (110, 255, 255), 10)):
+                            if nature_minus_expected:
+                                is_speed_matching = True
+                        elif (self.check_rect_HSV_match(
+                                self.speed_label_rect, (150, 30, 0),
+                                (180, 255, 255), 10)):
+                            if nature_plus_expected:
+                                is_speed_matching = True
+                        elif (
                             not nature_minus_expected
-                            and not nature_plus_expected)
+                            and not nature_plus_expected
                         ):
                             is_speed_matching = True
 
@@ -639,13 +819,22 @@ class DAController(SwitchController):
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
-        return (
-            self.base_ball if self.current_run.num_caught < 3
-            else self.legendary_ball)
+        if self.current_run.num_caught < 3:
+            ball_id = self.base_ball
+        else:
+            ball_id = self.legendary_ball
+
+        ball_name = self.balls[ball_id].names[self.lang]
+        ball_name.replace('ball', '')  # de
+        ball_name.replace(' Ball', '')  # en / es  / fr / it
+        ball_name.replace('ボール', '')  # ja / ja-Hrkt
+        ball_name.replace('볼', '')   # ko
+        ball_name.replace('球', '')   # zh-Hans / zh-Hant
+        return ball_name
 
     def check_ball(self) -> str:
-        """Detect the currently selected Poke Ball during the catch phase of the
-        game.
+        """Detect the currently selected Poke Ball during the catch phase of
+        the game.
         """
 
         return self.read_text(
@@ -690,12 +879,18 @@ class DAController(SwitchController):
         without saving.
         """
 
-        # If the ore cost of resetting is zero, resett regardless of the ore
+        # If the ore cost of resetting is zero, reset regardless of the ore
         # count.
         if self.calculate_ore_cost(
             self.consecutive_resets + additionnal_reset_count
         ) == 0:
             return True
+        # If the ore cost of resetting is above a threshold, reset
+        # regardless of the ore count.
+        elif self.calculate_ore_cost(
+            self.consecutive_resets + 1
+        ) > self.maximum_ore_cost:
+            return False
         # Otherwise, calculate whether the ore amount would still be positive
         # after resetting.
         ore_after_resets = self.dynite_ore
@@ -752,6 +947,7 @@ class DAController(SwitchController):
             'Opponent': self.current_run.opponent,
             'Win percentage': win_percent,
             'Time per run': time_per_run,
+            'Consecutive resets': self.consecutive_resets,
             'Shinies found': self.shinies_found
         }.items():
             self.info[key] = value
@@ -764,18 +960,22 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
-        
+
     def get_stats_for_discord(self) -> dict:
-        """This method takes information from the run and returns a nice dictionary
-        for embedding to Discord
-        
-        increment_one is only for a win with a shiny, so that we can get the nice
-        status screen with the screenshot.
+        """This method takes information from the run and returns a nice
+        dictionary for embedding to Discord
+
+        increment_one is only for a win with a shiny, so that we can get the
+        nice status screen with the screenshot.
         """
+
+        wins_updated = (
+            self.wins + 1 if self.current_run.lives != 0 else self.wins)
+        runs_updated = self.runs + 1
 
         the_dict = {
             "Boss": self.boss,
-            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Wins/Runs": f"{wins_updated}/{runs_updated}",
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
@@ -783,5 +983,5 @@ class DAController(SwitchController):
 
         if self.shinies_found > 0:
             the_dict["Shinies Found"] = self.shinies_found
-        
+
         return the_dict

@@ -5,8 +5,9 @@
 #   2020-11-27
 
 import copy
-from typing import Dict, List, Tuple
-from automaxlair.pokemon_classes import Pokemon
+from typing import List, Tuple, Iterable
+from automaxlair.pokemon_classes import Pokemon, Move
+from automaxlair.field import Field
 
 
 def type_damage_multiplier_single(type1: str, type2: str) -> float:
@@ -44,6 +45,108 @@ def type_damage_multiplier(move_type: str, defender_types: List[str]) -> float:
     for defender_type in defender_types:
         factor *= type_damage_multiplier_single(move_type, defender_type)
     return factor
+
+
+def weather_damage_multiplier(
+    attacker: Pokemon, move: Move, defender: Pokemon, field: Field
+) -> float:
+    modifier = 1
+    if field.is_weather_sunlight():
+        if move.name_id == 'solar-beam':
+            modifier *= 2
+        elif move.name_id == 'thunder' or move.name_id == 'hurricane':
+            modifier *= (0.5 / 0.7)
+        elif move.name_id == 'weather-ball':
+            move.type_id = 'fire'
+            modifier *= 2
+
+        if move.type_id == 'fire':
+            modifier *= 1.5
+        elif move.type_id == 'water':
+            modifier *= 0.5
+    elif field.is_weather_rain():
+        if move.name_id == 'solar-beam':
+            modifier *= 0.5
+        elif move.name_id == 'thunder' or move.name_id == 'hurricane':
+            modifier *= (1.0 / 0.7)
+        elif move.name_id == 'weather-ball':
+            move.type_id = 'water'
+            modifier *= 2
+
+        if move.type_id == 'water':
+            modifier *= 1.5
+        elif move.type_id == 'fire':
+            modifier *= 0.5
+
+    elif field.is_weather_hail():
+        if move.name_id == 'solar-beam':
+            modifier *= 0.5
+        elif move.name_id == 'blizzard':
+            modifier *= (1.0 / 0.7)
+        elif move.name_id == 'weather-ball':
+            move.type_id = 'ice'
+            modifier *= 2
+    elif field.is_weather_sandstorm():
+        if move.name_id == 'solar-beam':
+            modifier *= 0.5
+        elif move.name_id == 'weather-ball':
+            move.type_id = 'rock'
+            modifier *= 2
+    else:
+        if move.name_id == 'weather-ball':
+            move.type_id = 'normal'
+
+    return modifier
+
+
+def terrain_damage_multiplier(
+    attacker: Pokemon, move: Move, defender: Pokemon, field: Field
+) -> float:
+    modifier = 1.0
+
+    if 'flying' not in attacker.type_ids or (
+        'levitate' != attacker.ability_name_id
+    ):
+        if field.is_terrain_electric():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'electric'
+                modifier *= 1.5
+
+            if move.type_id == 'electric':
+                modifier *= 1.3
+        elif field.is_terrain_grassy():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'grass'
+                modifier *= 1.5
+
+            if move.type_id == 'grass':
+                modifier *= 1.3
+        elif field.is_terrain_psychic():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'psychic'
+                modifier *= 1.5
+            elif move.name_id == 'expanding-force':
+                modifier *= 1.5
+
+            if move.type_id == 'psychic':
+                modifier *= 1.3
+
+        elif field.is_terrain_misty():
+            if move.name_id == 'terrain-pulse':
+                move.type_id = 'fairy'
+                modifier *= 1.5
+
+            if move.type_id == 'dragon':
+                modifier *= 0.5
+
+    if 'flying' not in defender.type_ids or (
+        'levitate' != defender.ability_name_id
+    ):
+        if field.is_terrain_electric():
+            if move.name_id == 'rising-voltage':
+                modifier *= 2
+
+    return modifier
 
 
 def ability_damage_multiplier(
@@ -113,7 +216,7 @@ def ability_damage_multiplier(
 
 
 def calculate_damage(
-    attacker: Pokemon, move_index: int, defender: Pokemon,
+    attacker: Pokemon, move_index: int, defender: Pokemon, field: Field,
     multiple_targets: bool = False
 ) -> float:
     """Return the damage (default %) of a move used by the attacker against the
@@ -129,8 +232,12 @@ def calculate_damage(
     modifier *= move.accuracy
     if multiple_targets and move.is_spread:
         modifier *= 0.75
-    # Ignore weather for now
     # Ignore crits
+
+    # It needs to be before STAB
+    modifier *= weather_damage_multiplier(attacker, move, defender, field)
+
+    modifier *= terrain_damage_multiplier(attacker, move, defender, field)
 
     # It needs to be before STAB
     if move.type_id == 'normal':
@@ -138,13 +245,13 @@ def calculate_damage(
             move.type_id = 'ice'
             modifier *= 1.2
         elif attacker.ability_name_id == 'aerilate':
-            move.type_id = 'fly'
+            move.type_id = 'flying'
             modifier *= 1.2
         elif attacker.ability_name_id == 'galvanize':
-            move.type_id = 'fly'
+            move.type_id = 'electric'
             modifier *= 1.2
-        elif attacker.ability_name_id == 'aerilate':
-            move.type_id = 'fly'
+        elif attacker.ability_name_id == 'pixilate':
+            move.type_id = 'fairy'
             modifier *= 1.2
     else:
         if attacker.ability_name_id == 'normalize':
@@ -173,6 +280,7 @@ def calculate_damage(
         or defender.ability_name_id == 'dark-aura'
     ):
         modifier *= 1.33
+
     # Apply attacker and defender stats
     if move.category == 'physical':
         if move.name_id == 'body-press':
@@ -186,6 +294,8 @@ def calculate_damage(
         numerator = attacker.stats[3]
         if move.name_id not in ('psystrike', 'psyshock'):
             denominator = defender.stats[4]
+            if field.is_weather_sandstorm() and 'rock' in defender.type_ids:
+                denominator *= 1.5
         else:
             denominator = defender.stats[2]
 
@@ -195,27 +305,28 @@ def calculate_damage(
 
 
 def calculate_average_damage(
-    attackers: Dict[str, Pokemon], defenders: Dict[str, Pokemon],
-    multiple_targets: bool = False
+    attackers: Iterable[Pokemon], defenders: Iterable[Pokemon],
+    field: Field, multiple_targets: bool = False
 ) -> float:
     """Return the average damage output of a range of attackers against a
     single defender.
     """
+
+    attackers = list(attackers)
+    defenders = list(defenders)
 
     if len(attackers) == 0 or len(defenders) == 0:
         return 0
     else:
         total_damage = 0.0
         count = 0
-        for key in attackers:
-            attacker = attackers[key]
-            for key2 in defenders:
-                defender = defenders[key2]
+        for attacker in attackers:
+            for defender in defenders:
                 subtotal_damage = 0.0
                 subcount = 0
                 for i in range(len(attacker.moves)):
                     subtotal_damage += calculate_damage(
-                        attacker, i, defender, multiple_targets)
+                        attacker, i, defender, field, multiple_targets)
                     subcount += 1
                 total_damage += subtotal_damage / subcount
                 count += 1
@@ -225,21 +336,31 @@ def calculate_average_damage(
 
 def calculate_move_score(
     attacker: Pokemon, move_index: int, defender: Pokemon,
-    teammates: Dict[str, Pokemon], team_contribution: float = None
+    teammates: Iterable[Pokemon], field: Field
 ) -> float:
     """Return a numerical score of an attacker's move against a defender."""
+
+    teammates = list(teammates)
+
     # Calculate contribution of the move itself (assume Dynamaxed boss)
-    dealt_damage = calculate_damage(attacker, move_index, defender, False) / 2
+    dealt_damage = calculate_damage(
+        attacker, move_index, defender, field, False) / 2
 
     # Estimate contributions by teammates (assume Dynamaxed boss).
     # Don't count the attacker or defender as teammates.
-    popped_attacker = teammates.pop(attacker.name_id, None)
-    popped_defender = teammates.pop(defender.name_id, None)
+    try:
+        teammates.remove(attacker)
+    except ValueError:
+        pass
+    try:
+        teammates.remove(defender)
+    except ValueError:
+        pass
     # The average damage of teammates is likely undercounted as some status
     # moves are helpful and the AI chooses better than random moves.
     fudge_factor = 1.5
     dealt_damage += 3 * calculate_average_damage(
-        teammates, {defender.name_id: defender}) / 2 * fudge_factor
+        teammates, [defender], field) / 2 * fudge_factor
 
     # Estimate contributions from status moves.
     #   TODO: implement status moves besides Wide Guard.
@@ -260,10 +381,10 @@ def calculate_move_score(
                 or attacker.dynamax
             ):
                 received_regular_damage += calculate_damage(
-                    defender, i, attacker, multiple_targets=True
+                    defender, i, attacker, field, multiple_targets=True
                 ) / num_moves
                 received_regular_damage += 3 * calculate_average_damage(
-                    {defender.name_id: defender}, teammates,
+                    [defender], teammates, field,
                     multiple_targets=True
                 ) / num_moves
             else:
@@ -271,12 +392,11 @@ def calculate_move_score(
                 pass
         else:
             received_regular_damage += (
-                0.25 * calculate_damage(defender, i, attacker)
+                0.25 * calculate_damage(defender, i, attacker, field)
                 / (2 if attacker.dynamax else 1)
             ) / num_moves
             received_regular_damage += (
-                0.75 * calculate_average_damage({defender.name_id: defender},
-                                                teammates)
+                0.75 * calculate_average_damage([defender], teammates, field)
             ) / num_moves
     # Calculate damage from Max Moves.
     # Note that bosses never seem to use Max Guard. It is assumed that the move
@@ -286,12 +406,11 @@ def calculate_move_score(
     num_max_moves = min(4, len(defender.max_moves))
     for i in range(num_max_moves):
         received_max_move_damage += (
-            0.25 * calculate_damage(defender, i, attacker)
+            0.25 * calculate_damage(defender, i, attacker, field)
             / (2 if attacker.dynamax else 1)
         ) / num_max_moves
         received_max_move_damage += (
-            0.75 * calculate_average_damage({defender.name_id: defender},
-                                            teammates)
+            0.75 * calculate_average_damage([defender], teammates, field)
         ) / num_max_moves
     # Return the defender to its original dynamax state.
     defender.dynamax = original_dynamax_state
@@ -303,12 +422,6 @@ def calculate_move_score(
         + received_max_move_damage * max_move_probability
     )
 
-    # Re-add Pokemon temporaily removed from the dictionaries.
-    if popped_attacker is not None:
-        teammates[popped_attacker.name_id] = popped_attacker
-    if popped_defender is not None:
-        teammates[popped_defender.name_id] = popped_defender
-
     # Return the score
     try:
         return dealt_damage / received_damage
@@ -319,31 +432,59 @@ def calculate_move_score(
 
 
 def evaluate_matchup(
-    attacker: Pokemon, boss: Pokemon, teammates: Dict[str, Pokemon] = {}
+    attacker: Pokemon, boss: Pokemon, teammates: Iterable[Pokemon] = [],
+    num_lives: int = 1
 ) -> float:
     """Return a matchup score between an attacker and defender, with the
     attacker using optimal moves and the defender using average moves.
     """
+
+    # Transform Ditto (Dynamax Adventure Ditto has Imposter).
     if attacker.name_id == 'ditto':
         attacker = transform_ditto(attacker, boss)
     elif boss.name_id == 'ditto':
         boss = transform_ditto(boss, attacker)
+
+    # Calculate scores for base and Dynamaxed versions of the attacker.
     base_version = copy.copy(attacker)
     base_version.dynamax = False
     dmax_version = copy.copy(attacker)
     dmax_version.dynamax = True
-
-    base_version_score = select_best_move(base_version, boss, teammates)[2]
-    dmax_version_score = select_best_move(dmax_version, boss, teammates)[2]
+    base_version_score = select_best_move(
+        base_version, boss, Field(), teammates)[2]
+    dmax_version_score = select_best_move(
+        dmax_version, boss, Field(), teammates)[2]
     score = max(
         base_version_score, (base_version_score + dmax_version_score) / 2)
 
-    return score
+    # Adjust the score depending on the Pokemon's HP. If there are multiple
+    # lives left, fainting is less important.
+    assert 1 <= num_lives <= 4, 'num_lives should be between 1 and 4.'
+    HP_correction = ((5 - num_lives) * attacker.HP + num_lives - 1) / 4
+
+    return score * HP_correction
 
 
-def select_best_move(attacker: Pokemon, defender: Pokemon,
-                     teammates: Dict[str, Pokemon] = {}
-                     ) -> Tuple[int, str, float]:
+def evaluate_average_matchup(
+    attacker: Pokemon, bosses: Iterable[Pokemon],
+    teammates: Iterable[Pokemon] = [], num_lives: int = 1
+) -> float:
+    """Return an average matchup score between an attacker and multiple
+    defenders. Wrapper for the evaluate_matchup function which scores a single
+    matchup.
+    """
+
+    total_score = 0
+    for boss in bosses:
+        total_score += evaluate_matchup(attacker, boss, teammates, num_lives)
+
+    return 1 if len(bosses) == 0 else total_score / len(bosses)
+
+
+def select_best_move(
+    attacker: Pokemon, defender: Pokemon, field: Field,
+    teammates: Iterable[Pokemon] = []
+) -> Tuple[int, str, float]:
     """Return the index of the move that the attacker should use against the
     defender.
     """
@@ -354,7 +495,7 @@ def select_best_move(attacker: Pokemon, defender: Pokemon,
     for i in range(len(attacker.moves)):
         if attacker.PP[i] > 0:
             score = calculate_move_score(
-                attacker, i, defender, teammates=teammates)
+                attacker, i, defender, teammates, field)
             if score > best_score:
                 best_index = i
                 best_move_name_id = attacker.moves[i].name_id
@@ -363,7 +504,8 @@ def select_best_move(attacker: Pokemon, defender: Pokemon,
 
 
 def print_matchup_summary(
-    attacker: Pokemon, defender: Pokemon, teammates: Dict[str, Pokemon] = {}
+    attacker: Pokemon, defender: Pokemon, field: Field,
+    teammates: Iterable[Pokemon] = []
 ) -> None:
     output = (
         f'Matchup between {attacker.name_id} and {defender.name_id}: '
@@ -376,7 +518,7 @@ def print_matchup_summary(
             f'Score for {move.name_id} (Effective BP {move.power}, accuracy '
             f'{move.accuracy}, type multiplier '
             f'{type_damage_multiplier(move.type_id, defender.type_ids)}): '
-            f'{calculate_move_score(attacker, i, defender, teammates)}'
+            f'{calculate_move_score(attacker, i, defender, teammates, field)}'
         )
         print(output)
 
