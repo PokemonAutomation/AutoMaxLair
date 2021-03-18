@@ -45,13 +45,13 @@ class DAController(SwitchController):
         self.window_name = 'AutoMaxLair Output'
 
         # Read values from the config.
-        self.boss = config['default']['BOSS'].lower().replace(' ', '-')
+        self.boss = config['BOSS'].lower().replace(' ', '-')
 
-        self.base_ball = config['default']['BASE_BALL']
-        self.base_balls = int(config['default']['BASE_BALLS'])
-        self.legendary_ball = config['default']['LEGENDARY_BALL']
-        self.legendary_balls = int(config['default']['LEGENDARY_BALLS'])
-        self.mode = config['default']['MODE'].lower()
+        self.base_ball = config['BASE_BALL']
+        self.base_balls = int(config['BASE_BALLS'])
+        self.legendary_ball = config['LEGENDARY_BALL']
+        self.legendary_balls = config['LEGENDARY_BALLS']
+        self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.data_paths = (
             config['pokemon_data_paths']['Boss_Pokemon'],
@@ -62,12 +62,27 @@ class DAController(SwitchController):
             config['pokemon_data_paths']['path_tree_path']
         )
 
-        self.check_attack_stat = (
-            config['stats']['CHECK_ATTACK_STAT'].lower() == 'true')
+        self.check_attack_stat = config['stats']['CHECK_ATTACK_STAT']
         self.expected_attack_stats = config['stats']['ATTACK_STATS']
-        self.check_speed_stat = (
-            config['stats']['CHECK_SPEED_STAT'].lower() == 'true')
+        # only need to run this assertion if we're checking the attack stat
+        if self.check_attack_stat:
+            assert 'positive' in self.expected_attack_stats.keys(), "No positive value found in expected attack stats"
+            assert 'negative' in self.expected_attack_stats.keys(), "No negative value found in expected attack stats"
+            assert 'neutral' in self.expected_attack_stats.keys(), "No neutral value found in expected attack stats"
+            assert type(self.expected_attack_stats['positive']) is list, "You must provide multiple values for positive attack stats"
+            assert type(self.expected_attack_stats['negative']) is list, "You must provide multiple values for negative attack stats"
+            assert type(self.expected_attack_stats['neutral']) is list, "You must provide multiple values for neutral attack stats"
+
+        self.check_speed_stat = config['stats']['CHECK_SPEED_STAT']
         self.expected_speed_stats = config['stats']['SPEED_STATS']
+        # only need to run this assertion if we're checking the speed stat
+        if self.check_speed_stat:
+            assert 'positive' in self.expected_speed_stats.keys(), "No positive value found in expected speed stats"
+            assert 'negative' in self.expected_speed_stats.keys(), "No negative value found in expected speed stats"
+            assert 'neutral' in self.expected_speed_stats.keys(), "No neutral value found in expected speed stats"
+            assert type(self.expected_speed_stats['positive']) is list, "You must provide multiple values for positive speed stats"
+            assert type(self.expected_speed_stats['negative']) is list, "You must provide multiple values for negative speed stats"
+            assert type(self.expected_speed_stats['neutral']) is list, "You must provide multiple values for neutral speed stats"
 
         # Initialize starting values.
         self.num_saved_images = 0
@@ -94,7 +109,7 @@ class DAController(SwitchController):
         self.menu_rect_2 = ((0.92, 0.69), (0.98, 0.75))
         self.menu_rect_3 = ((0.82, 0.85), (0.98, 0.88))
         self.menu_rect_4 = ((0.82, 0.93), (0.98, 0.96))
-        self.battle_text_rect = ((0, 0.805), (1, 0.95))
+        self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
         self.den_text_rect = ((0.27, 0.80), (0.72, 0.92))
@@ -145,7 +160,7 @@ class DAController(SwitchController):
             )
         if self.boss not in self.current_run.boss_pokemon:
             raise KeyError(
-                f'Incorrect value: {config["default"]["BOSS"]} for BOSS '
+                f'Incorrect value: {config["BOSS"]} for BOSS '
                 'supplied in Config.ini'
             )
 
@@ -171,9 +186,7 @@ class DAController(SwitchController):
         if not self.enable_debug_logs or rectangle_set is None:
             pass
         elif rectangle_set == 'detect':
-            self.outline_regions(
-                img, (self.menu_rect_1, self.menu_rect_2, self.den_text_rect),
-                (255, 255, 0))
+            self.outline_region(img, self.den_text_rect, (255, 255, 0))
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
                 img, (
@@ -238,7 +251,7 @@ class DAController(SwitchController):
         type_data = []
         for img in images:
             type_data.append(self.identify_path_pokemon(img))
-        
+
         # Finally, update the path information with the matched types.
         self.current_run.update_paths(type_data, stage_index)
 
@@ -457,38 +470,67 @@ class DAController(SwitchController):
 
         # Get a frame from the VideoCapture that we will check for the state.
         img = self.get_frame()
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         # First, check if the player was defeated.
         if self.check_black_screen(img):
             return 'LOSS'
         # Then, check for the presence of the Fight or Cheer menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img
+            self.menu_rect_1, (0, 0, 0), (180, 10, 10), 240, img_hsv, already_HSV=True
         ):
             if self.check_rect_HSV_match(
-                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img
+                self.menu_rect_2, (170, 120, 0), (180, 255, 255), 20, img_hsv, already_HSV=True
             ):
                 return 'FIGHT'
             elif self.check_rect_HSV_match(
-                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img
+                self.menu_rect_2, (95, 220, 120), (105, 255, 255), 20, img_hsv, already_HSV=True
             ):
                 return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 200, img
+            self.menu_rect_3, (0, 0, 0), (180, 5, 10), 180, img_hsv, already_HSV=True
         ) and self.check_rect_HSV_match(
-            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img
+            self.menu_rect_4, (0, 0, 250), (180, 5, 255), 20, img_hsv, already_HSV=True
         ):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 55, 255), 240, img
+            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img_hsv, already_HSV=True
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
                 return 'FAINT'
-            # TODO: Add handlers for other events (weather etc.).
-        # else
+            elif re.search(self.phrases['WEATHER_CLEAR'], text):
+                self.current_run.field.set_weather_clear()
+                self.log('WEATHER_CLEAR has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_SUNLIGHT'], text):
+                self.current_run.field.set_weather_sunlight()
+                self.log('WEATHER_SUNLIGHT has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_RAIN'], text):
+                self.current_run.field.set_weather_rain()
+                self.log('WEATHER_RAIN has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_SANDSTORM'], text):
+                self.current_run.field.set_weather_sandstorm()
+                self.log('WEATHER_SANDSTORM has been detected.', 'DEBUG')
+            elif re.search(self.phrases['WEATHER_HAIL'], text):
+                self.current_run.field.set_weather_hail()
+                self.log('WEATHER_HAIL has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_CLEAR'], text):
+                self.current_run.field.set_terrain_clear()
+                self.log('TERRAIN_CLEAR has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_ELECTRIC'], text):
+                self.current_run.field.set_terrain_electric()
+                self.log('TERRAIN_ELECTRIC has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_GRASSY'], text):
+                self.current_run.field.set_terrain_grassy()
+                self.log('TERRAIN_GRASSY has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_MISTY'], text):
+                self.current_run.field.set_terrain_misty()
+                self.log('TERRAIN_MISTY has been detected.', 'DEBUG')
+            elif re.search(self.phrases['TERRAIN_PSYCHIC'], text):
+                self.current_run.field.set_terrain_psychic()
+                self.log('TERRAIN_PSYCHIC has been detected.', 'DEBUG')
         return None
 
     def check_shiny(self) -> bool:
@@ -511,29 +553,28 @@ class DAController(SwitchController):
                 self.get_frame(), self.attack_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_attack in self.expected_attack_stats.split(','):
-                nature_plus_expected = False
-                nature_minus_expected = False
-                if '+' in expected_attack:
-                    nature_plus_expected = True
-                    expected_attack = expected_attack.strip('+')
-                elif '-' in expected_attack:
-                    nature_minus_expected = True
-                    expected_attack = expected_attack.strip('-')
-                if expected_attack in read_attack:
-                    if (
-                        (nature_minus_expected and self.check_rect_HSV_match(
-                            self.attack_label_rect, (80, 30, 0),
-                            (110, 255, 255), 10)) or (
-                            nature_plus_expected and self.check_rect_HSV_match(
-                                self.attack_label_rect, (150, 30, 0),
-                                (180, 255, 255), 10)
-                        )
-                        or (
-                            not nature_minus_expected
-                            and not nature_plus_expected)
-                    ):
-                        is_attack_matching = True
+            for nature_type, expected_attacks in self.expected_attack_stats.items():
+                nature_plus_expected = False if nature_type != 'positive' else True
+                nature_minus_expected = False if nature_type != 'negative' else True
+                
+                # then iterate through the stats
+                for expected_attack in expected_attacks:
+                    expected_attack = str(expected_attack)
+                
+                    if expected_attack in read_attack:
+                        if (
+                            (nature_minus_expected and self.check_rect_HSV_match(
+                                self.attack_label_rect, (80, 30, 0),
+                                (110, 255, 255), 10)) or (
+                                nature_plus_expected and self.check_rect_HSV_match(
+                                    self.attack_label_rect, (150, 30, 0),
+                                    (180, 255, 255), 10)
+                            )
+                            or (
+                                not nature_minus_expected
+                                and not nature_plus_expected)
+                        ):
+                            is_attack_matching = True
 
             if is_attack_matching:
                 self.log(
@@ -550,28 +591,25 @@ class DAController(SwitchController):
                 self.get_frame(), self.speed_stat_rect, threshold=False,
                 segmentation_mode='--psm 8'
             )
-            for expected_speed in self.expected_speed_stats.split(','):
-                nature_plus_expected = False
-                nature_minus_expected = False
-                if '+' in expected_speed:
-                    nature_plus_expected = True
-                    expected_speed = expected_speed.strip('+')
-                elif '-' in expected_speed:
-                    nature_minus_expected = True
-                    expected_speed = expected_speed.strip('-')
-                if expected_speed in read_speed:
-                    if (
-                        (nature_minus_expected and self.check_rect_HSV_match(
-                            self.speed_label_rect, (80, 30, 0),
-                            (110, 255, 255), 10))
-                        or (nature_plus_expected and self.check_rect_HSV_match(
-                           self.speed_label_rect, (150, 30, 0),
-                           (180, 255, 255), 10))
-                        or (
-                           not nature_minus_expected
-                           and not nature_plus_expected)
-                    ):
-                        is_speed_matching = True
+            for nature_type, expected_speeds in self.expected_speed_stats.items():
+                nature_plus_expected = False if nature_type != 'positive' else True
+                nature_minus_expected = False if nature_type != 'negative' else True
+            
+                for expected_speed in expected_speeds:
+                    expected_speed = str(expected_speed)
+                    if expected_speed in read_speed:
+                        if (
+                            (nature_minus_expected and self.check_rect_HSV_match(
+                                self.speed_label_rect, (80, 30, 0),
+                                (110, 255, 255), 10))
+                            or (nature_plus_expected and self.check_rect_HSV_match(
+                            self.speed_label_rect, (150, 30, 0),
+                            (180, 255, 255), 10))
+                            or (
+                            not nature_minus_expected
+                            and not nature_plus_expected)
+                        ):
+                            is_speed_matching = True
 
             if is_speed_matching:
                 self.log(
@@ -647,13 +685,21 @@ class DAController(SwitchController):
         """Calculate the prospective Dynite Ore cost of resetting the game."""
         return 0 if num_resets < 3 else min(10, num_resets)
 
-    def check_sufficient_ore(self, aditionnal_reset_count: int) -> bool:
+    def check_sufficient_ore(self, additionnal_reset_count: int) -> bool:
         """Calculate whether sufficient Dynite Ore remains to quit the run
         without saving.
         """
 
+        # If the ore cost of resetting is zero, resett regardless of the ore
+        # count.
+        if self.calculate_ore_cost(
+            self.consecutive_resets + additionnal_reset_count
+        ) == 0:
+            return True
+        # Otherwise, calculate whether the ore amount would still be positive
+        # after resetting.
         ore_after_resets = self.dynite_ore
-        for i in range(aditionnal_reset_count):
+        for i in range(additionnal_reset_count):
             ore_after_resets -= self.calculate_ore_cost(
                 self.consecutive_resets + 1 + i)
         return ore_after_resets >= 0
@@ -718,3 +764,24 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
+        
+    def get_stats_for_discord(self) -> dict:
+        """This method takes information from the run and returns a nice dictionary
+        for embedding to Discord
+        
+        increment_one is only for a win with a shiny, so that we can get the nice
+        status screen with the screenshot.
+        """
+
+        the_dict = {
+            "Boss": self.boss,
+            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Base Balls": self.base_balls,
+            "Legendary Balls": self.legendary_balls,
+            "Dynite Ore": self.dynite_ore,
+        }
+
+        if self.shinies_found > 0:
+            the_dict["Shinies Found"] = self.shinies_found
+        
+        return the_dict

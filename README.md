@@ -8,28 +8,23 @@ AutoMaxLair is designed for shiny hunting legendary Pokemon in Dynamax Adventure
 ## Required Software
 * Teensy Loader (or similar, depending on your microcontroller) for programming the microcontroller.
 * Tesseract OCR. Compiled executables can be downloaded from the [UB Mannheim Github](https://github.com/UB-Mannheim/tesseract/wiki).
-* Python 3.6-3.8 with the following packages installed (see requirements.txt for details):
-	* discord
-	* opencv-python
-	* pytesseract
-	* pyenchant
-	* pyserial
-	* pokebase (not strictly required if you don't need to rebuild the included json files)
+* Python 3.6-3.8
+* Some python packages (the full list is in requirements.txt)
 ## Setup
 1.	Install Python, ensuring you check the box to add Python to your PATH environment variable (possibly specific to Windows).
-1.	Install the required Python modules. If you are using Windows, you can run install_requirements.bat which will install the modules for you.
+1.	Install the required Python modules. If you are using Windows, you can run install-requirements.bat which will install the modules for you.
 1.	Program the microcontroller with the appropriate version of RemoteControl_XXX.hex and plug it into the Switch.
 1.	Plug the USB cable attached to the Teensy’s serial port into the computer.
 1.	Ensure the screen size is set to 100% under the Switch’s TV settings. Not doing so will result in misaligned text detection rectangles.
 1.	Fill your inventory with Poke Balls so the bot can run uninterrupted.
 1.	Make sure the setting for automatically sending Pokemon to your box is turned on.
 1.	Go to the Max Lair and stop in front of the scientist, then disconnect any wireless controllers and plug the Switch into the dock.
-1.	Rename Config.sample.ini to Config.ini, then open it with a text editor and modify the values to suit your setup.
+1.	Rename Config.sample.toml to Config.toml, then open it with a text editor and modify the values to suit your setup.
 1.	Plug the HDMI of your switch into the capture card, but do not view the input from any other application (or else the bot will not be able to access the video). Many capture cards will work out of the box; however, certain capture cards can’t be read by OpenCV for some reason. In this case, the virtual camera function of Open Broadcasting Software can be used.
 1.	Run auto_max_lair.py, either directly or in your IDE of choice (which is better for debugging).
 1.	Check the placement of the coloured rectangles as show in Figure 1, Figure 2, Figure 3, Figure 4, Figure 5, and Figure 6.
 	*	If the rectangle positions are off, first double check that the Switch’s TV settings are correct—the screen size should be 100%.
-	*	If that doesn’t fix the issue, you can tweak the rectangle coordinates in MaxLairInstance.py by adjusting the values in the __init__ method.
+	*	If that doesn’t fix the issue, you can tweak the rectangle coordinates in da_controller.py by adjusting the values in the __init__ method.
 	*	The changes will come into effect when the bot is restarted.
 ## Operation
 The bot will run until it finds a shiny legendary or until it runs out of resources. Depending on the boss, it should take a day or two on average if you have the shiny charm (15 minutes per run, variable success rate but usually above 50%, 1/100 shiny chance for the legendary). It will also keep any other shiny Pokemon it finds but will continue running after (when using the default mode). Figure 6 shows an example screenshot of the summary screen of a shiny Legendary Pokemon.
@@ -77,8 +72,6 @@ Find Path|Useful for finding a path to use "Keep Path" mode on.|Utility mode tha
 ### Major Features
 * Improved move selection
 	*	Stat changes, status, weather, field effects, terrain and current teammates are not currently considered in damage calculations.
-*	Improved path selection
-	*	Intelligent path selection could be improved. The current team is not considered when choosing a path, and Wide Guard is not valued in the calculations.
 *	Improved selection of Pokemon
 	*	HP and status of the current Pokemon is not currently measured. This information could better inform decisions on whether to take a new Pokemon.
 	*	When considering a potential new Pokemon, only the player’s current Pokemon is compared. The rest of the team could be considered to see whether another member would benefit more from the Pokemon.
@@ -146,4 +139,11 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Tweaked how Pokemon are scored.
 * Stats checking now takes nature into account.
 * Changed how certain events are detected, improving efficiency and reducing reliance on Tesseract.
+* Improved path selection
+* Improved config file
+* Improved stats checking
 * More improvements on the way!
+
+## Acknowledgements
+
+Thanks to [pokemondb.net](https://pokemondb.net/) for hosting the sprites of the bosses.

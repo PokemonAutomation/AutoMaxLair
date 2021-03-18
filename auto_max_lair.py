@@ -5,45 +5,57 @@
 #           Discord user pifopi, and Discord user denvoros
 #       Created 2020-11-20
 
-import configparser
 import logging
 import logging.handlers
 import os
 import sys
-
 from datetime import datetime
 
 import pytesseract
+import toml
 
 import automaxlair
-
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-beta'
+VERSION = 'v0.7'
 
-# Load configuration from config file
-config = configparser.ConfigParser()
+# load configuration from the config file
+try:
+    config = toml.load("Config.toml")
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
+except:
+    raise SyntaxError(
+        "Something went wrong parsing Config.toml\n" +
+        "Please make sure you entered the information right " +
+        "and did not modify \" or . symbols or have uppercase true or false in the settings.")
 
-# Configparser doesn't complain if it can't find the config file,
-# so manually raise an error if the file was not read.
-if not config.read('Config.ini', 'utf8'):
-    raise FileNotFoundError('Failed to locate the Config.ini file.')
-
-COM_PORT = config['default']['COM_PORT']
-VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
-VIDEO_EXTRA_DELAY = int(config['advanced']['VIDEO_EXTRA_DELAY'])
-BOSS = config['default']['BOSS'].lower().replace(' ', '-')
-BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
-pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+COM_PORT = config['COM_PORT']
+VIDEO_INDEX = config['VIDEO_INDEX']
+VIDEO_EXTRA_DELAY = config['advanced']['VIDEO_EXTRA_DELAY']
+BOSS = config['BOSS'].lower().replace(' ', '-')
+BOSS_INDEX = config['advanced']['BOSS_INDEX']
+pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
+ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
 
 # Set the log name
-LOG_NAME = ''.join(
-    (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 
 
-def initialize(__) -> str:
+def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
+    # send a discord message that we're ready to rumble
+    ctrlr.send_discord_message(False, f"Starting a new full run for {ctrlr.boss}!",
+        embed_fields=ctrlr.get_stats_for_discord(), level="update"
+    )
+
+    # assume we're starting from the select controller menu, connect, then
+    # press home twice to return to the game
+    ctrlr.push_buttons(
+        (b'a', 2), (b'h', 2.0), (b'h', 2.0), (b'b', 1.5), (b'b', 1.5)
+    )
+
     return 'join'
 
 
@@ -98,10 +110,10 @@ def join(ctrlr) -> str:
 
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 0.65)
     ctrlr.read_path_information(3)
     ctrlr.log(str(run), 'DEBUG')
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -133,7 +145,7 @@ def path(ctrlr) -> str:
     # Then, move the cursor onto that boss and select it.
     for __ in range(offset):
         ctrlr.push_button(b'>', 1)
-    ctrlr.push_buttons((b'a', 4))
+    ctrlr.push_button(b'a', 4 + VIDEO_EXTRA_DELAY)
     run.advance_node()
     ctrlr.log(
         f'Chose path with index {offset} from the left, towards type '
@@ -163,7 +175,7 @@ def battle(ctrlr) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
-    ctrlr.push_button(None, 10)
+    ctrlr.push_button(None, 12)
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by the screen going completely black).
@@ -223,6 +235,15 @@ def battle(ctrlr) -> str:
                         (b'y', 1), (b'a', 1), (b'l', 3 + VIDEO_EXTRA_DELAY))
                     run.opponent = ctrlr.read_selectable_pokemon('battle')[0]
                     ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
+
+                    if run.opponent.name_id == 'ditto':
+                        if run.current_node.name != 'normal':
+                            ctrlr.log(f'We were expecting a {run.current_node.name} type'
+                                      ' pokemon and we got ditto.', 'WARNING')
+                    else:
+                        if run.current_node.name not in run.opponent.type_ids:
+                            ctrlr.log(f'We were expecting a {run.current_node.name} type '
+                                      f'pokemon and we got {run.opponent.name_id}.', 'WARNING')
 
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
@@ -421,7 +442,9 @@ def backpacker(ctrlr) -> str:
         items.append(item)
         ctrlr.log(f'Detected item: {item}', 'DEBUG')
 
-    ctrlr.push_button(b'a', 5)
+    # Note: a long delay is required here so the bot doesn't think a battle
+    # started.
+    ctrlr.push_button(b'a', 7 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log('Finished choosing an item.', 'DEBUG')
     return 'detect'
@@ -467,11 +490,15 @@ def scientist(ctrlr) -> str:
     # Also it means we took the pokemon from scientist.
     # So let's try to pick it up again
     if run.pokemon is None or average_score > existing_score:
-        ctrlr.push_buttons((None, 3), (b'a', 1))
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'a', 7 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
-        ctrlr.push_buttons((None, 3), (b'b', 1))
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'b', 7 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
     return 'detect'
 
@@ -493,6 +520,13 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.reset_run()
         ctrlr.record_ore_reward()
         ctrlr.log('Preparing for another run.')
+
+        ctrlr.send_discord_message(
+            False,
+            "No Pokémon were caught in the last run.",
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="update"
+        )
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
@@ -501,9 +535,12 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            True, f'You got a winning path for {run.caught_pokemon[3]} with '
-            f'{run.lives} lives remaining !!!',
-            f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+            False, 
+            f"Found a winning path for {ctrlr.boss} with {run.lives} remaining.",
+            path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="update"
+        )
         ctrlr.log(f'This path won with {run.lives} lives remaining.')
         return None  # Return None to signal the program to end.
 
@@ -527,8 +564,11 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
-                True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
-                f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                True, f"Matching stats found for {ctrlr.boss}!",
+                path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                embed_fields=ctrlr.get_stats_for_discord(),
+                level="shiny"
+            )
             return None  # End whenever a matching stats legendary is found
 
         ctrlr.push_button(b'<', 1)
@@ -555,22 +595,29 @@ def select_pokemon(ctrlr) -> str:
                 f'Shiny {run.caught_pokemon[run.num_caught - 1 - i]} will be '
                 'kept.'
             )
+            ctrlr.log("Adding information to the number of found shinies", "DEBUG")
             ctrlr.caught_shinies.append(
                 run.caught_pokemon[run.num_caught - 1 - i]
             )
             ctrlr.shinies_found += 1
+            ctrlr.log("Sending off to save a screenshot", "DEBUG")
             ctrlr.display_results(screenshot=True)
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
                 ctrlr.send_discord_message(
-                    True, f'You got a shiny {run.caught_pokemon[3]} !!!',
-                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                    True, f'Found a shiny {run.caught_pokemon[3]}!',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                    embed_fields=ctrlr.get_stats_for_discord(),
+                    level="shiny"
+                )
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'You got a shiny '
-                    f'{run.caught_pokemon[run.num_caught - 1 - i]} !!!',
-                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                    False, f'Found a shiny {run.caught_pokemon[run.num_caught - 1 - i]}!',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png',
+                    embed_fields=ctrlr.get_stats_for_discord(),
+                    level="shiny"
+                )
                 take_pokemon = True
                 break
         elif i < run.num_caught - 1:
@@ -619,9 +666,19 @@ def select_pokemon(ctrlr) -> str:
     # Start another run if there are sufficient Poke balls to do so.
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
+        ctrlr.send_discord_message(
+            False, f'Preparing for another run.',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="update"
+        )
         return 'join'
     else:
         ctrlr.log('Out of balls. Quitting.')
+        ctrlr.send_discord_message(
+            True, f'You ran out of legendary balls! The program has exited!',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="critical"
+        )
         return None  # Return None to signal the program to end.
 
 
@@ -664,10 +721,15 @@ if __name__ == '__main__':
         '%(asctime)s | %(levelname)s: %(message)s'
     )
 
+    # make the console formatter easier to read with fewer bits of info
+    console_formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s: %(message)s", "%H:%M:%S"
+    )
+
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    console.setFormatter(formatter)
+    console.setFormatter(console_formatter)
 
     # Configure the file handler, which will save logged information.
     fileHandler = logging.FileHandler(

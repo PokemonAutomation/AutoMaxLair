@@ -6,25 +6,97 @@ import copy
 from typing import Dict, List, Tuple
 
 
+class Move():
+    """Representation of a Pokemon Move, including name, type, category,
+    base power, accuracy, PP, effect, probability effect, whether the move hits
+    multiple opponents, and a correction factor (applicable for example to
+    multi-hit moves).
+    """
+
+    def __init__(
+        self,
+        id_num: int,
+        name_id: str,
+        names: Dict[str, str],
+        type_id: str,
+        category: str,
+        base_power: float,
+        accuracy: float,
+        PP: int,
+        effect: str,
+        probability: float,
+        is_spread: bool = False,
+        correction_factor: float = 1
+    ) -> None:
+        self.id_num = id_num
+        self.name_id = name_id
+        self.names = names
+        self.type_id = type_id
+        self.category = category
+        self.base_power = base_power
+        self.accuracy = accuracy
+        self.PP = PP
+        self.effect = effect
+        self.probability = probability
+        self.is_spread = is_spread
+        self.correction_factor = correction_factor
+
+        self.power = base_power * correction_factor
+
+    def __str__(self):
+        return self.name_id
+
+    def __copy__(self):
+        return type(self)(
+            self.id_num, self.name_id, self.names, self.type_id, self.category,
+            self.base_power, self.accuracy, self.PP, self.effect,
+            self.probability, self.is_spread, self.correction_factor
+        )
+
+    def print_verbose(self):
+        """Print a detailed summary of the Move."""
+        print(f'ID number: {self.id_num}')
+        print(f'Name identifier: {self.name_id}')
+        print('Translations')
+        for language, name in self.names.items():
+            print(f'\t{language}: {name}')
+        print(f'Type identifier: {self.type_id}')
+        print(f'Category: {self.category}')
+        print(f'BP: {self.base_power}')
+        print(f'Accuracy: {int(self.accuracy*100)}')
+        print(f'PP: {self.PP}')
+        print(f'Effect: {self.effect}')
+        print(f'Probability: {self.probability}')
+        print(f'Spread move: {self.is_spread}')
+        print(f'Correction factor: {self.correction_factor}')
+        print(f'Adjusted power: {self.power}')
+
+    def __repr__(self) -> str:
+        return f"<'{self.name_id}' Move object>"
+
+
 class Pokemon():
-    def __init__(self,
-                 id_num: int,
-                 name_id: str,
-                 names: Dict[str, str],
-                 ability_name_id: str,
-                 abilities: Dict[str, str],
-                 type_ids: List[str],
-                 types: List[Dict[str, str]],
-                 base_stats: Tuple[int, int, int, int, int, int],
-                 moves,
-                 max_moves,
-                 level: int = 100,
-                 IVs: Tuple[int, int, int, int, int, int] = (
-                     15, 15, 15, 15, 15, 15),
-                 EVs: Tuple[int, int, int, int, int, int] = (0, 0, 0, 0, 0, 0),
-                 nature: Tuple[int, int, int, int,
-                               int, int] = (1, 1, 1, 1, 1, 1)
-                 ):
+    """Representation of a Pokemon including its name, ability, types, stats,
+    moves, level, IVs, EVs, and nature.
+    """
+
+    def __init__(
+        self,
+        id_num: int,
+        name_id: str,
+        names: Dict[str, str],
+        ability_name_id: str,
+        abilities: Dict[str, str],
+        type_ids: List[str],
+        types: List[Dict[str, str]],
+        base_stats: Tuple[int, int, int, int, int, int],
+        moves: Tuple[Move],
+        max_moves: Tuple[Move],
+        level: int = 100,
+        IVs: Tuple[int, int, int, int, int, int] = (15, 15, 15, 15, 15, 15),
+        EVs: Tuple[int, int, int, int, int, int] = (0, 0, 0, 0, 0, 0),
+        nature: Tuple[int, int, int, int, int, int] = (1, 1, 1, 1, 1, 1)
+    ):
         self.id_num = id_num
         self.name_id = name_id
         self.names = names
@@ -47,21 +119,25 @@ class Pokemon():
         self.restore()
         self.reset_stats()
 
-    def __str__(self):
-        return self.name_id
-
     def __copy__(self):
-        copied_pokemon = type(self)(self. id_num, self.name_id, self.names,
-                                    self.ability_name_id, self.abilities, self.type_ids, self.types,
-                                    self.base_stats, self.moves, self.max_moves, self.level, self.ivs,
-                                    self.evs, self.nature
-                                    )
+        copied_pokemon = type(self)(
+            self. id_num, self.name_id, self.names, self.ability_name_id,
+            self.abilities, self.type_ids, self.types, self.base_stats,
+            self.moves, self.max_moves, self.level, self.ivs, self.evs,
+            self.nature
+        )
         copied_pokemon.PP = copy.deepcopy(self.PP)
         copied_pokemon.HP = copy.deepcopy(self.HP)
         copied_pokemon.status = self.status
         copied_pokemon.stat_modifiers = self.stat_modifiers
         copied_pokemon.dynamax = self.dynamax
         return copied_pokemon
+
+    def __repr__(self) -> str:
+        return f"<'{self.name_id}' Pokemon Object>"
+
+    def __str__(self):
+        return self.name_id
 
     def print_verbose(self):
         """Print a detailed summary of the Pokemon."""
@@ -99,21 +175,29 @@ class Pokemon():
 
     def reset_stats(self):
         """Reset stat changes."""
-        self.stat_modifiers = (None, 0, 0, 0, 0, 0)
+        self.stat_modifiers = [None, 0, 0, 0, 0, 0]
         self.recalculate_stats()
         self.dynamax = False
 
     def adjust_stats(self, modification):
+        """Apply stat modifications."""
         for i in range(1, 6):
             self.stat_modifiers[i] += modification[i]
         self.recalculate_stats()
 
     def recalculate_stats(self):
-        self.stats = [(math.floor((2 * self.base_stats[0] + self.ivs[0] + math.floor(
-            self.evs[0] / 4)) * self.level / 100) + self.level + 10) * self.HP]
+        """(Re)calculate stats of the Pokemon. Called on instantiation and
+        after any stat modifications are applied.
+        """
+
+        self.stats = [self.HP * (math.floor((
+            2 * self.base_stats[0] + self.ivs[0] + math.floor(self.evs[0] / 4)
+        ) * self.level / 100) + self.level + 10)]
         for i in range(1, 6):
-            self.stats.append(math.floor((math.floor(
-                (2 * self.base_stats[i] + self.ivs[i] + math.floor(self.evs[i] / 4)) * self.level / 100) + 5) * self.nature[i]))
+            self.stats.append(math.floor((math.floor((
+                2 * self.base_stats[i] + self.ivs[i]
+                + math.floor(self.evs[i] / 4)
+            ) * self.level / 100) + 5) * self.nature[i]))
             if self.stat_modifiers[i] >= 0:
                 if self.stat_modifiers[i] > 6:
                     self.stat_modifiers[i] = 6
@@ -146,57 +230,3 @@ class Pokemon():
         for i in range(len(self.types)):
             types.append(self.types[i].get(language, self.type_ids[i]))
         return types
-    
-    def __repr__(self) -> str:
-        return f"<'{self.name_id}' Pokemon Object>"
-
-class Move():
-    def __init__(self, id_num: int, name_id: str, names: Dict[str, str],
-                 type_id: str, category: str, base_power: float, accuracy: float,
-                 PP: int, effect: str, probability: float, is_spread: bool = False,
-                 correction_factor: float = 1
-                 ):
-        self.id_num = id_num
-        self.name_id = name_id
-        self.names = names
-        self.type_id = type_id
-        self.category = category
-        self.base_power = base_power
-        self.accuracy = accuracy
-        self.PP = PP
-        self.effect = effect
-        self.probability = probability
-        self.is_spread = is_spread
-        self.correction_factor = correction_factor
-
-        self.power = base_power * correction_factor
-
-    def __str__(self):
-        return self.name_id
-
-    def __copy__(self):
-        return type(self)(self.id_num, self.name_id, self.names, self.type_id,
-                          self.category, self.base_power, self.accuracy, self.PP, self.effect,
-                          self.probability, self.is_spread, self.correction_factor
-                          )
-
-    def print_verbose(self):
-        """Print a detailed summary of the Move."""
-        print(f'ID number: {self.id_num}')
-        print(f'Name identifier: {self.name_id}')
-        print('Translations')
-        for language, name in self.names.items():
-            print(f'\t{language}: {name}')
-        print(f'Type identifier: {self.type_id}')
-        print(f'Category: {self.category}')
-        print(f'BP: {self.base_power}')
-        print(f'Accuracy: {int(self.accuracy*100)}')
-        print(f'PP: {self.PP}')
-        print(f'Effect: {self.effect}')
-        print(f'Probability: {self.probability}')
-        print(f'Spread move: {self.is_spread}')
-        print(f'Correction factor: {self.correction_factor}')
-        print(f'Adjusted power: {self.power}')
-    
-    def __repr__(self) -> str:
-        return f"<'{self.name_id}' Move object>"
