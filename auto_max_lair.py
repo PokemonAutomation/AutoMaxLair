@@ -702,7 +702,7 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('----------------------------------')
         ctrlr.log(f'--Found {NON_LEGEND} on this path.--')
         ctrlr.log('----------------------------------')
-        
+
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).
     if not reset_game:
