@@ -959,7 +959,6 @@ class DAController(SwitchController):
             image=self.get_frame(
                 rectangle_set=self.stage, resize=True), log=log,
             screenshot=screenshot)
-
     def get_stats_for_discord(self) -> dict:
         """This method takes information from the run and returns a nice
         dictionary for embedding to Discord
@@ -972,13 +971,29 @@ class DAController(SwitchController):
             self.wins if self.current_run.lives != 0 else self.wins)
         runs_updated = self.runs
 
+        # Calculate the "Win Percentage" statistic.
+        win_percent = (
+            'N/A' if self.runs == 0 else (
+                str(round(100 * self.wins / self.runs)) + '%'
+            )
+        )
+        #Calculate the "Time Per Run" statistic.
+        time_per_run = (
+            'N/A' if self.runs == 0 else str((datetime.now() - self.start_date)
+                                             / self.runs)[2:7]
+        )
+        
         the_dict = {
             "Boss": self.boss,
-            "Wins/Runs": f"{wins_updated}/{runs_updated}",
+            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Win Percentage": win_percent,
+            "Time Per Run": time_per_run,
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
-        }
+            "Consecutive Resets": self.consecutive_resets
+            }
+
 
         if self.shinies_found > 0:
             the_dict["Shinies Found"] = self.shinies_found
