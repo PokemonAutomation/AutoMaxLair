@@ -184,6 +184,7 @@ def battle(ctrlr) -> str:
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
     # Wait for the black screen at the start of the battle to go away.
+    ctrlr.push_button(None, 13)
     while ctrlr.check_black_screen():
         ctrlr.push_button(None, 1)
     # Loop continuously until an event that ends the battle is detected.
