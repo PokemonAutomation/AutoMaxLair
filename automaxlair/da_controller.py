@@ -403,8 +403,8 @@ class DAController(SwitchController):
                 if self.current_run.pokemon not in (None, pokemon):
                     self.log(
                         "The bot's Pokemon detected from the sprite, "
-                        f"{pokemon.name}, did not match with the previously "
-                        f"known value of {self.current_run.pokemon.name}.",
+                        f"{pokemon.name_id}, did not match with the previously "
+                        f"known value of {self.current_run.pokemon.name_id}.",
                         'WARNING'
                     )
                 self.current_run.pokemon = pokemon
