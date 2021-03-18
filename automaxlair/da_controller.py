@@ -969,8 +969,8 @@ class DAController(SwitchController):
         """
 
         wins_updated = (
-            self.wins + 1 if self.current_run.lives != 0 else self.wins)
-        runs_updated = self.runs + 1
+            self.wins if self.current_run.lives != 0 else self.wins)
+        runs_updated = self.runs
 
         the_dict = {
             "Boss": self.boss,
