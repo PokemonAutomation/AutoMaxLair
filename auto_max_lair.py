@@ -40,6 +40,7 @@ BOSS = config['BOSS'].lower().replace(' ', '-')
 BOSS_INDEX = config['advanced']['BOSS_INDEX']
 pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
 ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
+NON_LEGEND = config['advanced']['NON_LEGEND'].lower().replace(' ', '-')
 
 # Set the log name
 LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
@@ -693,6 +694,15 @@ def select_pokemon(ctrlr) -> str:
     ):
         reset_game = True
 
+    if (
+        not take_pokemon and NON_LEGEND in run.caught_pokemon
+        and ctrlr.check_sufficient_ore(1)
+    ):
+        reset_game = True
+        ctrlr.log('----------------------------------')
+        ctrlr.log(f'--Found {NON_LEGEND} on this path.--')
+        ctrlr.log('----------------------------------')
+        
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).
     if not reset_game:
