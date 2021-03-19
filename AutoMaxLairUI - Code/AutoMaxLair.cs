@@ -419,7 +419,7 @@ namespace AutoDA
         private void btnTesseract_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.RootFolder = Environment.SpecialFolder.ProgramFiles;
+            fbd.SelectedPath = boxTesseract.Text;
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 boxTesseract.Text = fbd.SelectedPath;
         }
