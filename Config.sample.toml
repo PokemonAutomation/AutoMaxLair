@@ -506,3 +506,56 @@ TERRAIN_MISTY = "Nebel aus"
 
 # Sentence used to detect that the terrain is now psychic.
 TERRAIN_PSYCHIC = "seltsam an"
+
+#
+[Japanese]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "jpn"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "ja-Hrkt"
+
+# Sentence used to detect that the bot met the backpacker.
+BACKPACKER = "バックパッカー"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "swapping"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "みちに"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "じょうくうの　あらしが"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "ダイマックスアドベンチャーに"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "sunlight faded|rain stopped|sandstorm subsided|hail stopped"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "ひざしが"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "あめが"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "ふきはじめた"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "ふりはじめた"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "electricity disappeared|grass disappeared|mist disappeared|weirdness disappeared"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "あしもとに"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "おいしげった"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "たちこめた"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "ふしぎなかんじ"
