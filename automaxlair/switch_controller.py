@@ -405,7 +405,7 @@ class SwitchController:
         cv2.imwrite(filename, img)
 
     def send_discord_message(
-        self, ping_yourself: bool, text: str, path_to_picture: str = None,
+        self, text: str, path_to_picture: str = None,
         embed_fields: dict = None, level: str = "update") -> None:
         """Send a notification via Discord.
 
@@ -425,11 +425,28 @@ class SwitchController:
             where the keys are the titles to give and the items are the text
             for that field.
         level : str, optional
-            What type of update this is. Currently accepts "update", "shiny", and
+            What type of update this is. Currently accepts "update", "shiny", "legendary", and
             "critical", which helps the program determine if it should send based
             on settings provided by the user.
         """
 
+        # the first check is if there's no discord info
+        if (self.webhook_id == 'PLACE_ID_WITHIN_QUOTES' or self.webhook_token == 'PLACE_TOKEN_WITHIN_QUOTES' \
+            or self.webhook_id == "" or self.webhook_token == ""):
+            self.log(
+                'You need to setup the discord section to be able to use the '
+                'ping feature.', 'DEBUG')
+            return
+
+        # now we check if we can ping or not
+        # NOTE: available discord levels from the program:
+        #   "all" - gives all notifications, pings you on *ALL* shinies found
+        #   "all_ping_legendary" - gives all notifications, pings you only when legendary is found
+        #   "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
+        #   "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
+        #   "none" - ignores all discord messages
+
+        # first check if the discord level is none
         if self.discord_level == 'none':
             # if they don't want discord information, just return and pass by
             return
@@ -437,15 +454,19 @@ class SwitchController:
             # if they don't want the discord update information, we can also
             # return
             return
-
-        # Do nothing if user did not setup the Discord information.
-        if self.webhook_id == '' or self.webhook_token == '' or (
-            self.user_id == '' and ping_yourself
-        ):
-            self.log(
-                'You need to setup the discord section to be able to use the '
-                'ping feature.', 'DEBUG')
-            return
+        
+        send_ping = False
+        
+        # determine if we can ping right from level and potential settings
+        if level == "update":
+            pass
+        elif level == "shiny":
+            if self.discord_level in ("all", "only_shiny"):
+                send_ping = True
+        elif level == "legendary":
+            send_ping = True
+        elif level == "critical":
+            send_ping = True
 
         # construct the webhook object
         webhook = discord.Webhook.partial(
@@ -469,7 +490,7 @@ class SwitchController:
                 embed.add_field(name=name, value=item, inline=True)
 
         # construct the proper string
-        send_str = f"<@{self.user_id}>" if ping_yourself else f'{self.user_nickname}'
+        send_str = f"<@{self.user_id}>" if send_ping else f'{self.user_nickname}'
         send_str += f': {text}'
 
         # add the image to the embed if it was included

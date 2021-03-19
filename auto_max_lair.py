@@ -49,7 +49,7 @@ def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
     ctrlr.send_discord_message(
-        False, f"Starting a new full run for {ctrlr.boss}!",
+        f"Starting a new full run for {ctrlr.boss}!",
         embed_fields=ctrlr.get_stats_for_discord(), level="update"
     )
     ctrlr.log(f'Initializing AutoMaxLair {VERSION}.')
@@ -579,7 +579,6 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('Preparing for another run.')
 
         ctrlr.send_discord_message(
-            False,
             "No Pokémon were caught in the last run.",
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
@@ -592,7 +591,6 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            True,
             f"Found a winning path for {ctrlr.boss} with {run.lives} "
             "remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
@@ -623,11 +621,11 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
-                True, f"Matching stats found for {ctrlr.boss}!",
+                f"Matching stats found for {ctrlr.boss}!",
                 path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                 f'{ctrlr.num_saved_images}.png',
                 embed_fields=ctrlr.get_stats_for_discord(),
-                level="shiny"
+                level="legendary"
             )
             return None  # End whenever a matching stats legendary is found
 
@@ -665,17 +663,18 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.display_results(screenshot=True)
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
+                # NOTE: this is when we found a legendary!
                 ctrlr.send_discord_message(
-                    True, f'Found a shiny {run.caught_pokemon[3]}!',
+                    f'Found a shiny {run.caught_pokemon[3]}!',
                     path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                     f'{ctrlr.num_saved_images}.png',
                     embed_fields=ctrlr.get_stats_for_discord(),
-                    level="shiny"
+                    level="legendary"
                 )
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'Found a shiny '
+                    f'Found a shiny '
                     f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
                     path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                     f'{ctrlr.num_saved_images}.png',
@@ -725,13 +724,17 @@ def select_pokemon(ctrlr) -> str:
     # Update statistics and reset stored information about the complete run.
     ctrlr.wins += 1 if run.lives != 0 else 0
     ctrlr.runs += 1
+    # calculate the win percent
+    ctrlr.win_percent = ctrlr.wins / ctrlr.runs
+    # then update the time per run
+    ctrlr.time_per_run = (datetime.now() - ctrlr.start_date) / ctrlr.runs
     ctrlr.reset_run()
 
     # Start another run if there are sufficient Poke balls to do so.
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
         ctrlr.send_discord_message(
-            False, 'Preparing for another run.',
+            'Preparing for another run.',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
@@ -739,7 +742,7 @@ def select_pokemon(ctrlr) -> str:
     else:
         ctrlr.log('Out of balls. Quitting.')
         ctrlr.send_discord_message(
-            True, 'You ran out of legendary balls! The program has exited!',
+            'You ran out of legendary balls! The program has exited!',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="critical"
         )

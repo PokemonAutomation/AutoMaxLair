@@ -165,8 +165,6 @@ negative = [81, 82]
 # === WEBHOOK_ID and WEBHOOK_TOKEN ===
 # Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
 WEBHOOK_ID = "PLACE_ID_WITHIN_QUOTES"
-
-# 
 WEBHOOK_TOKEN = "PLACE_TOKEN_WITHIN_QUOTES"
 
 # === USER_ID ===
@@ -182,8 +180,10 @@ USER_SHORT_NAME = "YOUR_SHORT_NAME_WITHIN_QUOTES"
 # === UPDATE_LEVELS ===
 # There are multiple types of levels that can be sent via the Discord Webhook to inform
 # your progress,
-#   "all" - provides all possible updates to your webhook, includes stats after a completed run
-#   "only_shiny" - will only push updates if shinies are found
+#   "all" - gives all notifications, pings you on *ALL* shinies found
+#   "all_ping_legendary" - gives all notifications, pings you only when legendary is found
+#   "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
+#   "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
 #   "none" - ignores all discord messages
 UPDATE_LEVELS = "none"
 
@@ -229,6 +229,8 @@ pokemon_sprite_path = "data/pokemon_sprites.pickle"
 
 # File containing the pickled data about other icons (cheer, fight).
 misc_icon_dir = "data/misc_icons/"
+
+boss_colors = "data/boss_colors.json"
 
 # ==========
 # === OTHER LANGUAGE SETTINGS

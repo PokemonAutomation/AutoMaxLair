@@ -18,6 +18,7 @@ from typing import List, Tuple, TypeVar, Callable, Dict, Optional
 
 import cv2
 import enchant
+from discord import Color
 
 from .pokemon_classes import Pokemon
 from .max_lair_instance import MaxLairInstance
@@ -71,6 +72,8 @@ class DAController(SwitchController):
         self.num_saved_images = 0
         self.runs = 0
         self.wins = 0
+        self.win_percent = 0.0
+        self.time_per_run = 0.0
         self.shinies_found = 0
         self.caught_shinies: List[str] = []
         self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
@@ -213,6 +216,15 @@ class DAController(SwitchController):
                 "You must provide multiple values for negative speed stats")
             assert type(self.expected_speed_stats['neutral']) is list, (
                 "You must provide multiple values for neutral speed stats")
+        
+        # choose a good color for the boss
+        try:
+            # let's update the embed color with one from our list
+            with open(self.config['pokemon_data_paths']['boss_colors'], 'r') as f:
+                boss_colors = jsonpickle.decode(f.read())
+            self.discord_embed_color = Color.from_rgb(*boss_colors[self.boss])
+        except:
+            self.discord_embed_color = Color.random()
 
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
@@ -391,8 +403,8 @@ class DAController(SwitchController):
                 if self.current_run.pokemon not in (None, pokemon):
                     self.log(
                         "The bot's Pokemon detected from the sprite, "
-                        f"{pokemon.name}, did not match with the previously "
-                        f"known value of {self.current_run.pokemon.name}.",
+                        f"{pokemon.name_id}, did not match with the previously "
+                        f"known value of {self.current_run.pokemon.name_id}.",
                         'WARNING'
                     )
                 self.current_run.pokemon = pokemon
@@ -920,17 +932,6 @@ class DAController(SwitchController):
         the run sequence.
         """
 
-        # Calculate some statistics for display
-        win_percent = (
-            'N/A' if self.runs == 0 else (
-                str(round(100 * self.wins / self.runs)) + '%'
-            )
-        )
-        time_per_run = (
-            'N/A' if self.runs == 0 else str((datetime.now() - self.start_date)
-                                             / self.runs)[2:7]
-        )
-
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
             'Run #': self.runs + 1,
@@ -944,8 +945,8 @@ class DAController(SwitchController):
             'Lives': self.current_run.lives,
             'Pokemon': self.current_run.pokemon,
             'Opponent': self.current_run.opponent,
-            'Win percentage': win_percent,
-            'Time per run': time_per_run,
+            'Win percentage': f"{self.win_percent:.1%}",
+            'Time per run': str(self.time_per_run)[2:7],
             'Consecutive resets': self.consecutive_resets,
             'Shinies found': self.shinies_found
         }.items():
@@ -968,16 +969,15 @@ class DAController(SwitchController):
         nice status screen with the screenshot.
         """
 
-        wins_updated = (
-            self.wins + 1 if self.current_run.lives != 0 else self.wins)
-        runs_updated = self.runs + 1
-
         the_dict = {
             "Boss": self.boss,
-            "Wins/Runs": f"{wins_updated}/{runs_updated}",
+            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Win Rate": self.win_percent,
+            "Avg. Time": str(self.time_per_run)[2:7],
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
+            "Consecutive Resets": self.consecutive_resets
         }
 
         if self.shinies_found > 0:
