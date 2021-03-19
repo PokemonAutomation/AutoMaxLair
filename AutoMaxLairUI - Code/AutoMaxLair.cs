@@ -136,29 +136,36 @@ namespace AutoDA
                 boxSpeedNeut.Text = String.Join(",", arr4);
                 boxSpeedNeg.Text = String.Join(",", arr5);
 
-                boxPokemon.Text = Utils.ConvertBossIdToBossName(t["BOSS"]);
-                boxBaseBall.Text = Utils.ConvertBallIdToBallName(t["BASE_BALL"]);
-                boxBaseBallValue.Text = t["BASE_BALLS"];
-                boxLegendBall.Text = Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]);
-                boxLegendBallValue.Text = t["LEGENDARY_BALLS"];
-                boxMode.Text = t["MODE"];
-                boxComPort.Text = t["COM_PORT"];
-                boxTesseract.Text = t["TESSERACT_PATH"];
-                boxVideoScale.Text = t["advanced"]["VIDEO_SCALE"];
-                boxVideoDelay.Text = t["advanced"]["VIDEO_EXTRA_DELAY"];
-                boxBossIndex.Text = t["advanced"]["BOSS_INDEX"];
-                boxDyniteOre.Text = t["advanced"]["DYNITE_ORE"];
-                boxConsecutiveResets.Text = t["advanced"]["CONSECUTIVE_RESETS"];
-                boxMaxDynite.Text = t["advanced"]["MAXIMUM_ORE_COST"];
+                SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
+                SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
+                SetConfigValue(boxBaseBallValue, t["BASE_BALLS"], t["BASE_BALLS"].Comment);
+                SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
+                SetConfigValue(boxLegendBallValue, t["LEGENDARY_BALLS"], t["LEGENDARY_BALLS"].Comment);
+                SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
+                SetConfigValue(boxComPort, t["COM_PORT"], t["COM_PORT"].Comment);
+                SetConfigValue(boxTesseract, t["TESSERACT_PATH"], t["TESSERACT_PATH"].Comment);
+                SetConfigValue(boxVideoScale, t["advanced"]["VIDEO_SCALE"], t["advanced"]["VIDEO_SCALE"].Comment);
+                SetConfigValue(boxVideoDelay, t["advanced"]["VIDEO_EXTRA_DELAY"], t["advanced"]["VIDEO_EXTRA_DELAY"].Comment);
+                SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
+                SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
+                SetConfigValue(boxConsecutiveResets, t["advanced"]["CONSECUTIVE_RESETS"], t["advanced"]["CONSECUTIVE_RESETS"].Comment);
+                SetConfigValue(boxMaxDynite, t["advanced"]["MAXIMUM_ORE_COST"], t["advanced"]["MAXIMUM_ORE_COST"].Comment);
+
                 checkBoxDebugLogs.Checked = t["advanced"]["ENABLE_DEBUG_LOGS"];
+                this.toolTip.SetToolTip(this.checkBoxDebugLogs, t["advanced"]["ENABLE_DEBUG_LOGS"].Comment);
+
                 boxCheckAttack.Checked = t["stats"]["CHECK_ATTACK_STAT"];
+                this.toolTip.SetToolTip(this.boxCheckAttack, t["CHECK_ATTACK_STAT"].Comment);
+
                 boxCheckSpeed.Checked = t["stats"]["CHECK_SPEED_STAT"];
-                boxWebhookID.Text = t["discord"]["WEBHOOK_ID"];
-                boxWebhookToken.Text = t["discord"]["WEBHOOK_TOKEN"];
-                boxUserID.Text = t["discord"]["USER_ID"];
-                boxPingName.Text = t["discord"]["USER_SHORT_NAME"];
-                boxPingSettings.Text = t["discord"]["UPDATE_LEVELS"];
-                boxGameLanguage.Text = t["language"]["LANGUAGE"]; 
+                this.toolTip.SetToolTip(this.boxCheckSpeed, t["CHECK_SPEED_STAT"].Comment);
+
+                SetConfigValue(boxWebhookID, t["discord"]["WEBHOOK_ID"], t["discord"]["WEBHOOK_ID"].Comment);
+                SetConfigValue(boxWebhookToken, t["discord"]["WEBHOOK_TOKEN"], t["discord"]["WEBHOOK_TOKEN"].Comment);
+                SetConfigValue(boxUserID, t["discord"]["USER_ID"], t["discord"]["USER_ID"].Comment);
+                SetConfigValue(boxPingName, t["discord"]["USER_SHORT_NAME"], t["discord"]["USER_SHORT_NAME"].Comment);
+                SetConfigValue(boxPingSettings, t["discord"]["UPDATE_LEVELS"], t["discord"]["UPDATE_LEVELS"].Comment);
+                SetConfigValue(boxGameLanguage, t["language"]["LANGUAGE"], t["language"]["LANGUAGE"].Comment);
             }
         }
 
@@ -596,6 +603,12 @@ namespace AutoDA
                 item.BackColor = lab;
                 item.ForeColor = textC;
             }
+        }
+
+        public void SetConfigValue(Control control, string content, string tooltip)
+        {
+            control.Text = content;
+            this.toolTip.SetToolTip(control, tooltip);
         }
     }
 
