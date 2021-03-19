@@ -185,7 +185,6 @@ namespace AutoDA
             this.boxMaxDynite.TabIndex = 21;
             this.boxMaxDynite.Text = "0";
             this.boxMaxDynite.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxMaxDynite, "The maximum amount of Dynite Ore the program\r\nshall use.");
             // 
             // boxBossIndex
             // 
@@ -202,7 +201,6 @@ namespace AutoDA
             this.boxBossIndex.Size = new System.Drawing.Size(95, 25);
             this.boxBossIndex.TabIndex = 20;
             this.boxBossIndex.Text = "Top";
-            this.toolTip.SetToolTip(this.boxBossIndex, "The position of the legendary Pokémon you are hunting on the menu.");
             // 
             // boxConsecutiveResets
             // 
@@ -215,8 +213,6 @@ namespace AutoDA
             this.boxConsecutiveResets.TabIndex = 17;
             this.boxConsecutiveResets.Text = "0";
             this.boxConsecutiveResets.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxConsecutiveResets, "If you had to stop the script and have not reset your reset counter by \r\nclearing" +
-        " an adventure, set this number to how many you previously had.");
             // 
             // boxDyniteOre
             // 
@@ -229,7 +225,6 @@ namespace AutoDA
             this.boxDyniteOre.TabIndex = 19;
             this.boxDyniteOre.Text = "0";
             this.boxDyniteOre.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxDyniteOre, "The amount of Dynite Ore the program can use or \r\nyou want to recover.");
             // 
             // boxVideoDelay
             // 
@@ -242,7 +237,6 @@ namespace AutoDA
             this.boxVideoDelay.TabIndex = 18;
             this.boxVideoDelay.Text = "0.0";
             this.boxVideoDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxVideoDelay, resources.GetString("boxVideoDelay.ToolTip"));
             // 
             // boxVideoScale
             // 
@@ -255,8 +249,6 @@ namespace AutoDA
             this.boxVideoScale.TabIndex = 17;
             this.boxVideoScale.Text = "0.5";
             this.boxVideoScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxVideoScale, "The scaling for the live display of the script.\r\nSet to less than 1 if you want t" +
-        "he image smaller than the default size.\r\n(1920x1080)");
             // 
             // checkBoxDebugLogs
             // 
@@ -268,9 +260,6 @@ namespace AutoDA
             this.checkBoxDebugLogs.Size = new System.Drawing.Size(146, 23);
             this.checkBoxDebugLogs.TabIndex = 14;
             this.checkBoxDebugLogs.Text = "Enable Debug Logs";
-            this.toolTip.SetToolTip(this.checkBoxDebugLogs, "This enables the debug logs in your Python console. This can be very useful when " +
-        "you are \r\nrunning into problems and need to report to the developers what\'s happ" +
-        "ening.");
             this.checkBoxDebugLogs.UseVisualStyleBackColor = true;
             // 
             // labelConsecutiveResets
@@ -375,8 +364,6 @@ namespace AutoDA
             this.btnTesseract.Size = new System.Drawing.Size(28, 26);
             this.btnTesseract.TabIndex = 25;
             this.btnTesseract.Text = "v";
-            this.toolTip.SetToolTip(this.btnTesseract, "This is the path to the Tesseract executable. \r\n(NOT pytesseract) \r\nOn Windows it" +
-        " is most likely inside Program Files\\\\Tesseract-OCR.");
             this.btnTesseract.UseVisualStyleBackColor = false;
             this.btnTesseract.Click += new System.EventHandler(this.btnTesseract_Click);
             // 
@@ -397,7 +384,6 @@ namespace AutoDA
             this.boxGameLanguage.Size = new System.Drawing.Size(121, 25);
             this.boxGameLanguage.TabIndex = 24;
             this.boxGameLanguage.Text = "English";
-            this.toolTip.SetToolTip(this.boxGameLanguage, "This is the language of the game you are playing.");
             this.boxGameLanguage.SelectedIndexChanged += new System.EventHandler(this.boxGameLanguage_SelectedIndexChanged);
             // 
             // labelGameLanguage
@@ -422,8 +408,6 @@ namespace AutoDA
             this.boxTesseract.TabIndex = 22;
             this.boxTesseract.Text = "C:\\\\Program Files\\\\Tesseract-OCR\\\\tesseract.exe";
             this.boxTesseract.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxTesseract, "This is the path to the Tesseract executable. \r\n(NOT pytesseract) \r\nOn Windows it" +
-        " is most likely inside Program Files\\\\Tesseract-OCR.");
             this.boxTesseract.TextChanged += new System.EventHandler(this.boxTesseract_TextChanged);
             // 
             // labelTessaract
@@ -448,7 +432,6 @@ namespace AutoDA
             this.boxLegendBallValue.TabIndex = 18;
             this.boxLegendBallValue.Text = "99";
             this.boxLegendBallValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxLegendBallValue, "The amount of the selected Pokéballs you have.");
             // 
             // boxVideoCapture
             // 
@@ -472,7 +455,6 @@ namespace AutoDA
             this.boxBaseBallValue.TabIndex = 17;
             this.boxBaseBallValue.Text = "99";
             this.boxBaseBallValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxBaseBallValue, "The amount of the selected Pokéballs you have.");
             // 
             // boxComPort
             // 
@@ -485,8 +467,6 @@ namespace AutoDA
             this.boxComPort.TabIndex = 15;
             this.boxComPort.Text = "COM4";
             this.boxComPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxComPort, "ComPort is for the internally connection of the serial connection. \r\nOn Windows i" +
-        "t will be of the form \"COMX\" where X is some number.");
             // 
             // boxMode
             // 
@@ -505,7 +485,6 @@ namespace AutoDA
             this.boxMode.Size = new System.Drawing.Size(113, 25);
             this.boxMode.TabIndex = 14;
             this.boxMode.Text = "Default";
-            this.toolTip.SetToolTip(this.boxMode, resources.GetString("boxMode.ToolTip"));
             // 
             // labelVideoIndex
             // 
@@ -604,8 +583,6 @@ namespace AutoDA
             this.boxLegendBall.Size = new System.Drawing.Size(113, 25);
             this.boxLegendBall.TabIndex = 7;
             this.boxLegendBall.Text = "Premier";
-            this.toolTip.SetToolTip(this.boxLegendBall, "This is the Pokéball for the legendary Pokémon. \r\nWith the \"Default\" option it wi" +
-        "ll use the first Pokéball in your inventory.");
             // 
             // boxBaseBall
             // 
@@ -644,8 +621,6 @@ namespace AutoDA
             this.boxBaseBall.Size = new System.Drawing.Size(113, 25);
             this.boxBaseBall.TabIndex = 6;
             this.boxBaseBall.Text = "Premier";
-            this.toolTip.SetToolTip(this.boxBaseBall, "This is the Pokéball that you use for non legendary Pokémon. \r\nWith the \"Default\"" +
-        " option it will use the first Pokéball in your inventory.");
             // 
             // boxPokemon
             // 
@@ -706,7 +681,6 @@ namespace AutoDA
             this.boxPokemon.Size = new System.Drawing.Size(113, 25);
             this.boxPokemon.TabIndex = 5;
             this.boxPokemon.Text = "Articuno";
-            this.toolTip.SetToolTip(this.boxPokemon, "This is the legendary you are resetting for.");
             // 
             // btnSetting
             // 
@@ -915,7 +889,6 @@ namespace AutoDA
             this.boxPingSettings.Size = new System.Drawing.Size(151, 25);
             this.boxPingSettings.TabIndex = 21;
             this.boxPingSettings.Text = "none";
-            this.toolTip.SetToolTip(this.boxPingSettings, resources.GetString("boxPingSettings.ToolTip"));
             // 
             // boxPingName
             // 
@@ -928,7 +901,6 @@ namespace AutoDA
             this.boxPingName.TabIndex = 20;
             this.boxPingName.Text = "ShinyHunter";
             this.boxPingName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxPingName, "A name that the webhook will mention.");
             // 
             // boxUserID
             // 
@@ -941,7 +913,6 @@ namespace AutoDA
             this.boxUserID.TabIndex = 19;
             this.boxUserID.Text = "123456789987654321";
             this.boxUserID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxUserID, "Your User ID in discord.");
             // 
             // boxWebhookToken
             // 
@@ -954,7 +925,6 @@ namespace AutoDA
             this.boxWebhookToken.TabIndex = 18;
             this.boxWebhookToken.Text = "123456789987654321";
             this.boxWebhookToken.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxWebhookToken, "The Webhook Token to setup the webhook.");
             // 
             // boxWebhookID
             // 
@@ -967,7 +937,6 @@ namespace AutoDA
             this.boxWebhookID.TabIndex = 17;
             this.boxWebhookID.Text = "123456789987654321";
             this.boxWebhookID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxWebhookID, "The Webhook ID to setup the webhook.");
             // 
             // labelMessages
             // 
@@ -1096,7 +1065,6 @@ namespace AutoDA
             this.boxCheckSpeed.Size = new System.Drawing.Size(134, 23);
             this.boxCheckSpeed.TabIndex = 28;
             this.boxCheckSpeed.Text = "Check Speed Stat";
-            this.toolTip.SetToolTip(this.boxCheckSpeed, "This enables to search for a pokémon with specific speed stats.");
             this.boxCheckSpeed.UseVisualStyleBackColor = true;
             // 
             // boxCheckAttack
@@ -1109,7 +1077,6 @@ namespace AutoDA
             this.boxCheckAttack.Size = new System.Drawing.Size(136, 23);
             this.boxCheckAttack.TabIndex = 27;
             this.boxCheckAttack.Text = "Check Attack Stat";
-            this.toolTip.SetToolTip(this.boxCheckAttack, "This enables to search for a pokémon with specific attack stats.");
             this.boxCheckAttack.UseVisualStyleBackColor = true;
             // 
             // boxSpeedNeg
@@ -1123,8 +1090,6 @@ namespace AutoDA
             this.boxSpeedNeg.TabIndex = 26;
             this.boxSpeedNeg.Text = "81";
             this.boxSpeedNeg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxSpeedNeg, "Enter the values for Speed Stats you want to search for, \r\nwhen the legendary has" +
-        " a negetive nature.\r\n");
             // 
             // boxSpeedNeut
             // 
@@ -1137,8 +1102,6 @@ namespace AutoDA
             this.boxSpeedNeut.TabIndex = 25;
             this.boxSpeedNeut.Text = "90";
             this.boxSpeedNeut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxSpeedNeut, "Enter the values for Speed Stats you want to search for, \r\nwhen the legendary has" +
-        " a neutral nature.\r\n");
             // 
             // labelSpeedNeg
             // 
@@ -1212,8 +1175,6 @@ namespace AutoDA
             this.boxSpeedPos.TabIndex = 17;
             this.boxSpeedPos.Text = "99";
             this.boxSpeedPos.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxSpeedPos, "Enter the values for Speed Stats you want to search for, \r\nwhen the legendary has" +
-        " a positive nature.");
             // 
             // boxAttackNeg
             // 
@@ -1226,8 +1187,6 @@ namespace AutoDA
             this.boxAttackNeg.TabIndex = 19;
             this.boxAttackNeg.Text = "131";
             this.boxAttackNeg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxAttackNeg, "Enter the values for Attack Stats you want to search for, \r\nwhen the legendary ha" +
-        "s a negative nature.");
             // 
             // boxAttackNeut
             // 
@@ -1240,8 +1199,6 @@ namespace AutoDA
             this.boxAttackNeut.TabIndex = 18;
             this.boxAttackNeut.Text = "146";
             this.boxAttackNeut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxAttackNeut, "Enter the values for Attack Stats you want to search for, \r\nwhen the legendary ha" +
-        "s a neutral nature.");
             // 
             // boxAttackPos
             // 
@@ -1254,8 +1211,6 @@ namespace AutoDA
             this.boxAttackPos.TabIndex = 17;
             this.boxAttackPos.Text = "160";
             this.boxAttackPos.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.boxAttackPos, "Enter the values for Attack Stats you want to search for, \r\nwhen the legendary ha" +
-        "s a positive nature.");
             // 
             // labelAttackPos
             // 
