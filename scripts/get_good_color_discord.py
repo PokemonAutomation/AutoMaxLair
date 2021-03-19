@@ -60,12 +60,6 @@ if __name__ == "__main__":
                 col_use = pal_test
                 break
 
-        # NOTE: some of them are hand selected
-
-        new_img = Image.new('RGB', (300, 200), tuple(col_use))
-        new_img.save(f"{boss_name}.png")
-        print(boss_name, col_use)
-
         boss_colors[boss_name] = col_use.tolist()
 
     # NOTE: some of them were bad so i hand selected these ones
