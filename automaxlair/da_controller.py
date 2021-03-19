@@ -636,6 +636,7 @@ class DAController(SwitchController):
 
         # Get a frame from the VideoCapture that we will check for the state.
         img = self.get_frame()
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         # First, check if the player was defeated.
         if self.check_black_screen(img):
@@ -658,14 +659,14 @@ class DAController(SwitchController):
             return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img_hsv, already_HSV=True
         ) and self.check_rect_HSV_match(
-            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img_hsv, already_HSV=True
         ):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img
+            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img_hsv, already_HSV=True
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
