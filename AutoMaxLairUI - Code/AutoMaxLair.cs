@@ -1,21 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using AForge.Video;
 using AForge.Video.DirectShow;
-using System.Threading.Tasks;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
-using System.Diagnostics;
 using Tommy;
-using System.Collections;
 using AutoMaxLair;
+using Newtonsoft.Json.Linq;
 
 namespace AutoDA
 {
@@ -84,7 +76,26 @@ namespace AutoDA
             {
                 configData = path + @"\Config.sample.toml";
             }
-            
+
+            List<string> legendaryList = new List<string>();
+            using (StreamReader reader = File.OpenText(@"data/boss_pokemon.json"))
+            {
+                string json = reader.ReadToEnd();
+                foreach (var item in JObject.Parse(json).Properties())
+                {
+                    legendaryList.Add(Utils.ConvertBossIdToBossName(item.Name));
+                }
+            }
+
+            List<string> ballList = new List<string>();
+            using (StreamReader reader = File.OpenText(@"data/balls.json"))
+            {
+                string json = reader.ReadToEnd();
+                foreach (var item in JObject.Parse(json).Properties())
+                {
+                    ballList.Add(Utils.ConvertBallIdToBallName(item.Name));
+                }
+            }
 
             using (StreamReader reader = new StreamReader(File.OpenRead(configData)))
             {
@@ -137,10 +148,16 @@ namespace AutoDA
                 boxSpeedNeg.Text = String.Join(",", arr5);
 
                 SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
+                boxPokemon.Items.AddRange(legendaryList.ToArray());
+
                 SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
+                boxBaseBall.Items.AddRange(ballList.ToArray());
                 SetConfigValue(boxBaseBallValue, t["BASE_BALLS"], t["BASE_BALLS"].Comment);
+
                 SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
+                boxLegendBall.Items.AddRange(ballList.ToArray());
                 SetConfigValue(boxLegendBallValue, t["LEGENDARY_BALLS"], t["LEGENDARY_BALLS"].Comment);
+
                 SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
                 SetConfigValue(boxComPort, t["COM_PORT"], t["COM_PORT"].Comment);
                 SetConfigValue(boxTesseract, t["TESSERACT_PATH"], t["TESSERACT_PATH"].Comment);

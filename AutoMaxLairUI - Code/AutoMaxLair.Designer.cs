@@ -552,32 +552,6 @@ namespace AutoDA
             this.boxLegendBall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.boxLegendBall.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxLegendBall.FormattingEnabled = true;
-            this.boxLegendBall.Items.AddRange(new object[] {
-            "Poke",
-            "Premier",
-            "Beast",
-            "Great",
-            "Ultra",
-            "Master",
-            "Friend",
-            "Lure",
-            "Quick",
-            "Repeat",
-            "Luxury",
-            "Net",
-            "Heal",
-            "Nest",
-            "Moon",
-            "Dream",
-            "Dive",
-            "Level",
-            "Love",
-            "Heavy",
-            "Dusk",
-            "Timer",
-            "Fast",
-            "Safari",
-            "Sport"});
             this.boxLegendBall.Location = new System.Drawing.Point(112, 71);
             this.boxLegendBall.Name = "boxLegendBall";
             this.boxLegendBall.Size = new System.Drawing.Size(113, 25);
@@ -590,32 +564,6 @@ namespace AutoDA
             this.boxBaseBall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.boxBaseBall.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxBaseBall.FormattingEnabled = true;
-            this.boxBaseBall.Items.AddRange(new object[] {
-            "Poke",
-            "Premier",
-            "Beast",
-            "Great",
-            "Ultra",
-            "Master",
-            "Friend",
-            "Lure",
-            "Quick",
-            "Repeat",
-            "Luxury",
-            "Net",
-            "Heal",
-            "Nest",
-            "Moon",
-            "Dream",
-            "Dive",
-            "Level",
-            "Love",
-            "Heavy",
-            "Dusk",
-            "Timer",
-            "Fast",
-            "Safari",
-            "Sport"});
             this.boxBaseBall.Location = new System.Drawing.Point(112, 40);
             this.boxBaseBall.Name = "boxBaseBall";
             this.boxBaseBall.Size = new System.Drawing.Size(113, 25);
@@ -628,54 +576,6 @@ namespace AutoDA
             this.boxPokemon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.boxPokemon.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxPokemon.FormattingEnabled = true;
-            this.boxPokemon.Items.AddRange(new object[] {
-            "Articuno",
-            "Zapdos",
-            "Moltres",
-            "Mewtwo",
-            "Raikou",
-            "Entei",
-            "Suicune",
-            "Lugia",
-            "Ho-Oh",
-            "Latias",
-            "Latios",
-            "Kyogre",
-            "Groudon",
-            "Rayquaza",
-            "Uxie",
-            "Mesprit",
-            "Azelf",
-            "Dialga",
-            "Palkia",
-            "Heatran",
-            "Giratina",
-            "Cresselia",
-            "Tornadus",
-            "Thundurus",
-            "Landorus",
-            "Reshiram",
-            "Zekrom",
-            "Kyurem",
-            "Xerneas",
-            "Yveltal",
-            "Zygarde",
-            "Tapu-Koko",
-            "Tapu-Lele",
-            "Tapu-Bulu",
-            "Tapu-Fini",
-            "Solgaleo",
-            "Lunala",
-            "Necrozma",
-            "Nihilego",
-            "Xerkitree",
-            "Buzzwole",
-            "Pheromosa",
-            "Celesteela",
-            "Kartana",
-            "Guzzlord",
-            "Stakataka",
-            "Blacephalon"});
             this.boxPokemon.Location = new System.Drawing.Point(112, 9);
             this.boxPokemon.Name = "boxPokemon";
             this.boxPokemon.Size = new System.Drawing.Size(113, 25);
