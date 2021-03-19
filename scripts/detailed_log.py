@@ -8,35 +8,42 @@ base_dir = dirname(dirname(abspath(__file__)))
 log_path = os.path.join(base_dir, 'logs')
 file_list = os.listdir(log_path)
 
-# Modify this list with whatever bosses you want to look at.
 bosses = ['articuno', 'zapdos', 'moltres', 'mewtwo', 'raikou', 'entei',
           'suicune', 'lugia', 'ho-oh', 'latias', 'latios', 'kyogre', 'groudon',
           'rayquaza', 'uxie', 'mesprit', 'azelf', 'dialga', 'palkia', 'heatran',
-          'giratina-altered', 'cresselia', 'tornadus', 'thundurus', 'reshiram', 'zekrom',
-          'landorus', 'kyurem', 'xerneas', 'yveltal', 'zygarde-50', 'tapu-koko', 'tapu-lele',
-          'tapu-bulu', 'tapu-fini', 'solgaleo', 'lunala', 'necrozma', 'nihilego', 'xurkitree',
-          'buzzwole', 'pheromosa', 'celesteela', 'kartana', 'guzzlord', 'stakataka',
-          'blacephalon'
+          'giratina-altered', 'cresselia', 'tornadus-incarnate', 'thundurus-incarnate',
+          'reshiram', 'zekrom', 'landorus-incarnate', 'kyurem', 'xerneas', 'yveltal',
+          'zygarde-50', 'tapu-koko', 'tapu-lele', 'tapu-bulu', 'tapu-fini', 'solgaleo',
+          'lunala', 'necrozma', 'nihilego', 'xurkitree', 'buzzwole', 'pheromosa',
+          'celesteela', 'kartana', 'guzzlord', 'stakataka', 'blacephalon'
           ]
 global_losses = 0
 global_wins = 0
 global_shinies = 0
 global_legends = 0
+boss_files = {}
 
 for boss in bosses:
+    found_files = []
+    for x in file_list:
+        if boss.lower() in x.lower() and ('.log' in x or '.txt' in x):
+            # add to the files found
+            found_files.append(x)
+            # remove from the original list since we're done with it
+            file_list.remove(x)
+
+    if len(found_files) > 0:
+        boss_files[boss] = found_files
+
+for boss, logs in boss_files.items():
     total_losses = 0
     total_wins = 0
     total_shinies = 0
     shiny_names = []
     total_legends = 0
 
-    # Iterate over all relevant log files because a new file is created every
-    # time the program is restarted.
-    for fn in file_list:
-        # Note that early versions capitalize the boss name whereas others do
-        # not. Therefore convert all the text to lower case.
-         if boss.lower() in fn.lower() and ('.txt' in fn or '.log' in fn):
-            with open(os.path.join(log_path, fn), newline='\n', encoding='utf-8') as log_file:
+    for log in logs:
+        with open(os.path.join(log_path, log), newline='\n', encoding='utf-8') as log_file:
                 num_losses = 0
                 num_wins = 0
                 num_shinies = 0
@@ -53,7 +60,7 @@ for boss in bosses:
                         shiny_names.append(row.split(' will be kept')[0].split('Shiny ')[1])
                     if (f'{boss} will be kept') in row:
                         legend_caught += 1
-                        
+
                 total_losses += num_losses
                 total_wins += num_wins
                 total_shinies += num_shinies
@@ -71,7 +78,7 @@ for boss in bosses:
     print(f'Total shinies found: {total_shinies}')
     for shiny_name in shiny_names:
         print(f'{shiny_name}')
-        
+
     global_wins += total_wins
     global_losses += total_losses
     global_shinies += total_shinies
