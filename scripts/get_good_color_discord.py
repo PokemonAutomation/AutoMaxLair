@@ -11,6 +11,8 @@ base_dir = dirname(dirname(abspath(__file__)))
 def palette(img):
     """
     Return palette in descending order of frequency
+
+    Taken directly from stack overflow: https://stackoverflow.com/a/18801274
     """
     arr = np.asarray(img)
     palette, index = np.unique(asvoid(arr).ravel(), return_inverse=True)
