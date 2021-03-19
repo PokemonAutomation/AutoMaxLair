@@ -114,6 +114,12 @@ DYNITE_ORE = 0
 # an adventure, set this number to how many you previously had.
 CONSECUTIVE_RESETS = 0
 
+# === NON_LEGEND ==
+# This setting will reset any completed run in which the pokemon listed was caught in. It will 
+# continue to reset and use ore in this manner until it either finds a shiny of some type or 
+# does not have enough ore to afford another reset.
+NON_LEGEND = "default"
+
 # === MAXIMUM_ORE_COST ===
 # The maximum ore cost you're willing to pay in order to reset once.
 MAXIMUM_ORE_COST = 10
