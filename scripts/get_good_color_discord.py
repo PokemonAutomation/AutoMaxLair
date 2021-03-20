@@ -2,7 +2,6 @@ import jsonpickle
 import requests
 from PIL import Image
 import numpy as np
-import sys
 from os.path import abspath, dirname, join
 
 base_dir = dirname(dirname(abspath(__file__)))

@@ -13,7 +13,6 @@ import os
 import pickle
 import jsonpickle
 
-from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
 
 import cv2
@@ -216,14 +215,14 @@ class DAController(SwitchController):
                 "You must provide multiple values for negative speed stats")
             assert type(self.expected_speed_stats['neutral']) is list, (
                 "You must provide multiple values for neutral speed stats")
-        
+
         # choose a good color for the boss
         try:
             # let's update the embed color with one from our list
             with open(self.config['pokemon_data_paths']['boss_colors'], 'r') as f:
                 boss_colors = jsonpickle.decode(f.read())
             self.discord_embed_color = Color.from_rgb(*boss_colors[self.boss])
-        except:
+        except Exception:
             self.discord_embed_color = Color.random()
 
     def reset_run(self) -> None:

@@ -405,8 +405,9 @@ class SwitchController:
         cv2.imwrite(filename, img)
 
     def send_discord_message(
-        self, text: str, path_to_picture: str = None,
-        embed_fields: dict = None, level: str = "update") -> None:
+            self, text: str, path_to_picture: str = None,
+            embed_fields: dict = None, level: str = "update"
+    ) -> None:
         """Send a notification via Discord.
 
         Parameters
@@ -431,8 +432,8 @@ class SwitchController:
         """
 
         # the first check is if there's no discord info
-        if (self.webhook_id == 'PLACE_ID_WITHIN_QUOTES' or self.webhook_token == 'PLACE_TOKEN_WITHIN_QUOTES' \
-            or self.webhook_id == "" or self.webhook_token == ""):
+        if (self.webhook_id == 'PLACE_ID_WITHIN_QUOTES' or self.webhook_token == 'PLACE_TOKEN_WITHIN_QUOTES'
+                or self.webhook_id == "" or self.webhook_token == ""):
             self.log(
                 'You need to setup the discord section to be able to use the '
                 'ping feature.', 'DEBUG')
@@ -454,9 +455,9 @@ class SwitchController:
             # if they don't want the discord update information, we can also
             # return
             return
-        
+
         send_ping = False
-        
+
         # determine if we can ping right from level and potential settings
         if level == "update":
             pass
