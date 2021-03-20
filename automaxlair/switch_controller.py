@@ -271,7 +271,7 @@ class SwitchController:
         cropped_area = img[round(rect[0][1] * h):round(rect[1][1] * h),
                            round(rect[0][0] * w):round(rect[1][0] * w)]
         measured_value = self.get_rect_HSV_value(
-            cropped_area, lower_threshold, upper_threshold)
+            cropped_area, lower_threshold, upper_threshold, True)
 
         # Return True if the mean value is above the supplied threshold
         return measured_value > mean_value_threshold
