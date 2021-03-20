@@ -127,7 +127,7 @@ class DAController(SwitchController):
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
         # Backpacker item rectangles.
-        self.backpacker_blue_rect = ((0.75, 0.15), (0.95, 0.6))
+        self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
         self.item_rect_2 = ((0.549, 0.19), (0.745, 0.24))
         self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
@@ -245,7 +245,9 @@ class DAController(SwitchController):
         if not self.enable_debug_logs or rectangle_set is None:
             pass
         elif rectangle_set == 'detect':
-            self.outline_region(img, self.den_text_rect, (255, 255, 0))
+            self.outline_regions(img, (
+                self.den_text_rect, self.backpacker_blue_rect
+            ), (255, 255, 0))
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
                 img, (
