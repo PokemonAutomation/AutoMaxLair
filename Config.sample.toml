@@ -301,7 +301,7 @@ TERRAIN_PSYCHIC = "got weird"
 TESSERACT_LANG_NAME = "spa"
 
 # Code used by auto max lair to read the names in the right language.
-DATA_LANG_NAME = "sp"
+DATA_LANG_NAME = "es"
 
 # Sentence used to detect that the bot met the backpacker.
 BACKPACKER = "mis objetos"
