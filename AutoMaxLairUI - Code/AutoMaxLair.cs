@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
-using AForge.Video.DirectShow;
+using VisioForge.Shared.DirectShowLib;
 using Tommy;
 using AutoMaxLair;
 using Newtonsoft.Json.Linq;
@@ -19,24 +19,9 @@ namespace AutoDA
             getConfig();
         }
 
-        FilterInfoCollection filterInfoCollection;
-
-
         private void AutoDA_Load(object sender, EventArgs e)
         {
             Initialize_Add();
-            int i = 0;
-            // Get every Video Capture device and put it into the combobox (with right order)
-            filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            foreach (FilterInfo filterInfo in filterInfoCollection)
-            {
-                boxVideoCapture.Items.Insert(i, filterInfo.Name);
-                i = i++;
-            }
-
-            boxVideoCapture.SelectedIndex = 0;
-
-            
             bool darktheme;
             darktheme = AutoMaxLair.Properties.Settings.Default.DarkTheme;
 
@@ -52,12 +37,6 @@ namespace AutoDA
                 btnSave.BackgroundImage = AutoMaxLair.Properties.Resources.Save2;
                 btnSettings.BackgroundImage = AutoMaxLair.Properties.Resources.Settings2;
             }
-
-            
-                
-            
-            boxVideoCapture.SelectedIndex = 0;
-            //Add(filterInfo.Name);
         }
 
         // Method to get the preset for the UI from the Config.toml
@@ -160,6 +139,19 @@ namespace AutoDA
 
                 SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
                 SetConfigValue(boxComPort, t["COM_PORT"], t["COM_PORT"].Comment);
+
+                // Get every Video Capture device and put it into the combobox (with right order)
+                List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
+                foreach (var device in devices)
+                {
+                    boxVideoCapture.Items.Add(device.Name);
+                }
+                int videoIndex = t["VIDEO_INDEX"];
+                if (videoIndex < devices.Count)
+                {
+                    boxVideoCapture.Text = devices[videoIndex].Name;
+                }
+
                 SetConfigValue(boxTesseract, t["TESSERACT_PATH"], t["TESSERACT_PATH"].Comment);
                 SetConfigValue(boxVideoScale, t["advanced"]["VIDEO_SCALE"], t["advanced"]["VIDEO_SCALE"].Comment);
                 SetConfigValue(boxVideoDelay, t["advanced"]["VIDEO_EXTRA_DELAY"], t["advanced"]["VIDEO_EXTRA_DELAY"].Comment);
