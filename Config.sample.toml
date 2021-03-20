@@ -213,7 +213,7 @@ TERRAIN_PSYCHIC = "got weird"
 
 [Spanish]
 TESSERACT_LANG_NAME = "spa"
-DATA_LANG_NAME = "sp"
+DATA_LANG_NAME = "es"
 BACKPACKER = "mis objetos"
 SCIENTIST = "préstamo"
 PATH = "quieres seguir"
