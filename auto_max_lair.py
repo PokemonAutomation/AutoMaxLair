@@ -356,7 +356,7 @@ def catch(ctrlr) -> str:
         and not ctrlr.check_sufficient_ore(1)
     ):
         ctrlr.log('Finishing the run without wasting a ball on the boss.')
-        ctrlr.push_buttons((b'v', 2), (b'a', 30))
+        ctrlr.push_buttons((b'v', 2), (b'a', 10))
         ctrlr.log('Congratulations!')
         return 'select_pokemon'
 
