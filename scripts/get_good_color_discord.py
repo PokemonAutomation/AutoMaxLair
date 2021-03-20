@@ -23,7 +23,8 @@ def palette(img):
 
 def asvoid(arr):
     """View the array as dtype np.void (bytes)
-    This collapses ND-arrays to 1D-arrays, so you can perform 1D operations on them.
+    This collapses ND-arrays to 1D-arrays,
+    so you can perform 1D operations on them.
     http://stackoverflow.com/a/16216866/190597 (Jaime)
     http://stackoverflow.com/a/16840350/190597 (Jaime)
     Warning:
@@ -34,9 +35,11 @@ def asvoid(arr):
     return arr.view(np.dtype((np.void, arr.dtype.itemsize * arr.shape[-1])))
 
 
-if __name__ == "__main__":
+def main():
 
-    with open(join(base_dir, 'data', 'boss_pokemon.json'), 'r', encoding='utf8') as file:
+    with open(
+        join(base_dir, 'data', 'boss_pokemon.json'), 'r', encoding='utf8'
+    ) as file:
         boss_pokemon = jsonpickle.decode(file.read())
 
     boss_colors = {}
@@ -83,5 +86,11 @@ if __name__ == "__main__":
     boss_colors['zygarde-50'] = [41, 186, 149]
 
     # then save it as a json
-    with open(join(base_dir, "data", 'boss_colors.json'), 'w', encoding='utf8') as f:
+    with open(
+        join(base_dir, "data", 'boss_colors.json'), 'w', encoding='utf8'
+    ) as f:
         f.write(jsonpickle.encode(boss_colors, indent=4))
+
+
+if __name__ == "__main__":
+    main()
