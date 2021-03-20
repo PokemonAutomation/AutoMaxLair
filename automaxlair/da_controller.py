@@ -5,7 +5,6 @@ den.
 
 #       Eric Donders
 #       Contributions from denvoros, pifopi, and Miguel Tavera
-#       Last updated 2021-01-08
 #       Created 2020-11-20
 
 import re
@@ -128,6 +127,7 @@ class DAController(SwitchController):
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
         # Backpacker item rectangles.
+        self.backpacker_blue_rect = ((0.75, 15), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
         self.item_rect_2 = ((0.549, 0.19), (0.745, 0.24))
         self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
@@ -155,17 +155,20 @@ class DAController(SwitchController):
                 self.misc_icons[filename.split('.png')[0]] = cv2.imread(
                     os.path.join(directory, filename)
                 )
-        with open(config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8') as file:
+        with open(
+            config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8'
+        ) as file:
             self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
-        assert self.balls[self.base_ball], 'Unknown base ball id'
-        assert self.balls[self.legendary_ball], 'Unknown legendary ball id'
+        assert self.balls[self.base_ball], 'Unknown base ball id.'
+        assert self.balls[self.legendary_ball], 'Unknown legendary ball id.'
         if self.base_ball == self.legendary_ball:
-            assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
+            assert self.base_balls == self.legendary_balls, (
+                'Ball count mismatch.')
             assert self.base_balls >= 4, 'Not enough base balls.'
             assert self.base_balls <= 999, 'Too many base balls.'
         else:
@@ -176,12 +179,18 @@ class DAController(SwitchController):
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
-        assert self.discord_level in ['all', 'only_shiny', 'none'], 'Invalid discord level'
-        # Do not assert for negative dynite ore. That way it can be used to farm ore.
-        assert self.dynite_ore <= 999, 'Too much dynite ore'
-        assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
-        assert self.maximum_ore_cost >= 0, 'Maximum ore cost cannot be negative'
-        assert self.maximum_ore_cost <= 10, 'Maximum ore cost cannot be greater than 10'
+        assert self.discord_level in (
+            'all', 'only_shiny', 'none'), 'Invalid discord level'
+        # Do not assert for negative dynite ore.
+        # Negative ore will force the bot to not spend any ore until it reaches
+        # that target.
+        assert self.dynite_ore <= 999, 'Too much dynite ore.'
+        assert self.consecutive_resets >= 0, (
+            'Consecutive reset cannot be negative.')
+        assert self.maximum_ore_cost >= 0, (
+            'Maximum ore cost cannot be negative.')
+        assert self.maximum_ore_cost <= 10, (
+            'Maximum ore cost cannot be greater than 10.')
         # Only need to run this assertion if we're checking the attack stat.
         if self.check_attack_stat:
             assert 'positive' in self.expected_attack_stats.keys(), (
@@ -282,8 +291,11 @@ class DAController(SwitchController):
                 ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
-                img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                      self.item_rect_4, self.item_rect_5), (0, 255, 0))
+                img, (
+                    self.backpacker_blue_rect, self.item_rect_1,
+                    self.item_rect_2, self.item_rect_3, self.item_rect_4,
+                    self.item_rect_5
+                ), (0, 255, 0))
 
         # Return annotated image.
         return img
@@ -614,13 +626,17 @@ class DAController(SwitchController):
             self.misc_icons['fight']
         )[0] >= 0.85:
             return 'battle'
+        # Then, check for the backpacker screen.
+        if self.check_rect_HSV_match(
+            self.backpacker_blue_rect, (80, 230, 230), (120, 255, 255), 240,
+            img
+        ):
+            return 'backpacker'
         # Otherwise, check for other text.
         if self.check_rect_HSV_match(
             self.den_text_rect, (0, 0, 0,), (180, 55, 255), 220, img
         ):
             text = self.read_text(img, self.den_text_rect, invert=True)
-            if re.search(self.phrases['BACKPACKER'], text):
-                return 'backpacker'
             if re.search(self.phrases['SCIENTIST'], text):
                 return 'scientist'
             if re.search(self.phrases['PATH'], text):
@@ -659,14 +675,17 @@ class DAController(SwitchController):
             return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img_hsv, already_HSV=True
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img_hsv,
+            already_HSV=True
         ) and self.check_rect_HSV_match(
-            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img_hsv, already_HSV=True
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20,
+            img_hsv, already_HSV=True
         ):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img_hsv, already_HSV=True
+            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img_hsv,
+            already_HSV=True
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):

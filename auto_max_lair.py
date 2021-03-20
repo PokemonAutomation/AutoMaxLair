@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-beta'
+VERSION = 'v0.8-beta-2021-03-19-1'
 
 # load configuration from the config file
 try:
@@ -477,7 +477,7 @@ def catch(ctrlr) -> str:
 
 def backpacker(ctrlr) -> str:
     """Choose an item from the backpacker."""
-    ctrlr.push_button(None, 5 + VIDEO_EXTRA_DELAY)
+    ctrlr.push_button(None, 1 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log("Reading the backpacker's items.")
 
