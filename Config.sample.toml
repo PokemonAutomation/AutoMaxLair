@@ -198,7 +198,7 @@ UPDATE_LEVELS = "none"
 [language]
 # === LANGUAGE ===
 # Set the language of your game here.
-# Currently we support English, Spanish, French, Korean, and German
+# Currently we support English, Spanish, French, Korean, German and Japanese
 LANGUAGE = "English"
 
 # ==========
@@ -521,7 +521,7 @@ DATA_LANG_NAME = "ja-Hrkt"
 BACKPACKER = "バックパッカー"
 
 # Sentence used to detect that the bot met the scientist.
-SCIENTIST = "swapping"
+SCIENTIST = "レンタル"
 
 # Sentence used to detect that the bot have to choose a path in the den.
 PATH = "みちに"
