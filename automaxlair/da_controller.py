@@ -993,7 +993,7 @@ class DAController(SwitchController):
         the_dict = {
             "Boss": self.boss,
             "Wins/Runs": f"{self.wins}/{self.runs}",
-            "Win Rate": self.win_percent,
+            "Win Rate": f"{self.win_percent:.1%}",
             "Avg. Time": str(self.time_per_run)[2:7],
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
