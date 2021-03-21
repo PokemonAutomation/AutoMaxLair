@@ -182,7 +182,8 @@ class DAController(SwitchController):
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
         assert self.discord_level in (
-            'all', 'only_shiny', 'none'), 'Invalid discord level'
+            'all', 'all_ping_legendary', 'only_shiny', 'only_shiny_ping_legendary',
+            'none'), 'Invalid discord level'
         # Do not assert for negative dynite ore.
         # Negative ore will force the bot to not spend any ore until it reaches
         # that target.
