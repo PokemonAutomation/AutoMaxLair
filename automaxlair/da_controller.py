@@ -182,7 +182,8 @@ class DAController(SwitchController):
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
         assert self.discord_level in (
-            'all', 'only_shiny', 'none'), 'Invalid discord level'
+            'all', 'all_ping_legendary', 'only_shiny', 'only_shiny_ping_legendary',
+            'none'), 'Invalid discord level'
         # Do not assert for negative dynite ore.
         # Negative ore will force the bot to not spend any ore until it reaches
         # that target.
@@ -993,7 +994,7 @@ class DAController(SwitchController):
         the_dict = {
             "Boss": self.boss,
             "Wins/Runs": f"{self.wins}/{self.runs}",
-            "Win Rate": self.win_percent,
+            "Win Rate": f"{self.win_percent:.1%}",
             "Avg. Time": str(self.time_per_run)[2:7],
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,

@@ -781,9 +781,11 @@ namespace AutoDA
             this.boxPingSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxPingSettings.FormattingEnabled = true;
             this.boxPingSettings.Items.AddRange(new object[] {
-            "none",
+            "all",
+            "all_ping_legendary",
             "only_shiny",
-            "all"});
+            "only_shiny_ping_legendary",
+            "none"});
             this.boxPingSettings.Location = new System.Drawing.Point(128, 136);
             this.boxPingSettings.Name = "boxPingSettings";
             this.boxPingSettings.Size = new System.Drawing.Size(151, 25);

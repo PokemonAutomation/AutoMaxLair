@@ -198,7 +198,7 @@ UPDATE_LEVELS = "none"
 [language]
 # === LANGUAGE ===
 # Set the language of your game here.
-# Currently we support English, Spanish, French, Korean, and German
+# Currently we support English, Spanish, French, Korean, German and Japanese
 LANGUAGE = "English"
 
 # ==========
@@ -252,9 +252,6 @@ TESSERACT_LANG_NAME = "eng"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "en"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "backpacker"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "swapping"
 
@@ -305,9 +302,6 @@ TESSERACT_LANG_NAME = "spa"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "es"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "mis objetos"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "préstamo"
 
@@ -315,40 +309,40 @@ SCIENTIST = "préstamo"
 PATH = "quieres seguir"
 
 # Sentence used to detect that we lost a live (storm is raging).
-FAINT = "La tormenta"
+FAINT = "tormenta reinante"
 
 # Sentence used to detect the scientist asking us to join a DA.
 START_PHRASE = "emprender"
 
 # Sentence used to detect that the weather is now normal.
-WEATHER_CLEAR = "PLACEHOLDER"
+WEATHER_CLEAR = "sol vuelve a brillar|dejado de llover|arena ha amainado|dejado de granizar"
 
 # Sentence used to detect that the weather is now sunny.
-WEATHER_SUNLIGHT = "PLACEHOLDER"
+WEATHER_SUNLIGHT = "sol pega fuerte"
 
 # Sentence used to detect that the weather is now rainy.
-WEATHER_RAIN = "PLACEHOLDER"
+WEATHER_RAIN = "empezado a llover"
 
 # Sentence used to detect that the sandstorm is raging.
-WEATHER_SANDSTORM = "PLACEHOLDER"
+WEATHER_SANDSTORM = "desatado una tormenta de arena"
 
 # Sentence used to detect that the hailstorm is raging.
-WEATHER_HAIL = "PLACEHOLDER"
+WEATHER_HAIL = "empezado a granizar"
 
 # Sentence used to detect that the terrain is now normal.
-TERRAIN_CLEAR = "PLACEHOLDER"
+TERRAIN_CLEAR = "eléctrica ha desaparecido|desaparecido la extraña|hierba ha desaparecido|se ha disipado"
 
 # Sentence used to detect that the terrain is now electrified.
-TERRAIN_ELECTRIC = "PLACEHOLDER"
+TERRAIN_ELECTRIC = "campo de corriente"
 
 # Sentence used to detect that the terrain is now grassy.
-TERRAIN_GRASSY = "PLACEHOLDER"
+TERRAIN_GRASSY = "ha cubierto de hierba"
 
 # Sentence used to detect that the terrain is now misty.
-TERRAIN_MISTY = "PLACEHOLDER"
+TERRAIN_MISTY = "niebla ha envuelto"
 
 # Sentence used to detect that the terrain is now psychic.
-TERRAIN_PSYCHIC = "PLACEHOLDER"
+TERRAIN_PSYCHIC = "ha vuelto muy extraño"
 
 # 
 [French]
@@ -357,9 +351,6 @@ TESSERACT_LANG_NAME = "fra"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "fr"
-
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "Randonneuse"
 
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "intéresse"
@@ -411,9 +402,6 @@ TESSERACT_LANG_NAME = "kor"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "ko"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "백팩커"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "교환하|교핟하 "
 
@@ -463,9 +451,6 @@ TESSERACT_LANG_NAME = "deu"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "de"
-
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "Backpackerin"
 
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "austauschen"
@@ -517,11 +502,8 @@ TESSERACT_LANG_NAME = "jpn"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "ja-Hrkt"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "バックパッカー"
-
 # Sentence used to detect that the bot met the scientist.
-SCIENTIST = "swapping"
+SCIENTIST = "レンタル"
 
 # Sentence used to detect that the bot have to choose a path in the den.
 PATH = "みちに"
