@@ -252,9 +252,6 @@ TESSERACT_LANG_NAME = "eng"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "en"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "backpacker"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "swapping"
 
@@ -304,9 +301,6 @@ TESSERACT_LANG_NAME = "spa"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "es"
-
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "mis objetos"
 
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "préstamo"
@@ -358,9 +352,6 @@ TESSERACT_LANG_NAME = "fra"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "fr"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "Randonneuse"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "intéresse"
 
@@ -410,9 +401,6 @@ TESSERACT_LANG_NAME = "kor"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "ko"
-
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "백팩커"
 
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "교환하|교핟하 "
@@ -464,9 +452,6 @@ TESSERACT_LANG_NAME = "deu"
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "de"
 
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "Backpackerin"
-
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "austauschen"
 
@@ -516,9 +501,6 @@ TESSERACT_LANG_NAME = "jpn"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "ja-Hrkt"
-
-# Sentence used to detect that the bot met the backpacker.
-BACKPACKER = "バックパッカー"
 
 # Sentence used to detect that the bot met the scientist.
 SCIENTIST = "レンタル"
