@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-beta'
+VERSION = 'v0.8-beta-2021-03-19-1'
 
 # load configuration from the config file
 try:
@@ -40,6 +40,7 @@ BOSS = config['BOSS'].lower().replace(' ', '-')
 BOSS_INDEX = config['advanced']['BOSS_INDEX']
 pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
 ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
+NON_LEGEND = config['advanced']['NON_LEGEND'].lower().replace(' ', '-')
 
 # Set the log name
 LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
@@ -49,7 +50,7 @@ def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
     # send a discord message that we're ready to rumble
     ctrlr.send_discord_message(
-        False, f"Starting a new full run for {ctrlr.boss}!",
+        f"Starting a new full run for {ctrlr.boss}!",
         embed_fields=ctrlr.get_stats_for_discord(), level="update"
     )
     ctrlr.log(f'Initializing AutoMaxLair {VERSION}.')
@@ -122,7 +123,6 @@ def join(ctrlr) -> str:
     ctrlr.log(f'Path type identified as: {run.path_type}')
     ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
     ctrlr.read_path_information(3)
-    #ctrlr.log(str(run), 'DEBUG')
     for line in run.get_output_strings():
         ctrlr.log(line)
     all_paths_str = run.get_paths(truncate=True, name_only=True)
@@ -184,7 +184,10 @@ def battle(ctrlr) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
+    # Wait for the black screen at the start of the battle to go away.
     ctrlr.push_button(None, 13)
+    while ctrlr.check_black_screen():
+        ctrlr.push_button(None, 1)
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by the screen going completely black).
@@ -353,7 +356,7 @@ def catch(ctrlr) -> str:
         and not ctrlr.check_sufficient_ore(1)
     ):
         ctrlr.log('Finishing the run without wasting a ball on the boss.')
-        ctrlr.push_buttons((b'v', 2), (b'a', 30))
+        ctrlr.push_buttons((b'v', 2), (b'a', 10))
         ctrlr.log('Congratulations!')
         return 'select_pokemon'
 
@@ -403,7 +406,7 @@ def catch(ctrlr) -> str:
             if i == 0:
                 run.pokemon.HP = HP
             else:
-                team[i-1].HP = HP
+                team[i - 1].HP = HP
         team_scores = []
         potential_teams = (
             (pokemon, team[0], team[1], team[2]),
@@ -474,7 +477,7 @@ def catch(ctrlr) -> str:
 
 def backpacker(ctrlr) -> str:
     """Choose an item from the backpacker."""
-    ctrlr.push_button(None, 5 + VIDEO_EXTRA_DELAY)
+    ctrlr.push_button(None, 1 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log("Reading the backpacker's items.")
 
@@ -577,7 +580,6 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('Preparing for another run.')
 
         ctrlr.send_discord_message(
-            False,
             "No Pokémon were caught in the last run.",
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
@@ -590,7 +592,6 @@ def select_pokemon(ctrlr) -> str:
     elif run.num_caught == 4 and ctrlr.mode == 'find path':
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            True,
             f"Found a winning path for {ctrlr.boss} with {run.lives} "
             "remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
@@ -621,11 +622,11 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
-                True, f"Matching stats found for {ctrlr.boss}!",
+                f"Matching stats found for {ctrlr.boss}!",
                 path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                 f'{ctrlr.num_saved_images}.png',
                 embed_fields=ctrlr.get_stats_for_discord(),
-                level="shiny"
+                level="legendary"
             )
             return None  # End whenever a matching stats legendary is found
 
@@ -663,17 +664,18 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.display_results(screenshot=True)
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
+                # NOTE: this is when we found a legendary!
                 ctrlr.send_discord_message(
-                    True, f'Found a shiny {run.caught_pokemon[3]}!',
+                    f'Found a shiny {run.caught_pokemon[3]}!',
                     path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                     f'{ctrlr.num_saved_images}.png',
                     embed_fields=ctrlr.get_stats_for_discord(),
-                    level="shiny"
+                    level="legendary"
                 )
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'Found a shiny '
+                    f'Found a shiny '
                     f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
                     path_to_picture=f'logs/{ctrlr.log_name}_cap_'
                     f'{ctrlr.num_saved_images}.png',
@@ -691,6 +693,15 @@ def select_pokemon(ctrlr) -> str:
         and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
+
+    if (
+        not take_pokemon and NON_LEGEND in run.caught_pokemon
+        and ctrlr.check_sufficient_ore(1)
+    ):
+        reset_game = True
+        ctrlr.log('----------------------------------')
+        ctrlr.log(f'--Found {NON_LEGEND} on this path.--')
+        ctrlr.log('----------------------------------')
 
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).
@@ -723,13 +734,17 @@ def select_pokemon(ctrlr) -> str:
     # Update statistics and reset stored information about the complete run.
     ctrlr.wins += 1 if run.lives != 0 else 0
     ctrlr.runs += 1
+    # calculate the win percent
+    ctrlr.win_percent = ctrlr.wins / ctrlr.runs
+    # then update the time per run
+    ctrlr.time_per_run = (datetime.now() - ctrlr.start_date) / ctrlr.runs
     ctrlr.reset_run()
 
     # Start another run if there are sufficient Poke balls to do so.
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
         ctrlr.send_discord_message(
-            False, 'Preparing for another run.',
+            'Preparing for another run.',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
@@ -737,7 +752,7 @@ def select_pokemon(ctrlr) -> str:
     else:
         ctrlr.log('Out of balls. Quitting.')
         ctrlr.send_discord_message(
-            True, 'You ran out of legendary balls! The program has exited!',
+            'You ran out of legendary balls! The program has exited!',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="critical"
         )

@@ -1,21 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using AForge.Video;
-using AForge.Video.DirectShow;
-using System.Threading.Tasks;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
-using System.Diagnostics;
+using VisioForge.Shared.DirectShowLib;
 using Tommy;
-using System.Collections;
 using AutoMaxLair;
+using Newtonsoft.Json.Linq;
 
 namespace AutoDA
 {
@@ -27,24 +19,9 @@ namespace AutoDA
             getConfig();
         }
 
-        FilterInfoCollection filterInfoCollection;
-
-
         private void AutoDA_Load(object sender, EventArgs e)
         {
             Initialize_Add();
-            int i = 0;
-            // Get every Video Capture device and put it into the combobox (with right order)
-            filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            foreach (FilterInfo filterInfo in filterInfoCollection)
-            {
-                boxVideoCapture.Items.Insert(i, filterInfo.Name);
-                i = i++;
-            }
-
-            boxVideoCapture.SelectedIndex = 0;
-
-            
             bool darktheme;
             darktheme = AutoMaxLair.Properties.Settings.Default.DarkTheme;
 
@@ -60,12 +37,6 @@ namespace AutoDA
                 btnSave.BackgroundImage = AutoMaxLair.Properties.Resources.Save2;
                 btnSettings.BackgroundImage = AutoMaxLair.Properties.Resources.Settings2;
             }
-
-            
-                
-            
-            boxVideoCapture.SelectedIndex = 0;
-            //Add(filterInfo.Name);
         }
 
         // Method to get the preset for the UI from the Config.toml
@@ -84,7 +55,26 @@ namespace AutoDA
             {
                 configData = path + @"\Config.sample.toml";
             }
-            
+
+            List<string> legendaryList = new List<string>();
+            using (StreamReader reader = File.OpenText(@"data/boss_pokemon.json"))
+            {
+                string json = reader.ReadToEnd();
+                foreach (var item in JObject.Parse(json).Properties())
+                {
+                    legendaryList.Add(Utils.ConvertBossIdToBossName(item.Name));
+                }
+            }
+
+            List<string> ballList = new List<string>();
+            using (StreamReader reader = File.OpenText(@"data/balls.json"))
+            {
+                string json = reader.ReadToEnd();
+                foreach (var item in JObject.Parse(json).Properties())
+                {
+                    ballList.Add(Utils.ConvertBallIdToBallName(item.Name));
+                }
+            }
 
             using (StreamReader reader = new StreamReader(File.OpenRead(configData)))
             {
@@ -136,61 +126,55 @@ namespace AutoDA
                 boxSpeedNeut.Text = String.Join(",", arr4);
                 boxSpeedNeg.Text = String.Join(",", arr5);
 
-                string poke = "";
-                if (t["BOSS"] == "tornadus-incarnate")
+                SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
+                boxPokemon.Items.AddRange(legendaryList.ToArray());
+
+                SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
+                boxBaseBall.Items.AddRange(ballList.ToArray());
+                SetConfigValue(boxBaseBallValue, t["BASE_BALLS"], t["BASE_BALLS"].Comment);
+
+                SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
+                boxLegendBall.Items.AddRange(ballList.ToArray());
+                SetConfigValue(boxLegendBallValue, t["LEGENDARY_BALLS"], t["LEGENDARY_BALLS"].Comment);
+
+                SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
+                SetConfigValue(boxComPort, t["COM_PORT"], t["COM_PORT"].Comment);
+
+                // Get every Video Capture device and put it into the combobox (with right order)
+                List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
+                foreach (var device in devices)
                 {
-                    poke = "tornadus";
-                    boxPokemon.Text = poke;
+                    boxVideoCapture.Items.Add(device.Name);
                 }
-                    
-                else if (t["BOSS"] == "landorus-incarnate")
-                { 
-                    poke = "landorus";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "thundurus-incarnate")
-                { 
-                    poke = "thundurus";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "giratina-altered") 
-                { 
-                    poke = "giratina";
-                    boxPokemon.Text = poke;
-                }
-                else if (t["BOSS"] == "zygarde-50")
-                { 
-                    poke = "zygarde";
-                    boxPokemon.Text = poke;
-                }
-                else
+                int videoIndex = t["VIDEO_INDEX"];
+                if (videoIndex < devices.Count)
                 {
-                    boxPokemon.Text = t["BOSS"];
+                    boxVideoCapture.Text = devices[videoIndex].Name;
                 }
-                string baseball = t["BASE_BALL"];
-                string legendball = t["LEGENDARY_BALL"];
-                boxBaseBall.Text = baseball.Substring(0, baseball.Length - 5);
-                boxBaseBallValue.Text = t["BASE_BALLS"];
-                boxLegendBall.Text = legendball.Substring(0, legendball.Length - 5);
-                boxLegendBallValue.Text = t["LEGENDARY_BALLS"];
-                boxMode.Text = t["MODE"];
-                boxComPort.Text = t["COM_PORT"];
-                boxTesseract.Text = t["TESSERACT_PATH"];
-                boxVideoScale.Text = t["advanced"]["VIDEO_SCALE"];
-                boxVideoDelay.Text = t["advanced"]["VIDEO_EXTRA_DELAY"];
-                boxBossIndex.Text = t["advanced"]["BOSS_INDEX"];
-                boxDyniteOre.Text = t["advanced"]["DYNITE_ORE"];
-                boxConsecutiveResets.Text = t["advanced"]["CONSECUTIVE_RESETS"];
-                boxMaxDynite.Text = t["advanced"]["MAXIMUM_ORE_COST"];
+
+                SetConfigValue(boxTesseract, t["TESSERACT_PATH"], t["TESSERACT_PATH"].Comment);
+                SetConfigValue(boxVideoScale, t["advanced"]["VIDEO_SCALE"], t["advanced"]["VIDEO_SCALE"].Comment);
+                SetConfigValue(boxVideoDelay, t["advanced"]["VIDEO_EXTRA_DELAY"], t["advanced"]["VIDEO_EXTRA_DELAY"].Comment);
+                SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
+                SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
+                SetConfigValue(boxConsecutiveResets, t["advanced"]["CONSECUTIVE_RESETS"], t["advanced"]["CONSECUTIVE_RESETS"].Comment);
+                SetConfigValue(boxMaxDynite, t["advanced"]["MAXIMUM_ORE_COST"], t["advanced"]["MAXIMUM_ORE_COST"].Comment);
+
                 checkBoxDebugLogs.Checked = t["advanced"]["ENABLE_DEBUG_LOGS"];
+                this.toolTip.SetToolTip(this.checkBoxDebugLogs, t["advanced"]["ENABLE_DEBUG_LOGS"].Comment);
+
                 boxCheckAttack.Checked = t["stats"]["CHECK_ATTACK_STAT"];
+                this.toolTip.SetToolTip(this.boxCheckAttack, t["CHECK_ATTACK_STAT"].Comment);
+
                 boxCheckSpeed.Checked = t["stats"]["CHECK_SPEED_STAT"];
-                boxWebhookID.Text = t["discord"]["WEBHOOK_ID"];
-                boxWebhookToken.Text = t["discord"]["WEBHOOK_TOKEN"];
-                boxUserID.Text = t["discord"]["USER_ID"];
-                boxPingName.Text = t["discord"]["USER_SHORT_NAME"];
-                boxPingSettings.Text = t["discord"]["UPDATE_LEVELS"];
-                boxGameLanguage.Text = t["language"]["LANGUAGE"]; 
+                this.toolTip.SetToolTip(this.boxCheckSpeed, t["CHECK_SPEED_STAT"].Comment);
+
+                SetConfigValue(boxWebhookID, t["discord"]["WEBHOOK_ID"], t["discord"]["WEBHOOK_ID"].Comment);
+                SetConfigValue(boxWebhookToken, t["discord"]["WEBHOOK_TOKEN"], t["discord"]["WEBHOOK_TOKEN"].Comment);
+                SetConfigValue(boxUserID, t["discord"]["USER_ID"], t["discord"]["USER_ID"].Comment);
+                SetConfigValue(boxPingName, t["discord"]["USER_SHORT_NAME"], t["discord"]["USER_SHORT_NAME"].Comment);
+                SetConfigValue(boxPingSettings, t["discord"]["UPDATE_LEVELS"], t["discord"]["UPDATE_LEVELS"].Comment);
+                SetConfigValue(boxGameLanguage, t["language"]["LANGUAGE"], t["language"]["LANGUAGE"].Comment);
             }
         }
 
@@ -203,7 +187,8 @@ namespace AutoDA
             string[] speedPos = boxSpeedPos.Text.Split(',').ToArray();
             string[] speedNeut = boxSpeedNeut.Text.Split(',').ToArray();
             string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
-            
+
+
             bool bossValue = int.TryParse(boxBossIndex.Text, out int i);
             bool baseBall = int.TryParse(boxBaseBallValue.Text, out int x);
             bool legendBall = int.TryParse(boxLegendBallValue.Text, out int y);
@@ -322,25 +307,10 @@ namespace AutoDA
                 string[] speedNeg = boxSpeedNeg.Text.Split(',').ToArray();
 
                 // General Settings
-                string poke = "";
-
-                if (boxPokemon.Text == "Tornadus")
-                    poke = "tornadus-incarnate";
-                else if (boxPokemon.Text == "Thundurus")
-                    poke = "thundurus-incarnate";
-                else if (boxPokemon.Text == "Landorus")
-                    poke = "landorus-incarnate";
-                else if (boxPokemon.Text == "Giratina")
-                    poke = "giratina-altered";
-                else if (boxPokemon.Text == "Zygarde")
-                    poke = "zygarde-50";
-                else
-                    poke = boxPokemon.Text;
-
-                t["BOSS"].AsString.Value = poke.ToLower();
-                t["BASE_BALL"].AsString.Value = boxBaseBall.Text.ToLower() + "-ball";
+                t["BOSS"].AsString.Value = Utils.ConvertBossNameToBossId(boxPokemon.Text);
+                t["BASE_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxBaseBall.Text);
                 t["BASE_BALLS"].AsInteger.Value = int.Parse(boxBaseBallValue.Text);
-                t["LEGENDARY_BALL"].AsString.Value = boxLegendBall.Text.ToLower() + "-ball";
+                t["LEGENDARY_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxLegendBall.Text);
                 t["LEGENDARY_BALLS"].AsInteger.Value = int.Parse(boxLegendBallValue.Text);
                 t["MODE"].AsString.Value = boxMode.Text.ToUpper();
                 t["COM_PORT"].AsString.Value = boxComPort.Text;
@@ -421,17 +391,8 @@ namespace AutoDA
                 t["discord"]["USER_SHORT_NAME"].AsString.Value = boxPingName.Text;
                 t["discord"]["UPDATE_LEVELS"].AsString.Value = boxPingSettings.Text;
 
-                // Pokémon Data Settings
-                t["pokemon_data_paths"] = tt["pokemon_data_paths"];
-
                 // Game Language Settings
-                t["language"]["LANGUAGE"] = boxGameLanguage.Text;
-
-                var languages = new List<String> { "English", "Spanish", "French", "Korean", "German" };
-                foreach (string language in languages)
-                {
-                    t[language] = tt[language];
-                }
+                t["language"]["LANGUAGE"].AsString.Value = boxGameLanguage.Text;
 
                 using (StreamWriter writer = new StreamWriter(File.Open(configData, FileMode.Create)))
                 {
@@ -467,7 +428,7 @@ namespace AutoDA
         private void btnTesseract_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.RootFolder = Environment.SpecialFolder.ProgramFiles;
+            fbd.SelectedPath = boxTesseract.Text;
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 boxTesseract.Text = fbd.SelectedPath;
         }
@@ -651,6 +612,12 @@ namespace AutoDA
                 item.BackColor = lab;
                 item.ForeColor = textC;
             }
+        }
+
+        public void SetConfigValue(Control control, string content, string tooltip)
+        {
+            control.Text = content;
+            this.toolTip.SetToolTip(control, tooltip);
         }
     }
 

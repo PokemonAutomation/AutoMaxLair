@@ -5,7 +5,6 @@ den.
 
 #       Eric Donders
 #       Contributions from denvoros, pifopi, and Miguel Tavera
-#       Last updated 2021-01-08
 #       Created 2020-11-20
 
 import re
@@ -13,11 +12,11 @@ import os
 import pickle
 import jsonpickle
 
-from datetime import datetime
 from typing import List, Tuple, TypeVar, Callable, Dict, Optional
 
 import cv2
 import enchant
+from discord import Color
 
 from .pokemon_classes import Pokemon
 from .max_lair_instance import MaxLairInstance
@@ -71,6 +70,8 @@ class DAController(SwitchController):
         self.num_saved_images = 0
         self.runs = 0
         self.wins = 0
+        self.win_percent = 0.0
+        self.time_per_run = 0.0
         self.shinies_found = 0
         self.caught_shinies: List[str] = []
         self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
@@ -88,9 +89,9 @@ class DAController(SwitchController):
         self.sel_rect_5 = ((0.195, 0.11), (0.39, 0.165))
         self.type_rect_1 = ((0.24, 0.175), (0.31, 0.21))
         self.type_rect_2 = ((0.35, 0.175), (0.425, 0.21))
-        self.catch_dialogue_rect_1 = ((0.82, 0.85), (0.98, 0.88))
-        self.catch_dialogue_rect_2 = ((0.82, 0.93), (0.98, 0.96))
-        self.battle_symbol_rect = ((0.9, 0.65), (0.99, 0.77))
+        self.catch_dialogue_rect_1 = ((0.82, 0.85), (0.98, 0.86))
+        self.catch_dialogue_rect_2 = ((0.82, 0.93), (0.98, 0.94))
+        self.battle_symbol_rect = ((0.9, 0.65), (0.99, 0.79))
         self.battle_text_rect = ((0.05, 0.805), (0.95, 0.95))
         self.dmax_symbol_rect = ((0.58, 0.805), (0.61, 0.84))
         # In-den rectangles.
@@ -128,6 +129,7 @@ class DAController(SwitchController):
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
         # Backpacker item rectangles.
+        self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
         self.item_rect_2 = ((0.549, 0.19), (0.745, 0.24))
         self.item_rect_3 = ((0.549, 0.27), (0.745, 0.32))
@@ -155,17 +157,20 @@ class DAController(SwitchController):
                 self.misc_icons[filename.split('.png')[0]] = cv2.imread(
                     os.path.join(directory, filename)
                 )
-        with open(config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8') as file:
+        with open(
+            config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8'
+        ) as file:
             self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
         assert self.boss in self.current_run.boss_pokemon, (
             f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
         )
-        assert self.balls[self.base_ball], 'Unknown base ball id'
-        assert self.balls[self.legendary_ball], 'Unknown legendary ball id'
+        assert self.balls[self.base_ball], 'Unknown base ball id.'
+        assert self.balls[self.legendary_ball], 'Unknown legendary ball id.'
         if self.base_ball == self.legendary_ball:
-            assert self.base_balls == self.legendary_balls, 'Ball count mismatch'
+            assert self.base_balls == self.legendary_balls, (
+                'Ball count mismatch.')
             assert self.base_balls >= 4, 'Not enough base balls.'
             assert self.base_balls <= 999, 'Too many base balls.'
         else:
@@ -176,12 +181,19 @@ class DAController(SwitchController):
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
-        assert self.discord_level in ['all', 'only_shiny', 'none'], 'Invalid discord level'
-        # Do not assert for negative dynite ore. That way it can be used to farm ore.
-        assert self.dynite_ore <= 999, 'Too much dynite ore'
-        assert self.consecutive_resets >= 0, 'Consecutive reset cannot be negative'
-        assert self.maximum_ore_cost >= 0, 'Maximum ore cost cannot be negative'
-        assert self.maximum_ore_cost <= 10, 'Maximum ore cost cannot be greater than 10'
+        assert self.discord_level in (
+            'all', 'all_ping_legendary', 'only_shiny', 'only_shiny_ping_legendary',
+            'none'), 'Invalid discord level'
+        # Do not assert for negative dynite ore.
+        # Negative ore will force the bot to not spend any ore until it reaches
+        # that target.
+        assert self.dynite_ore <= 999, 'Too much dynite ore.'
+        assert self.consecutive_resets >= 0, (
+            'Consecutive reset cannot be negative.')
+        assert self.maximum_ore_cost >= 0, (
+            'Maximum ore cost cannot be negative.')
+        assert self.maximum_ore_cost <= 10, (
+            'Maximum ore cost cannot be greater than 10.')
         # Only need to run this assertion if we're checking the attack stat.
         if self.check_attack_stat:
             assert 'positive' in self.expected_attack_stats.keys(), (
@@ -214,6 +226,15 @@ class DAController(SwitchController):
             assert type(self.expected_speed_stats['neutral']) is list, (
                 "You must provide multiple values for neutral speed stats")
 
+        # choose a good color for the boss
+        try:
+            # let's update the embed color with one from our list
+            with open(self.config['pokemon_data_paths']['boss_colors'], 'r') as f:
+                boss_colors = jsonpickle.decode(f.read())
+            self.discord_embed_color = Color.from_rgb(*boss_colors[self.boss])
+        except Exception:
+            self.discord_embed_color = Color.random()
+
     def reset_run(self) -> None:
         """Reset in preparation for a new Dynamax Adventure."""
         self.current_run = MaxLairInstance(self.boss, self.data_paths)
@@ -236,7 +257,9 @@ class DAController(SwitchController):
         if not self.enable_debug_logs or rectangle_set is None:
             pass
         elif rectangle_set == 'detect':
-            self.outline_region(img, self.den_text_rect, (255, 255, 0))
+            self.outline_regions(img, (
+                self.den_text_rect, self.backpacker_blue_rect
+            ), (255, 255, 0))
         elif rectangle_set == 'select_pokemon':
             self.outline_regions(
                 img, (
@@ -282,8 +305,11 @@ class DAController(SwitchController):
                 ), (255, 255, 0))
         elif rectangle_set == 'backpacker':
             self.outline_regions(
-                img, (self.item_rect_1, self.item_rect_2, self.item_rect_3,
-                      self.item_rect_4, self.item_rect_5), (0, 255, 0))
+                img, (
+                    self.backpacker_blue_rect, self.item_rect_1,
+                    self.item_rect_2, self.item_rect_3, self.item_rect_4,
+                    self.item_rect_5
+                ), (0, 255, 0))
 
         # Return annotated image.
         return img
@@ -391,8 +417,8 @@ class DAController(SwitchController):
                 if self.current_run.pokemon not in (None, pokemon):
                     self.log(
                         "The bot's Pokemon detected from the sprite, "
-                        f"{pokemon.name}, did not match with the previously "
-                        f"known value of {self.current_run.pokemon.name}.",
+                        f"{pokemon.name_id}, did not match with the previously "
+                        f"known value of {self.current_run.pokemon.name_id}.",
                         'WARNING'
                     )
                 self.current_run.pokemon = pokemon
@@ -614,13 +640,17 @@ class DAController(SwitchController):
             self.misc_icons['fight']
         )[0] >= 0.85:
             return 'battle'
+        # Then, check for the backpacker screen.
+        if self.check_rect_HSV_match(
+            self.backpacker_blue_rect, (80, 230, 230), (120, 255, 255), 240,
+            img
+        ):
+            return 'backpacker'
         # Otherwise, check for other text.
         if self.check_rect_HSV_match(
             self.den_text_rect, (0, 0, 0,), (180, 55, 255), 220, img
         ):
             text = self.read_text(img, self.den_text_rect, invert=True)
-            if re.search(self.phrases['BACKPACKER'], text):
-                return 'backpacker'
             if re.search(self.phrases['SCIENTIST'], text):
                 return 'scientist'
             if re.search(self.phrases['PATH'], text):
@@ -636,6 +666,7 @@ class DAController(SwitchController):
 
         # Get a frame from the VideoCapture that we will check for the state.
         img = self.get_frame()
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         # First, check if the player was defeated.
         if self.check_black_screen(img):
@@ -658,14 +689,17 @@ class DAController(SwitchController):
             return 'CHEER'
         # Then, check for the presence of the Catch menu.
         if self.check_rect_HSV_match(
-            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img
+            self.catch_dialogue_rect_1, (0, 0, 0), (180, 5, 10), 180, img_hsv,
+            already_HSV=True
         ) and self.check_rect_HSV_match(
-            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20, img
+            self.catch_dialogue_rect_2, (0, 0, 250), (180, 5, 255), 20,
+            img_hsv, already_HSV=True
         ):
             return 'CATCH'
         # Finally, check for other text.
         if self.check_rect_HSV_match(
-            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img
+            self.battle_text_rect, (0, 0, 0,), (180, 60, 255), 240, img_hsv,
+            already_HSV=True
         ):
             text = self.read_text(img, self.battle_text_rect, invert=True)
             if re.search(self.phrases['FAINT'], text):
@@ -920,17 +954,6 @@ class DAController(SwitchController):
         the run sequence.
         """
 
-        # Calculate some statistics for display
-        win_percent = (
-            'N/A' if self.runs == 0 else (
-                str(round(100 * self.wins / self.runs)) + '%'
-            )
-        )
-        time_per_run = (
-            'N/A' if self.runs == 0 else str((datetime.now() - self.start_date)
-                                             / self.runs)[2:7]
-        )
-
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
             'Run #': self.runs + 1,
@@ -944,8 +967,9 @@ class DAController(SwitchController):
             'Lives': self.current_run.lives,
             'Pokemon': self.current_run.pokemon,
             'Opponent': self.current_run.opponent,
-            'Win percentage': win_percent,
-            'Time per run': time_per_run,
+            'Win percentage': f"{self.win_percent:.1%}",
+            'Time per run': str(self.time_per_run)[2:7],
+            'Consecutive resets': self.consecutive_resets,
             'Shinies found': self.shinies_found
         }.items():
             self.info[key] = value
@@ -967,16 +991,15 @@ class DAController(SwitchController):
         nice status screen with the screenshot.
         """
 
-        wins_updated = (
-            self.wins + 1 if self.current_run.lives != 0 else self.wins)
-        runs_updated = self.runs + 1
-
         the_dict = {
             "Boss": self.boss,
-            "Wins/Runs": f"{wins_updated}/{runs_updated}",
+            "Wins/Runs": f"{self.wins}/{self.runs}",
+            "Win Rate": f"{self.win_percent:.1%}",
+            "Avg. Time": str(self.time_per_run)[2:7],
             "Base Balls": self.base_balls,
             "Legendary Balls": self.legendary_balls,
             "Dynite Ore": self.dynite_ore,
+            "Consecutive Resets": self.consecutive_resets
         }
 
         if self.shinies_found > 0:

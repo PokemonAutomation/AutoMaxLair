@@ -139,10 +139,15 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * Tweaked how Pokemon are scored.
 * Stats checking now takes nature into account.
 * Changed how certain events are detected, improving efficiency and reducing reliance on Tesseract.
-* Improved path selection
-* Improved config file
-* Improved stats checking
+* Improved path selection.
+* Improved config file.
+* Improved stats checking.
 * More improvements on the way!
+### v0.8
+* Weather and terrain are now taken into consideration.
+* The teammates are now detected.
+* Improve the config file validation by asserting at the startup.
+* Add a UI to be able to easily edit the config file.
 
 ## Acknowledgements
 
