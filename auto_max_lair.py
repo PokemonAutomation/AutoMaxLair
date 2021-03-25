@@ -591,7 +591,7 @@ def select_pokemon(ctrlr) -> str:
         return 'join'
     # "find path" mode quits if the run is successful.
     elif run.num_caught == 4 and (
-        ctrlr.mode == 'find path' and ctrlr.consecutive_resets == FIND_PATH_WINS -1:
+        ctrlr.mode == 'find path' and ctrlr.consecutive_resets == FIND_PATH_WINS -1):
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
             f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with {run.lives} remaining.",
