@@ -594,8 +594,8 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.mode == 'find path' and ctrlr.consecutive_resets == FIND_PATH_WINS -1:
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            f"This path won {FIND_PATH_WINS} times against  {ctrlr.boss} "
-            "with {run.lives} remaining.",
+            False,
+            f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with {run.lives} remaining."
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
             f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
@@ -716,10 +716,8 @@ def select_pokemon(ctrlr) -> str:
         else:
             ctrlr.push_buttons((b'b', 3), (b'b', 1))
         ctrlr.record_ore_reward()
-        ctrlr.consecutive_resets = 0
     else:
         ctrlr.log('Resetting the game to preserve a winning seed.')
-        ctrlr.consecutive_resets += 1
         ctrlr.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
