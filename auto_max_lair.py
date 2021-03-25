@@ -41,6 +41,7 @@ BOSS_INDEX = config['advanced']['BOSS_INDEX']
 pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
 ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
 NON_LEGEND = config['advanced']['NON_LEGEND'].lower().replace(' ', '-')
+FIND_PATH_WINS = config['FIND_PATH_WINS']
 
 # Set the log name
 LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
@@ -589,17 +590,18 @@ def select_pokemon(ctrlr) -> str:
         # although the path would be lost that situation should never arise.
         return 'join'
     # "find path" mode quits if the run is successful.
-    elif run.num_caught == 4 and ctrlr.mode == 'find path':
+    elif run.num_caught == 4 and (
+        ctrlr.mode == 'find path' and ctrlr.consecutive_resets == FIND_PATH_WINS -1:
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            f"Found a winning path for {ctrlr.boss} with {run.lives} "
-            "remaining.",
+            f"This path won {FIND_PATH_WINS} times against  {ctrlr.boss} "
+            "with {run.lives} remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
             f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
-        ctrlr.log(f'This path won with {run.lives} lives remaining.')
+        ctrlr.log(f'This path won {FIND_PATH_WINS} times with {run.lives} lives remaining.')
         return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -689,8 +691,8 @@ def select_pokemon(ctrlr) -> str:
 
     if (
         not take_pokemon and (
-            ctrlr.mode == 'strong boss' and run.num_caught == 4)
-        and ctrlr.check_sufficient_ore(1)
+            ctrlr.mode == 'strong boss' or ctrlr.mode == 'keep path')
+        and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
 
@@ -714,8 +716,10 @@ def select_pokemon(ctrlr) -> str:
         else:
             ctrlr.push_buttons((b'b', 3), (b'b', 1))
         ctrlr.record_ore_reward()
+        ctrlr.consecutive_resets = 0
     else:
         ctrlr.log('Resetting the game to preserve a winning seed.')
+        ctrlr.consecutive_resets += 1
         ctrlr.record_game_reset()
         # The original button sequence was added with the help of users fawress
         # and Miguel90 on the Pokemon Automation Discord.
