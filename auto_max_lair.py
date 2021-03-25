@@ -691,7 +691,7 @@ def select_pokemon(ctrlr) -> str:
 
     if (
         not take_pokemon and (
-            ctrlr.mode == 'strong boss' or ctrlr.mode == 'keep path')
+            ctrlr.mode == 'strong boss' or ctrlr.mode == 'find path')
         and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
