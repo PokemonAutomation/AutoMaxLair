@@ -62,7 +62,7 @@ LEGENDARY_BALLS = 500
 #       It can be used alongside KEEP PATH to find a winning path. It's up to the user to 
 #       check if the path was good or not.
 MODE = "STRONG BOSS"
-KEEP PATH WINS = "1"
+FIND PATH WINS = "1"
 
 # === COM_PORT ===
 # The COM Port is how your system internally connects to your Serial connection.
