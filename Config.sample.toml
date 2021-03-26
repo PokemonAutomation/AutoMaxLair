@@ -57,10 +57,14 @@ LEGENDARY_BALLS = 500
 #   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
-#   "FIND PATH" - Will run like default mode but will stop as soon as it win once. It can be used
-#       alongside KEEP PATH to find a winning path. It's up  to the user to check if the path was
-#       good or not.
+#   "FIND PATH" - Will run like STRONG BOSS mode but will stop when it consecutively wins the
+#       number of times inputted into "FIND PATH WINS". It is recommended to leave the 
+#       NON_LEGEND setting as "default" to avoid any false posistives.
+#       It can be used alongside KEEP PATH to find a winning path. Don't forget to update the  
+#       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
+#       It's up to the user to check if the path found was good or not.
 MODE = "STRONG BOSS"
+FIND_PATH_WINS = 1
 
 # === COM_PORT ===
 # The COM Port is how your system internally connects to your Serial connection.
