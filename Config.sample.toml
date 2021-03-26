@@ -463,7 +463,7 @@ SCIENTIST = "austauschen"
 PATH = "Weg"
 
 # Sentence used to detect that we lost a live (storm is raging).
-FAINT = "Der Sturm|Eure Gruppe wurde vom Sturm"
+FAINT = "Der Sturm"
 
 # Sentence used to detect the scientist asking us to join a DA.
 START_PHRASE = "Möchtest du zu einem"
