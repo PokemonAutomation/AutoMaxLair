@@ -309,40 +309,40 @@ SCIENTIST = "préstamo"
 PATH = "quieres seguir"
 
 # Sentence used to detect that we lost a live (storm is raging).
-FAINT = "tormenta reinante"
+FAINT = "tormenta reinante|Aguantar"
 
 # Sentence used to detect the scientist asking us to join a DA.
 START_PHRASE = "emprender"
 
 # Sentence used to detect that the weather is now normal.
-WEATHER_CLEAR = "sol vuelve a brillar|dejado de llover|arena ha amainado|dejado de granizar"
+WEATHER_CLEAR = "sol vuelve|dejado de|amainado"
 
 # Sentence used to detect that the weather is now sunny.
-WEATHER_SUNLIGHT = "sol pega fuerte"
+WEATHER_SUNLIGHT = "sol pega"
 
 # Sentence used to detect that the weather is now rainy.
-WEATHER_RAIN = "empezado a llover"
+WEATHER_RAIN = "a llover"
 
 # Sentence used to detect that the sandstorm is raging.
-WEATHER_SANDSTORM = "desatado una tormenta de arena"
+WEATHER_SANDSTORM = "desatado"
 
 # Sentence used to detect that the hailstorm is raging.
-WEATHER_HAIL = "empezado a granizar"
+WEATHER_HAIL = "a granizar"
 
 # Sentence used to detect that the terrain is now normal.
-TERRAIN_CLEAR = "eléctrica ha desaparecido|desaparecido la extraña|hierba ha desaparecido|se ha disipado"
+TERRAIN_CLEAR = "ha desaparecido|niebla se"
 
 # Sentence used to detect that the terrain is now electrified.
 TERRAIN_ELECTRIC = "campo de corriente"
 
 # Sentence used to detect that the terrain is now grassy.
-TERRAIN_GRASSY = "ha cubierto de hierba"
+TERRAIN_GRASSY = "de hierba"
 
 # Sentence used to detect that the terrain is now misty.
 TERRAIN_MISTY = "niebla ha envuelto"
 
 # Sentence used to detect that the terrain is now psychic.
-TERRAIN_PSYCHIC = "ha vuelto muy extraño"
+TERRAIN_PSYCHIC = "muy extraño"
 
 # 
 [French]

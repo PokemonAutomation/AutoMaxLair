@@ -597,7 +597,7 @@ def select_pokemon(ctrlr) -> str:
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
             f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
-            level="update"
+            level="critical"
         )
         ctrlr.log(f'This path won with {run.lives} lives remaining.')
         return None  # Return None to signal the program to end.
