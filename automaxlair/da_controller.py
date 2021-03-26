@@ -852,7 +852,7 @@ class DAController(SwitchController):
                 img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
             if not self.check_rect_HSV_match(
                 ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 50), 250, img, True
-            ) or cv2.meanStdDev(img)[1] > 10:
+            ) or cv2.meanStdDev(cv2.split(img)[2])[1] > 10:
                 return False
             # Delay and get the next frame 200 ms later.
             self.push_button(None, 0.2)
