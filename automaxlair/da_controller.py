@@ -128,6 +128,7 @@ class DAController(SwitchController):
         # Poke ball rectangles.
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
+        self.ball_sprite_rect = ((0.60, 0.60), (0.68, 0.70))
         # Backpacker item rectangles.
         self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
@@ -150,6 +151,10 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
         ) as image_file:
             self.pokemon_sprites = pickle.load(image_file)
+        with open(
+            self.congif['pokemon_data_paths']['ball_sprite_path'], 'rb'
+        ) as image_file:
+            self.ball_sprites = pickle.load(image_file)
         self.misc_icons = {}
         directory = self.config['pokemon_data_paths']['misc_icon_dir']
         for filename in os.listdir(directory):
@@ -182,8 +187,8 @@ class DAController(SwitchController):
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
         assert self.discord_level in (
-            'all', 'all_ping_legendary', 'only_shiny', 'only_shiny_ping_legendary',
-            'none'), 'Invalid discord level'
+            'all', 'all_ping_legendary', 'only_shiny',
+            'only_shiny_ping_legendary', 'none'), 'Invalid discord level'
         # Do not assert for negative dynite ore.
         # Negative ore will force the bot to not spend any ore until it reaches
         # that target.
@@ -229,7 +234,9 @@ class DAController(SwitchController):
         # choose a good color for the boss
         try:
             # let's update the embed color with one from our list
-            with open(self.config['pokemon_data_paths']['boss_colors'], 'r') as f:
+            with open(
+                self.config['pokemon_data_paths']['boss_colors'], 'r'
+            ) as f:
                 boss_colors = jsonpickle.decode(f.read())
             self.discord_embed_color = Color.from_rgb(*boss_colors[self.boss])
         except Exception:
@@ -417,8 +424,8 @@ class DAController(SwitchController):
                 if self.current_run.pokemon not in (None, pokemon):
                     self.log(
                         "The bot's Pokemon detected from the sprite, "
-                        f"{pokemon.name_id}, did not match with the previously "
-                        f"known value of {self.current_run.pokemon.name_id}.",
+                        f"{pokemon.name_id}, did not match with the previously"
+                        f" known value of {self.current_run.pokemon.name_id}.",
                         'WARNING'
                     )
                 self.current_run.pokemon = pokemon
@@ -869,6 +876,19 @@ class DAController(SwitchController):
         """Detect the currently selected Poke Ball during the catch phase of
         the game.
         """
+
+        ball_image = self.get_image_slice(
+            self.get_frame(), self.ball_sprite_rect)
+        best_match_value = -1
+        for ball_id, sprite in self.ball_sprites.values():
+            match_value = self.match_template(ball_image, sprite)[0]
+            if match_value > best_match_value:
+                best_match_value = match_value
+                best_match = ball_id
+
+        self.log(
+            f'Detected {best_match} sprite with a match value of '
+            f'{best_match_value:.3f}', 'DEBUG')
 
         return self.read_text(
             self.get_frame(), self.ball_rect, threshold=False, invert=True,
