@@ -848,15 +848,27 @@ class DAController(SwitchController):
 
     def check_black_screen(self, img: Image = None) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
-        if not self.check_rect_HSV_match(
-            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250, img
-        ):
-            return False
 
-        # Pause and check a second time as a rudimentary debounce filter.
-        self.push_button(None, 0.2)
-        return self.check_rect_HSV_match(
-            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250)
+        # Check for:
+        # 1) A low average brightness of the screen, and
+        # 2) High uniformity across the entire screen.
+        #
+        # Check twice to make sure the frame isn't a one-off—sometimes there is
+        # a momentary black screen after the Dynamax animation.
+        for __ in range(2):
+            if img is None:
+                img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
+            if not self.check_rect_HSV_match(
+                ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 50), 250, img, True
+            ) or cv2.meanStdDev(cv2.split(img)[2])[1] > 10:
+                return False
+            # Delay and get the next frame 200 ms later.
+            self.push_button(None, 0.2)
+            # Important! Force a new frame to be fetched the next loop.
+            img = None
+
+        # If nothing triggered an early exit, the screen must be black.
+        return True
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
