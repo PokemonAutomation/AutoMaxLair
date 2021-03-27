@@ -237,6 +237,9 @@ type_icon_path = "data/type_icons.pickle"
 # File containing the pickled data about the pokemon sprites.
 pokemon_sprite_path = "data/pokemon_sprites.pickle"
 
+# File containing the pickled ball sprites
+ball_sprite_path = "data/ball_sprites.pickle"
+
 # File containing the pickled data about other icons (cheer, fight).
 misc_icon_dir = "data/misc_icons/"
 
