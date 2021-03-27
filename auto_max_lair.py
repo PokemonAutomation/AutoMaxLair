@@ -288,8 +288,6 @@ def battle(ctrlr) -> str:
                 run.dmax_timer == -1 and ctrlr.check_dynamax_available()
             )
             # Choose the best move to use against the boss
-            # TODO: use the actual teammates instead of the average of all
-            # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
                     run.pokemon, run.opponent, run.field,
@@ -591,16 +589,21 @@ def select_pokemon(ctrlr) -> str:
         return 'join'
     # "find path" mode quits if the run is successful.
     elif run.num_caught == 4 and (
-        ctrlr.mode == 'find path' and ctrlr.consecutive_resets == FIND_PATH_WINS - 1):
+        ctrlr.mode == 'find path'
+        and ctrlr.consecutive_resets == FIND_PATH_WINS - 1
+    ):
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with {run.lives} lives remaining.",
+            f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with "
+            f"{run.lives} lives remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
             f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
             level="critical"
         )
-        ctrlr.log(f'This path won {FIND_PATH_WINS} times with {run.lives} lives remaining.')
+        ctrlr.log(
+            f'This path won {FIND_PATH_WINS} times with {run.lives} '
+            'lives remaining.')
         return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
