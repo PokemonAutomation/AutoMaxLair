@@ -884,7 +884,7 @@ class DAController(SwitchController):
         # Match the ball on screen to stored sprites.
         ball_image = self.get_image_slice(img, self.ball_sprite_rect)
         best_match_value = -1
-        for ball_id, sprite in self.ball_sprites.values():
+        for ball_id, sprite in self.ball_sprites.items():
             match_value = self.match_template(ball_image, sprite)[0]
             if match_value > best_match_value:
                 best_match_value = match_value
