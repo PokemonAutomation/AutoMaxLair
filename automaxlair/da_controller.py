@@ -152,7 +152,7 @@ class DAController(SwitchController):
         ) as image_file:
             self.pokemon_sprites = pickle.load(image_file)
         with open(
-            self.congig['pokemon_data_paths']['ball_sprite_path'], 'rb'
+            self.config['pokemon_data_paths']['ball_sprite_path'], 'rb'
         ) as image_file:
             self.ball_sprites = pickle.load(image_file)
         self.misc_icons = {}
