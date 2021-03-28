@@ -547,7 +547,7 @@ def scientist(ctrlr) -> str:
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 3 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'b', 3.5 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
 
     # Read teammates.
@@ -557,7 +557,7 @@ def scientist(ctrlr) -> str:
     # OrderedDict is unnecessary.
     if average_score > existing_score:
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    ctrlr.push_button(None, 4)
+    ctrlr.push_button(None, 3)
 
     return 'detect'
 
