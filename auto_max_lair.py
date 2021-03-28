@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-beta-2021-03-19-1'
+VERSION = 'v0.8-beta-20210328'
 
 # load configuration from the config file
 try:
@@ -541,13 +541,13 @@ def scientist(ctrlr) -> str:
     if average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'a', 3 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'a', 2 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 3.5 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'b', 2 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
 
     # Read teammates.
