@@ -46,7 +46,7 @@ def main():
         # Convert transparent pixels to black as they appear in game.
         mask = ball_image[:, :, 3] == 0
         ball_image[mask] = [0, 0, 0, 0]
-        ball_images[ball_id] = ball_image
+        ball_images[ball_id] = cv2.cvtColor(ball_image, cv2.COLOR_BGRA2BGR)
 
         resource = pb.APIResource('item', ball_id)
 
