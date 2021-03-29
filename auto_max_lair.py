@@ -575,15 +575,15 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('No Pokemon caught.')
         ctrlr.push_buttons((None, 10), (b'b', 1))
         ctrlr.runs += 1
-        ctrlr.reset_run()
-        ctrlr.record_ore_reward()
-        ctrlr.log('Preparing for another run.')
-
         ctrlr.send_discord_message(
             "No Pokémon were caught in the last run.",
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
+        ctrlr.record_ore_reward()
+        ctrlr.reset_run()
+        ctrlr.log('Preparing for another run.')
+
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
