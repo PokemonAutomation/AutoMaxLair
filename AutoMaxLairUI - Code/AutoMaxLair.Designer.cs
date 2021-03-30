@@ -115,6 +115,10 @@ namespace AutoDA
             this.btnStats = new System.Windows.Forms.Button();
             this.panelRightTop = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.labelPathWins = new System.Windows.Forms.Label();
+            this.boxPathWins = new System.Windows.Forms.TextBox();
+            this.labelNonLegend = new System.Windows.Forms.Label();
+            this.boxNonLegend = new System.Windows.Forms.ComboBox();
             this.panelSideMenu.SuspendLayout();
             this.panelAdvancedSettingsSubmenu.SuspendLayout();
             this.panelSettingSubmenu.SuspendLayout();
@@ -139,12 +143,14 @@ namespace AutoDA
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
             this.panelSideMenu.Name = "panelSideMenu";
-            this.panelSideMenu.Size = new System.Drawing.Size(292, 702);
+            this.panelSideMenu.Size = new System.Drawing.Size(292, 728);
             this.panelSideMenu.TabIndex = 0;
             // 
             // panelAdvancedSettingsSubmenu
             // 
             this.panelAdvancedSettingsSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxNonLegend);
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelNonLegend);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelMaxDynite);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxMaxDynite);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxBossIndex);
@@ -159,16 +165,16 @@ namespace AutoDA
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelVideoDelay);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelVideoScale);
             this.panelAdvancedSettingsSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelAdvancedSettingsSubmenu.Location = new System.Drawing.Point(0, 457);
+            this.panelAdvancedSettingsSubmenu.Location = new System.Drawing.Point(0, 464);
             this.panelAdvancedSettingsSubmenu.Name = "panelAdvancedSettingsSubmenu";
-            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 233);
+            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 252);
             this.panelAdvancedSettingsSubmenu.TabIndex = 8;
             // 
             // labelMaxDynite
             // 
             this.labelMaxDynite.AutoSize = true;
             this.labelMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelMaxDynite.Location = new System.Drawing.Point(13, 170);
+            this.labelMaxDynite.Location = new System.Drawing.Point(13, 197);
             this.labelMaxDynite.Name = "labelMaxDynite";
             this.labelMaxDynite.Size = new System.Drawing.Size(141, 19);
             this.labelMaxDynite.TabIndex = 22;
@@ -179,7 +185,7 @@ namespace AutoDA
             this.boxMaxDynite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
             this.boxMaxDynite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxMaxDynite.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxMaxDynite.Location = new System.Drawing.Point(175, 168);
+            this.boxMaxDynite.Location = new System.Drawing.Point(175, 195);
             this.boxMaxDynite.Name = "boxMaxDynite";
             this.boxMaxDynite.Size = new System.Drawing.Size(30, 25);
             this.boxMaxDynite.TabIndex = 21;
@@ -254,7 +260,7 @@ namespace AutoDA
             // 
             this.checkBoxDebugLogs.AutoSize = true;
             this.checkBoxDebugLogs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.checkBoxDebugLogs.Location = new System.Drawing.Point(12, 196);
+            this.checkBoxDebugLogs.Location = new System.Drawing.Point(12, 223);
             this.checkBoxDebugLogs.Name = "checkBoxDebugLogs";
             this.checkBoxDebugLogs.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxDebugLogs.Size = new System.Drawing.Size(146, 23);
@@ -317,7 +323,7 @@ namespace AutoDA
             this.btnAdvancedSettings.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnAdvancedSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdvancedSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnAdvancedSettings.Location = new System.Drawing.Point(0, 412);
+            this.btnAdvancedSettings.Location = new System.Drawing.Point(0, 419);
             this.btnAdvancedSettings.Name = "btnAdvancedSettings";
             this.btnAdvancedSettings.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnAdvancedSettings.Size = new System.Drawing.Size(292, 45);
@@ -329,6 +335,8 @@ namespace AutoDA
             // panelSettingSubmenu
             // 
             this.panelSettingSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.panelSettingSubmenu.Controls.Add(this.boxPathWins);
+            this.panelSettingSubmenu.Controls.Add(this.labelPathWins);
             this.panelSettingSubmenu.Controls.Add(this.btnTesseract);
             this.panelSettingSubmenu.Controls.Add(this.boxGameLanguage);
             this.panelSettingSubmenu.Controls.Add(this.labelGameLanguage);
@@ -349,9 +357,9 @@ namespace AutoDA
             this.panelSettingSubmenu.Controls.Add(this.boxBaseBall);
             this.panelSettingSubmenu.Controls.Add(this.boxPokemon);
             this.panelSettingSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelSettingSubmenu.Location = new System.Drawing.Point(0, 145);
+            this.panelSettingSubmenu.Location = new System.Drawing.Point(0, 125);
             this.panelSettingSubmenu.Name = "panelSettingSubmenu";
-            this.panelSettingSubmenu.Size = new System.Drawing.Size(292, 267);
+            this.panelSettingSubmenu.Size = new System.Drawing.Size(292, 294);
             this.panelSettingSubmenu.TabIndex = 1;
             // 
             // btnTesseract
@@ -359,7 +367,7 @@ namespace AutoDA
             this.btnTesseract.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(8)))), ((int)(((byte)(20)))));
             this.btnTesseract.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTesseract.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnTesseract.Location = new System.Drawing.Point(239, 188);
+            this.btnTesseract.Location = new System.Drawing.Point(239, 216);
             this.btnTesseract.Name = "btnTesseract";
             this.btnTesseract.Size = new System.Drawing.Size(28, 26);
             this.btnTesseract.TabIndex = 25;
@@ -379,7 +387,7 @@ namespace AutoDA
             "French",
             "Korean",
             "German"});
-            this.boxGameLanguage.Location = new System.Drawing.Point(112, 222);
+            this.boxGameLanguage.Location = new System.Drawing.Point(112, 250);
             this.boxGameLanguage.Name = "boxGameLanguage";
             this.boxGameLanguage.Size = new System.Drawing.Size(121, 25);
             this.boxGameLanguage.TabIndex = 24;
@@ -390,7 +398,7 @@ namespace AutoDA
             // 
             this.labelGameLanguage.AutoSize = true;
             this.labelGameLanguage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelGameLanguage.Location = new System.Drawing.Point(12, 225);
+            this.labelGameLanguage.Location = new System.Drawing.Point(12, 253);
             this.labelGameLanguage.Name = "labelGameLanguage";
             this.labelGameLanguage.Size = new System.Drawing.Size(69, 19);
             this.labelGameLanguage.TabIndex = 23;
@@ -402,7 +410,7 @@ namespace AutoDA
             this.boxTesseract.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
             this.boxTesseract.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxTesseract.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxTesseract.Location = new System.Drawing.Point(112, 191);
+            this.boxTesseract.Location = new System.Drawing.Point(112, 219);
             this.boxTesseract.Name = "boxTesseract";
             this.boxTesseract.Size = new System.Drawing.Size(121, 25);
             this.boxTesseract.TabIndex = 22;
@@ -414,7 +422,7 @@ namespace AutoDA
             // 
             this.labelTessaract.AutoSize = true;
             this.labelTessaract.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelTessaract.Location = new System.Drawing.Point(12, 191);
+            this.labelTessaract.Location = new System.Drawing.Point(12, 219);
             this.labelTessaract.Name = "labelTessaract";
             this.labelTessaract.Size = new System.Drawing.Size(96, 19);
             this.labelTessaract.TabIndex = 21;
@@ -439,7 +447,7 @@ namespace AutoDA
             this.boxVideoCapture.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.boxVideoCapture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
             this.boxVideoCapture.FormattingEnabled = true;
-            this.boxVideoCapture.Location = new System.Drawing.Point(112, 156);
+            this.boxVideoCapture.Location = new System.Drawing.Point(112, 184);
             this.boxVideoCapture.Name = "boxVideoCapture";
             this.boxVideoCapture.Size = new System.Drawing.Size(121, 25);
             this.boxVideoCapture.TabIndex = 19;
@@ -461,12 +469,13 @@ namespace AutoDA
             this.boxComPort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
             this.boxComPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxComPort.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxComPort.Location = new System.Drawing.Point(12, 157);
+            this.boxComPort.Location = new System.Drawing.Point(12, 185);
             this.boxComPort.Name = "boxComPort";
             this.boxComPort.Size = new System.Drawing.Size(62, 25);
             this.boxComPort.TabIndex = 15;
             this.boxComPort.Text = "COM4";
             this.boxComPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.boxComPort.TextChanged += new System.EventHandler(this.boxComPort_TextChanged);
             // 
             // boxMode
             // 
@@ -490,7 +499,7 @@ namespace AutoDA
             // 
             this.labelVideoIndex.AutoSize = true;
             this.labelVideoIndex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelVideoIndex.Location = new System.Drawing.Point(123, 135);
+            this.labelVideoIndex.Location = new System.Drawing.Point(123, 163);
             this.labelVideoIndex.Name = "labelVideoIndex";
             this.labelVideoIndex.Size = new System.Drawing.Size(97, 19);
             this.labelVideoIndex.TabIndex = 13;
@@ -500,7 +509,7 @@ namespace AutoDA
             // 
             this.labelComPort.AutoSize = true;
             this.labelComPort.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelComPort.Location = new System.Drawing.Point(12, 135);
+            this.labelComPort.Location = new System.Drawing.Point(12, 163);
             this.labelComPort.Name = "labelComPort";
             this.labelComPort.Size = new System.Drawing.Size(67, 19);
             this.labelComPort.TabIndex = 12;
@@ -587,7 +596,7 @@ namespace AutoDA
             this.btnSetting.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetting.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnSetting.Location = new System.Drawing.Point(0, 100);
+            this.btnSetting.Location = new System.Drawing.Point(0, 80);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnSetting.Size = new System.Drawing.Size(292, 45);
@@ -603,13 +612,13 @@ namespace AutoDA
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
             this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(292, 100);
+            this.panelLogo.Size = new System.Drawing.Size(292, 80);
             this.panelLogo.TabIndex = 0;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(-10, 15);
+            this.pictureBox1.Location = new System.Drawing.Point(-8, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 85);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -621,7 +630,7 @@ namespace AutoDA
             this.labelLogo.AutoSize = true;
             this.labelLogo.Font = new System.Drawing.Font("Viner Hand ITC", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelLogo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.labelLogo.Location = new System.Drawing.Point(81, 53);
+            this.labelLogo.Location = new System.Drawing.Point(86, 41);
             this.labelLogo.Name = "labelLogo";
             this.labelLogo.Size = new System.Drawing.Size(206, 44);
             this.labelLogo.TabIndex = 0;
@@ -736,7 +745,7 @@ namespace AutoDA
             this.panelRightSide.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelRightSide.Location = new System.Drawing.Point(292, 0);
             this.panelRightSide.Name = "panelRightSide";
-            this.panelRightSide.Size = new System.Drawing.Size(292, 702);
+            this.panelRightSide.Size = new System.Drawing.Size(292, 728);
             this.panelRightSide.TabIndex = 22;
             // 
             // btnSettings
@@ -769,7 +778,7 @@ namespace AutoDA
             this.panelDiscordSubmenu.Controls.Add(this.button1);
             this.panelDiscordSubmenu.Controls.Add(this.button4);
             this.panelDiscordSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 390);
+            this.panelDiscordSubmenu.Location = new System.Drawing.Point(0, 370);
             this.panelDiscordSubmenu.Name = "panelDiscordSubmenu";
             this.panelDiscordSubmenu.Size = new System.Drawing.Size(292, 183);
             this.panelDiscordSubmenu.TabIndex = 25;
@@ -921,7 +930,7 @@ namespace AutoDA
             this.btnDiscord.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDiscord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDiscord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnDiscord.Location = new System.Drawing.Point(0, 345);
+            this.btnDiscord.Location = new System.Drawing.Point(0, 325);
             this.btnDiscord.Name = "btnDiscord";
             this.btnDiscord.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnDiscord.Size = new System.Drawing.Size(292, 45);
@@ -952,7 +961,7 @@ namespace AutoDA
             this.panelStatSubmenu.Controls.Add(this.labelAttackPos);
             this.panelStatSubmenu.Controls.Add(this.labelAtk);
             this.panelStatSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 145);
+            this.panelStatSubmenu.Location = new System.Drawing.Point(0, 125);
             this.panelStatSubmenu.Name = "panelStatSubmenu";
             this.panelStatSubmenu.Size = new System.Drawing.Size(292, 200);
             this.panelStatSubmenu.TabIndex = 23;
@@ -1140,7 +1149,7 @@ namespace AutoDA
             this.btnStats.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnStats.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStats.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.btnStats.Location = new System.Drawing.Point(0, 100);
+            this.btnStats.Location = new System.Drawing.Point(0, 80);
             this.btnStats.Name = "btnStats";
             this.btnStats.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnStats.Size = new System.Drawing.Size(292, 45);
@@ -1156,18 +1165,62 @@ namespace AutoDA
             this.panelRightTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelRightTop.Location = new System.Drawing.Point(0, 0);
             this.panelRightTop.Name = "panelRightTop";
-            this.panelRightTop.Size = new System.Drawing.Size(292, 100);
+            this.panelRightTop.Size = new System.Drawing.Size(292, 80);
             this.panelRightTop.TabIndex = 0;
             // 
             // toolTip
             // 
             this.toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip_Popup);
             // 
+            // labelPathWins
+            // 
+            this.labelPathWins.AutoSize = true;
+            this.labelPathWins.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelPathWins.Location = new System.Drawing.Point(13, 137);
+            this.labelPathWins.Name = "labelPathWins";
+            this.labelPathWins.Size = new System.Drawing.Size(101, 19);
+            this.labelPathWins.TabIndex = 26;
+            this.labelPathWins.Text = "Find Path Wins";
+            // 
+            // boxPathWins
+            // 
+            this.boxPathWins.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.boxPathWins.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.boxPathWins.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.boxPathWins.Location = new System.Drawing.Point(128, 135);
+            this.boxPathWins.Name = "boxPathWins";
+            this.boxPathWins.Size = new System.Drawing.Size(30, 25);
+            this.boxPathWins.TabIndex = 27;
+            this.boxPathWins.Text = "99";
+            this.boxPathWins.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // labelNonLegend
+            // 
+            this.labelNonLegend.AutoSize = true;
+            this.labelNonLegend.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.labelNonLegend.Location = new System.Drawing.Point(12, 168);
+            this.labelNonLegend.Name = "labelNonLegend";
+            this.labelNonLegend.Size = new System.Drawing.Size(84, 19);
+            this.labelNonLegend.TabIndex = 23;
+            this.labelNonLegend.Text = "Non Legend";
+            // 
+            // boxNonLegend
+            // 
+            this.boxNonLegend.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.boxNonLegend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.boxNonLegend.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.boxNonLegend.FormattingEnabled = true;
+            this.boxNonLegend.Location = new System.Drawing.Point(142, 165);
+            this.boxNonLegend.Name = "boxNonLegend";
+            this.boxNonLegend.Size = new System.Drawing.Size(113, 25);
+            this.boxNonLegend.TabIndex = 24;
+            this.boxNonLegend.Text = "Articuno";
+            // 
             // MainWindow
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(104)))), ((int)(((byte)(104)))));
-            this.ClientSize = new System.Drawing.Size(584, 702);
+            this.ClientSize = new System.Drawing.Size(584, 728);
             this.Controls.Add(this.panelRightSide);
             this.Controls.Add(this.panelLogs);
             this.Controls.Add(this.boxVideoOutput);
@@ -1283,5 +1336,9 @@ namespace AutoDA
         public System.Windows.Forms.Button btnSettings;
         public System.Windows.Forms.Label labelMaxDynite;
         public System.Windows.Forms.TextBox boxMaxDynite;
+        public System.Windows.Forms.Label labelPathWins;
+        public System.Windows.Forms.TextBox boxPathWins;
+        public System.Windows.Forms.ComboBox boxNonLegend;
+        public System.Windows.Forms.Label labelNonLegend;
     }
 }

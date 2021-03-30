@@ -57,25 +57,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="boxVideoDelay.ToolTip" xml:space="preserve">
-    <value>Input a time (in seconds) if your capture card has any significant delay.
-Most configurations can leave this value at 0 but people using OBS
-virtual camera may have to increase this calue to 1 or 2 (seconds).
-</value>
-  </data>
-  <data name="boxMode.ToolTip" xml:space="preserve">
-    <value>This is the mode that the program should use.
-
-"Default": Perfect to accumulate Dynite Ore, it will never reset the game.
-
-"Ball Saver": Resets the game, if the legendary is not shiny.
-It will also keep track of your Dynite Ore and not catch the Boss if low on it.
-
-"Strong Boss": Similiar to Ball Saver, but will also keep non legendary shinies.
-
-"Keep path": Will force the game to always reset on a pre-saved path.
-This will deplete your Dynite Ore quickly.</value>
-  </data>
   <assembly alias="System.Drawing.Common" name="System.Drawing.Common, Version=4.0.2.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -349,12 +330,6 @@ This will deplete your Dynite Ore quickly.</value>
         1QPMAZEBkhIl0SGIihrXKiApbHDDQGkeEEQTilxEigy9nY6oBwcwLtaNGwjaGUqlVGQGQ6f7f64t2Cb+
         dAjZAAAAAElFTkSuQmCC
 </value>
-  </data>
-  <data name="boxPingSettings.ToolTip" xml:space="preserve">
-    <value>The update messages that the webhook will send you.
-"all": provides all possible updates to your webhook, includes stats after a completed run.
-"only shiny": will only push updates if shinies are found.
-"none": ignores all discord messages.</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
