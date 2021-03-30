@@ -94,6 +94,9 @@ namespace AutoMaxLair
             labels.Add(main.labelMessages);
             labels.Add(main.labelAtk);
             labels.Add(main.labelSpeed);
+            labels.Add(main.labelMaxDynite);
+            labels.Add(main.labelPathWins);
+            labels.Add(main.labelNonLegend);
 
             comboboxes.Add(main.boxBossIndex);
             comboboxes.Add(main.boxPokemon);
@@ -103,6 +106,7 @@ namespace AutoMaxLair
             comboboxes.Add(main.boxVideoCapture);
             comboboxes.Add(main.boxGameLanguage);
             comboboxes.Add(main.boxPingSettings);
+            comboboxes.Add(main.boxNonLegend);
 
             textboxes.Add(main.boxBaseBallValue);
             textboxes.Add(main.boxLegendBallValue);
@@ -123,6 +127,8 @@ namespace AutoMaxLair
             textboxes.Add(main.boxWebhookToken);
             textboxes.Add(main.boxUserID);
             textboxes.Add(main.boxPingName);
+            textboxes.Add(main.boxMaxDynite);
+            textboxes.Add(main.boxPathWins);
 
             checkboxes.Add(main.checkBoxDebugLogs);
             checkboxes.Add(main.boxCheckAttack);
