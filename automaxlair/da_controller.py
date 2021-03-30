@@ -74,6 +74,7 @@ class DAController(SwitchController):
         self.time_per_run = 0.0
         self.shinies_found = 0
         self.caught_shinies: List[str] = []
+        self.ball_numbers: Dict[str, int] = {}
         self.consecutive_resets = int(config['advanced']['CONSECUTIVE_RESETS'])
         self.reset_run()  # Some values are initialized in here.
 
@@ -128,6 +129,7 @@ class DAController(SwitchController):
         # Poke ball rectangles.
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
+        self.ball_sprite_rect = ((0.60, 0.60), (0.68, 0.70))
         # Backpacker item rectangles.
         self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
@@ -150,6 +152,10 @@ class DAController(SwitchController):
             self.config['pokemon_data_paths']['pokemon_sprite_path'], 'rb'
         ) as image_file:
             self.pokemon_sprites = pickle.load(image_file)
+        with open(
+            self.config['pokemon_data_paths']['ball_sprite_path'], 'rb'
+        ) as image_file:
+            self.ball_sprites = pickle.load(image_file)
         self.misc_icons = {}
         directory = self.config['pokemon_data_paths']['misc_icon_dir']
         for filename in os.listdir(directory):
@@ -182,8 +188,8 @@ class DAController(SwitchController):
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
         assert self.discord_level in (
-            'all', 'all_ping_legendary', 'only_shiny', 'only_shiny_ping_legendary',
-            'none'), 'Invalid discord level'
+            'all', 'all_ping_legendary', 'only_shiny',
+            'only_shiny_ping_legendary', 'none'), 'Invalid discord level'
         # Do not assert for negative dynite ore.
         # Negative ore will force the bot to not spend any ore until it reaches
         # that target.
@@ -229,7 +235,9 @@ class DAController(SwitchController):
         # choose a good color for the boss
         try:
             # let's update the embed color with one from our list
-            with open(self.config['pokemon_data_paths']['boss_colors'], 'r') as f:
+            with open(
+                self.config['pokemon_data_paths']['boss_colors'], 'r'
+            ) as f:
                 boss_colors = jsonpickle.decode(f.read())
             self.discord_embed_color = Color.from_rgb(*boss_colors[self.boss])
         except Exception:
@@ -417,8 +425,8 @@ class DAController(SwitchController):
                 if self.current_run.pokemon not in (None, pokemon):
                     self.log(
                         "The bot's Pokemon detected from the sprite, "
-                        f"{pokemon.name_id}, did not match with the previously "
-                        f"known value of {self.current_run.pokemon.name_id}.",
+                        f"{pokemon.name_id}, did not match with the previously"
+                        f" known value of {self.current_run.pokemon.name_id}.",
                         'WARNING'
                     )
                 self.current_run.pokemon = pokemon
@@ -840,15 +848,27 @@ class DAController(SwitchController):
 
     def check_black_screen(self, img: Image = None) -> bool:
         """Detect the black screen that is characteristic of losing the run."""
-        if not self.check_rect_HSV_match(
-            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250, img
-        ):
-            return False
 
-        # Pause and check a second time as a rudimentary debounce filter.
-        self.push_button(None, 0.2)
-        return self.check_rect_HSV_match(
-            ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 10), 250)
+        # Check for:
+        # 1) A low average brightness of the screen, and
+        # 2) High uniformity across the entire screen.
+        #
+        # Check twice to make sure the frame isn't a one-off—sometimes there is
+        # a momentary black screen after the Dynamax animation.
+        for __ in range(2):
+            if img is None:
+                img = cv2.cvtColor(self.get_frame(), cv2.COLOR_BGR2HSV)
+            if not self.check_rect_HSV_match(
+                ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 50), 250, img, True
+            ) or cv2.meanStdDev(cv2.split(img)[2])[1] > 10:
+                return False
+            # Delay and get the next frame 200 ms later.
+            self.push_button(None, 0.2)
+            # Important! Force a new frame to be fetched the next loop.
+            img = None
+
+        # If nothing triggered an early exit, the screen must be black.
+        return True
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
@@ -870,8 +890,45 @@ class DAController(SwitchController):
         the game.
         """
 
+        # Get an image that we will read the ball type and number from.
+        img = self.get_frame()
+
+        # Match the ball on screen to stored sprites.
+        ball_image = self.get_image_slice(img, self.ball_sprite_rect)
+        best_match_value = -1
+        for ball_id, sprite in self.ball_sprites.items():
+            match_value = self.match_template(ball_image, sprite)[0]
+            if match_value > best_match_value:
+                best_match_value = match_value
+                best_match = ball_id
+
+        # Read the ball number.
+        # How it works: a regex is used to exclude non-number characters from
+        # the ball number read by OCR.
+        ball_num = int('0' + ''.join(re.findall(r'\d+', self.read_text(
+            img, self.ball_num_rect, invert=True, segmentation_mode='--psm 7'
+        ))))
+        self.log(
+            f'Detected number of remaining {best_match} as {ball_num}.',
+            'DEBUG')
+        # If the ball numbers are not known, record them.
+        # Alternatively, raise a warning if the read number is inconsistent
+        # with the previous known value.
+        stored_ball_num = self.ball_numbers.get(best_match, None)
+        if stored_ball_num is None:
+            # Store the ball number.
+            self.ball_numbers[best_match] = ball_num
+            self.log(
+                f'Detected the number of {best_match} as {ball_num}.', 'DEBUG')
+        elif ball_num != stored_ball_num:
+            self.log(
+                f'Detected base ball number {ball_num} did not match with '
+                f'stored value of {stored_ball_num}.', 'WARNING')
+
+        # DEPRECATED: return the ball name for now until the sprite detection
+        # is shown to be robust.
         return self.read_text(
-            self.get_frame(), self.ball_rect, threshold=False, invert=True,
+            img, self.ball_rect, threshold=False, invert=True,
             segmentation_mode='--psm 7').strip()
 
     def record_ball_use(self) -> None:
@@ -879,6 +936,19 @@ class DAController(SwitchController):
         number of pokemon caught.
         """
 
+        # Subtract one from the stored number of balls.
+        ball_to_use = (
+            self.base_ball if self.current_run.num_caught < 3
+            else self.legendary_ball
+        )
+        try:
+            self.ball_numbers[ball_to_use] -= 1
+        except KeyError:
+            self.log(
+                f'{ball_to_use} number not initialized before use.', 'ERROR')
+
+        # DEPRECATED: manually track each ball number until the new method is
+        # shown to work.
         if self.base_ball == self.legendary_ball:
             self.base_balls -= 1
             self.legendary_balls -= 1
@@ -886,13 +956,25 @@ class DAController(SwitchController):
             self.base_balls -= 1
         else:
             self.legendary_balls -= 1
+
+        # Record the Pokemon being caught.
         self.current_run.num_caught += 1
 
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
+        # DEPRECATED
         return not (
             (self.base_ball == self.legendary_ball and self.base_balls < 4)
             or (self.base_balls < 3) or (self.legendary_balls < 1))
+
+        return not (
+            (
+                self.base_ball == self.legendary_ball
+                and self.ball_numbers[self.base_ball] < 4
+            )
+            or (self.ball_numbers[self.base_ball] < 3)
+            or (self.ball_numbers[self.legendary_ball] < 1)
+        )
 
     def record_ore_reward(self) -> None:
         """Award Dynite Ore depending on how the run went."""
@@ -934,6 +1016,22 @@ class DAController(SwitchController):
 
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
+        num_caught = self.current_run.num_caught
+        try:
+            self.ball_numbers[self.base_ball] += min(3, num_caught)
+        except KeyError:
+            self.log(
+                f'{self.base_ball} number not initialized before use.',
+                'ERROR')
+        if num_caught == 4:
+            try:
+                self.ball_numbers[self.legendary_ball] += 1
+            except KeyError:
+                self.log(
+                    f'{self.legendary_ball} number not initialized before '
+                    'use.', 'ERROR')
+        # DEPRECATED: manually track each ball number until the new method is
+        # shown to work.
         if self.base_ball != self.legendary_ball:
             self.base_balls += min(3, self.current_run.num_caught)
             self.legendary_balls += (
@@ -941,6 +1039,8 @@ class DAController(SwitchController):
         else:
             self.base_balls += self.current_run.num_caught
             self.legendary_balls += self.current_run.num_caught
+
+        # Record an additional reset and the associated ore cost.
         self.consecutive_resets += 1
         ore_cost = self.calculate_ore_cost(self.consecutive_resets)
         self.dynite_ore -= ore_cost

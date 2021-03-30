@@ -43,6 +43,8 @@ def main():
             fn = 'toxtricity.png'
         elif name_id == 'indeedee-male':
             fn = 'indeedee.png'
+        elif name_id == 'gastrodon':
+            fn = 'gastrodon-east.png'
         else:
             fn = name_id + '.png'
         # Start by loading the Pokemon's sprite and female sprite if it exists.

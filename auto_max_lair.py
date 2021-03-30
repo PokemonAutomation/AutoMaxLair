@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-beta-2021-03-19-1'
+VERSION = 'v0.8-beta-20210328'
 
 # load configuration from the config file
 try:
@@ -41,6 +41,7 @@ BOSS_INDEX = config['advanced']['BOSS_INDEX']
 pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
 ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
 NON_LEGEND = config['advanced']['NON_LEGEND'].lower().replace(' ', '-')
+FIND_PATH_WINS = config['FIND_PATH_WINS']
 
 # Set the log name
 LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
@@ -205,7 +206,7 @@ def battle(ctrlr) -> str:
         elif battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
-            ctrlr.push_button(None, 3)
+            ctrlr.push_button(None, 3.5)
         elif battle_state == 'LOSS':
             ctrlr.log('You lose and the battle is finished.')
             run.lives -= 1
@@ -287,8 +288,6 @@ def battle(ctrlr) -> str:
                 run.dmax_timer == -1 and ctrlr.check_dynamax_available()
             )
             # Choose the best move to use against the boss
-            # TODO: use the actual teammates instead of the average of all
-            # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
                     run.pokemon, run.opponent, run.field,
@@ -540,13 +539,13 @@ def scientist(ctrlr) -> str:
     if average_score > existing_score:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'a', 3 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'a', 2 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
         # Note: a long delay is required here so the bot doesn't think a
         # battle started.
-        ctrlr.push_buttons((None, 3), (b'b', 3 + VIDEO_EXTRA_DELAY))
+        ctrlr.push_buttons((None, 3), (b'b', 2 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
 
     # Read teammates.
@@ -556,7 +555,7 @@ def scientist(ctrlr) -> str:
     # OrderedDict is unnecessary.
     if average_score > existing_score:
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    ctrlr.push_button(None, 4)
+    ctrlr.push_button(None, 3)
 
     return 'detect'
 
@@ -589,17 +588,22 @@ def select_pokemon(ctrlr) -> str:
         # although the path would be lost that situation should never arise.
         return 'join'
     # "find path" mode quits if the run is successful.
-    elif run.num_caught == 4 and ctrlr.mode == 'find path':
+    elif run.num_caught == 4 and (
+        ctrlr.mode == 'find path'
+        and ctrlr.consecutive_resets == FIND_PATH_WINS - 1
+    ):
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            f"Found a winning path for {ctrlr.boss} with {run.lives} "
-            "remaining.",
+            f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with "
+            f"{run.lives} lives remaining.",
             path_to_picture=f'logs/{ctrlr.log_name}_cap_'
             f'{ctrlr.num_saved_images}.png',
             embed_fields=ctrlr.get_stats_for_discord(),
-            level="update"
+            level="critical"
         )
-        ctrlr.log(f'This path won with {run.lives} lives remaining.')
+        ctrlr.log(
+            f'This path won {FIND_PATH_WINS} times with {run.lives} '
+            'lives remaining.')
         return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -689,8 +693,8 @@ def select_pokemon(ctrlr) -> str:
 
     if (
         not take_pokemon and (
-            ctrlr.mode == 'strong boss' and run.num_caught == 4)
-        and ctrlr.check_sufficient_ore(1)
+            ctrlr.mode == 'strong boss' or ctrlr.mode == 'find path')
+        and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
 

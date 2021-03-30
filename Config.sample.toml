@@ -57,10 +57,14 @@ LEGENDARY_BALLS = 500
 #   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
-#   "FIND PATH" - Will run like default mode but will stop as soon as it win once. It can be used
-#       alongside KEEP PATH to find a winning path. It's up  to the user to check if the path was
-#       good or not.
+#   "FIND PATH" - Will run like STRONG BOSS mode but will stop when it consecutively wins the
+#       number of times inputted into "FIND PATH WINS". It is recommended to leave the 
+#       NON_LEGEND setting as "default" to avoid any false posistives.
+#       It can be used alongside KEEP PATH to find a winning path. Don't forget to update the  
+#       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
+#       It's up to the user to check if the path found was good or not.
 MODE = "STRONG BOSS"
+FIND_PATH_WINS = 1
 
 # === COM_PORT ===
 # The COM Port is how your system internally connects to your Serial connection.
@@ -233,6 +237,9 @@ type_icon_path = "data/type_icons.pickle"
 # File containing the pickled data about the pokemon sprites.
 pokemon_sprite_path = "data/pokemon_sprites.pickle"
 
+# File containing the pickled ball sprites
+ball_sprite_path = "data/ball_sprites.pickle"
+
 # File containing the pickled data about other icons (cheer, fight).
 misc_icon_dir = "data/misc_icons/"
 
@@ -309,40 +316,40 @@ SCIENTIST = "préstamo"
 PATH = "quieres seguir"
 
 # Sentence used to detect that we lost a live (storm is raging).
-FAINT = "tormenta reinante"
+FAINT = "tormenta reinante|Aguantar"
 
 # Sentence used to detect the scientist asking us to join a DA.
 START_PHRASE = "emprender"
 
 # Sentence used to detect that the weather is now normal.
-WEATHER_CLEAR = "sol vuelve a brillar|dejado de llover|arena ha amainado|dejado de granizar"
+WEATHER_CLEAR = "sol vuelve|dejado de|amainado"
 
 # Sentence used to detect that the weather is now sunny.
-WEATHER_SUNLIGHT = "sol pega fuerte"
+WEATHER_SUNLIGHT = "sol pega"
 
 # Sentence used to detect that the weather is now rainy.
-WEATHER_RAIN = "empezado a llover"
+WEATHER_RAIN = "a llover"
 
 # Sentence used to detect that the sandstorm is raging.
-WEATHER_SANDSTORM = "desatado una tormenta de arena"
+WEATHER_SANDSTORM = "desatado"
 
 # Sentence used to detect that the hailstorm is raging.
-WEATHER_HAIL = "empezado a granizar"
+WEATHER_HAIL = "a granizar"
 
 # Sentence used to detect that the terrain is now normal.
-TERRAIN_CLEAR = "eléctrica ha desaparecido|desaparecido la extraña|hierba ha desaparecido|se ha disipado"
+TERRAIN_CLEAR = "ha desaparecido|niebla se"
 
 # Sentence used to detect that the terrain is now electrified.
 TERRAIN_ELECTRIC = "campo de corriente"
 
 # Sentence used to detect that the terrain is now grassy.
-TERRAIN_GRASSY = "ha cubierto de hierba"
+TERRAIN_GRASSY = "de hierba"
 
 # Sentence used to detect that the terrain is now misty.
 TERRAIN_MISTY = "niebla ha envuelto"
 
 # Sentence used to detect that the terrain is now psychic.
-TERRAIN_PSYCHIC = "ha vuelto muy extraño"
+TERRAIN_PSYCHIC = "muy extraño"
 
 # 
 [French]
@@ -459,7 +466,7 @@ SCIENTIST = "austauschen"
 PATH = "Weg"
 
 # Sentence used to detect that we lost a live (storm is raging).
-FAINT = "Eure Gruppe wurde vom Sturm"
+FAINT = "Der Sturm"
 
 # Sentence used to detect the scientist asking us to join a DA.
 START_PHRASE = "Möchtest du zu einem"
