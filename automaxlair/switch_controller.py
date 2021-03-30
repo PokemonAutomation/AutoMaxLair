@@ -318,11 +318,11 @@ class SwitchController:
 
         # Send the command to the microcontroller using the serial port.
         if char is not None:
-            self.com.write(char)
             hold_ticks = bytes([round(hold_ticks)])
-            self.com.write(hold_ticks)
-            char_echo = self.com.read()
-            hold_echo = self.com.read()
+            self.com.write(char+hold_ticks)
+            response = self.com.read(2)
+            char_echo = response[:1]
+            hold_echo = response[1:]
             # Check whether the microcontroller successfully echoed back the
             # command, and raise a warning if it did not.
             if char_echo != char:
