@@ -31,7 +31,11 @@ for boss in bosses:
     if len(found_files) > 0:
         boss_files[boss] = found_files
 
-for boss, logs in boss_files.items():
+boss_files = {key: val for key, val in boss_files.items() if len(val) > 0}
+boss_order = sorted(boss_files, key=lambda x: os.path.getmtime(os.path.join(log_path, boss_files[x][0])))
+
+for boss in boss_order:
+    logs = boss_files[boss]
     total_losses = 0
     total_wins = 0
     total_shinies = 0
