@@ -13,14 +13,93 @@ from crccheck import crc
 
 
 # Constants used by PABotBase
-PROTOCOL_VERSION = 2021030200  # Match to hex file required
+PROTOCOL_VERSION = 2021030200  # Match of all but last 2 digits required
 PABB_MSG_SEQNUM_RESET = b'\x40'
 PABB_MSG_REQUEST_PROTOCOL_VERSION = b'\x41'
 PABB_MSG_CONTROLLER_STATE = b'\x9f'
+PABB_MSG_COMMAND_PBF_PRESS_BUTTON = b'\x91'
+
+TICKS_PER_SECOND = 125
+GLOBAL_RELEASE_TICKS = 10
 
 # Overrides for the parameters used by the regular serial port.
 BAUD_RATE = 115200
 TIMEOUT = 0.05
+
+
+# Functions to convert series of parameters into commands.
+def _get_button_command(
+    seqnum: int,
+    button: int,
+    hold_ticks: int,
+    release_ticks: int
+):
+    """Get a bytestring corresponding to the desired button press."""
+    return (
+        b'\x91'
+        + seqnum.to_bytes(4, byteorder='little')
+        + button.to_bytes(2, byteorder='little')
+        + hold_ticks.to_bytes(2, byteorder='little')
+        + release_ticks.to_bytes(2, byteorder='little')
+    )
+
+
+def _get_joystick_command(
+    stick_type: bytes,
+    seqnum: int,
+    x: int,
+    y: int,
+    hold_ticks: int,
+    release_ticks: int
+):
+    """Get a bytestring corresponding to the desired joystick movement."""
+    return (
+        stick_type
+        + seqnum.to_bytes(4, byteorder='little')
+        + x.to_bytes(1, byteorder='little')
+        + y.to_bytes(1, byteorder='little')
+        + hold_ticks.to_bytes(2, byteorder='little')
+        + release_ticks.to_bytes(2, byteorder='little')
+    )
+
+
+# Map for translating commands used by AutoMaxLair into PABotBase commands.
+#
+# Note that each value should be called with the seqnum as the first parameter
+# and the hold ticks as the second parameter.
+# Example: command: bytes = button_map['a'](seqnum: int, hold_ticks: int)
+button_map = {
+    'y': lambda x, y: _get_button_command(x, 1, y, GLOBAL_RELEASE_TICKS),
+    'b': lambda x, y: _get_button_command(x, 2, y, GLOBAL_RELEASE_TICKS),
+    'a': lambda x, y: _get_button_command(x, 4, y, GLOBAL_RELEASE_TICKS),
+    'x': lambda x, y: _get_button_command(x, 8, y, GLOBAL_RELEASE_TICKS),
+    'l': lambda x, y: _get_button_command(x, 16, y, GLOBAL_RELEASE_TICKS),
+    'r': lambda x, y: _get_button_command(x, 32, y, GLOBAL_RELEASE_TICKS),
+    'L': lambda x, y: _get_button_command(x, 64, y, GLOBAL_RELEASE_TICKS),
+    'R': lambda x, y: _get_button_command(x, 128, y, GLOBAL_RELEASE_TICKS),
+    '-': lambda x, y: _get_button_command(x, 256, y, GLOBAL_RELEASE_TICKS),
+    '+': lambda x, y: _get_button_command(x, 512, y, GLOBAL_RELEASE_TICKS),
+    'C': lambda x, y: _get_button_command(x, 1024, y, GLOBAL_RELEASE_TICKS),
+    'c': lambda x, y: _get_button_command(x, 2048, y, GLOBAL_RELEASE_TICKS),
+    'h': lambda x, y: _get_button_command(x, 4096, y, GLOBAL_RELEASE_TICKS),
+    'p': lambda x, y: _get_button_command(x, 8192, y, GLOBAL_RELEASE_TICKS),
+    '^': lambda x, y: _get_joystick_command(
+        b'\x93', x, 0x80, 0x00, y, GLOBAL_RELEASE_TICKS),  # LY stick min
+    '<': lambda x, y: _get_joystick_command(
+        b'\x93', x, 0x00, 0x80, y, GLOBAL_RELEASE_TICKS),  # LX stick min
+    'v': lambda x, y: _get_joystick_command(
+        b'\x93', x, 0x80, 0xFF, y, GLOBAL_RELEASE_TICKS),  # LY stick max
+    '>': lambda x, y: _get_joystick_command(
+        b'\x93', x, 0xFF, 0x80, y, GLOBAL_RELEASE_TICKS),  # LX stick max
+    '8': lambda x, y: _get_joystick_command(
+        b'\x94', x, 0x80, 0x00, y, GLOBAL_RELEASE_TICKS),  # RY stick min
+    '4': lambda x, y: _get_joystick_command(
+        b'\x94', x, 0x00, 0x80, y, GLOBAL_RELEASE_TICKS),  # RX stick min
+    '2': lambda x, y: _get_joystick_command(
+        b'\x94', x, 0x80, 0xFF, y, GLOBAL_RELEASE_TICKS),  # RY stick max
+    '6': lambda x, y: _get_joystick_command(
+        b'\x94', x, 0xFF, 0x80, y, GLOBAL_RELEASE_TICKS)  # RX stick max
+}
 
 
 class PABotBaseController:
@@ -28,10 +107,11 @@ class PABotBaseController:
     by PABotBase.
     """
 
-    def __init__(self, port, __, __, debug_mode=False):
+    def __init__(self, port, __, ___, debug_mode=False):
         """Initialize a serial port connection."""
         self.debug_mode = debug_mode
         self.com = serial.Serial(port, 115200)
+        self.timeout = 0.05
 
         self._reset()
 
@@ -51,9 +131,10 @@ class PABotBaseController:
         )
 
         echo = self._write(PABB_MSG_REQUEST_PROTOCOL_VERSION, b'')
-        controller_program_version = self._decode_bytestring(echo[6:10])
-        assert controller_program_version == PROTOCOL_VERSION, (
-            f'Protocol version {PROTOCOL_VERSION} is required but the '
+        controller_program_version = int.from_bytes(
+            echo[6:10], byteorder='little')
+        assert controller_program_version//100 == PROTOCOL_VERSION//100, (
+            f'Protocol version {PROTOCOL_VERSION//100}xx is required but the '
             f'microcontroller is using version {controller_program_version}'
         )
 
@@ -91,7 +172,7 @@ class PABotBaseController:
         response_length = int.from_bytes([length_byte], 'little') ^ 0xFF
 
         start_time = time.time()
-        while time.time() - start_time < 0.05:
+        while time.time() - start_time < self.timeout:
             if self.com.inWaiting() >= response_length - 1:
                 message = self.com.read(response_length)
                 break
@@ -157,3 +238,4 @@ class PABotBaseController:
 if __name__ == '__main__':
 
     com = PABotBaseController('COM4', 9600, 0.05, True)
+    #print(binascii.hexlify(button_map['x'](1, 80)))
