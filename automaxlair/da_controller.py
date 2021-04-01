@@ -295,7 +295,7 @@ class DAController(SwitchController):
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
-                img, (self.ball_rect, self.ball_num_rect), (0, 0, 255))
+                img, (self.ball_rect, self.ball_sprite_rect, self.ball_num_rect), (0, 0, 255))
             self.outline_regions(
                 img, (
                     self.team_HP_rect_5, self.team_HP_rect_6,
