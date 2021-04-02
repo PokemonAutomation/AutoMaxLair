@@ -555,7 +555,7 @@ def scientist(ctrlr) -> str:
     # OrderedDict is unnecessary.
     if average_score > existing_score:
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    ctrlr.push_button(None, 3)
+    ctrlr.push_button(None, 5)
 
     return 'detect'
 
