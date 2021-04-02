@@ -129,7 +129,7 @@ class DAController(SwitchController):
         # Poke ball rectangles.
         self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
-        self.ball_sprite_rect = ((0.60, 0.60), (0.68, 0.70))
+        self.ball_sprite_rect = ((0.66, 0.63), (0.675, 0.68))
         # Backpacker item rectangles.
         self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
         self.item_rect_1 = ((0.549, 0.11), (0.745, 0.16))
@@ -295,7 +295,9 @@ class DAController(SwitchController):
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
-                img, (self.ball_rect, self.ball_sprite_rect, self.ball_num_rect), (0, 0, 255))
+                img, (
+                    self.ball_rect, self.ball_sprite_rect, self.ball_num_rect
+                ), (0, 0, 255))
             self.outline_regions(
                 img, (
                     self.team_HP_rect_5, self.team_HP_rect_6,
@@ -897,7 +899,7 @@ class DAController(SwitchController):
         ball_image = self.get_image_slice(img, self.ball_sprite_rect)
         best_match_value = -1
         for ball_id, sprite in self.ball_sprites.items():
-            match_value = self.match_template(ball_image, sprite)[0]
+            match_value = self.match_template(sprite, ball_image)[0]
             if match_value > best_match_value:
                 best_match_value = match_value
                 best_match = ball_id
