@@ -14,8 +14,10 @@ from crccheck import crc
 
 # Constants used by PABotBase
 PROTOCOL_VERSION = 2021030200  # Match of all but last 2 digits required
+PABB_MSG_ACK_REQUEST_I32  = b'\x14'
 PABB_MSG_SEQNUM_RESET = b'\x40'
 PABB_MSG_REQUEST_PROTOCOL_VERSION = b'\x41'
+PABB_MSG_REQUEST_COMMAND_FINISHED = b'\x45'
 PABB_MSG_CONTROLLER_STATE = b'\x9f'
 PABB_MSG_COMMAND_PBF_PRESS_BUTTON = b'\x91'
 
@@ -69,35 +71,35 @@ def _get_joystick_command(
 # and the hold ticks as the second parameter.
 # Example: command: bytes = button_map['a'](seqnum: int, hold_ticks: int)
 button_map = {
-    'y': lambda x, y: _get_button_command(x, 1, y, GLOBAL_RELEASE_TICKS),
-    'b': lambda x, y: _get_button_command(x, 2, y, GLOBAL_RELEASE_TICKS),
-    'a': lambda x, y: _get_button_command(x, 4, y, GLOBAL_RELEASE_TICKS),
-    'x': lambda x, y: _get_button_command(x, 8, y, GLOBAL_RELEASE_TICKS),
-    'l': lambda x, y: _get_button_command(x, 16, y, GLOBAL_RELEASE_TICKS),
-    'r': lambda x, y: _get_button_command(x, 32, y, GLOBAL_RELEASE_TICKS),
-    'L': lambda x, y: _get_button_command(x, 64, y, GLOBAL_RELEASE_TICKS),
-    'R': lambda x, y: _get_button_command(x, 128, y, GLOBAL_RELEASE_TICKS),
-    '-': lambda x, y: _get_button_command(x, 256, y, GLOBAL_RELEASE_TICKS),
-    '+': lambda x, y: _get_button_command(x, 512, y, GLOBAL_RELEASE_TICKS),
-    'C': lambda x, y: _get_button_command(x, 1024, y, GLOBAL_RELEASE_TICKS),
-    'c': lambda x, y: _get_button_command(x, 2048, y, GLOBAL_RELEASE_TICKS),
-    'h': lambda x, y: _get_button_command(x, 4096, y, GLOBAL_RELEASE_TICKS),
-    'p': lambda x, y: _get_button_command(x, 8192, y, GLOBAL_RELEASE_TICKS),
-    '^': lambda x, y: _get_joystick_command(
+    b'y': lambda x, y: _get_button_command(x, 1, y, GLOBAL_RELEASE_TICKS),
+    b'b': lambda x, y: _get_button_command(x, 2, y, GLOBAL_RELEASE_TICKS),
+    b'a': lambda x, y: _get_button_command(x, 4, y, GLOBAL_RELEASE_TICKS),
+    b'x': lambda x, y: _get_button_command(x, 8, y, GLOBAL_RELEASE_TICKS),
+    b'l': lambda x, y: _get_button_command(x, 16, y, GLOBAL_RELEASE_TICKS),
+    b'r': lambda x, y: _get_button_command(x, 32, y, GLOBAL_RELEASE_TICKS),
+    b'L': lambda x, y: _get_button_command(x, 64, y, GLOBAL_RELEASE_TICKS),
+    b'R': lambda x, y: _get_button_command(x, 128, y, GLOBAL_RELEASE_TICKS),
+    b'-': lambda x, y: _get_button_command(x, 256, y, GLOBAL_RELEASE_TICKS),
+    b'+': lambda x, y: _get_button_command(x, 512, y, GLOBAL_RELEASE_TICKS),
+    b'C': lambda x, y: _get_button_command(x, 1024, y, GLOBAL_RELEASE_TICKS),
+    b'c': lambda x, y: _get_button_command(x, 2048, y, GLOBAL_RELEASE_TICKS),
+    b'h': lambda x, y: _get_button_command(x, 4096, y, GLOBAL_RELEASE_TICKS),
+    b'p': lambda x, y: _get_button_command(x, 8192, y, GLOBAL_RELEASE_TICKS),
+    b'^': lambda x, y: _get_joystick_command(
         b'\x93', x, 0x80, 0x00, y, GLOBAL_RELEASE_TICKS),  # LY stick min
-    '<': lambda x, y: _get_joystick_command(
+    b'<': lambda x, y: _get_joystick_command(
         b'\x93', x, 0x00, 0x80, y, GLOBAL_RELEASE_TICKS),  # LX stick min
-    'v': lambda x, y: _get_joystick_command(
+    b'v': lambda x, y: _get_joystick_command(
         b'\x93', x, 0x80, 0xFF, y, GLOBAL_RELEASE_TICKS),  # LY stick max
-    '>': lambda x, y: _get_joystick_command(
+    b'>': lambda x, y: _get_joystick_command(
         b'\x93', x, 0xFF, 0x80, y, GLOBAL_RELEASE_TICKS),  # LX stick max
-    '8': lambda x, y: _get_joystick_command(
+    b'8': lambda x, y: _get_joystick_command(
         b'\x94', x, 0x80, 0x00, y, GLOBAL_RELEASE_TICKS),  # RY stick min
-    '4': lambda x, y: _get_joystick_command(
+    b'4': lambda x, y: _get_joystick_command(
         b'\x94', x, 0x00, 0x80, y, GLOBAL_RELEASE_TICKS),  # RX stick min
-    '2': lambda x, y: _get_joystick_command(
+    b'2': lambda x, y: _get_joystick_command(
         b'\x94', x, 0x80, 0xFF, y, GLOBAL_RELEASE_TICKS),  # RY stick max
-    '6': lambda x, y: _get_joystick_command(
+    b'6': lambda x, y: _get_joystick_command(
         b'\x94', x, 0xFF, 0x80, y, GLOBAL_RELEASE_TICKS)  # RX stick max
 }
 
@@ -113,6 +115,8 @@ class PABotBaseController:
         self.com = serial.Serial(port, 115200)
         self.timeout = 0.05
 
+        self.last_command = None
+
         self._reset()
 
     def __del__(self):
@@ -125,12 +129,15 @@ class PABotBaseController:
 
         self.seqnum = 0
 
-        echo = self._write(PABB_MSG_SEQNUM_RESET, b'')
+        echo = self._write(
+            PABB_MSG_SEQNUM_RESET + self.seqnum.to_bytes(4, 'little'))
         assert echo[1] == 0x11, (
             'PABotBase failed to respond to the reset command'
         )
 
-        echo = self._write(PABB_MSG_REQUEST_PROTOCOL_VERSION, b'')
+        echo = self._write(
+            PABB_MSG_REQUEST_PROTOCOL_VERSION
+            + self.seqnum.to_bytes(4, 'little'))
         controller_program_version = int.from_bytes(
             echo[6:10], byteorder='little')
         assert controller_program_version//100 == PROTOCOL_VERSION//100, (
@@ -138,26 +145,23 @@ class PABotBaseController:
             f'microcontroller is using version {controller_program_version}'
         )
 
-    def _write(self, message_type_byte, message) -> None:
+    def _write(self, message) -> bytes:
         """Handler for the PABotBase message send routine which involves
         checking that the message was echoed back successfully.
         """
 
-        length_byte = bytes([(10 + len(message)) ^ 0xFF])
+        length_byte = bytes([(5 + len(message)) ^ 0xFF])
 
-        full_message = self._add_checksum(
-            length_byte + message_type_byte
-            + self._encode_bytestring(self.seqnum) + message
-        )
+        full_message = self._add_checksum(length_byte + message)
 
-        self.com.flushInput()
-        self.com.flushOutput()
+        #self.com.flushInput()
+        #self.com.flushOutput()
         self.com.write(full_message)
-        time.sleep(0.05)
-        echo = self.com.read(self.com.inWaiting())
         if self.debug_mode:
             print(f'Sent message: {binascii.hexlify(full_message)}')
-            print(f'Received message: {binascii.hexlify(echo)}')
+        time.sleep(0.005)
+        echo = self._read()
+        
         return echo
 
     def _read(self) -> bytes:
@@ -165,24 +169,53 @@ class PABotBaseController:
         reading an expected message and echoing it back.
         """
 
-        self.com.flushInput()
         while self.com.inWaiting() == 0:
             time.sleep(0.01)
         length_byte = self.com.read()
-        response_length = int.from_bytes([length_byte], 'little') ^ 0xFF
+        response_length = length_byte[0] ^ 0xFF
 
         start_time = time.time()
         while time.time() - start_time < self.timeout:
             if self.com.inWaiting() >= response_length - 1:
-                message = self.com.read(response_length)
+                message = self.com.read(response_length - 1)
                 break
 
         full_message = length_byte + message
 
         if self.debug_mode:
-            print(f'Received message: {full_message}')
+            print(f'Received message: {binascii.hexlify(full_message)}')
 
-        self.com.write(full_message)
+        return full_message
+
+    def _read_command_finished(self) -> bool:
+        """Confirm that PABotBase finished processing a command."""
+
+        full_message = self._read()
+
+        # Prepare an acknowledgement of the received message to return to the
+        # microcontroller.
+        ack = None
+        if full_message[1] == PABB_MSG_REQUEST_COMMAND_FINISHED:
+            ack = self._add_checksum(
+                b'\x0a' + PABB_MSG_ACK_REQUEST_I32 + full_message[6:10]
+            )
+        else:
+            print(
+                f'Message code {full_message[1]} did not'
+                ' match any known response.')
+        # Send the acknowledgement.
+        if ack is not None:
+            self.com.write(ack)
+            # self.com.flushInput()
+            return True
+        else:
+            return False
+
+        # Print the messages for debugging purposes.
+        if self.debug_mode:
+            print(f'Received message: {binascii.hexlify(full_message)}')
+            if ack is not None:
+                print(f'Sent ack: {binascii.hexlify(ack)}')
 
         return full_message
 
@@ -199,10 +232,6 @@ class PABotBaseController:
         return int.from_bytes(
             binascii.unhexlify(int_as_bytes), byteorder='little')
 
-    def _encode_bytestring(self, integer: int) -> bytes:
-        """Encode an integer as a 4 byte little-endian bytestring."""
-        return integer.to_bytes(4, byteorder='little')
-
     def close(self):
         """Close the com port."""
         self.com.close()
@@ -213,11 +242,19 @@ class PABotBaseController:
         command.
         """
 
+        self.last_command = message
+
+        character = message[0].to_bytes(1, 'little')
+        hold_ticks = message[1] * 10
+
+        if self.debug_mode:
+            print(
+                f'Translating command with character {character} and duration '
+                f'{hold_ticks}')
+
+        translated_command = button_map[character](self.seqnum, hold_ticks)
+        self._write(translated_command)
         self.seqnum += 1
-
-        translated_message = b'PLACEHOLDER'
-
-        self._write(translated_message)
 
     def read(self, length=2):
         """Wrapper for serial.Serial.read. Always returns two bytes since that
@@ -228,14 +265,16 @@ class PABotBaseController:
             raise serial.SerialException(
                 'PABotBaseController.read method always returns 2 bytes.')
 
-        message = self._read()
-
-        translated_message = message  # PLACEHOLDER
-
-        return translated_message
+        if self._read_command_finished():
+            return self.last_command
+        else:
+            return b'\xff\xff'  # Throws an error
 
 
 if __name__ == '__main__':
 
     com = PABotBaseController('COM4', 9600, 0.05, True)
-    #print(binascii.hexlify(button_map['x'](1, 80)))
+    com.write(b'x' + bytes([8]))
+    print(com.read(2))
+    com.write(b'x' + bytes([8]))
+    print(com.read(2))
