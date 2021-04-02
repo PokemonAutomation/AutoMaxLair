@@ -646,12 +646,12 @@ def select_pokemon(ctrlr) -> str:
             or (
                 (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
                 and run.num_caught == 4 and i > 0
-                )
+            )
         ):
             if (
                 (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
                 or ctrlr.check_sufficient_ore(2)
-                ):
+            ):
                 reset_game = True
                 break
             else:
