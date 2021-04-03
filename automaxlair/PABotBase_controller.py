@@ -166,8 +166,8 @@ class PABotBaseController:
             + self.seqnum.to_bytes(4, 'little'))
         controller_program_version = int.from_bytes(
             echo[6:10], byteorder='little')
-        assert controller_program_version//100 == PROTOCOL_VERSION//100, (
-            f'Protocol version {PROTOCOL_VERSION//100}xx is required but the '
+        assert controller_program_version // 100 == PROTOCOL_VERSION // 100, (
+            f'Protocol version {PROTOCOL_VERSION // 100}xx is required but the '
             f'microcontroller is using version {controller_program_version}'
         )
 
