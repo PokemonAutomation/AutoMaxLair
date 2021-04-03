@@ -643,9 +643,15 @@ def select_pokemon(ctrlr) -> str:
         # caught.
         if (
             (ctrlr.mode == 'keep path' and (run.num_caught < 4 or i > 0))
-            or (ctrlr.mode == 'ball saver' and run.num_caught == 4 and i > 0)
+            or (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                and run.num_caught == 4 and i > 0
+            )
         ):
-            if ctrlr.mode == 'ball saver' or ctrlr.check_sufficient_ore(2):
+            if (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                or ctrlr.check_sufficient_ore(2)
+            ):
                 reset_game = True
                 break
             else:
@@ -692,8 +698,7 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.push_button(b'^', 3 + VIDEO_EXTRA_DELAY)
 
     if (
-        not take_pokemon and (
-            ctrlr.mode == 'strong boss' or ctrlr.mode == 'find path')
+        not take_pokemon and ctrlr.mode == 'strong boss'
         and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
