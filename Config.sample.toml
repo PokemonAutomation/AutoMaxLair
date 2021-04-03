@@ -29,7 +29,7 @@ BASE_BALL = "premier-ball"
 
 # === BASE_BALLS ===
 # This is the current quantity of the ball that you selected in BASE_BALL
-BASE_BALLS = 600
+BASE_BALLS = 500
 
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
@@ -101,6 +101,11 @@ VIDEO_SCALE = 0.5
 #   OBS virtual camera may have to increase this value to 1 or 2 (seconds).
 #   Please make sure there's always a decimal at the end of this value.
 VIDEO_EXTRA_DELAY = 0.0
+
+# === PABOTBASE_HEX ==
+# Denote whether your microcontroller is using the PABotBase hex.
+#   If false, RemoteControl_xxxx.hex is assumed
+PABOTBASE_HEX = false
 
 # === BOSS_INDEX ===
 # The position of the boss you're hunting on the menu. 
