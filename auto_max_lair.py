@@ -17,7 +17,7 @@ import toml
 import automaxlair
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.8-beta-20210328'
+VERSION = 'v0.8-beta-20210402'
 
 # load configuration from the config file
 try:
@@ -555,7 +555,7 @@ def scientist(ctrlr) -> str:
     # OrderedDict is unnecessary.
     if average_score > existing_score:
         ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
-    ctrlr.push_button(None, 3)
+    ctrlr.push_button(None, 5)
 
     return 'detect'
 
@@ -574,15 +574,15 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('No Pokemon caught.')
         ctrlr.push_buttons((None, 10), (b'b', 1))
         ctrlr.runs += 1
-        ctrlr.reset_run()
-        ctrlr.record_ore_reward()
-        ctrlr.log('Preparing for another run.')
-
         ctrlr.send_discord_message(
             "No Pokémon were caught in the last run.",
             embed_fields=ctrlr.get_stats_for_discord(),
             level="update"
         )
+        ctrlr.record_ore_reward()
+        ctrlr.reset_run()
+        ctrlr.log('Preparing for another run.')
+
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
@@ -643,9 +643,15 @@ def select_pokemon(ctrlr) -> str:
         # caught.
         if (
             (ctrlr.mode == 'keep path' and (run.num_caught < 4 or i > 0))
-            or (ctrlr.mode == 'ball saver' and run.num_caught == 4 and i > 0)
+            or (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                and run.num_caught == 4 and i > 0
+            )
         ):
-            if ctrlr.mode == 'ball saver' or ctrlr.check_sufficient_ore(2):
+            if (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                or ctrlr.check_sufficient_ore(2)
+            ):
                 reset_game = True
                 break
             else:
@@ -692,8 +698,7 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.push_button(b'^', 3 + VIDEO_EXTRA_DELAY)
 
     if (
-        not take_pokemon and (
-            ctrlr.mode == 'strong boss' or ctrlr.mode == 'find path')
+        not take_pokemon and ctrlr.mode == 'strong boss'
         and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True

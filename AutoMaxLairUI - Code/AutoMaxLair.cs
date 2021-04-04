@@ -66,6 +66,16 @@ namespace AutoDA
                 }
             }
 
+            List<string> nonLegendList = new List<string>();
+            using (StreamReader reader = File.OpenText(@"data/rental_pokemon.json"))
+            {
+                string json2 = reader.ReadToEnd();
+                foreach (var item in JObject.Parse(json2).Properties())
+                {
+                    nonLegendList.Add(item.Name);
+                }
+            }
+
             List<string> ballList = new List<string>();
             using (StreamReader reader = File.OpenText(@"data/balls.json"))
             {
@@ -126,18 +136,19 @@ namespace AutoDA
                 boxSpeedNeut.Text = String.Join(",", arr4);
                 boxSpeedNeg.Text = String.Join(",", arr5);
 
-                SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
                 boxPokemon.Items.AddRange(legendaryList.ToArray());
+                SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
 
-                SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
                 boxBaseBall.Items.AddRange(ballList.ToArray());
+                SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
                 SetConfigValue(boxBaseBallValue, t["BASE_BALLS"], t["BASE_BALLS"].Comment);
 
-                SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
                 boxLegendBall.Items.AddRange(ballList.ToArray());
+                SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
                 SetConfigValue(boxLegendBallValue, t["LEGENDARY_BALLS"], t["LEGENDARY_BALLS"].Comment);
 
                 SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
+                SetConfigValue(boxPathWins, t["FIND_PATH_WINS"], t["FIND_PATH_WINS"].Comment);
                 SetConfigValue(boxComPort, t["COM_PORT"], t["COM_PORT"].Comment);
 
                 // Get every Video Capture device and put it into the combobox (with right order)
@@ -158,7 +169,13 @@ namespace AutoDA
                 SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
                 SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
                 SetConfigValue(boxConsecutiveResets, t["advanced"]["CONSECUTIVE_RESETS"], t["advanced"]["CONSECUTIVE_RESETS"].Comment);
+
+                boxNonLegend.Items.Add("default");
+                boxNonLegend.Items.AddRange(nonLegendList.ToArray());
+                SetConfigValue(boxNonLegend, t["advanced"]["NON_LEGEND"], t["advanced"]["NON_LEGEND"].Comment);
+
                 SetConfigValue(boxMaxDynite, t["advanced"]["MAXIMUM_ORE_COST"], t["advanced"]["MAXIMUM_ORE_COST"].Comment);
+                SetConfigValue(boxNonLegend, t["NON_LEGEND"], t["NON_LEGEND"].Comment);
 
                 checkBoxDebugLogs.Checked = t["advanced"]["ENABLE_DEBUG_LOGS"];
                 this.toolTip.SetToolTip(this.checkBoxDebugLogs, t["advanced"]["ENABLE_DEBUG_LOGS"].Comment);
@@ -313,6 +330,7 @@ namespace AutoDA
                 t["LEGENDARY_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxLegendBall.Text);
                 t["LEGENDARY_BALLS"].AsInteger.Value = int.Parse(boxLegendBallValue.Text);
                 t["MODE"].AsString.Value = boxMode.Text.ToUpper();
+                t["FIND_PATH_WINS"].AsInteger.Value =int.Parse(boxPathWins.Text);
                 t["COM_PORT"].AsString.Value = boxComPort.Text;
                 t["VIDEO_INDEX"].AsInteger.Value = boxVideoCapture.SelectedIndex;
                 t["TESSERACT_PATH"].AsString.Value = boxTesseract.Text;
@@ -323,6 +341,7 @@ namespace AutoDA
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
+                t["advanced"]["NON_LEGEND"].AsString.Value = boxNonLegend.Text;
                 t["advanced"]["MAXIMUM_ORE_COST"].AsInteger.Value = int.Parse(boxMaxDynite.Text);
                 t["advanced"]["ENABLE_DEBUG_LOGS"].AsBoolean.Value = checkBoxDebugLogs.Checked;
 
@@ -532,6 +551,9 @@ namespace AutoDA
             labels.Add(labelMessages);
             labels.Add(labelAtk);
             labels.Add(labelSpeed);
+            labels.Add(labelMaxDynite);
+            labels.Add(labelPathWins);
+            labels.Add(labelNonLegend);
 
             comboboxes.Add(boxBossIndex);
             comboboxes.Add(boxPokemon);
@@ -541,6 +563,7 @@ namespace AutoDA
             comboboxes.Add(boxVideoCapture);
             comboboxes.Add(boxGameLanguage);
             comboboxes.Add(boxPingSettings);
+            comboboxes.Add(boxNonLegend);
 
             textboxes.Add(boxBaseBallValue);
             textboxes.Add(boxLegendBallValue);
@@ -560,6 +583,8 @@ namespace AutoDA
             textboxes.Add(boxWebhookToken);
             textboxes.Add(boxUserID);
             textboxes.Add(boxPingName);
+            textboxes.Add(boxMaxDynite);
+            textboxes.Add(boxPathWins);
 
             checkboxes.Add(checkBoxDebugLogs);
             checkboxes.Add(boxCheckAttack);
@@ -612,6 +637,11 @@ namespace AutoDA
                 item.BackColor = lab;
                 item.ForeColor = textC;
             }
+        }
+
+        private void boxComPort_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         public void SetConfigValue(Control control, string content, string tooltip)

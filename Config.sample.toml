@@ -29,7 +29,7 @@ BASE_BALL = "premier-ball"
 
 # === BASE_BALLS ===
 # This is the current quantity of the ball that you selected in BASE_BALL
-BASE_BALLS = 600
+BASE_BALLS = 500
 
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
@@ -57,9 +57,8 @@ LEGENDARY_BALLS = 500
 #   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
 #       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
 #       This will deplete your Ore quickly.
-#   "FIND PATH" - Will run like STRONG BOSS mode but will stop when it consecutively wins the
-#       number of times inputted into "FIND PATH WINS". It is recommended to leave the 
-#       NON_LEGEND setting as "default" to avoid any false posistives.
+#   "FIND PATH" - Will run like BALL SAVER mode but will stop when it consecutively wins the
+#       number of times inputted into "FIND PATH WINS".
 #       It can be used alongside KEEP PATH to find a winning path. Don't forget to update the  
 #       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
 #       It's up to the user to check if the path found was good or not.
@@ -101,6 +100,11 @@ VIDEO_SCALE = 0.5
 #   OBS virtual camera may have to increase this value to 1 or 2 (seconds).
 #   Please make sure there's always a decimal at the end of this value.
 VIDEO_EXTRA_DELAY = 0.0
+
+# === PABOTBASE_HEX ==
+# Denote whether your microcontroller is using the PABotBase hex.
+#   If false, RemoteControl_xxxx.hex is assumed
+PABOTBASE_HEX = false
 
 # === BOSS_INDEX ===
 # The position of the boss you're hunting on the menu. 
