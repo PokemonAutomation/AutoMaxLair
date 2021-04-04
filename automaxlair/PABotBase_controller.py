@@ -14,7 +14,7 @@ from crccheck import crc
 FORCE_DEBUG_MODE = False
 
 # Constants used by PABotBase.
-PROTOCOL_VERSION = 2021032200  # Match of all but last 2 digits required
+PROTOCOL_VERSION = (2021030200, 2021032200)  # Must match all but last 2 digits
 PABB_MSG_ERROR_WARNING = b'\x07'
 PABB_MSG_ACK_REQUEST = b'\x11'
 PABB_MSG_SEQNUM_RESET = b'\x40'
@@ -164,11 +164,12 @@ class PABotBaseController:
         echo = self._write(
             PABB_MSG_REQUEST_PROTOCOL_VERSION
             + self.seqnum.to_bytes(4, 'little'))
-        controller_program_version = int.from_bytes(
+        used_protocol_version = int.from_bytes(
             echo[6:10], byteorder='little')
-        assert controller_program_version // 100 == PROTOCOL_VERSION // 100, (
-            f'Protocol version {PROTOCOL_VERSION // 100}xx is required but the'
-            f' microcontroller is using version {controller_program_version}'
+        used_protocol_version_major = (used_protocol_version // 100) * 100
+        assert used_protocol_version_major in PROTOCOL_VERSION, (
+            f'Protocol version in {PROTOCOL_VERSION} is required but the'
+            f' microcontroller is using version {used_protocol_version_major}'
         )
 
     def _write(self, message) -> bytes:
