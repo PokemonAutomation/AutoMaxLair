@@ -76,15 +76,33 @@ namespace AutoDA
                 }
             }
 
-            List<string> ballList = new List<string>();
-            using (StreamReader reader = File.OpenText(@"data/balls.json"))
-            {
-                string json = reader.ReadToEnd();
-                foreach (var item in JObject.Parse(json).Properties())
-                {
-                    ballList.Add(Utils.ConvertBallIdToBallName(item.Name));
-                }
-            }
+            string[] ballList = {
+                "beast-ball",
+                "dive-ball",
+                "dream-ball",
+                "dusk-ball",
+                "fast-ball",
+                "friend-ball",
+                "great-ball",
+                "heal-ball",
+                "heavy-ball",
+                "level-ball",
+                "love-ball",
+                "lure-ball",
+                "luxury-ball",
+                "master-ball",
+                "moon-ball",
+                "nest-ball",
+                "net-ball",
+                "poke-ball",
+                "premier-ball",
+                "quick-ball",
+                "repeat-ball",
+                "safari-ball",
+                "sport-ball",
+                "timer-ball",
+                "ultra-ball"
+            };
 
             using (StreamReader reader = new StreamReader(File.OpenRead(configData)))
             {
@@ -139,13 +157,11 @@ namespace AutoDA
                 boxPokemon.Items.AddRange(legendaryList.ToArray());
                 SetConfigValue(boxPokemon, Utils.ConvertBossIdToBossName(t["BOSS"]), t["BOSS"].Comment);
 
-                boxBaseBall.Items.AddRange(ballList.ToArray());
+                boxBaseBall.Items.AddRange(ballList);
                 SetConfigValue(boxBaseBall, Utils.ConvertBallIdToBallName(t["BASE_BALL"]), t["BASE_BALL"].Comment);
-                SetConfigValue(boxBaseBallValue, t["BASE_BALLS"], t["BASE_BALLS"].Comment);
 
-                boxLegendBall.Items.AddRange(ballList.ToArray());
+                boxLegendBall.Items.AddRange(ballList);
                 SetConfigValue(boxLegendBall, Utils.ConvertBallIdToBallName(t["LEGENDARY_BALL"]), t["LEGENDARY_BALL"].Comment);
-                SetConfigValue(boxLegendBallValue, t["LEGENDARY_BALLS"], t["LEGENDARY_BALLS"].Comment);
 
                 SetConfigValue(boxMode, t["MODE"], t["MODE"].Comment);
                 SetConfigValue(boxPathWins, t["FIND_PATH_WINS"], t["FIND_PATH_WINS"].Comment);
@@ -207,8 +223,6 @@ namespace AutoDA
 
 
             bool bossValue = int.TryParse(boxBossIndex.Text, out int i);
-            bool baseBall = int.TryParse(boxBaseBallValue.Text, out int x);
-            bool legendBall = int.TryParse(boxLegendBallValue.Text, out int y);
             bool dynite = int.TryParse(boxDyniteOre.Text, out int q);
             bool resets = int.TryParse(boxConsecutiveResets.Text, out int w);
             bool maxdynite = int.TryParse(boxMaxDynite.Text, out int h);
@@ -225,22 +239,8 @@ namespace AutoDA
             bool sNeutInts = speedNeut.All(x => int.TryParse(x.ToString(), out int l));
             bool sNegInts = speedNeg.All(x => int.TryParse(x.ToString(), out int k));
 
-            // Base Ball Validation
-            if (baseBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || baseBall == true && x < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
-                || baseBall == true && x > 999 && boxBaseBall.Text.Equals(boxLegendBall.Text))
-                MessageBox.Show("Your Base Ball Value needs to be a number between 4 and 999!", "Error: Base Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (baseBall == false || baseBall == true && x < 3 || baseBall == true && x > 999)
-                MessageBox.Show("Your Base Ball Value needs to be a number between 3 and 999!", "Error: Base Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Legendary Ball Validation
-            else if (legendBall == false && boxBaseBall.Text.Equals(boxLegendBall.Text) || legendBall == true && y < 4 && boxBaseBall.Text.Equals(boxLegendBall.Text) 
-                || legendBall == true && y > 999 && boxBaseBall.Text.Equals(boxLegendBall.Text))
-                MessageBox.Show("Your Legend Ball Value needs to be a number between 4 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (legendBall == false || legendBall == true && y < 1 || legendBall == true && y > 999)
-                MessageBox.Show("Your Legend Ball Value needs to be a number between 1 and 999!", "Error: Legend Ball Value", MessageBoxButtons.OK, MessageBoxIcon.Error);  
-
             // Video Scale Validation
-            else if (videoScale == false)
+            if (videoScale == false)
                 MessageBox.Show("Your Video Scale must be a number (e.g. 0.5).", "Error: Video Scale", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Video Delay Validation
@@ -326,9 +326,7 @@ namespace AutoDA
                 // General Settings
                 t["BOSS"].AsString.Value = Utils.ConvertBossNameToBossId(boxPokemon.Text);
                 t["BASE_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxBaseBall.Text);
-                t["BASE_BALLS"].AsInteger.Value = int.Parse(boxBaseBallValue.Text);
                 t["LEGENDARY_BALL"].AsString.Value = Utils.ConvertBallNameToBallId(boxLegendBall.Text);
-                t["LEGENDARY_BALLS"].AsInteger.Value = int.Parse(boxLegendBallValue.Text);
                 t["MODE"].AsString.Value = boxMode.Text.ToUpper();
                 t["FIND_PATH_WINS"].AsInteger.Value =int.Parse(boxPathWins.Text);
                 t["COM_PORT"].AsString.Value = boxComPort.Text;
@@ -565,8 +563,6 @@ namespace AutoDA
             comboboxes.Add(boxPingSettings);
             comboboxes.Add(boxNonLegend);
 
-            textboxes.Add(boxBaseBallValue);
-            textboxes.Add(boxLegendBallValue);
             textboxes.Add(boxComPort);
             textboxes.Add(boxTesseract);
             textboxes.Add(boxVideoScale);
