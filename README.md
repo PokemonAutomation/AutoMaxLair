@@ -148,7 +148,10 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 * The teammates are now detected.
 * Improve the config file validation by asserting at the startup.
 * Add a UI to be able to easily edit the config file.
+* Detect ball type using sprites instead of text
+* Automatically detect ball numbers instead of relying on users to input them in the config file
+* Add compatibility for the PABotBase hex file as opposed to the custom RemoteControl hex
 
 ## Acknowledgements
 
-Thanks to [pokemondb.net](https://pokemondb.net/) for hosting the sprites of the bosses.
+Thanks to [PokéSprite](https://github.com/msikma/pokesprite) for hosting the sprites of the Pokémon and balls, [PokéAPI](https://pokeapi.co/) for hosting data on Pokémon, abilities, and moves. We also thank [LUFA](http://www.lufa-lib.org/) for their ARV framework with which the microcontroller code would not work without.
