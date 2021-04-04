@@ -1030,7 +1030,7 @@ class DAController(SwitchController):
             self.info[key] = value
 
         for i in range(len(self.caught_shinies)):
-            self.info[f'Shiny #{i+1}'] = self.caught_shinies[i]
+            self.info[f'Shiny #{i+1}'] = self.caught_shinies[i].replace('-', ' ').title()
 
         # Call the base display method.
         super().display_results(
