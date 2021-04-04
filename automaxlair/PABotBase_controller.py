@@ -2,7 +2,7 @@
 with the command format required by PABotBase.
 
 PABotBase code can be found on GitHub:
-https://github.com/PokemonAutomation/Arduino-Source
+https://github.com/PokemonAutomation/SwSh-Arduino
 """
 
 import binascii
