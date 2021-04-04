@@ -23,6 +23,7 @@ import pytesseract
 import serial
 import threading
 import discord
+from .PABotBase_controller import PABotBaseController
 
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
@@ -62,7 +63,15 @@ class SwitchController:
         # objects used.
 
         # Connect to the Teensy over a serial port.
-        self.com = serial.Serial(
+        use_PABotBase_hex = config['advanced']['PABOTBASE_HEX']
+        # if not use_PABotBase_hex:
+        #     self.log(
+        #         'RemoteControl.hex is deprecated; support will be phased out '
+        #         'in the future in favour of the PABotBase hex file.', 'WARNING'
+        #     )
+        com_controller = (
+            PABotBaseController if use_PABotBase_hex else serial.Serial)
+        self.com = com_controller(
             config['COM_PORT'], 9600, timeout=0.05)
         self.logger.info(f'Attempting to connect to {self.com.port}.')
         timeout_fails = 0
@@ -71,8 +80,11 @@ class SwitchController:
                 self.com.open()
             except serial.SerialException:
                 if timeout_fails > 10:
-                    # if the serial device won't open after 10 times, we might as well raise and exception and abort
-                    raise Exception("Could not connect to the serial device. Check your device.")
+                    # if the serial device won't open after 10 times, we might
+                    # as well raise and exception and abort
+                    raise Exception(
+                        "Could not connect to the serial device. "
+                        "Check your device.")
                 timeout_fails += 1
                 pass
         self.logger.info('Connected to the serial device successfully.')
@@ -318,11 +330,11 @@ class SwitchController:
 
         # Send the command to the microcontroller using the serial port.
         if char is not None:
-            self.com.write(char)
             hold_ticks = bytes([round(hold_ticks)])
-            self.com.write(hold_ticks)
-            char_echo = self.com.read()
-            hold_echo = self.com.read()
+            self.com.write(char + hold_ticks)
+            response = self.com.read(2)
+            char_echo = response[:1]
+            hold_echo = response[1:]
             # Check whether the microcontroller successfully echoed back the
             # command, and raise a warning if it did not.
             if char_echo != char:
