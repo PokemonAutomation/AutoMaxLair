@@ -162,6 +162,18 @@ class DAController(SwitchController):
                 )
 
         # Validate starting values.
+        assert self.boss in self.current_run.boss_pokemon, (
+            f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
+        )
+        invalid_balls = {self.base_ball, self.legendary_ball} - {
+            'beast-ball', 'dive-ball', 'dream-ball', 'dusk-ball', 'fast-ball',
+            'friend-ball', 'great-ball', 'heal-ball', 'heavy-ball',
+            'level-ball', 'love-ball', 'lure-ball', 'luxury-ball',
+            'master-ball', 'moon-ball', 'nest-ball', 'net-ball', 'poke-ball',
+            'premier-ball', 'quick-ball', 'repeat-ball', 'safari-ball',
+            'sport-ball', 'timer-ball', 'ultra-ball'}
+        assert len(invalid_balls) == 0, (
+            f'Invalid ball type(s) supplied in Config.toml: {invalid_balls}')
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
