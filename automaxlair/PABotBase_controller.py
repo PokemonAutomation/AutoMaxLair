@@ -13,7 +13,7 @@ from crccheck import crc
 
 FORCE_DEBUG_MODE = False
 
-# Constants used by PABotBase
+# Constants used by PABotBase.
 PROTOCOL_VERSION = 2021032200  # Match of all but last 2 digits required
 PABB_MSG_ERROR_WARNING = b'\x07'
 PABB_MSG_ACK_REQUEST = b'\x11'
@@ -167,8 +167,8 @@ class PABotBaseController:
         controller_program_version = int.from_bytes(
             echo[6:10], byteorder='little')
         assert controller_program_version // 100 == PROTOCOL_VERSION // 100, (
-            f'Protocol version {PROTOCOL_VERSION // 100}xx is required but the '
-            f'microcontroller is using version {controller_program_version}'
+            f'Protocol version {PROTOCOL_VERSION // 100}xx is required but the'
+            f' microcontroller is using version {controller_program_version}'
         )
 
     def _write(self, message) -> bytes:
@@ -186,10 +186,7 @@ class PABotBaseController:
         return self._read()
 
     def _read(self) -> bytes:
-        """Handler for the PABotBase message receive routine which involves
-        reading an expected message and echoing it back.
-        """
-
+        """Method for reading a single message that was sent from PABotBase."""
         # Wait until a message is received, then parse the message.
 
         # First, read the length of the message.
@@ -218,7 +215,9 @@ class PABotBaseController:
         return full_message
 
     def _read_command_finished(self) -> bool:
-        """Confirm that PABotBase finished processing a command."""
+        """Confirm that PABotBase finished processing a command, and send an
+        acknowledgement for receiving the notification.
+        """
 
         # First, read the expected PABB_MSG_REQUEST_COMMAND_FINISHED message.
         full_message = self._read()
@@ -261,7 +260,7 @@ class PABotBaseController:
 
         # Compute the CRC using the crccheck module.
         val = crc.Crc32c.calchex(message, byteorder='little')
-        # Transform it to the Intel format used by PABotBase
+        # Transform it to the Intel format used by PABotBase.
         inverted_int = int(val, 16) ^ 0xFFFFFFFF
 
         return message + inverted_int.to_bytes(4, byteorder='big')
@@ -271,9 +270,11 @@ class PABotBaseController:
         self.com.close()
 
     def write(self, message: bytes):
-        """Wrapper for serial.Serial.write. Takes two bytes, one for the button
-        and one for hold duration, and sends the corresponsing PABotBase
-        command.
+        """External facing method that the SwitchController will call in the
+        same way as serial.Serial.write.
+
+        Takes two bytes, one for the button and one for hold duration, and
+        sends the corresponsing PABotBase command.
         """
 
         # Save the command so it can be "echoed" when the read method is
@@ -304,9 +305,8 @@ class PABotBaseController:
         is the format used by SwitchController.
         """
 
-        if length != 2:
-            raise serial.SerialException(
-                'PABotBaseController.read method always returns 2 bytes.')
+        assert length == 2, (
+            'PABotBaseController.read method always returns 2 bytes.')
 
         # Handle an incoming PABB_MSG_REQUEST_COMMAND_FINISHED message and
         # "echo" the previous command successfully if everything went as
