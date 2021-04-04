@@ -108,8 +108,6 @@ namespace AutoMaxLair
             comboboxes.Add(main.boxPingSettings);
             comboboxes.Add(main.boxNonLegend);
 
-            textboxes.Add(main.boxBaseBallValue);
-            textboxes.Add(main.boxLegendBallValue);
             textboxes.Add(main.boxComPort);
             textboxes.Add(main.boxTesseract);
             textboxes.Add(main.boxVideoScale);

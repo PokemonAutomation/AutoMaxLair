@@ -53,9 +53,7 @@ namespace AutoDA
             this.labelGameLanguage = new System.Windows.Forms.Label();
             this.boxTesseract = new System.Windows.Forms.TextBox();
             this.labelTessaract = new System.Windows.Forms.Label();
-            this.boxLegendBallValue = new System.Windows.Forms.TextBox();
             this.boxVideoCapture = new System.Windows.Forms.ComboBox();
-            this.boxBaseBallValue = new System.Windows.Forms.TextBox();
             this.boxComPort = new System.Windows.Forms.TextBox();
             this.boxMode = new System.Windows.Forms.ComboBox();
             this.labelVideoIndex = new System.Windows.Forms.Label();
@@ -342,9 +340,7 @@ namespace AutoDA
             this.panelSettingSubmenu.Controls.Add(this.labelGameLanguage);
             this.panelSettingSubmenu.Controls.Add(this.boxTesseract);
             this.panelSettingSubmenu.Controls.Add(this.labelTessaract);
-            this.panelSettingSubmenu.Controls.Add(this.boxLegendBallValue);
             this.panelSettingSubmenu.Controls.Add(this.boxVideoCapture);
-            this.panelSettingSubmenu.Controls.Add(this.boxBaseBallValue);
             this.panelSettingSubmenu.Controls.Add(this.boxComPort);
             this.panelSettingSubmenu.Controls.Add(this.boxMode);
             this.panelSettingSubmenu.Controls.Add(this.labelVideoIndex);
@@ -429,18 +425,6 @@ namespace AutoDA
             this.labelTessaract.Text = "Tesseract Path";
             this.labelTessaract.Click += new System.EventHandler(this.labelTessaract_Click);
             // 
-            // boxLegendBallValue
-            // 
-            this.boxLegendBallValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
-            this.boxLegendBallValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.boxLegendBallValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxLegendBallValue.Location = new System.Drawing.Point(237, 72);
-            this.boxLegendBallValue.Name = "boxLegendBallValue";
-            this.boxLegendBallValue.Size = new System.Drawing.Size(30, 25);
-            this.boxLegendBallValue.TabIndex = 18;
-            this.boxLegendBallValue.Text = "99";
-            this.boxLegendBallValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // boxVideoCapture
             // 
             this.boxVideoCapture.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
@@ -451,18 +435,6 @@ namespace AutoDA
             this.boxVideoCapture.Name = "boxVideoCapture";
             this.boxVideoCapture.Size = new System.Drawing.Size(121, 25);
             this.boxVideoCapture.TabIndex = 19;
-            // 
-            // boxBaseBallValue
-            // 
-            this.boxBaseBallValue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
-            this.boxBaseBallValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.boxBaseBallValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
-            this.boxBaseBallValue.Location = new System.Drawing.Point(237, 41);
-            this.boxBaseBallValue.Name = "boxBaseBallValue";
-            this.boxBaseBallValue.Size = new System.Drawing.Size(30, 25);
-            this.boxBaseBallValue.TabIndex = 17;
-            this.boxBaseBallValue.Text = "99";
-            this.boxBaseBallValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // boxComPort
             // 
@@ -1282,8 +1254,6 @@ namespace AutoDA
         public System.Windows.Forms.TextBox boxVideoDelay;
         public System.Windows.Forms.TextBox boxVideoScale;
         public System.Windows.Forms.ComboBox boxBossIndex;
-        public System.Windows.Forms.TextBox boxLegendBallValue;
-        public System.Windows.Forms.TextBox boxBaseBallValue;
         public System.Windows.Forms.Button btnSave;
         public System.Windows.Forms.ComboBox boxVideoCapture;
         public System.Windows.Forms.PictureBox boxVideoOutput;

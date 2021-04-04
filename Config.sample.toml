@@ -54,6 +54,8 @@ LEGENDARY_BALL = "premier-ball"
 #       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
 #       It's up to the user to check if the path found was good or not.
 MODE = "STRONG BOSS"
+
+# 
 FIND_PATH_WINS = 1
 
 # === COM_PORT ===
@@ -170,6 +172,8 @@ negative = [81, 82]
 # === WEBHOOK_ID and WEBHOOK_TOKEN ===
 # Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
 WEBHOOK_ID = "PLACE_ID_WITHIN_QUOTES"
+
+# 
 WEBHOOK_TOKEN = "PLACE_TOKEN_WITHIN_QUOTES"
 
 # === USER_ID ===
@@ -235,6 +239,7 @@ ball_sprite_path = "data/ball_sprites.pickle"
 # File containing the pickled data about other icons (cheer, fight).
 misc_icon_dir = "data/misc_icons/"
 
+# 
 boss_colors = "data/boss_colors.json"
 
 # ==========
