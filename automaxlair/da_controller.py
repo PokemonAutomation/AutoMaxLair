@@ -160,27 +160,8 @@ class DAController(SwitchController):
                 self.misc_icons[filename.split('.png')[0]] = cv2.imread(
                     os.path.join(directory, filename)
                 )
-        with open(
-            config['pokemon_data_paths']['balls_path'], 'r', encoding='utf8'
-        ) as file:
-            self.balls = jsonpickle.decode(file.read())
 
         # Validate starting values.
-        assert self.boss in self.current_run.boss_pokemon, (
-            f'Invalid value for BOSS supplied in Config.toml: {config["BOSS"]}'
-        )
-        assert self.balls[self.base_ball], 'Unknown base ball id.'
-        assert self.balls[self.legendary_ball], 'Unknown legendary ball id.'
-        if self.base_ball == self.legendary_ball:
-            assert self.base_balls == self.legendary_balls, (
-                'Ball count mismatch.')
-            assert self.base_balls >= 4, 'Not enough base balls.'
-            assert self.base_balls <= 999, 'Too many base balls.'
-        else:
-            assert self.base_balls >= 3, 'Not enough base balls.'
-            assert self.base_balls <= 999, 'Too many base balls.'
-            assert self.legendary_balls >= 1, 'Not enough legendary balls.'
-            assert self.legendary_balls <= 999, 'Too many legendary balls.'
         assert self.mode in (
             'default', 'strong boss', 'ball saver', 'keep path', 'find path'
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
@@ -192,7 +173,7 @@ class DAController(SwitchController):
         # that target.
         assert self.dynite_ore <= 999, 'Too much dynite ore.'
         assert self.consecutive_resets >= 0, (
-            'Consecutive reset cannot be negative.')
+            'Consecutive resets cannot be negative.')
         assert self.maximum_ore_cost >= 0, (
             'Maximum ore cost cannot be negative.')
         assert self.maximum_ore_cost <= 10, (
@@ -869,10 +850,9 @@ class DAController(SwitchController):
 
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
-        if self.current_run.num_caught < 3:
-            return self.base_ball
-        else:
-            return self.legendary_ball
+        return (
+            self.base_ball if self.current_run.num_caught < 3
+            else self.legendary_ball)
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of
@@ -908,7 +888,7 @@ class DAController(SwitchController):
             # Store the ball number.
             self.ball_numbers[best_match] = ball_num
             self.log(
-                f'Detected the number of {best_match} as {ball_num}.', 'DEBUG')
+                f'Stored the number of {best_match} as {ball_num}.', 'DEBUG')
         elif ball_num != stored_ball_num:
             self.log(
                 f'Detected base ball number {ball_num} did not match with '
@@ -1023,8 +1003,8 @@ class DAController(SwitchController):
             'Hunting for': self.boss,
             'Mode': self.mode,
             'Stage': self.stage,
-            'Base balls': self.base_balls,
-            'Legendary balls': self.legendary_balls,
+            'Base balls': self.ball_numbers.get(self.base_ball, '-'),
+            'Legendary balls': self.ball_numbers.get(self.legendary_ball, '-'),
             'Dynite Ore': self.dynite_ore,
             'Pokemon caught': self.current_run.num_caught,
             'Lives': self.current_run.lives,
@@ -1059,8 +1039,8 @@ class DAController(SwitchController):
             "Wins/Runs": f"{self.wins}/{self.runs}",
             "Win Rate": f"{self.win_percent:.1%}",
             "Avg. Time": str(self.time_per_run)[2:7],
-            "Base Balls": self.base_balls,
-            "Legendary Balls": self.legendary_balls,
+            "Base Balls": self.ball_numbers.get(self.base_ball, '-'),
+            "Legendary Balls": self.ball_numbers.get(self.legendary_ball, '-'),
             "Dynite Ore": self.dynite_ore,
             "Consecutive Resets": self.consecutive_resets
         }

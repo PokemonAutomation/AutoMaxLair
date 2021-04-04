@@ -223,9 +223,6 @@ Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
 # File containing the pickled data about the score of every type versus every boss.
 path_tree_path = "data/path_tree.json"
 
-# File containing the pickled data about the translation of balls names in every language.
-balls_path = "data/balls.json"
-
 # File containing the pickled data about the type icons.
 type_icon_path = "data/type_icons.pickle"
 
