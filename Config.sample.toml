@@ -24,22 +24,13 @@ BOSS = "dialga"
 
 # === BASE_BALL ===
 # This is the Pokéball that should be used for all Pokémon except for the boss.
-#   This is the id of the ball to use (in english)
-BASE_BALL = "premier-ball"
-
-# === BASE_BALLS ===
-# This is the current quantity of the ball that you selected in BASE_BALL
-BASE_BALLS = 500
+#   This is the id of the ball to use (in English)
+BASE_BALL = "poke-ball"
 
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
-#   This is the id of the ball to use (in english)
+#   This is the id of the ball to use (in English)
 LEGENDARY_BALL = "premier-ball"
-
-# === LEGENDARY_BALLS ===
-# This is the current quantity of the ball that you selected in LEGENDARY_BALL.
-#   The program will end if this ever hits zero.
-LEGENDARY_BALLS = 500
 
 # === MODE ===
 # This is the mode that the program should use.

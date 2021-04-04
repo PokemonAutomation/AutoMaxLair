@@ -48,9 +48,7 @@ class DAController(SwitchController):
         self.boss = config['BOSS'].lower().replace(' ', '-')
 
         self.base_ball = config['BASE_BALL']
-        self.base_balls = int(config['BASE_BALLS'])
         self.legendary_ball = config['LEGENDARY_BALL']
-        self.legendary_balls = config['LEGENDARY_BALLS']
         self.mode = config['MODE'].lower()
         self.dynite_ore = int(config['advanced']['DYNITE_ORE'])
         self.maximum_ore_cost = int(config['advanced']['MAXIMUM_ORE_COST'])
@@ -127,7 +125,6 @@ class DAController(SwitchController):
         self.team_HP_rect_7 = ((0.225, 0.518), (0.34, 0.525))
         self.team_HP_rect_8 = ((0.225, 0.606), (0.34, 0.614))
         # Poke ball rectangles.
-        self.ball_rect = ((0.69, 0.63), (0.88, 0.68))
         self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
         self.ball_sprite_rect = ((0.66, 0.63), (0.675, 0.68))
         # Backpacker item rectangles.
@@ -295,9 +292,7 @@ class DAController(SwitchController):
             self.outline_region(img, self.abil_rect_4, (0, 255, 255))
             self.outline_region(img, self.moves_rect_4, (255, 255, 0))
             self.outline_regions(
-                img, (
-                    self.ball_rect, self.ball_sprite_rect, self.ball_num_rect
-                ), (0, 0, 255))
+                img, (self.ball_sprite_rect, self.ball_num_rect), (0, 0, 255))
             self.outline_regions(
                 img, (
                     self.team_HP_rect_5, self.team_HP_rect_6,
@@ -875,17 +870,9 @@ class DAController(SwitchController):
     def get_target_ball(self) -> str:
         """Return the name of the Poke Ball needed."""
         if self.current_run.num_caught < 3:
-            ball_id = self.base_ball
+            return self.base_ball
         else:
-            ball_id = self.legendary_ball
-
-        ball_name = self.balls[ball_id].names[self.lang]
-        ball_name.replace('ball', '')  # de
-        ball_name.replace(' Ball', '')  # en / es  / fr / it
-        ball_name.replace('ボール', '')  # ja / ja-Hrkt
-        ball_name.replace('볼', '')   # ko
-        ball_name.replace('球', '')   # zh-Hans / zh-Hant
-        return ball_name
+            return self.legendary_ball
 
     def check_ball(self) -> str:
         """Detect the currently selected Poke Ball during the catch phase of
@@ -897,7 +884,7 @@ class DAController(SwitchController):
 
         # Match the ball on screen to stored sprites.
         ball_image = self.get_image_slice(img, self.ball_sprite_rect)
-        best_match_value = -1
+        best_match_value = -1  # Guarantees at least one match.
         for ball_id, sprite in self.ball_sprites.items():
             match_value = self.match_template(sprite, ball_image)[0]
             if match_value > best_match_value:
@@ -927,11 +914,8 @@ class DAController(SwitchController):
                 f'Detected base ball number {ball_num} did not match with '
                 f'stored value of {stored_ball_num}.', 'WARNING')
 
-        # DEPRECATED: return the ball name for now until the sprite detection
-        # is shown to be robust.
-        return self.read_text(
-            img, self.ball_rect, threshold=False, invert=True,
-            segmentation_mode='--psm 7').strip()
+        # Return the detected ball_id.
+        return best_match
 
     def record_ball_use(self) -> None:
         """Decrement the number of balls in the inventory and increment the
@@ -949,26 +933,11 @@ class DAController(SwitchController):
             self.log(
                 f'{ball_to_use} number not initialized before use.', 'ERROR')
 
-        # DEPRECATED: manually track each ball number until the new method is
-        # shown to work.
-        if self.base_ball == self.legendary_ball:
-            self.base_balls -= 1
-            self.legendary_balls -= 1
-        elif self.current_run.num_caught < 3:
-            self.base_balls -= 1
-        else:
-            self.legendary_balls -= 1
-
         # Record the Pokemon being caught.
         self.current_run.num_caught += 1
 
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
-        # DEPRECATED
-        return not (
-            (self.base_ball == self.legendary_ball and self.base_balls < 4)
-            or (self.base_balls < 3) or (self.legendary_balls < 1))
-
         return not (
             (
                 self.base_ball == self.legendary_ball
@@ -1018,6 +987,7 @@ class DAController(SwitchController):
 
     def record_game_reset(self) -> None:
         """Update ball and Dynite Ore stocks resulting from a game reset."""
+        # "Refund" balls that were used during the unsaved run.
         num_caught = self.current_run.num_caught
         try:
             self.ball_numbers[self.base_ball] += min(3, num_caught)
@@ -1032,15 +1002,6 @@ class DAController(SwitchController):
                 self.log(
                     f'{self.legendary_ball} number not initialized before '
                     'use.', 'ERROR')
-        # DEPRECATED: manually track each ball number until the new method is
-        # shown to work.
-        if self.base_ball != self.legendary_ball:
-            self.base_balls += min(3, self.current_run.num_caught)
-            self.legendary_balls += (
-                1 if self.current_run.num_caught == 4 else 0)
-        else:
-            self.base_balls += self.current_run.num_caught
-            self.legendary_balls += self.current_run.num_caught
 
         # Record an additional reset and the associated ore cost.
         self.consecutive_resets += 1
