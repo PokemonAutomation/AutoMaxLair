@@ -930,13 +930,28 @@ class DAController(SwitchController):
 
     def check_sufficient_balls(self) -> bool:
         """Calculate whether sufficient balls remain for another run."""
+
+        # the following is logic to make sure we don't crash if we lose before
+        # seeing ball counts, it just assumes that we're on the right number
+        # ONLY if there isn't something saved, it does *Not* set it in the dict
+        if self.base_ball not in self.ball_numbers.keys():
+            self.log(
+                "Did not save base balls in ball numbers! "
+                "Assuming at least four left!", "WARN")
+        # the 4 is to make sure we extract out the right number
+        base_balls = self.ball_numbers.get(self.base_ball, 4)
+        if self.legendary_ball not in self.ball_numbers.keys():
+            self.log(
+                "Did not save legendary ball in ball numbers! "
+                "Assuming at least one left!", "WARN")
+        legendary_balls = self.ball_numbers.get(self.legendary_ball, 1)
         return not (
             (
                 self.base_ball == self.legendary_ball
-                and self.ball_numbers[self.base_ball] < 4
+                and base_balls < 4
             )
-            or (self.ball_numbers[self.base_ball] < 3)
-            or (self.ball_numbers[self.legendary_ball] < 1)
+            or (base_balls < 3)
+            or (legendary_balls < 1)
         )
 
     def record_ore_reward(self) -> None:
@@ -1030,7 +1045,8 @@ class DAController(SwitchController):
             self.info[key] = value
 
         for i in range(len(self.caught_shinies)):
-            self.info[f'Shiny #{i+1}'] = self.caught_shinies[i].replace('-', ' ').title()
+            self.info[f'Shiny #{i+1}'] = self.caught_shinies[i].replace(
+                '-', ' ').title()
 
         # Call the base display method.
         super().display_results(
