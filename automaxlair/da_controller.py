@@ -1014,7 +1014,7 @@ class DAController(SwitchController):
             'Run #': self.runs + 1,
             'Hunting for': self.boss.replace('-', ' ').title(),
             'Mode': self.mode.title(),
-            'Stage': self.stage.title(),
+            'Stage': str(self.stage).title(),
             'Base balls': self.ball_numbers.get(self.base_ball, '-'),
             'Legendary balls': self.ball_numbers.get(self.legendary_ball, '-'),
             'Dynite Ore': self.dynite_ore,
