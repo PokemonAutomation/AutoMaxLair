@@ -823,7 +823,7 @@ if __name__ == '__main__':
         encoding="UTF-8"
     )
     fileHandler.setFormatter(formatter)
-    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    fileHandler.setLevel(logging.DEBUG)
 
     # Add the handlers to the logger so that it will both print messages to
     # the console as well as save them to a log file.
