@@ -128,7 +128,7 @@ MAXIMUM_ORE_COST = 10
 # === ENABLE_DEBUG_LOGS ===
 # This enables the debug logs in your Python console. This can be very useful when
 # you're running into problems and need to report to the developers what's happening.
-ENABLE_DEBUG_LOGS = false
+ENABLE_DEBUG_LOGS = true
 
 # ==========
 # === POKEMON STAT FINDING SETTINGS
