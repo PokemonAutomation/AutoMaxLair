@@ -184,7 +184,7 @@ namespace AutoDA
                 SetConfigValue(boxVideoDelay, t["advanced"]["VIDEO_EXTRA_DELAY"], t["advanced"]["VIDEO_EXTRA_DELAY"].Comment);
 
                 boxPABotBaseHex.Checked = t["advanced"]["PABOTBASE_HEX"];
-                this.toolTip.SetToolTip(this.boxPABotBaseHex, t["PABOTBASE_HEX"].Comment);
+                this.toolTip.SetToolTip(this.boxPABotBaseHex, t["advanced"]["PABOTBASE_HEX"].Comment);
 
                 SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
                 SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
