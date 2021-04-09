@@ -182,6 +182,10 @@ namespace AutoDA
                 SetConfigValue(boxTesseract, t["TESSERACT_PATH"], t["TESSERACT_PATH"].Comment);
                 SetConfigValue(boxVideoScale, t["advanced"]["VIDEO_SCALE"], t["advanced"]["VIDEO_SCALE"].Comment);
                 SetConfigValue(boxVideoDelay, t["advanced"]["VIDEO_EXTRA_DELAY"], t["advanced"]["VIDEO_EXTRA_DELAY"].Comment);
+
+                boxPABotBaseHex.Checked = t["advanced"]["PABOTBASE_HEX"];
+                this.toolTip.SetToolTip(this.boxPABotBaseHex, t["PABOTBASE_HEX"].Comment);
+
                 SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
                 SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
                 SetConfigValue(boxConsecutiveResets, t["advanced"]["CONSECUTIVE_RESETS"], t["advanced"]["CONSECUTIVE_RESETS"].Comment);
@@ -267,16 +271,6 @@ namespace AutoDA
             else if (sPosInts == false || sNeutInts == false || sNegInts == false)
                 MessageBox.Show("Your Speed Stats need to be a number and be split with a comma (e.g. 120, 121).", "Error: Speed Stats", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            // Webhook Validation
-            else if (webhookID == false)
-                MessageBox.Show("Your Webhook ID should be a string of numbers.", "Error: Webhook ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //else if (webhookToken == false)
-                //MessageBox.Show("Your Webhook Token should be a string of numbers.", "Error: Webhook Token", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Discord Validation
-            else if (userID == false || boxUserID.Text.Length != 18)
-                MessageBox.Show("Your Discord User ID should be a string of numbers with the length 18.", "Error: User ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             else
                 setConfig();
         }
@@ -336,6 +330,7 @@ namespace AutoDA
                 // Advanced Settings
                 t["advanced"]["VIDEO_SCALE"].AsFloat.Value = float.Parse(boxVideoScale.Text);
                 t["advanced"]["VIDEO_EXTRA_DELAY"].AsFloat.Value = float.Parse(boxVideoDelay.Text);
+                t["advanced"]["PABOTBASE_HEX"].AsBoolean.Value = boxPABotBaseHex.Checked;
                 t["advanced"]["BOSS_INDEX"].AsInteger.Value = boss;
                 t["advanced"]["DYNITE_ORE"].AsInteger.Value = int.Parse(boxDyniteOre.Text);
                 t["advanced"]["CONSECUTIVE_RESETS"].AsInteger.Value = int.Parse(boxConsecutiveResets.Text);
@@ -636,6 +631,11 @@ namespace AutoDA
         }
 
         private void boxComPort_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
         }

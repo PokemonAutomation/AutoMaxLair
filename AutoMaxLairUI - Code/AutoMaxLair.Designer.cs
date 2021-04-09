@@ -117,6 +117,7 @@ namespace AutoDA
             this.boxPathWins = new System.Windows.Forms.TextBox();
             this.labelNonLegend = new System.Windows.Forms.Label();
             this.boxNonLegend = new System.Windows.Forms.ComboBox();
+            this.boxPABotBaseHex = new System.Windows.Forms.CheckBox();
             this.panelSideMenu.SuspendLayout();
             this.panelAdvancedSettingsSubmenu.SuspendLayout();
             this.panelSettingSubmenu.SuspendLayout();
@@ -141,12 +142,13 @@ namespace AutoDA
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
             this.panelSideMenu.Name = "panelSideMenu";
-            this.panelSideMenu.Size = new System.Drawing.Size(292, 728);
+            this.panelSideMenu.Size = new System.Drawing.Size(292, 745);
             this.panelSideMenu.TabIndex = 0;
             // 
             // panelAdvancedSettingsSubmenu
             // 
             this.panelAdvancedSettingsSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(33)))), ((int)(((byte)(40)))));
+            this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxPABotBaseHex);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.boxNonLegend);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelNonLegend);
             this.panelAdvancedSettingsSubmenu.Controls.Add(this.labelMaxDynite);
@@ -165,7 +167,7 @@ namespace AutoDA
             this.panelAdvancedSettingsSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelAdvancedSettingsSubmenu.Location = new System.Drawing.Point(0, 464);
             this.panelAdvancedSettingsSubmenu.Name = "panelAdvancedSettingsSubmenu";
-            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 252);
+            this.panelAdvancedSettingsSubmenu.Size = new System.Drawing.Size(292, 279);
             this.panelAdvancedSettingsSubmenu.TabIndex = 8;
             // 
             // labelMaxDynite
@@ -717,7 +719,7 @@ namespace AutoDA
             this.panelRightSide.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelRightSide.Location = new System.Drawing.Point(292, 0);
             this.panelRightSide.Name = "panelRightSide";
-            this.panelRightSide.Size = new System.Drawing.Size(292, 728);
+            this.panelRightSide.Size = new System.Drawing.Size(292, 745);
             this.panelRightSide.TabIndex = 22;
             // 
             // btnSettings
@@ -1188,11 +1190,24 @@ namespace AutoDA
             this.boxNonLegend.TabIndex = 24;
             this.boxNonLegend.Text = "Articuno";
             // 
+            // boxPABotBaseHex
+            // 
+            this.boxPABotBaseHex.AutoSize = true;
+            this.boxPABotBaseHex.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(63)))), ((int)(((byte)(82)))));
+            this.boxPABotBaseHex.Location = new System.Drawing.Point(12, 252);
+            this.boxPABotBaseHex.Name = "boxPABotBaseHex";
+            this.boxPABotBaseHex.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.boxPABotBaseHex.Size = new System.Drawing.Size(146, 23);
+            this.boxPABotBaseHex.TabIndex = 26;
+            this.boxPABotBaseHex.Text = "PABotBase Hex";
+            this.boxPABotBaseHex.UseVisualStyleBackColor = true;
+            this.boxPABotBaseHex.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(104)))), ((int)(((byte)(104)))));
-            this.ClientSize = new System.Drawing.Size(584, 728);
+            this.ClientSize = new System.Drawing.Size(584, 745);
             this.Controls.Add(this.panelRightSide);
             this.Controls.Add(this.panelLogs);
             this.Controls.Add(this.boxVideoOutput);
@@ -1310,5 +1325,6 @@ namespace AutoDA
         public System.Windows.Forms.TextBox boxPathWins;
         public System.Windows.Forms.ComboBox boxNonLegend;
         public System.Windows.Forms.Label labelNonLegend;
+        public System.Windows.Forms.CheckBox boxPABotBaseHex;
     }
 }
