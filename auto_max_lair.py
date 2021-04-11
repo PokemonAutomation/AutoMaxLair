@@ -5,45 +5,63 @@
 #           Discord user pifopi, and Discord user denvoros
 #       Created 2020-11-20
 
-import configparser
 import logging
 import logging.handlers
 import os
 import sys
-
 from datetime import datetime
 
 import pytesseract
+import toml
 
 import automaxlair
-
 from automaxlair import matchup_scoring
 
-VERSION = 'v0.7-beta'
+VERSION = 'v0.8-beta-210405'
 
-# Load configuration from config file
-config = configparser.ConfigParser()
+# load configuration from the config file
+try:
+    config = toml.load("Config.toml")
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "The Config.toml file was not found! Be sure to copy "
+        "Config.sample.toml as Config.toml and edit it!")
+except Exception:
+    raise SyntaxError(
+        "Something went wrong parsing Config.toml\n"
+        "Please make sure you entered the information right "
+        "and did not modify \" or . symbols or have uppercase true or false "
+        "in the settings.")
 
-# Configparser doesn't complain if it can't find the config file,
-# so manually raise an error if the file was not read.
-if not config.read('Config.ini', 'utf8'):
-    raise FileNotFoundError('Failed to locate the Config.ini file.')
-
-COM_PORT = config['default']['COM_PORT']
-VIDEO_INDEX = int(config['default']['VIDEO_INDEX'])
-VIDEO_EXTRA_DELAY = int(config['advanced']['VIDEO_EXTRA_DELAY'])
-BOSS = config['default']['BOSS'].lower().replace(' ', '-')
-BOSS_INDEX = int(config['advanced']['BOSS_INDEX'])
-pytesseract.pytesseract.tesseract_cmd = config['default']['TESSERACT_PATH']
-ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS'].lower() == 'true'
+COM_PORT = config['COM_PORT']
+VIDEO_INDEX = config['VIDEO_INDEX']
+VIDEO_EXTRA_DELAY = config['advanced']['VIDEO_EXTRA_DELAY']
+BOSS = config['BOSS'].lower().replace(' ', '-')
+BOSS_INDEX = config['advanced']['BOSS_INDEX']
+pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
+ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
+NON_LEGEND = config['advanced']['NON_LEGEND'].lower().replace(' ', '-')
+FIND_PATH_WINS = config['FIND_PATH_WINS']
 
 # Set the log name
-LOG_NAME = ''.join(
-    (BOSS, '_', datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+LOG_NAME = f"{BOSS}_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 
 
-def initialize(__) -> str:
+def initialize(ctrlr) -> str:
     """Placeholder. Immediately enter the join stage."""
+    # send a discord message that we're ready to rumble
+    ctrlr.send_discord_message(
+        f"Starting a new full run for {ctrlr.boss}!",
+        embed_fields=ctrlr.get_stats_for_discord(), level="update"
+    )
+    ctrlr.log(f'Initializing AutoMaxLair {VERSION}.')
+
+    # assume we're starting from the select controller menu, connect, then
+    # press home twice to return to the game
+    ctrlr.push_buttons(
+        (b'a', 2), (b'h', 2.0), (b'h', 2.0), (b'b', 1.5), (b'b', 1.5)
+    )
+
     return 'join'
 
 
@@ -96,16 +114,19 @@ def join(ctrlr) -> str:
     run.pokemon = pokemon_list[selection_index]
     ctrlr.push_button(b'a', 22 + VIDEO_EXTRA_DELAY)
 
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+
     # Read the path.
     ctrlr.read_path_information(1)
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.7)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 7)
     ctrlr.read_path_information(2)
     ctrlr.log(f'Path type identified as: {run.path_type}')
-    ctrlr.push_button(b'8', 1 + VIDEO_EXTRA_DELAY, 0.6)
+    ctrlr.push_button(b'8', 2 + VIDEO_EXTRA_DELAY, 8)
     ctrlr.read_path_information(3)
-    ctrlr.log(str(run), 'DEBUG')
+    for line in run.get_output_strings():
+        ctrlr.log(line)
     all_paths_str = run.get_paths(truncate=True, name_only=True)
-    print(all_paths_str)
 
     # Choose the best path out of the options.
     # TODO: Improve path selection algorithm.
@@ -120,6 +141,7 @@ def join(ctrlr) -> str:
     ctrlr.log(
         f'Target path at index {best_path_index} selected with score '
         f'{score_list[best_path_index]:.3f}: {target_path_str}.')
+
     ctrlr.log('Finished joining.', 'DEBUG')
     return 'path'
 
@@ -133,7 +155,7 @@ def path(ctrlr) -> str:
     # Then, move the cursor onto that boss and select it.
     for __ in range(offset):
         ctrlr.push_button(b'>', 1)
-    ctrlr.push_buttons((b'a', 4))
+    ctrlr.push_button(b'a', 4 + VIDEO_EXTRA_DELAY)
     run.advance_node()
     ctrlr.log(
         f'Chose path with index {offset} from the left, towards type '
@@ -163,7 +185,10 @@ def battle(ctrlr) -> str:
     """Choose moves during a battle and detect whether the battle has ended."""
     run = ctrlr.current_run
     ctrlr.log(f'Battle {run.num_caught+1} starting.')
-    ctrlr.push_button(None, 10)
+    # Wait for the black screen at the start of the battle to go away.
+    ctrlr.push_button(None, 13)
+    while ctrlr.check_black_screen():
+        ctrlr.push_button(None, 1)
     # Loop continuously until an event that ends the battle is detected.
     # The battle ends either in victory (signalled by the catch screen)
     # or in defeat (signalled by the screen going completely black).
@@ -181,7 +206,7 @@ def battle(ctrlr) -> str:
         elif battle_state == 'FAINT':
             run.lives -= 1
             ctrlr.log(f'Pokemon fainted. {run.lives} lives remaining.')
-            ctrlr.push_button(None, 4)
+            ctrlr.push_button(None, 3.5)
         elif battle_state == 'LOSS':
             ctrlr.log('You lose and the battle is finished.')
             run.lives -= 1
@@ -199,15 +224,6 @@ def battle(ctrlr) -> str:
                 run.dmax_timer = 0
             ctrlr.push_buttons((b'a', 1.5), (b'b', 1 + VIDEO_EXTRA_DELAY))
         elif battle_state == 'FIGHT':
-            # If we got the pokemon from the scientist, we don't know what
-            # our current pokemon is, so check it first.
-            if run.pokemon is None:
-                ctrlr.push_buttons((b'y', 1), (b'a', 1 + VIDEO_EXTRA_DELAY))
-                run.pokemon = ctrlr.read_selectable_pokemon('battle')[0]
-                ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
-                ctrlr.log(
-                    f'Received {run.pokemon.name_id} from the scientist.')
-
             # Before the bot makes a decision, it needs to know what the boss
             # is.
             if run.opponent is None:
@@ -223,6 +239,18 @@ def battle(ctrlr) -> str:
                         (b'y', 1), (b'a', 1), (b'l', 3 + VIDEO_EXTRA_DELAY))
                     run.opponent = ctrlr.read_selectable_pokemon('battle')[0]
                     ctrlr.push_buttons((b'b', 1), (b'b', 1.5), (b'b', 2))
+
+                    if run.opponent.name_id == 'ditto':
+                        if run.current_node.name != 'normal':
+                            ctrlr.log(
+                                f'We were expecting a {run.current_node.name} '
+                                'type pokemon and we got ditto.', 'WARNING')
+                    else:
+                        if run.current_node.name not in run.opponent.type_ids:
+                            ctrlr.log(
+                                f'We were expecting a {run.current_node.name} '
+                                'type pokemon and we got '
+                                f'{run.opponent.name_id}.', 'WARNING')
 
                 # If our Pokemon is Ditto, transform it into the boss (or vice
                 # versa).
@@ -260,18 +288,18 @@ def battle(ctrlr) -> str:
                 run.dmax_timer == -1 and ctrlr.check_dynamax_available()
             )
             # Choose the best move to use against the boss
-            # TODO: use the actual teammates instead of the average of all
-            # rental Pokemon.
             best_move_index, __, best_move_score = (
                 matchup_scoring.select_best_move(
-                    run.pokemon, run.opponent, teammates=run.rental_pokemon)
+                    run.pokemon, run.opponent, run.field,
+                    teammates=run.team_pokemon)
             )
             if run.dynamax_available:
                 default_score = best_move_score
                 run.pokemon.dynamax = True  # Temporary
                 best_max_move_index, __, best_dmax_move_score = (
                     matchup_scoring.select_best_move(
-                        run.pokemon, run.opponent, run.rental_pokemon)
+                        run.pokemon, run.opponent, run.field,
+                        teammates=run.team_pokemon)
                 )
                 if best_dmax_move_score > default_score:
                     best_move_index = best_max_move_index
@@ -327,7 +355,7 @@ def catch(ctrlr) -> str:
         and not ctrlr.check_sufficient_ore(1)
     ):
         ctrlr.log('Finishing the run without wasting a ball on the boss.')
-        ctrlr.push_buttons((b'v', 2), (b'a', 30))
+        ctrlr.push_buttons((b'v', 2), (b'a', 10))
         ctrlr.log('Congratulations!')
         return 'select_pokemon'
 
@@ -336,9 +364,7 @@ def catch(ctrlr) -> str:
     # Start by navigating to the ball selection screen
     ctrlr.push_button(b'a', 2)
     # then navigate to the ball specified in the config file
-    while (ctrlr.get_target_ball().lower() != 'default'
-           and ctrlr.get_target_ball() not in ctrlr.check_ball()
-           ):
+    while (ctrlr.get_target_ball() not in ctrlr.check_ball()):
         ctrlr.push_button(b'<', 2 + VIDEO_EXTRA_DELAY)
     ctrlr.push_button(b'a', 30)
     ctrlr.record_ball_use()
@@ -351,45 +377,90 @@ def catch(ctrlr) -> str:
         #
         # In this stage the list contains only 1 item.
         pokemon = ctrlr.read_selectable_pokemon('catch')[0]
+        run.caught_pokemon.append(pokemon.name_id)
+
+        # Update the list of potential minibosses that we might encounter later
+        # in the den.
+        run.prune_potential_minibosses()
+        ctrlr.log(
+            'The following Pokemon have been encountered and will not appear '
+            f'again: {run.all_encountered_pokemon}', 'DEBUG'
+        )
+        ctrlr.log(
+            'The following Pokemon may still appear along the target path: '
+            f'{[x for x in run.potential_boss_pokemon]}', 'DEBUG'
+        )
         # Consider the amount of remaining minibosses when scoring each rental
         # Pokemon, at the start of the run, there are 3 - num_caught minibosses
         # and 1 final boss. We weigh the boss more heavily because it is more
         # difficult than the other bosses.
         rental_weight = 3 - run.num_caught
         boss_weight = 2
-        # Calculate scores for the new and existing Pokemon.
-        # TODO: actually read the current Pokemon's health so the bot can
-        # decide to switch if it's low.
-        score = matchup_scoring.get_weighted_score(
-            run.rental_scores[pokemon.name_id], rental_weight,
-            run.boss_matchups[pokemon.name_id][ctrlr.boss], boss_weight
-        )
-        existing_score = matchup_scoring.get_weighted_score(
-            run.rental_scores[run.pokemon.name_id], rental_weight,
-            matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
-            ), boss_weight
-        ) * run.HP
-        ctrlr.log(f'Score for {pokemon.name_id}: {score:.2f}', 'DEBUG')
-        ctrlr.log(
-            f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG'
-        )
 
-        run.caught_pokemon.append(pokemon.name_id)
+        # Calculate scores for every potential team resulting from the decision
+        # to take or leave the new Pokemon.
+        team = run.team_pokemon
+        # Re-measure team HP.
+        for i, HP in enumerate(ctrlr.measure_team_HP()):
+            if i == 0:
+                run.pokemon.HP = HP
+            else:
+                team[i - 1].HP = HP
+        team_scores = []
+        potential_teams = (
+            (pokemon, team[0], team[1], team[2]),
+            (run.pokemon, team[0], team[1], team[2]),
+            (run.pokemon, pokemon, team[1], team[2]),
+            (run.pokemon, team[0], pokemon, team[2]),
+            (run.pokemon, team[0], team[1], pokemon)
+        )
+        ctrlr.log(f'HP of current team: {[x.HP for x in team]}.', 'DEBUG')
+        for potential_team in potential_teams:
+            score = matchup_scoring.get_weighted_score(
+                matchup_scoring.evaluate_average_matchup(
+                    potential_team[0], run.potential_boss_pokemon.values(),
+                    potential_team[1:], run.lives
+                ), rental_weight,
+                matchup_scoring.evaluate_matchup(
+                    potential_team[0], run.boss_pokemon[run.boss],
+                    potential_team[1:], run.lives
+                ), boss_weight
+            )
+            ctrlr.log(
+                'Score for potential team: '
+                f'{[x.name_id for x in potential_team]}: {score:.2f}', 'DEBUG')
+            team_scores.append(score)
+        # Choosing not to take the Pokemon may result in a teammate choosing
+        # it, or none may choose it. The mechanics of your teammates choosing
+        # is currently not known. Qualitatively, it seems like they choose yes
+        # or no randomly with about 50% chance. Using this assumption, the
+        # chance that none of them take the Pokemon is (1/2)^3 or 12.5%.
+        choose_score = team_scores[0]
+        leave_score = 0.125 * team_scores[1] + 0.875 * sum(team_scores[2:]) / 3
+        ctrlr.log(
+            f'Score for taking {pokemon.name_id}: {choose_score:.2f}', 'DEBUG')
+        ctrlr.log(
+            f'Score for declining {pokemon.name_id}: {leave_score:.2f}',
+            'DEBUG')
 
         # Compare the scores for the two options and choose the best one.
-        if score > existing_score:
+        if choose_score > leave_score:
             # Choose to swap your existing Pokemon for the new Pokemon.
             run.pokemon = pokemon
-            # Note: a long delay is required here so the bot doesn't think a
-            # battle started.
-            ctrlr.push_button(b'a', 7)
             ctrlr.log(f'Decided to swap for {run.pokemon.name_id}.')
-        else:
             # Note: a long delay is required here so the bot doesn't think a
             # battle started.
-            ctrlr.push_button(b'b', 7)
+            ctrlr.push_button(b'a', 6)
+
+        else:
             ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}.')
+            # Note: a long delay is required here so the bot doesn't think a
+            # battle started.
+            ctrlr.push_button(b'b', 6)
+
+        # Re-read teammates in case something changed.
+        ctrlr.identify_team_pokemon()
+        run.prune_potential_minibosses()
 
         # Move on to the detect stage.
         return 'detect'
@@ -405,7 +476,7 @@ def catch(ctrlr) -> str:
 
 def backpacker(ctrlr) -> str:
     """Choose an item from the backpacker."""
-    ctrlr.push_button(None, 5 + VIDEO_EXTRA_DELAY)
+    ctrlr.push_button(None, 1 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log("Reading the backpacker's items.")
 
@@ -421,7 +492,9 @@ def backpacker(ctrlr) -> str:
         items.append(item)
         ctrlr.log(f'Detected item: {item}', 'DEBUG')
 
-    ctrlr.push_button(b'a', 5)
+    # Note: a long delay is required here so the bot doesn't think a battle
+    # started.
+    ctrlr.push_button(b'a', 7 + VIDEO_EXTRA_DELAY)
 
     ctrlr.log('Finished choosing an item.', 'DEBUG')
     return 'detect'
@@ -433,46 +506,57 @@ def scientist(ctrlr) -> str:
 
     ctrlr.log('Scientist encountered.', 'DEBUG')
 
-    if run.pokemon is not None:
-        # Consider the amount of remaining minibosses when scoring each rental
-        # Pokemon, at the start of the run, there are 3 - num_caught minibosses
-        # and 1 final boss. We weigh the boss more heavily because it is more
-        # difficult than the other bosses.
-        rental_weight = 3 - run.num_caught
-        boss_weight = 2
+    # Consider the amount of remaining minibosses when scoring each rental
+    # Pokemon, at the start of the run, there are 3 - num_caught minibosses
+    # and 1 final boss. We weigh the boss more heavily because it is more
+    # difficult than the other bosses.
+    rental_weight = 3 - run.num_caught
+    boss_weight = 2
 
-        # Calculate scores for an average and existing Pokemon.
-        pokemon_scores = []
-        for name_id in run.rental_pokemon:
-            score = matchup_scoring.get_weighted_score(
-                run.rental_scores[name_id], rental_weight,
-                run.boss_matchups[name_id][ctrlr.boss], boss_weight
-            )
-            pokemon_scores.append(score)
-        average_score = sum(pokemon_scores) / len(pokemon_scores)
+    # Calculate scores for an average and existing Pokemon.
+    pokemon_scores = []
+    for name_id in run.rental_pokemon:
+        score = matchup_scoring.get_weighted_score(
+            run.rental_scores[name_id], rental_weight,
+            run.boss_matchups[name_id][ctrlr.boss], boss_weight
+        )
+        pokemon_scores.append(score)
+    average_score = sum(pokemon_scores) / len(pokemon_scores)
 
-        # TODO: actually read the current Pokemon's health so the bot can
-        # decide to switch if it's low.
-        existing_score = matchup_scoring.get_weighted_score(
-            run.rental_scores[run.pokemon.name_id], rental_weight,
-            matchup_scoring.evaluate_matchup(
-                run.pokemon, run.boss_pokemon[ctrlr.boss], run.rental_pokemon
-            ), boss_weight
-        ) * run.HP
-        ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
-        ctrlr.log(
-            f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
+    # TODO: actually read the current Pokemon's health so the bot can
+    # decide to switch if it's low.
+    existing_score = matchup_scoring.get_weighted_score(
+        run.rental_scores[run.pokemon.name_id], rental_weight,
+        matchup_scoring.evaluate_matchup(
+            run.pokemon, run.boss_pokemon[ctrlr.boss],
+            run.team_pokemon, run.lives
+        ), boss_weight
+    )
+    ctrlr.log(f'Score for average pokemon: {average_score:.2f}', 'DEBUG')
+    ctrlr.log(
+        f'Score for {run.pokemon.name_id}: {existing_score:.2f}', 'DEBUG')
 
-    # If current pokemon is None, it means we just already talked to scientist
-    # Also it means we took the pokemon from scientist.
-    # So let's try to pick it up again
-    if run.pokemon is None or average_score > existing_score:
-        ctrlr.push_buttons((None, 3), (b'a', 1))
+    if average_score > existing_score:
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'a', 2 + VIDEO_EXTRA_DELAY))
         run.pokemon = None
         ctrlr.log('Took a Pokemon from the scientist.')
     else:
-        ctrlr.push_buttons((None, 3), (b'b', 1))
+        # Note: a long delay is required here so the bot doesn't think a
+        # battle started.
+        ctrlr.push_buttons((None, 3), (b'b', 2 + VIDEO_EXTRA_DELAY))
         ctrlr.log(f'Decided to keep going with {run.pokemon.name_id}')
+
+    # Read teammates.
+    ctrlr.identify_team_pokemon()
+    # If we took a Pokemon from the scientist, try to identify it.
+    # Note: as of Python 3.6, dicts remember insertion order so using an
+    # OrderedDict is unnecessary.
+    if average_score > existing_score:
+        ctrlr.log(f'Identified {run.pokemon.name_id} as our new Pokemon.')
+    ctrlr.push_button(None, 5)
+
     return 'detect'
 
 
@@ -490,21 +574,36 @@ def select_pokemon(ctrlr) -> str:
         ctrlr.log('No Pokemon caught.')
         ctrlr.push_buttons((None, 10), (b'b', 1))
         ctrlr.runs += 1
-        ctrlr.reset_run()
+        ctrlr.send_discord_message(
+            "No Pokémon were caught in the last run.",
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="update"
+        )
         ctrlr.record_ore_reward()
+        ctrlr.reset_run()
         ctrlr.log('Preparing for another run.')
+
         # No Pokemon to review, so go back to the beginning.
         # Note that the "keep path" mode is meant to be used on a good path, so
         # although the path would be lost that situation should never arise.
         return 'join'
     # "find path" mode quits if the run is successful.
-    elif run.num_caught == 4 and ctrlr.mode == 'find path':
+    elif run.num_caught == 4 and (
+        ctrlr.mode == 'find path'
+        and ctrlr.consecutive_resets == FIND_PATH_WINS - 1
+    ):
         ctrlr.display_results(screenshot=True)
         ctrlr.send_discord_message(
-            True, f'You got a winning path for {run.caught_pokemon[3]} with '
-            f'{run.lives} lives remaining !!!',
-            f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
-        ctrlr.log(f'This path won with {run.lives} lives remaining.')
+            f"This path won {FIND_PATH_WINS} times against {ctrlr.boss} with "
+            f"{run.lives} lives remaining.",
+            path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+            f'{ctrlr.num_saved_images}.png',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="critical"
+        )
+        ctrlr.log(
+            f'This path won {FIND_PATH_WINS} times with {run.lives} '
+            'lives remaining.')
         return None  # Return None to signal the program to end.
 
     # Otherwise, navigate to the summary screen of the last Pokemon caught (the
@@ -527,8 +626,12 @@ def select_pokemon(ctrlr) -> str:
             ctrlr.log('******************************')
             ctrlr.display_results(screenshot=True)
             ctrlr.send_discord_message(
-                True, f'You got a matching stats {run.caught_pokemon[3]} !!!',
-                f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                f"Matching stats found for {ctrlr.boss}!",
+                path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                f'{ctrlr.num_saved_images}.png',
+                embed_fields=ctrlr.get_stats_for_discord(),
+                level="legendary"
+            )
             return None  # End whenever a matching stats legendary is found
 
         ctrlr.push_button(b'<', 1)
@@ -540,9 +643,15 @@ def select_pokemon(ctrlr) -> str:
         # caught.
         if (
             (ctrlr.mode == 'keep path' and (run.num_caught < 4 or i > 0))
-            or (ctrlr.mode == 'ball saver' and run.num_caught == 4 and i > 0)
+            or (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                and run.num_caught == 4 and i > 0
+            )
         ):
-            if ctrlr.mode == 'ball saver' or ctrlr.check_sufficient_ore(2):
+            if (
+                (ctrlr.mode == 'ball saver' or ctrlr.mode == 'find path')
+                or ctrlr.check_sufficient_ore(2)
+            ):
                 reset_game = True
                 break
             else:
@@ -555,33 +664,53 @@ def select_pokemon(ctrlr) -> str:
                 f'Shiny {run.caught_pokemon[run.num_caught - 1 - i]} will be '
                 'kept.'
             )
+            ctrlr.log(
+                "Adding information to the number of found shinies", "DEBUG")
             ctrlr.caught_shinies.append(
                 run.caught_pokemon[run.num_caught - 1 - i]
             )
             ctrlr.shinies_found += 1
+            ctrlr.log("Sending off to save a screenshot", "DEBUG")
             ctrlr.display_results(screenshot=True)
             ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
+                # NOTE: this is when we found a legendary!
                 ctrlr.send_discord_message(
-                    True, f'You got a shiny {run.caught_pokemon[3]} !!!',
-                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                    f'Found a shiny {run.caught_pokemon[3]}!',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                    f'{ctrlr.num_saved_images}.png',
+                    embed_fields=ctrlr.get_stats_for_discord(),
+                    level="legendary"
+                )
                 return None  # End whenever a shiny legendary is found.
             else:
                 ctrlr.send_discord_message(
-                    False, f'You got a shiny '
-                    f'{run.caught_pokemon[run.num_caught - 1 - i]} !!!',
-                    f'logs/{ctrlr.log_name}_cap_{ctrlr.num_saved_images}.png')
+                    f'Found a shiny '
+                    f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
+                    path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                    f'{ctrlr.num_saved_images}.png',
+                    embed_fields=ctrlr.get_stats_for_discord(),
+                    level="shiny"
+                )
                 take_pokemon = True
                 break
         elif i < run.num_caught - 1:
             ctrlr.push_button(b'^', 3 + VIDEO_EXTRA_DELAY)
 
     if (
-        not take_pokemon and (
-            ctrlr.mode == 'strong boss' and run.num_caught == 4)
+        not take_pokemon and ctrlr.mode == 'strong boss'
+        and run.num_caught == 4 and ctrlr.check_sufficient_ore(1)
+    ):
+        reset_game = True
+
+    if (
+        not take_pokemon and NON_LEGEND in run.caught_pokemon
         and ctrlr.check_sufficient_ore(1)
     ):
         reset_game = True
+        ctrlr.log('----------------------------------')
+        ctrlr.log(f'--Found {NON_LEGEND} on this path.--')
+        ctrlr.log('----------------------------------')
 
     # After checking all the Pokemon, wrap up the run (including taking a
     # Pokemon or resetting the game, where appropriate).
@@ -614,14 +743,28 @@ def select_pokemon(ctrlr) -> str:
     # Update statistics and reset stored information about the complete run.
     ctrlr.wins += 1 if run.lives != 0 else 0
     ctrlr.runs += 1
+    # calculate the win percent
+    ctrlr.win_percent = ctrlr.wins / ctrlr.runs
+    # then update the time per run
+    ctrlr.time_per_run = (datetime.now() - ctrlr.start_date) / ctrlr.runs
     ctrlr.reset_run()
 
     # Start another run if there are sufficient Poke balls to do so.
     if ctrlr.check_sufficient_balls():
         ctrlr.log('Preparing for another run.')
+        ctrlr.send_discord_message(
+            'Preparing for another run.',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="update"
+        )
         return 'join'
     else:
         ctrlr.log('Out of balls. Quitting.')
+        ctrlr.send_discord_message(
+            'You ran out of legendary balls! The program has exited!',
+            embed_fields=ctrlr.get_stats_for_discord(),
+            level="critical"
+        )
         return None  # Return None to signal the program to end.
 
 
@@ -664,10 +807,15 @@ if __name__ == '__main__':
         '%(asctime)s | %(levelname)s: %(message)s'
     )
 
+    # make the console formatter easier to read with fewer bits of info
+    console_formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s: %(message)s", "%H:%M:%S"
+    )
+
     # Configure the console, which will print logged information.
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
-    console.setFormatter(formatter)
+    console.setFormatter(console_formatter)
 
     # Configure the file handler, which will save logged information.
     fileHandler = logging.FileHandler(
@@ -675,7 +823,7 @@ if __name__ == '__main__':
         encoding="UTF-8"
     )
     fileHandler.setFormatter(formatter)
-    fileHandler.setLevel(logging.DEBUG if ENABLE_DEBUG_LOGS else logging.INFO)
+    fileHandler.setLevel(logging.DEBUG)
 
     # Add the handlers to the logger so that it will both print messages to
     # the console as well as save them to a log file.
