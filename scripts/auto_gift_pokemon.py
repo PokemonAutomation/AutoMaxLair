@@ -39,12 +39,14 @@ try:
     config = toml.load("Config.toml")
 except FileNotFoundError:
     raise FileNotFoundError(
-        "The Config.toml file was not found! Be sure to copy Config.sample.toml as Config.toml and edit it!")
-except:
+        "The Config.toml file was not found! Be sure to copy "
+        "Config.sample.toml as Config.toml and edit it!")
+except:  # nqa: E722
     raise SyntaxError(
-        "Something went wrong parsing Config.toml\n" +
-        "Please make sure you entered the information right " +
-        "and did not modify \" or . symbols or have uppercase true or false in the settings.")
+        "Something went wrong parsing Config.toml\n"
+        "Please make sure you entered the information right "
+        "and did not modify \" or . symbols or have uppercase true or false "
+        "in the settings.")
 
 COM_PORT = config['COM_PORT']
 VIDEO_INDEX = config['VIDEO_INDEX']
@@ -75,7 +77,7 @@ class AutoGiftPokemonController(
         # Rectangles for OCR and display
         self.IV_atk_rect = ((0.78, 0.25), (0.9, 0.30))
         self.IV_spa_rect = ((0.78, 0.35), (0.9, 0.4))
-    
+
     def get_frame(
         self,
         rectangle_set: Optional[str] = None,

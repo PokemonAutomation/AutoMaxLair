@@ -34,8 +34,8 @@ except FileNotFoundError:
         "Config.sample.toml as Config.toml and edit it!")
 except:  # noqa: E722
     raise SyntaxError(
-        "Something went wrong parsing Config.toml\n" +
-        "Please make sure you entered the information right " +
+        "Something went wrong parsing Config.toml\n"
+        "Please make sure you entered the information right "
         "and did not modify \" or . symbols or have uppercase true or false "
         "in the settings.")
 
@@ -77,7 +77,7 @@ class CustomController(automaxlair.switch_controller.SwitchController):
 
         # Get the base image from the base class method.
         img = super().get_frame(resize=resize)
-        
+
         # --------------------
         # Add any extra image processing you want here.
 
