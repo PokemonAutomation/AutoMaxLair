@@ -9,8 +9,9 @@ Instructions:
 2. Navigate to a box in your PC that has an opening in the default cursor
    position (top left corner of the box).
 3. Press the '+' button until the IVs of Pokemon in your boxes are shown.
-4. Save directly in front of the Poipole.
-5. Connect the microcontroller, serial connection, and capture card, then start
+4. Have your party full.
+5. Save directly in front of the Poipole.
+6. Connect the microcontroller, serial connection, and capture card, then start
    the script.
 """
 
