@@ -135,13 +135,13 @@ def loop(ctrlr) -> None:
     if 'nogood' in IV_text.lower().replace(' ', ''):
         ctrlr.log('********** Found 0 Atk target! **********')
         return None
+    ctrlr.resets += 1
     ctrlr.log(f'IV text detected as {IV_text}. Moving to reset {ctrlr.resets}')
 
     # Otherwise, reset the game and try again.
     ctrlr.push_buttons(
         (b'h', 3), (b'x', 1), (b'a', 3), (b'a', 1), (b'a', 20), (b'a', 4)
     )
-    ctrlr.resets += 1
     return 'loop'
 
 
