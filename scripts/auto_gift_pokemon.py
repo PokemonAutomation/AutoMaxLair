@@ -100,7 +100,7 @@ class AutoGiftPokemonController(
 
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
-            'Resets: ': self.resets,
+            'Resets': self.resets,
         }.items():
             self.info[key] = value
 

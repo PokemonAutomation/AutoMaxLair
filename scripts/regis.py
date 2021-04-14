@@ -112,10 +112,10 @@ class RegisController(automaxlair.switch_controller.SwitchController):
 
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
-            'Resets: ': self.resets,
-            'Checks for IV: ': self.checks_for_IV,
-            'Current balls thrown: ': self.current_balls_thrown,
-            'Total balls thrown: ': self.total_balls_thrown,
+            'Resets': self.resets,
+            'Checks for IV': self.checks_for_IV,
+            'Current balls thrown': self.current_balls_thrown,
+            'Total balls thrown': self.total_balls_thrown,
         }.items():
             self.info[key] = value
 
