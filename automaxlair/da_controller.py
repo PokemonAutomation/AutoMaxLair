@@ -888,7 +888,7 @@ class DAController(SwitchController):
         # the ball number read by OCR.
         ball_num = int('0' + ''.join(re.findall(r'\d+', self.read_text(
             img, self.ball_num_rect, invert=True, segmentation_mode='--psm 7'
-        ))))
+        ).replace('A', '4').replace('l', '1').replace(']', '1'))))
         self.log(
             f'Detected number of remaining {best_match} as {ball_num}.',
             'DEBUG')
