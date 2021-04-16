@@ -66,28 +66,30 @@ class SwitchController:
         use_PABotBase_hex = config['advanced']['PABOTBASE_HEX']
         # if not use_PABotBase_hex:
         #     self.log(
-        #         'RemoteControl.hex is deprecated; support will be phased out '
-        #         'in the future in favour of the PABotBase hex file.', 'WARNING'
+        #         'RemoteControl.hex is deprecated; support will be phased out'
+        #         ' in the future in favour of the PABotBase hex file.',
+        #         'WARNING'
         #     )
         com_controller = (
             PABotBaseController if use_PABotBase_hex else serial.Serial)
         self.com = com_controller(
             config['COM_PORT'], 9600, timeout=0.05)
-        self.logger.info(f'Attempting to connect to {self.com.port}.')
+        self.log(f'Attempting to connect to {self.com.port}.')
         timeout_fails = 0
         while not self.com.is_open:
             try:
                 self.com.open()
-            except serial.SerialException:
+            except serial.SerialException as e:
                 if timeout_fails > 10:
                     # if the serial device won't open after 10 times, we might
                     # as well raise and exception and abort
-                    raise Exception(
+                    self.log(
                         "Could not connect to the serial device. "
-                        "Check your device.")
+                        "Check your device and port number.", "ERROR")
+                    raise e
                 timeout_fails += 1
                 pass
-        self.logger.info('Connected to the serial device successfully.')
+        self.log('Connected to the serial device successfully.')
 
         # Open the video capture.
         vid_index = config['VIDEO_INDEX']
@@ -441,14 +443,17 @@ class SwitchController:
             where the keys are the titles to give and the items are the text
             for that field.
         level : str, optional
-            What type of update this is. Currently accepts "update", "shiny", "legendary", and
-            "critical", which helps the program determine if it should send based
-            on settings provided by the user.
+            What type of update this is. Currently accepts "update", "shiny",
+            "legendary", and "critical", which helps the program determine if
+            it should send based on settings provided by the user.
         """
 
         # the first check is if there's no discord info
-        if (self.webhook_id == 'PLACE_ID_WITHIN_QUOTES' or self.webhook_token == 'PLACE_TOKEN_WITHIN_QUOTES'
-                or self.webhook_id == "" or self.webhook_token == ""):
+        if (
+            self.webhook_id == 'PLACE_ID_WITHIN_QUOTES'
+            or self.webhook_token == 'PLACE_TOKEN_WITHIN_QUOTES'
+            or "" in (self.webhook_id, self.webhook_token)
+        ):
             self.log(
                 'You need to setup the discord section to be able to use the '
                 'ping feature.', 'DEBUG')
@@ -457,9 +462,12 @@ class SwitchController:
         # now we check if we can ping or not
         # NOTE: available discord levels from the program:
         #   "all" - gives all notifications, pings you on *ALL* shinies found
-        #   "all_ping_legendary" - gives all notifications, pings you only when legendary is found
-        #   "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
-        #   "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
+        #   "all_ping_legendary" - gives all notifications, pings you only when
+        #       a legendary is found
+        #   "only_shiny" - only notifies you when you find a shiny, pings on
+        #       *ALL* shinies found
+        #   "only_shiny_ping_legendary" - only notifies you when you find a
+        #       shiny, pings only on legendary
         #   "none" - ignores all discord messages
 
         # first check if the discord level is none
@@ -497,7 +505,9 @@ class SwitchController:
             timestamp=datetime.utcnow()
         )
 
-        embed.set_thumbnail(url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png")
+        embed.set_thumbnail(
+            url=f"https://img.pokemondb.net/sprites/home/shiny/{self.boss}.png"
+        )
         embed.set_footer(text="AutoMaxLair")
 
         # if we have fields that we want to add, we can!
@@ -506,7 +516,8 @@ class SwitchController:
                 embed.add_field(name=name, value=item, inline=True)
 
         # construct the proper string
-        send_str = f"<@{self.user_id}>" if send_ping else f'{self.user_nickname}'
+        send_str = (
+            f"<@{self.user_id}>" if send_ping else f'{self.user_nickname}')
         send_str += f': {text}'
 
         # add the image to the embed if it was included
@@ -556,7 +567,7 @@ class VideoCaptureHelper:
                 'Failed to open the video connection. Check the config file '
                 'and ensure no other application is using the video input.'
             )
-            raise RuntimeError("Failed to initialize video capture.")
+            raise AssertionError("Failed to initialize video capture.")
 
         self.cap.set(3, self.base_resolution[0])
         self.cap.set(4, self.base_resolution[1])

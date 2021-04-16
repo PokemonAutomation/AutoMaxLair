@@ -179,7 +179,8 @@ class DAController(SwitchController):
         ), f"Invalid value for MODE in Config.toml: {config['MODE']}"
         assert self.discord_level in (
             'all', 'all_ping_legendary', 'only_shiny',
-            'only_shiny_ping_legendary', 'none'), 'Invalid discord level'
+            'only_shiny_ping_legendary', 'none'), (
+                f'Invalid discord level: {self.discord_level}')
         # Do not assert for negative dynite ore.
         # Negative ore will force the bot to not spend any ore until it reaches
         # that target.
@@ -324,6 +325,8 @@ class DAController(SwitchController):
 
         # Get a subset of images relevant to the stage index
         images = []
+        assert stage_index in (1, 2, 3), (
+            'Parameter "stage_index" must be 1, 2, or 3')
         if stage_index == 1:
             images.append(self.get_image_slice(img, self.paths_2_1_rect))
             images.append(self.get_image_slice(img, self.paths_2_2_rect))
@@ -332,8 +335,6 @@ class DAController(SwitchController):
             images.append(self.get_image_slice(img, self.paths_4_2_rect))
             images.append(self.get_image_slice(img, self.paths_4_3_rect))
             images.append(self.get_image_slice(img, self.paths_4_4_rect))
-        else:
-            raise ValueError('Parameter "stage_index" must be 1, 2, or 3')
 
         type_data = []
         for img in images:
@@ -1036,7 +1037,8 @@ class DAController(SwitchController):
             'Pokemon caught': self.current_run.num_caught,
             'Lives': self.current_run.lives,
             'Pokemon': str(self.current_run.pokemon).replace('-', ' ').title(),
-            'Opponent': str(self.current_run.opponent).replace('-', ' ').title(),
+            'Opponent': str(
+                self.current_run.opponent).replace('-', ' ').title(),
             'Win percentage': f"{self.win_percent:.1%}",
             'Time per run': str(self.time_per_run)[2:7],
             'Consecutive resets': self.consecutive_resets,
