@@ -277,7 +277,7 @@ class PABotBaseController:
         ):
             # Random error that can be ignored, therefore re-call this method.
             self.log('Ignored PABB_MSG_ERROR_WARNING.')
-            return self._read() 
+            return self._read()
         else:
             return full_message
 
