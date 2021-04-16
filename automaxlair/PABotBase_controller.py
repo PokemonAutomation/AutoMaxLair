@@ -6,7 +6,11 @@ https://github.com/PokemonAutomation/SwSh-Arduino
 """
 
 import binascii
+import logging
+import logging.handlers
 import time
+import os
+from os.path import dirname, abspath
 
 import serial
 from crccheck import crc
@@ -26,10 +30,13 @@ PABB_MSG_COMMAND_PBF_PRESS_BUTTON = b'\x91'
 PABB_MSG_COMMAND_PBF_MOVE_JOYSTICK_L = b'\x93'
 PABB_MSG_COMMAND_PBF_MOVE_JOYSTICK_R = b'\x94'
 
-GLOBAL_RELEASE_TICKS = 10
+GLOBAL_RELEASE_TICKS = 10  # ticks at 125 ticks/s
+AWAIT_TIMEOUT = 10  # seconds
 
 # Overrides for the parameters used by the regular serial port.
 BAUD_RATE = 115200
+
+LOG_NAME = 'PABotBaseController'
 
 
 # Functions to convert series of parameters into commands.
@@ -132,8 +139,40 @@ class PABotBaseController:
         self.in_waiting = 0
         self.is_open = True
 
+        # Configure the logger.
+        self.logger = logging.getLogger(LOG_NAME)
+        self.logger.setLevel(
+            logging.DEBUG if self.debug_mode else logging.INFO)
+        formatter = logging.Formatter(
+            '%(asctime)s | %(levelname)s: %(message)s')
+
+        # make the console formatter easier to read with fewer bits of info
+        console_formatter = logging.Formatter(
+            "%(asctime)s | %(levelname)s: %(message)s", "%H:%M:%S")
+
+        # Configure the console, which will print logged information.
+        console = logging.StreamHandler()
+        console.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
+        console.setFormatter(console_formatter)
+
+        # Configure the file handler, which will save logged information.
+        fileHandler = logging.handlers.TimedRotatingFileHandler(
+            filename=os.path.join(
+                dirname(dirname(abspath(__file__))), 'logs',
+                LOG_NAME + '.log'
+            ), when='midnight', encoding='UTF-8'
+        )
+        fileHandler.setFormatter(formatter)
+        fileHandler.setLevel(logging.DEBUG)
+
+        # Add the handlers to the logger so that it will both print messages to
+        # the console as well as save them to a log file.
+        self.logger.addHandler(console)
+        self.logger.addHandler(fileHandler)
+
         # Open a serial port
-        self.com = serial.Serial(port, 115200)
+        self.last_sent_message = b''
+        self.com = serial.Serial(port, 115200, timeout=self.timeout)
         # Go through a reset sequence which initializes PABotBase.
         self._reset()
 
@@ -182,38 +221,64 @@ class PABotBaseController:
         full_message = self._add_checksum(length_byte + message)
         # Send the message and get the response.
         self.com.write(full_message)
-        if self.debug_mode:
-            print(f'Sent message: {binascii.hexlify(full_message)}')
-        return self._read()
+        self.last_sent_message = message
+        self.log(f'Sent message: {binascii.hexlify(full_message)}', 'DEBUG')
+        # Await the acknowledgement of the sent message and return it.
+        ack = self._read()
+        return ack
 
     def _read(self) -> bytes:
         """Method for reading a single message that was sent from PABotBase."""
         # Wait until a message is received, then parse the message.
 
         # First, read the length of the message.
+        start_time = time.time()
         while self.com.in_waiting == 0:
+            if time.time() - start_time > AWAIT_TIMEOUT:
+                self.log(
+                    'Timed out after awating a message for '
+                    f'{AWAIT_TIMEOUT} seconds.', 'ERROR'
+                )
+                return b''
             time.sleep(0.01)
         length_byte = self.com.read()
         response_length = length_byte[0] ^ 0xFF
         start_time = time.time()
-        message = None
+        full_message = None
 
         # Then, read bytes to fill the message length.
-        while time.time() - start_time < self.timeout:
-            # Wait until a full message has arrived, then read it.
-            if self.com.in_waiting >= response_length - 1:
-                message = self.com.read(response_length - 1)
-                break
-        if message is None:
-            # In the event of a timeout, read whatever did arrive.
-            # Note that this state usually results in an error.
-            message = self.com.read(self.com.in_waiting)
+        full_message = length_byte + self.com.read(response_length - 1)
+        if len(full_message) < response_length:
+            # Log a warning of a timeout occurring.
+            self.log(
+                'A timeout occurred waiting for the microcontroller to '
+                'send a complete message. The incomplete message was: '
+                f'{binascii.hexlify(full_message)}.', 'WARNING'
+            )
 
         # Finally, assmble and return the complete message.
-        full_message = length_byte + message
-        if self.debug_mode:
-            print(f'Received message: {binascii.hexlify(full_message)}')
-        return full_message
+        self.log(
+            f'Received message: {binascii.hexlify(full_message)}', 'DEBUG')
+        # Check for errors and attempt to deal with them
+        code = full_message[1]
+        if code == 0x01:
+            # Invalid message, possibly due to corruption of the previous
+            # message. Try resending it.
+            self.log(
+                'An error occurred trying to send message: '
+                f'{binascii.hexlify(self.last_sent_message)}. Attempting to '
+                'resend it.', 'WARNING'
+            )
+            return self._write(self.last_sent_message)
+        elif (
+            code == PABB_MSG_ERROR_WARNING[0]
+            and full_message[2:4] == b'\x01\x00'
+        ):
+            # Random error that can be ignored, therefore re-call this method.
+            self.log('Ignored PABB_MSG_ERROR_WARNING.')
+            return self._read()
+        else:
+            return full_message
 
     def _read_command_finished(self) -> bool:
         """Confirm that PABotBase finished processing a command, and send an
@@ -222,6 +287,9 @@ class PABotBaseController:
 
         # First, read the expected PABB_MSG_REQUEST_COMMAND_FINISHED message.
         full_message = self._read()
+        if len(full_message) == 0:
+            # Error encountered.
+            return False
 
         # Prepare an acknowledgement of the received message to return to the
         # microcontroller.
@@ -233,24 +301,15 @@ class PABotBaseController:
             ack = self._add_checksum(
                 b'\xf5' + PABB_MSG_ACK_REQUEST + full_message[2:6]
             )
-        elif (
-            code == PABB_MSG_ERROR_WARNING[0]
-            and full_message[2:4] == b'\x01\x00'
-        ):
-            # Random error that can be ignored, therefore re-call this method.
-            return self._read_command_finished()
         else:
-            # Unknown error code—print a warning.
-            print(
+            # Unknown error code.
+            self.log(
                 f'Message code {bytes([full_message[1]])} did not'
-                ' match any known response.')
-
-        # Print the messages for debugging purposes.
-        if self.debug_mode and ack is not None:
-            print(f'Sent ack: {binascii.hexlify(ack)}')
+                ' match any known response.', 'ERROR')
 
         # Send the acknowledgement.
         if ack is not None:
+            self.log(f'Sent ack: {binascii.hexlify(ack)}', 'DEBUG')
             self.com.write(ack)
             return True
         else:
@@ -270,6 +329,14 @@ class PABotBaseController:
         """Close the com port."""
         self.com.close()
 
+    def log(
+        self,
+        text: str,
+        level: str = 'INFO'
+    ) -> None:
+        """Print a string to the console and log file with a timestamp."""
+        self.logger.log(getattr(logging, level), text)
+
     def write(self, message: bytes):
         """External facing method that the SwitchController will call in the
         same way as serial.Serial.write.
@@ -286,10 +353,9 @@ class PABotBaseController:
         character = message[0].to_bytes(1, 'little')
         hold_ticks = message[1] * 10
 
-        if self.debug_mode:
-            print(
-                f'Translating command with character {character} and duration '
-                f'{hold_ticks}')
+        self.log(
+            f'Translating command with character {character} and duration '
+            f'{hold_ticks}', 'DEBUG')
 
         # Increment the seqnum so PABotBase knows this command is new.
         self.seqnum += 1
@@ -322,10 +388,10 @@ if __name__ == '__main__':
     # Test sequence for running this script in isolation.
     com = PABotBaseController('COM4', 9600, 0.05, True)
     com.write(b'a' + bytes([8]))
-    print(com.read(2))
+    com.log(com.read(2), 'INFO')
     time.sleep(1)
     com.write(b'b' + bytes([8]))
-    print(com.read(2))
+    com.log(com.read(2), 'INFO')
     time.sleep(1)
     com.write(b'a' + bytes([8]))
-    print(com.read(2))
+    com.log(com.read(2), 'INFO')
