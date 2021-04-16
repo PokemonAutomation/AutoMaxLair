@@ -236,7 +236,7 @@ class PABotBaseController:
         while self.com.in_waiting == 0:
             if time.time() - start_time > AWAIT_TIMEOUT:
                 self.log(
-                    'Timed out after awating a message for '
+                    'In _read method: Timed out after awating a message for '
                     f'{AWAIT_TIMEOUT} seconds.', 'ERROR'
                 )
                 return b''
@@ -251,6 +251,7 @@ class PABotBaseController:
         if len(full_message) < response_length:
             # Log a warning of a timeout occurring.
             self.log(
+                'In _read method: '
                 'A timeout occurred waiting for the microcontroller to '
                 'send a complete message. The incomplete message was: '
                 f'{binascii.hexlify(full_message)}.', 'WARNING'
@@ -258,6 +259,7 @@ class PABotBaseController:
 
         # Finally, assmble and return the complete message.
         self.log(
+            'In _read method: '
             f'Received message: {binascii.hexlify(full_message)}', 'DEBUG')
         # Check for errors and attempt to deal with them
         code = full_message[1]
@@ -265,7 +267,7 @@ class PABotBaseController:
             # Invalid message, possibly due to corruption of the previous
             # message. Try resending it.
             self.log(
-                'An error occurred trying to send message: '
+                'In _read method: An error occurred trying to send message: '
                 f'{binascii.hexlify(self.last_sent_message)}. Attempting to '
                 'resend it.', 'WARNING'
             )
@@ -275,7 +277,7 @@ class PABotBaseController:
             and full_message[2:4] == b'\x01\x00'
         ):
             # Random error that can be ignored, therefore re-call this method.
-            self.log('Ignored PABB_MSG_ERROR_WARNING.')
+            self.log('In _read method: Ignored PABB_MSG_ERROR_WARNING.')
             return self._read()
         else:
             return full_message
@@ -301,15 +303,23 @@ class PABotBaseController:
             ack = self._add_checksum(
                 b'\xf5' + PABB_MSG_ACK_REQUEST + full_message[2:6]
             )
+        elif code == 0x10:
+            # An error was likely caught in the _read method, causing the
+            # button command to be resent. Try to read the next message which
+            # will likely be the one we are looking for.
+            return self._read_command_finished()
         else:
             # Unknown error code.
             self.log(
+                'In _read_command_finished method: '
                 f'Message code {bytes([full_message[1]])} did not'
                 ' match any known response.', 'ERROR')
 
         # Send the acknowledgement.
         if ack is not None:
-            self.log(f'Sent ack: {binascii.hexlify(ack)}', 'DEBUG')
+            self.log(
+                'In _read_command_finished method: '
+                f'Sent ack: {binascii.hexlify(ack)}', 'DEBUG')
             self.com.write(ack)
             return True
         else:
@@ -354,6 +364,7 @@ class PABotBaseController:
         hold_ticks = message[1] * 10
 
         self.log(
+            'In write method: '
             f'Translating command with character {character} and duration '
             f'{hold_ticks}', 'DEBUG')
 
