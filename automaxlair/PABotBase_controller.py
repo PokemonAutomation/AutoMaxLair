@@ -259,7 +259,6 @@ class PABotBaseController:
         # Finally, assmble and return the complete message.
         self.log(
             f'Received message: {binascii.hexlify(full_message)}', 'DEBUG')
-        
         # Check for errors and attempt to deal with them
         code = full_message[1]
         if code == 0x01:
