@@ -1,5 +1,7 @@
 # AutoMaxLair
 AutoMaxLair is designed for shiny hunting legendary Pokemon in Dynamax Adventures found in Pokemon Sword and Shield: The Crown Tundra. The program runs on a computer connected to the Switch through a microcontroller (outgoing controls to the Switch) and an HDMI capture card (incoming video from the Switch).
+
+We are in the process of moving our setup instructions to a wiki. [Please refer there for detailed setup and troubleshooting instructions](https://github.com/PokemonAutomation/AutoMaxLair/wiki). 
 ## Required Hardware
 * Programmable microcontroller. Supported chips are atmega32u4 (Teensy 2.0), atmega16u2 (Arduino Uno second chip), and at90usb1286 (Teensy 2.0++).
 * USB to serial conversion device. See RemoteControl documentation for details or refer to the section on serial communication in the [Pokemon Automation SwSh Scripts](https://github.com/Mysticial/Pokemon-Automation-SwSh-Arduino-Scripts) user manual.
