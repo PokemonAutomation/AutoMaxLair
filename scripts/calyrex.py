@@ -1,23 +1,18 @@
-"""Script for soft resetting to get 0 Atk IVs on gift Pokemon
-
-This script was developed for the Poipole available in the Max Lair and may not
-work for other gift Pokemon.
+"""Script for soft resetting to get 0 Atk IVs calyrex
 
 Instructions:
-1. Your Pokemon icon must be in its default position in the menu (top row,
-   second column).
-2. Navigate to a box in your PC that has an opening in the default cursor
-   position (top left corner of the box).
-3. Press the '+' button until the IVs of Pokemon in your boxes are shown.
-4. Have your party full.
-5. Save directly in front of the Poipole.
-6. Connect the microcontroller, serial connection, and capture card, then start
+1. Press the '+' button until the IVs of Pokemon in your boxes are shown.
+2. Have your party missing 2 slots.
+3. Save directly in front of calyrex.
+4. Connect the microcontroller, serial connection, and capture card, then start
    the script.
 """
 
 import logging
 import os
 import sys
+import time
+import cv2
 from datetime import datetime
 from typing import Dict, Callable, Optional, TypeVar
 
@@ -56,13 +51,12 @@ pytesseract.pytesseract.tesseract_cmd = config['TESSERACT_PATH']
 ENABLE_DEBUG_LOGS = config['advanced']['ENABLE_DEBUG_LOGS']
 
 # Set the log name
-LOG_NAME = f"auto_gift_pokemon_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
+LOG_NAME = f"calyrex_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 
 
-class AutoGiftPokemonController(
-    automaxlair.switch_controller.SwitchController
-):
-    """Switch controller specific to resetting for 0 Atk gift Pokemon."""
+class CalyrexController(automaxlair.switch_controller.SwitchController):
+    """Switch controller specific to resetting for 0 Atk calyrex."""
+
     def __init__(
         self,
         config_,
@@ -74,10 +68,22 @@ class AutoGiftPokemonController(
         super().__init__(config_, log_name, actions)
 
         self.resets = 0
+        self.checks_for_IV = 0
+        self.current_balls_thrown = 0
+        self.total_balls_thrown = 0
 
         # Rectangles for OCR and display
         self.IV_atk_rect = ((0.78, 0.25), (0.9, 0.30))
-        self.IV_spa_rect = ((0.78, 0.35), (0.9, 0.4))
+        self.battle_symbol_rect = ((0.9, 0.55), (0.99, 0.69))
+        self.text_rect = ((0, 0.70), (1, 1))
+
+        self.misc_icons = {}
+        directory = self.config['pokemon_data_paths']['misc_icon_dir']
+        for filename in os.listdir(directory):
+            if '.png' in filename:
+                self.misc_icons[filename.split('.png')[0]] = cv2.imread(
+                    os.path.join(directory, filename)
+                )
 
     def get_frame(
         self,
@@ -89,7 +95,9 @@ class AutoGiftPokemonController(
         # Get the base image from the base class method.
         img = super().get_frame(resize=resize)
         if rectangle_set is not None:
-            self.outline_region(img, self.IV_atk_rect, (0, 255, 0))
+            self.outline_region(img, self.IV_atk_rect, (255, 0, 0))
+            self.outline_region(img, self.battle_symbol_rect, (0, 255, 0))
+            self.outline_region(img, self.text_rect, (0, 0, 255))
 
         return img
 
@@ -101,6 +109,9 @@ class AutoGiftPokemonController(
         # Construct the dictionary that will be displayed by the base method.
         for key, value in {
             'Resets': self.resets,
+            'Checks for IV': self.checks_for_IV,
+            'Current balls thrown': self.current_balls_thrown,
+            'Total balls thrown': self.total_balls_thrown,
         }.items():
             self.info[key] = value
 
@@ -123,21 +134,89 @@ def initialize(ctrlr) -> None:
 
 def loop(ctrlr) -> None:
     """Main sequence that is repeated once per cycle."""
-    # Take the gift Pokemon and navigate to its IV summary.
-    ctrlr.push_buttons(
-        (b'b', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1),
-        (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1),
-        (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1), (b'a', 1),
-        (b'x', 1.5), (b'>', 0.5), (b'a', 2),
-        (b'r', 3 + VIDEO_EXTRA_DELAY))
+    while(True):
+        img = ctrlr.get_frame()
+        fight_menu_image = ctrlr.get_image_slice(img, ctrlr.battle_symbol_rect)
+        fight_match = ctrlr.match_template(
+            fight_menu_image, ctrlr.misc_icons['fight'])[0]
+        if fight_match >= 0.85:
+            ctrlr.log(
+                'Detected "Fight" symbol with match value of '
+                f'{fight_match:.3f}.', 'DEBUG')
+            break
+        else:
+            ctrlr.push_button(b'a', 2)
 
+    start_time = time.time()
+    while(True):
+        img = ctrlr.get_frame()
+        fight_menu_image = ctrlr.get_image_slice(img, ctrlr.battle_symbol_rect)
+        fight_match = ctrlr.match_template(
+            fight_menu_image, ctrlr.misc_icons['fight'])[0]
+        if fight_match >= 0.85:
+            ctrlr.log(
+                'Detected "Fight" symbol with match value of '
+                f'{fight_match:.3f}.', 'DEBUG')
+
+            # Throw a ball and then reset the timer
+            ctrlr.log('Throw a ball.')
+            ctrlr.current_balls_thrown += 1
+            ctrlr.total_balls_thrown += 1
+
+            ctrlr.push_buttons(
+                (b'x', 1), (b'a', 1)
+            )
+            start_time = time.time()
+        elif 'avez attrapé' in ctrlr.read_text(img, ctrlr.text_rect):
+            # pokemon was caught, now check it's IV
+            break
+        elif ('est K.O.' in ctrlr.read_text(img, ctrlr.text_rect)) or (time.time() - start_time > 30):
+            # if more than 30s passed, consider you need to reset (program locked itself, your pokemon died, etc)
+            ctrlr.resets += 1
+
+            ctrlr.log(f'Program stall for 30s. Moving to reset {ctrlr.resets}.')
+            ctrlr.current_balls_thrown = 0
+            ctrlr.push_buttons(
+                (b'h', 3), (b'x', 1), (b'a', 3), (b'a', 1), (b'a', 20), (b'a', 4)
+            )
+            return 'loop'
+
+    for __ in range(45):
+        ctrlr.push_button(b'a', 1)
+
+    ctrlr.log('Splitting calyrex and spectrier.')
+    ctrlr.push_buttons(
+        (b'x', 1.5), (b'>', 0.5), (b'>', 0.5),
+        (b'a', 2), (b'<', 0.5), (b'^', 0.5),
+        (b'a', 2), (b'a', 2), (b'^', 2),
+        (b'a', 2), (b'a', 2))
+
+    for __ in range(10):
+        ctrlr.push_button(b'b', 1)
+
+    ctrlr.log('Checkin stats.')
+    ctrlr.push_buttons(
+        (b'x', 2), (b'<', 0.5), (b'a', 2),
+        (b'r', 3), (b'<', 1), (b'^', 1),
+        (b'^', 1 + VIDEO_EXTRA_DELAY))
     # Check the Atk IV and quit if it's 0 ("No good")
     IV_text = ctrlr.read_text(ctrlr.get_frame(), ctrlr.IV_atk_rect)
-    if 'nogood' in IV_text.lower().replace(' ', ''):
+    if 'pastop' in IV_text.lower().replace(' ', ''):
         ctrlr.log('********** Found 0 Atk target! **********')
         return None
-    ctrlr.resets += 1
-    ctrlr.log(f'IV text detected as {IV_text}. Moving to reset {ctrlr.resets}')
+    ctrlr.checks_for_IV += 1
+    ctrlr.current_balls_thrown = 0
+    ctrlr.log(f'IV text detected as {IV_text}. It was checked {ctrlr.checks_for_IV} times.')
+
+    ctrlr.push_button(b'^', 1 + VIDEO_EXTRA_DELAY)
+    # Check the Atk IV and quit if it's 0 ("No good")
+    IV_text = ctrlr.read_text(ctrlr.get_frame(), ctrlr.IV_atk_rect)
+    if 'pastop' in IV_text.lower().replace(' ', ''):
+        ctrlr.log('********** Found 0 Atk target! **********')
+        return None
+    ctrlr.checks_for_IV += 1
+    ctrlr.current_balls_thrown = 0
+    ctrlr.log(f'IV text detected as {IV_text}. It was checked {ctrlr.checks_for_IV} times.')
 
     # Otherwise, reset the game and try again.
     ctrlr.push_buttons(
@@ -151,7 +230,7 @@ def main(log_name: str) -> None:
 
     actions = {'initialize': initialize, 'loop': loop}
 
-    controller = AutoGiftPokemonController(config, log_name, actions)
+    controller = CalyrexController(config, log_name, actions)
 
     controller.event_loop()
 
