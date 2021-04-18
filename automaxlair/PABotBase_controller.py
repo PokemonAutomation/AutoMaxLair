@@ -284,7 +284,8 @@ class PABotBaseController:
             and full_message[2:4] == b'\x01\x00'
         ):
             # Random error that can be ignored, therefore re-call this method.
-            self.log('In _read method: Ignored PABB_MSG_ERROR_WARNING.')
+            self.log(
+                'In _read method: Ignored PABB_MSG_ERROR_WARNING.', 'DEBUG')
             return self._read()
         else:
             return full_message
