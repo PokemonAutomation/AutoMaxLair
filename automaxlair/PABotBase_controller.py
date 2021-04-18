@@ -10,6 +10,7 @@ import logging
 import logging.handlers
 import time
 import os
+from collections import deque
 from os.path import dirname, abspath
 
 import serial
@@ -133,6 +134,7 @@ class PABotBaseController:
         self.timeout = timeout
         self.debug_mode = debug_mode or FORCE_DEBUG_MODE
         self.last_command = None
+        self.message_history = deque(maxlen=10)
         # Initialize some dummy attributes that are needed because this object
         # pretends to be a serial.Serial object.
         self.port = port
@@ -221,6 +223,8 @@ class PABotBaseController:
         full_message = self._add_checksum(length_byte + message)
         # Send the message and get the response.
         self.com.write(full_message)
+        self.message_history.append(
+            'TX: ' + str(binascii.hexlify(full_message)))
         self.last_sent_message = message
         self.log(f'Sent message: {binascii.hexlify(full_message)}', 'DEBUG')
         # Await the acknowledgement of the sent message and return it.
@@ -237,7 +241,8 @@ class PABotBaseController:
             if time.time() - start_time > AWAIT_TIMEOUT:
                 self.log(
                     'In _read method: Timed out after awating a message for '
-                    f'{AWAIT_TIMEOUT} seconds.', 'ERROR'
+                    f'{AWAIT_TIMEOUT} seconds. The last sent message was '
+                    f'{binascii.hexlify(self.last_sent_message)}.', 'ERROR'
                 )
                 return b''
             time.sleep(0.01)
@@ -248,6 +253,8 @@ class PABotBaseController:
 
         # Then, read bytes to fill the message length.
         full_message = length_byte + self.com.read(response_length - 1)
+        self.message_history.append(
+            'RX: ' + str(binascii.hexlify(full_message)))
         if len(full_message) < response_length:
             # Log a warning of a timeout occurring.
             self.log(
@@ -291,6 +298,10 @@ class PABotBaseController:
         full_message = self._read()
         if len(full_message) == 0:
             # Error encountered.
+            self.log(
+                'In _read_command_finished method: _read method railed to '
+                'receive a message or any kind.', 'ERROR'
+            )
             return False
 
         # Prepare an acknowledgement of the received message to return to the
@@ -376,7 +387,13 @@ class PABotBaseController:
         # filled in already.
         translated_command = button_map[character](self.seqnum, hold_ticks)
         # Finally, send the translated command to the microcontroller.
-        self._write(translated_command)
+        ack = self._write(translated_command)
+        code = ack[1]
+        if code != 0x10:
+            self.log(
+                f'Received message with code {binascii.hexlify(code)} instead '
+                'of expected 0x10.', 'WARNING'
+            )
 
     def read(self, length=2):
         """Wrapper for serial.Serial.read. Always returns two bytes since that
@@ -392,6 +409,10 @@ class PABotBaseController:
         if self._read_command_finished():
             return self.last_command
         else:
+            self.log(
+                'Unrecoverable state encountered. Recent message history: '
+                f'{self.message_history}', 'ERROR'
+            )
             return b'er'  # Throws an error
 
 
