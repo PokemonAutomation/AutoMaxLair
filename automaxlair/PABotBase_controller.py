@@ -299,8 +299,8 @@ class PABotBaseController:
         if len(full_message) == 0:
             # Error encountered.
             self.log(
-                'In _read_command_finished method: _read method railed to '
-                'receive a message or any kind.', 'ERROR'
+                'In _read_command_finished method: _read method failed to '
+                'receive a message of any kind.', 'ERROR'
             )
             return False
 
@@ -314,7 +314,7 @@ class PABotBaseController:
             ack = self._add_checksum(
                 b'\xf5' + PABB_MSG_ACK_REQUEST + full_message[2:6]
             )
-        elif code == 0x10:
+        elif code == 0x01:
             # An error was likely caught in the _read method, causing the
             # button command to be resent. Try to read the next message which
             # will likely be the one we are looking for.
