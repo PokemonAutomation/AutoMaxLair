@@ -11,7 +11,7 @@ Thanks to [PokéSprite](https://github.com/msikma/pokesprite) for hosting the sp
 AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It has been supported by code contributions from [pifopi](https://github.com/pifopi) and [denvoros](https://github.com/denvoros), as well as advice and testing by multiple users in the [Pokemon Automation Discord](https://discord.gg/PokemonAutomation) and extra code contributions from users Miguel90 and fawress.
 
 ## Supporting us
-All the support we ask for is that you share our work with your friends if you have enjoyed using it. In the spirit of transparency, we also ask that you disclose the use of our tool (or at least indicating you used automation) when sharing photos of Pokemon caught using it.
+All the support we ask for is that you share our work with your friends if you have enjoyed using it. Further, in the spirit of transparency, we would prefer that you disclose the use of our tool (or at least indicating you used automation) when sharing photos of Pokemon caught using it. If that is not an option, we ask that you do avoid explicitly or implicltly claiming that these Pokemon were caught manually.
 
 ## Changelog
 ### v0.2-beta
