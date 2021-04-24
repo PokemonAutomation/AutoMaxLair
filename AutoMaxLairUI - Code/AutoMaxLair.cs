@@ -186,7 +186,20 @@ namespace AutoDA
                 boxPABotBaseHex.Checked = t["advanced"]["PABOTBASE_HEX"];
                 this.toolTip.SetToolTip(this.boxPABotBaseHex, t["advanced"]["PABOTBASE_HEX"].Comment);
 
-                SetConfigValue(boxBossIndex, t["advanced"]["BOSS_INDEX"], t["advanced"]["BOSS_INDEX"].Comment);
+                string bossIndexAsText = "";
+                if (t["advanced"]["BOSS_INDEX"] == 0)
+                {
+                    bossIndexAsText = "Top";
+                }
+                else if (t["advanced"]["BOSS_INDEX"] == 1)
+                {
+                    bossIndexAsText = "Middle";
+                }
+                else if (t["advanced"]["BOSS_INDEX"] == 2)
+                {
+                    bossIndexAsText = "Bottom";
+                }
+                SetConfigValue(boxBossIndex, bossIndexAsText, t["advanced"]["BOSS_INDEX"].Comment);
                 SetConfigValue(boxDyniteOre, t["advanced"]["DYNITE_ORE"], t["advanced"]["DYNITE_ORE"].Comment);
                 SetConfigValue(boxConsecutiveResets, t["advanced"]["CONSECUTIVE_RESETS"], t["advanced"]["CONSECUTIVE_RESETS"].Comment);
 
