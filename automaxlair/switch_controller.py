@@ -79,13 +79,14 @@ class SwitchController:
         while not self.com.is_open:
             try:
                 self.com.open()
-            except serial.SerialException as e:
+            except serial.serialutil.SerialException as e:
                 if timeout_fails > 10:
                     # if the serial device won't open after 10 times, we might
                     # as well raise and exception and abort
                     self.log(
-                        "Could not connect to the serial device. "
-                        "Check your device and port number.", "ERROR")
+                        'Could not connect to the serial device '
+                        f'"{config["COM_PORT"]}".'
+                        'Check your device and port number.', 'ERROR')
                     raise e
                 timeout_fails += 1
                 pass

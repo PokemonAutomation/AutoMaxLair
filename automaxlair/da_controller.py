@@ -853,8 +853,8 @@ class DAController(SwitchController):
                 ((0, 0), (1, 1)), (0, 0, 0), (180, 255, 50), 250, img, True
             ) or cv2.meanStdDev(cv2.split(img)[2])[1] > 10:
                 return False
-            # Delay and get the next frame 200 ms later.
-            self.push_button(None, 0.2)
+            # Delay and get the next frame 500 ms later.
+            self.push_button(None, 0.5)
             # Important! Force a new frame to be fetched the next loop.
             img = None
 
