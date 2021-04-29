@@ -130,6 +130,7 @@ MAXIMUM_ORE_COST = 10
 # you're running into problems and need to report to the developers what's happening.
 ENABLE_DEBUG_LOGS = true
 
+
 # ==========
 # === POKEMON STAT FINDING SETTINGS
 # The following settings are to enable the program to check for specific stats
@@ -143,7 +144,6 @@ CHECK_ATTACK_STAT = false
 # Enables checking the Speed stat
 CHECK_SPEED_STAT = false
 
-
 # === ATTACK_STATS ===
 # Enter the values for Attack stats you want to search for.
 # These are divided up by how the nature affects the stats.
@@ -153,6 +153,7 @@ CHECK_SPEED_STAT = false
 positive = [160, 161]
 neutral = [146, 147]
 negative = [131, 132]
+
 # === SPEED_STATS ===
 # Enter the values for Speed stats you want to search for. 
 # These are divided up by how the nature affects the stats.
@@ -162,6 +163,8 @@ negative = [131, 132]
 positive = [99, 100]
 neutral = [90, 91]
 negative = [81, 82]
+
+
 # ==========
 # === DISCORD SETTINGS
 # Fill out these values to enable Discord notifications to webhooks
@@ -241,6 +244,7 @@ misc_icon_dir = "data/misc_icons/"
 
 # 
 boss_colors = "data/boss_colors.json"
+
 
 # ==========
 # === OTHER LANGUAGE SETTINGS

@@ -18,7 +18,6 @@ high_H_name = 'High H'
 high_S_name = 'High S'
 high_V_name = 'High V'
 
-
 def on_low_H_thresh_trackbar(val):
     global low_H
     global high_H

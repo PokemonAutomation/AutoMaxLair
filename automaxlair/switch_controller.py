@@ -527,7 +527,6 @@ class SwitchController:
             embed.set_image(url="attachment://image.png")
         else:
             my_file = None
-
         # Open the image to be sent.
         try:
             webhook.send(send_str, embed=embed, file=my_file)
