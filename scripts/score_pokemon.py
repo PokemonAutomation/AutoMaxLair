@@ -30,7 +30,7 @@ from automaxlair import matchup_scoring  # noqa: E402
 # Config values for the log and multiprocessing.
 LOG_NAME = 'packagePokemon'
 ENABLE_DEBUG_LOGS = True
-MAX_NUM_THREADS = mp.cpu_count() - 1
+MAX_NUM_THREADS = mp.cpu_count()
 
 
 def compute_scores(attacker):
