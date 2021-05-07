@@ -30,7 +30,7 @@ from automaxlair import matchup_scoring  # noqa: E402
 # Config values for the log and multiprocessing.
 LOG_NAME = 'packagePokemon'
 ENABLE_DEBUG_LOGS = True
-MAX_NUM_THREADS = mp.cpu_count() - 1
+MAX_NUM_THREADS = mp.cpu_count()
 
 
 def compute_scores(attacker):
@@ -60,7 +60,7 @@ def compute_scores(attacker):
     for defender_id in tuple(boss_pokemon):
         defender = boss_pokemon[defender_id]
         score = matchup_scoring.evaluate_matchup(
-            attacker, defender, rental_pokemon
+            attacker, defender, rental_pokemon.values()
         )
         boss_matchups[defender_id] = score
         logger.debug(
@@ -73,7 +73,7 @@ def compute_scores(attacker):
     for defender_id in tuple(rental_pokemon):
         defender = rental_pokemon[defender_id]
         score = matchup_scoring.evaluate_matchup(
-            attacker, defender, rental_pokemon
+            attacker, defender, rental_pokemon.values()
         )
         rental_matchups[defender_id] = score
         # We sum the attacker's score which will later be normalized.
