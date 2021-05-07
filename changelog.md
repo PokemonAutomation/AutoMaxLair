@@ -63,3 +63,6 @@
 * Automatically detect ball numbers instead of relying on users to input them in the config file
 * Add compatibility for the PABotBase hex file in addition to the custom RemoteControl hex
 * Detect weather and terrain
+## v1.0
+* Link PABotBase hex files
+* Use the PABotBase hex by default
