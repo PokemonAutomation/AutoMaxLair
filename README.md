@@ -5,7 +5,7 @@ We have migrated our setup and operation instructions to a wiki. [Please refer t
 
 ## Acknowledgements
 
-Thanks to [PokéSprite](https://github.com/msikma/pokesprite) for hosting the sprites of the Pokémon and balls and [PokéAPI](https://pokeapi.co/) for hosting data on Pokémon, abilities, and moves. We also thank [LUFA](http://www.lufa-lib.org/) for their AVR framework with which the microcontroller code would not work without. Finally, we thank [brianuuu](https://github.com/brianuuu) for the [AutoController](https://github.com/brianuuu/AutoController_swsh) program family on which our microcontroller code is based on.
+Thanks to [PokéSprite](https://github.com/msikma/pokesprite) for hosting the sprites of the Pokémon and balls and [PokéAPI](https://pokeapi.co/) for hosting data on Pokémon, abilities, and moves. We also thank [LUFA](http://www.lufa-lib.org/) for their AVR framework with which the microcontroller code would not work without. Finally, we thank [brianuuu](https://github.com/brianuuu) for the [AutoController](https://github.com/brianuuu/AutoController_swsh) program family on which our legacy microcontroller code is based.
 
 ## Contributors
 AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It has been supported by code contributions from [pifopi](https://github.com/pifopi) and [denvoros](https://github.com/denvoros), as well as advice and testing by multiple users in the [Pokemon Automation Discord](https://discord.gg/PokemonAutomation) and extra code contributions from users Miguel90 and fawress.
