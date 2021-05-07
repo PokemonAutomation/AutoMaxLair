@@ -12,16 +12,3 @@ AutoMaxLair was initially written by [ercdndrs](https://github.com/ercdndrs). It
 
 ## Supporting us
 We do not take donations of any kind for this project. The only support we request is by sharing our work with your friends if you have enjoyed using it. Further, in the spirit of transparency, we would prefer that you disclose the use of our tool (or at least an indication of automation) when sharing photos of Pokemon caught using it. If such a disclosure is not permissible, we ask that you avoid any explicit or implicit claims that such Pokemon were caught manually.
-
-## TODO
-### Major Features
-* Improved move selection
-	*	Stat changes, status, field effects, and current teammates are not currently considered in damage calculations.
-*	Improved selection of Pokemon
-	*	Status of the current Pokemon is not currently measured. This information could better inform decisions on whether to take a new Pokemon.
-### Minor Updates and Bug Fixes
-*	PP use is currently overestimated because the bot deducts PP when the move is selected as opposed to when it is used.
-*	Boss move usage is not fully reflected by their movesets.
-	*	Bosses use their 5th move only when at low HP with boss-dependent frequency and timing.
-*	Items are not chosen intelligently
-*	Improved goal selection (shiny and perfect attack, shiny, etc)
