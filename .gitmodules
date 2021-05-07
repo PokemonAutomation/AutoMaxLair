@@ -4,3 +4,6 @@
 [submodule "data/pokesprite"]
 	path = data/pokesprite
 	url = https://github.com/msikma/pokesprite.git
+[submodule "Packages"]
+	path = Packages
+	url = https://github.com/PokemonAutomation/Packages.git
