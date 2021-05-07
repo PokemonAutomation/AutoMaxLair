@@ -20,7 +20,7 @@
 #   Bosses with multiple formes need to have the forme specified.
 #   This includes the following:
 #       "giratina-altered", "thundurus-incarnate", "tornadus-incarnate", "landorus-incarnate", "zygarde-50"
-BOSS = "dialga"
+BOSS = "suicune"
 
 # === BASE_BALL ===
 # This is the Pokéball that should be used for all Pokémon except for the boss.
@@ -53,7 +53,7 @@ LEGENDARY_BALL = "premier-ball"
 #       It can be used alongside KEEP PATH to find a winning path. Don't forget to update the  
 #       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
 #       It's up to the user to check if the path found was good or not.
-MODE = "STRONG BOSS"
+MODE = "DEFAULT"
 
 # 
 FIND_PATH_WINS = 1
@@ -97,7 +97,7 @@ VIDEO_EXTRA_DELAY = 0.0
 # === PABOTBASE_HEX ==
 # Denote whether your microcontroller is using the PABotBase hex.
 #   If false, RemoteControl_xxxx.hex is assumed
-PABOTBASE_HEX = false
+PABOTBASE_HEX = true
 
 # === BOSS_INDEX ===
 # The position of the boss you're hunting on the menu. 
