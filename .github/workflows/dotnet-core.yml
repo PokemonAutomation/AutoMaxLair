@@ -29,11 +29,15 @@ jobs:
       with:
         name: Auto Max Lair UI
         path: AutoMaxLairUI - Code/bin/Release/netcoreapp3.1/win-x64/publish/AutoMaxLair.exe
+    - name: Zip UI
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        compress-archive "bin/Release/netcoreapp3.1/win-x64/publish/AutoMaxLair.exe" AutoMaxLairUI.zip
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       if: startsWith(github.ref, 'refs/tags/v')
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: AutoMaxLairUI - Code/bin/Release/netcoreapp3.1/win-x64/publish/AutoMaxLair.exe
-        asset_name: Auto Max Lair UI
+        file: AutoMaxLairUI - Code/AutoMaxLairUI.zip
+        asset_name: AutoMaxLairUI.zip
         tag: ${{ github.ref }}
