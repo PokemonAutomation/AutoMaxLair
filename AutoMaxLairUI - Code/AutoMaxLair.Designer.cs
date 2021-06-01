@@ -384,7 +384,8 @@ namespace AutoDA
             "Spanish",
             "French",
             "Korean",
-            "German"});
+            "German",
+            "Italian"});
             this.boxGameLanguage.Location = new System.Drawing.Point(112, 250);
             this.boxGameLanguage.Name = "boxGameLanguage";
             this.boxGameLanguage.Size = new System.Drawing.Size(121, 25);
