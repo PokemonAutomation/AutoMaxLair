@@ -215,7 +215,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -242,7 +242,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -269,7 +269,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -296,7 +296,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -323,7 +323,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -611,7 +611,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -638,7 +638,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "physical",
@@ -665,7 +665,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "physical",
@@ -692,7 +692,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -719,7 +719,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -1007,7 +1007,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -1034,7 +1034,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "physical",
@@ -1061,7 +1061,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -1088,7 +1088,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -1115,7 +1115,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -1393,7 +1393,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -1420,7 +1420,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -1447,7 +1447,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -1474,7 +1474,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -1501,7 +1501,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -1779,7 +1779,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -1806,7 +1806,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -1833,7 +1833,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -1860,7 +1860,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -1887,7 +1887,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "physical",
@@ -2165,7 +2165,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -2192,7 +2192,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -2219,7 +2219,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -2246,7 +2246,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -2273,7 +2273,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "physical",
@@ -2551,7 +2551,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "physical",
@@ -2578,7 +2578,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -2605,7 +2605,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -2632,7 +2632,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -2659,7 +2659,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -2947,7 +2947,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -2974,7 +2974,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -3001,7 +3001,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -3028,7 +3028,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -3055,7 +3055,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -3343,7 +3343,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "physical",
@@ -3370,7 +3370,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -3397,7 +3397,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -3424,7 +3424,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -3451,7 +3451,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "physical",
@@ -3739,7 +3739,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -3766,7 +3766,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -3793,7 +3793,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -3820,7 +3820,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -3847,7 +3847,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -4135,7 +4135,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -4162,7 +4162,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -4189,7 +4189,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -4216,7 +4216,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "special",
@@ -4243,7 +4243,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -4521,7 +4521,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -4548,7 +4548,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -4575,7 +4575,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -4602,7 +4602,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -4629,7 +4629,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -4907,7 +4907,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -4934,7 +4934,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -4961,7 +4961,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -4988,7 +4988,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "physical",
@@ -5015,7 +5015,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -5303,7 +5303,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "physical",
@@ -5330,7 +5330,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -5357,7 +5357,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -5384,7 +5384,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -5411,7 +5411,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -5689,7 +5689,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -5716,7 +5716,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -5743,7 +5743,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -5770,7 +5770,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "special",
@@ -5797,7 +5797,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -6075,7 +6075,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -6102,7 +6102,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -6129,7 +6129,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -6156,7 +6156,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -6183,7 +6183,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -6461,7 +6461,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -6488,7 +6488,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -6515,7 +6515,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -6542,7 +6542,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -6569,7 +6569,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -6857,7 +6857,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -6884,7 +6884,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -6911,7 +6911,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "special",
@@ -6938,7 +6938,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -6965,7 +6965,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -7253,7 +7253,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -7280,7 +7280,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -7307,7 +7307,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -7334,7 +7334,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -7361,7 +7361,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "physical",
@@ -7649,7 +7649,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -7676,7 +7676,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -7703,7 +7703,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -7730,7 +7730,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -7757,7 +7757,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -8045,7 +8045,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -8072,7 +8072,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -8099,7 +8099,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "special",
@@ -8126,7 +8126,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -8153,7 +8153,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "physical",
@@ -8431,7 +8431,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -8458,7 +8458,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -8485,7 +8485,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -8512,7 +8512,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -8539,7 +8539,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -8816,7 +8816,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -8843,7 +8843,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -8870,7 +8870,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -8897,7 +8897,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -8924,7 +8924,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -9211,7 +9211,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -9238,7 +9238,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -9265,7 +9265,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -9292,7 +9292,7 @@
                     "it": "Dynacorrosione",
                     "en": "Max Ooze",
                     "ja": "\u30c0\u30a4\u30a2\u30b7\u30c3\u30c9",
-                    "zh-Hans": "\u6975\u5de8\u9178\u6bd2"
+                    "zh-Hans": "\u6781\u5de8\u9178\u6bd2"
                 },
                 "type_id": "poison",
                 "category": "special",
@@ -9319,7 +9319,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -9606,7 +9606,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -9633,7 +9633,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -9660,7 +9660,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -9687,7 +9687,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -9714,7 +9714,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -10001,7 +10001,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -10028,7 +10028,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -10055,7 +10055,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "physical",
@@ -10082,7 +10082,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -10109,7 +10109,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "physical",
@@ -10396,7 +10396,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -10423,7 +10423,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "physical",
@@ -10450,7 +10450,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -10477,7 +10477,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "special",
@@ -10504,7 +10504,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -10791,7 +10791,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -10818,7 +10818,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -10845,7 +10845,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "special",
@@ -10872,7 +10872,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -10899,7 +10899,7 @@
                     "it": "Dynagelo",
                     "en": "Max Hailstorm",
                     "ja": "\u30c0\u30a4\u30a2\u30a4\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5bd2\u51b0"
+                    "zh-Hans": "\u6781\u5de8\u5bd2\u51b0"
                 },
                 "type_id": "ice",
                 "category": "special",
@@ -11176,7 +11176,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -11203,7 +11203,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -11230,7 +11230,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -11257,7 +11257,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -11284,7 +11284,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -11571,7 +11571,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -11598,7 +11598,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -11625,7 +11625,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -11652,7 +11652,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -11679,7 +11679,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "special",
@@ -11966,7 +11966,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -11993,7 +11993,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -12020,7 +12020,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "special",
@@ -12047,7 +12047,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -12074,7 +12074,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -12361,7 +12361,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -12388,7 +12388,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -12415,7 +12415,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "physical",
@@ -12442,7 +12442,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -12469,7 +12469,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -12756,7 +12756,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -12783,7 +12783,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "physical",
@@ -12810,7 +12810,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -12837,7 +12837,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -12864,7 +12864,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -13151,7 +13151,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "physical",
@@ -13178,7 +13178,7 @@
                     "it": "Dynainsetto",
                     "en": "Max Flutterby",
                     "ja": "\u30c0\u30a4\u30ef\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u87f2\u8831"
+                    "zh-Hans": "\u6781\u5de8\u866b\u86ca"
                 },
                 "type_id": "bug",
                 "category": "physical",
@@ -13205,7 +13205,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -13232,7 +13232,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -13259,7 +13259,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -13546,7 +13546,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -13573,7 +13573,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -13600,7 +13600,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -13627,7 +13627,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -13654,7 +13654,7 @@
                     "it": "Dynaflusso",
                     "en": "Max Geyser",
                     "ja": "\u30c0\u30a4\u30b9\u30c8\u30ea\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u6c34\u6d41"
+                    "zh-Hans": "\u6781\u5de8\u6c34\u6d41"
                 },
                 "type_id": "water",
                 "category": "special",
@@ -13941,7 +13941,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -13968,7 +13968,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -13995,7 +13995,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -14022,7 +14022,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -14049,7 +14049,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -14336,7 +14336,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "special",
@@ -14363,7 +14363,7 @@
                     "it": "Dynafata",
                     "en": "Max Starfall",
                     "ja": "\u30c0\u30a4\u30d5\u30a7\u30a2\u30ea\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u5996\u7cbe"
+                    "zh-Hans": "\u6781\u5de8\u5996\u7cbe"
                 },
                 "type_id": "fairy",
                 "category": "special",
@@ -14390,7 +14390,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -14417,7 +14417,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -14444,7 +14444,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "special",
@@ -14731,7 +14731,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -14758,7 +14758,7 @@
                     "it": "Dynacorrosione",
                     "en": "Max Ooze",
                     "ja": "\u30c0\u30a4\u30a2\u30b7\u30c3\u30c9",
-                    "zh-Hans": "\u6975\u5de8\u9178\u6bd2"
+                    "zh-Hans": "\u6781\u5de8\u9178\u6bd2"
                 },
                 "type_id": "poison",
                 "category": "special",
@@ -14785,7 +14785,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -14812,7 +14812,7 @@
                     "it": "Dynacorrosione",
                     "en": "Max Ooze",
                     "ja": "\u30c0\u30a4\u30a2\u30b7\u30c3\u30c9",
-                    "zh-Hans": "\u6975\u5de8\u9178\u6bd2"
+                    "zh-Hans": "\u6781\u5de8\u9178\u6bd2"
                 },
                 "type_id": "poison",
                 "category": "special",
@@ -14839,7 +14839,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -15126,7 +15126,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "physical",
@@ -15153,7 +15153,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -15180,7 +15180,7 @@
                     "it": "Dynainsetto",
                     "en": "Max Flutterby",
                     "ja": "\u30c0\u30a4\u30ef\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u87f2\u8831"
+                    "zh-Hans": "\u6781\u5de8\u866b\u86ca"
                 },
                 "type_id": "bug",
                 "category": "physical",
@@ -15207,7 +15207,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "physical",
@@ -15234,7 +15234,7 @@
                     "it": "Dynainsetto",
                     "en": "Max Flutterby",
                     "ja": "\u30c0\u30a4\u30ef\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u87f2\u8831"
+                    "zh-Hans": "\u6781\u5de8\u866b\u86ca"
                 },
                 "type_id": "bug",
                 "category": "physical",
@@ -15521,7 +15521,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "physical",
@@ -15548,7 +15548,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "special",
@@ -15575,7 +15575,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -15602,7 +15602,7 @@
                     "it": "Dynainsetto",
                     "en": "Max Flutterby",
                     "ja": "\u30c0\u30a4\u30ef\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u87f2\u8831"
+                    "zh-Hans": "\u6781\u5de8\u866b\u86ca"
                 },
                 "type_id": "bug",
                 "category": "physical",
@@ -15629,7 +15629,7 @@
                     "it": "Dynainsetto",
                     "en": "Max Flutterby",
                     "ja": "\u30c0\u30a4\u30ef\u30fc\u30e0",
-                    "zh-Hans": "\u6975\u5de8\u87f2\u8831"
+                    "zh-Hans": "\u6781\u5de8\u866b\u86ca"
                 },
                 "type_id": "bug",
                 "category": "special",
@@ -15906,7 +15906,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -15933,7 +15933,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -15960,7 +15960,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -15987,7 +15987,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -16014,7 +16014,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -16301,7 +16301,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -16328,7 +16328,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "physical",
@@ -16355,7 +16355,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -16382,7 +16382,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -16409,7 +16409,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "special",
@@ -16696,7 +16696,7 @@
                     "it": "Dynapugno",
                     "en": "Max Knuckle",
                     "ja": "\u30c0\u30a4\u30ca\u30c3\u30af\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u62f3\u9b25"
+                    "zh-Hans": "\u6781\u5de8\u62f3\u6597"
                 },
                 "type_id": "fighting",
                 "category": "special",
@@ -16723,7 +16723,7 @@
                     "it": "Dynajet",
                     "en": "Max Airstream",
                     "ja": "\u30c0\u30a4\u30b8\u30a7\u30c3\u30c8",
-                    "zh-Hans": "\u6975\u5de8\u98db\u885d"
+                    "zh-Hans": "\u6781\u5de8\u98de\u51b2"
                 },
                 "type_id": "flying",
                 "category": "special",
@@ -16750,7 +16750,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -16777,7 +16777,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -16804,7 +16804,7 @@
                     "it": "Dynaflora",
                     "en": "Max Overgrowth",
                     "ja": "\u30c0\u30a4\u30bd\u30a6\u30b2\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u8349\u539f"
+                    "zh-Hans": "\u6781\u5de8\u8349\u539f"
                 },
                 "type_id": "grass",
                 "category": "physical",
@@ -17091,7 +17091,7 @@
                     "it": "Dynadragone",
                     "en": "Max Wyrmwind",
                     "ja": "\u30c0\u30a4\u30c9\u30e9\u30b0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u9f8d\u9a0e"
+                    "zh-Hans": "\u6781\u5de8\u9f99\u9a91"
                 },
                 "type_id": "dragon",
                 "category": "physical",
@@ -17118,7 +17118,7 @@
                     "it": "Dynasisma",
                     "en": "Max Quake",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30b9",
-                    "zh-Hans": "\u6975\u5de8\u5927\u5730"
+                    "zh-Hans": "\u6781\u5de8\u5927\u5730"
                 },
                 "type_id": "ground",
                 "category": "physical",
@@ -17145,7 +17145,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -17172,7 +17172,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -17199,7 +17199,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -17476,7 +17476,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -17503,7 +17503,7 @@
                     "it": "Dynasaetta",
                     "en": "Max Lightning",
                     "ja": "\u30c0\u30a4\u30b5\u30f3\u30c0\u30fc",
-                    "zh-Hans": "\u6975\u5de8\u9583\u96fb"
+                    "zh-Hans": "\u6781\u5de8\u95ea\u7535"
                 },
                 "type_id": "electric",
                 "category": "special",
@@ -17530,7 +17530,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "special",
@@ -17557,7 +17557,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -17584,7 +17584,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "special",
@@ -17871,7 +17871,7 @@
                     "it": "Dynamacigno",
                     "en": "Max Rockfall",
                     "ja": "\u30c0\u30a4\u30ed\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u5ca9\u77f3"
+                    "zh-Hans": "\u6781\u5de8\u5ca9\u77f3"
                 },
                 "type_id": "rock",
                 "category": "physical",
@@ -17898,7 +17898,7 @@
                     "it": "Dynattacco",
                     "en": "Max Strike",
                     "ja": "\u30c0\u30a4\u30a2\u30bf\u30c3\u30af",
-                    "zh-Hans": "\u6975\u5de8\u653b\u64ca"
+                    "zh-Hans": "\u6781\u5de8\u653b\u51fb"
                 },
                 "type_id": "normal",
                 "category": "physical",
@@ -17925,7 +17925,7 @@
                     "it": "Dynatenebre",
                     "en": "Max Darkness",
                     "ja": "\u30c0\u30a4\u30a2\u30fc\u30af",
-                    "zh-Hans": "\u6975\u5de8\u60e1\u9738"
+                    "zh-Hans": "\u6781\u5de8\u6076\u9738"
                 },
                 "type_id": "dark",
                 "category": "physical",
@@ -17952,7 +17952,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -17979,7 +17979,7 @@
                     "it": "Dynametallo",
                     "en": "Max Steelspike",
                     "ja": "\u30c0\u30a4\u30b9\u30c1\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u92fc\u9435"
+                    "zh-Hans": "\u6781\u5de8\u94a2\u94c1"
                 },
                 "type_id": "steel",
                 "category": "physical",
@@ -18266,7 +18266,7 @@
                     "it": "Dynavuoto",
                     "en": "Max Phantasm",
                     "ja": "\u30c0\u30a4\u30db\u30ed\u30a6",
-                    "zh-Hans": "\u6975\u5de8\u5e7d\u9b42"
+                    "zh-Hans": "\u6781\u5de8\u5e7d\u9b42"
                 },
                 "type_id": "ghost",
                 "category": "physical",
@@ -18293,7 +18293,7 @@
                     "it": "Dynabarriera",
                     "en": "Max Guard",
                     "ja": "\u30c0\u30a4\u30a6\u30a9\u30fc\u30eb",
-                    "zh-Hans": "\u6975\u5de8\u9632\u58c1"
+                    "zh-Hans": "\u6781\u5de8\u9632\u58c1"
                 },
                 "type_id": "normal",
                 "category": "status",
@@ -18320,7 +18320,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
@@ -18347,7 +18347,7 @@
                     "it": "Dynapsiche",
                     "en": "Max Mindstorm",
                     "ja": "\u30c0\u30a4\u30b5\u30a4\u30b3",
-                    "zh-Hans": "\u6975\u5de8\u8d85\u80fd"
+                    "zh-Hans": "\u6781\u5de8\u8d85\u80fd"
                 },
                 "type_id": "psychic",
                 "category": "physical",
@@ -18374,7 +18374,7 @@
                     "it": "Dynafiammata",
                     "en": "Max Flare",
                     "ja": "\u30c0\u30a4\u30d0\u30fc\u30f3",
-                    "zh-Hans": "\u6975\u5de8\u706b\u7206"
+                    "zh-Hans": "\u6781\u5de8\u706b\u7206"
                 },
                 "type_id": "fire",
                 "category": "special",
