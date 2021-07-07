@@ -492,12 +492,16 @@ class DAController(SwitchController):
             # the OCRed text.
             # Note that some OCR strings omit the ability and others omit the
             # types so don't include these identifiers in these cases.
-            string_to_match = pokemon.names[self.lang]
+            # Also note that the name slug will be used if a value is missing
+            # for a certain language.
+            string_to_match = pokemon.names.get(self.lang, pokemon.name_id)
             if ability != '':
-                string_to_match += pokemon.abilities[self.lang]
+                string_to_match += pokemon.abilities.get(
+                    self.lang, pokemon.ability_name_id)
             if types != '':
-                for type_name_dict in pokemon.types:
-                    string_to_match += type_name_dict[self.lang]
+                for i, type_name_dict in enumerate(pokemon.types):
+                    string_to_match += type_name_dict.get(
+                        self.lang, self.type_ids[i])
             if moves != '':
                 for move in pokemon.moves:
                     string_to_match += move.names.get(self.lang, move.name_id)
