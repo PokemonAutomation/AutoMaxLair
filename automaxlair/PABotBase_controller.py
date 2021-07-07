@@ -19,7 +19,7 @@ from crccheck import crc
 FORCE_DEBUG_MODE = False
 
 # Constants used by PABotBase.
-PROTOCOL_VERSION = (2021030200, 2021032200)  # Must match all but last 2 digits
+PROTOCOL_VERSION = (2021030200, 2021032200, 2021052600)  # Must match all but last 2 digits
 PABB_MSG_ERROR_WARNING = b'\x07'
 PABB_MSG_ACK_REQUEST = b'\x11'
 PABB_MSG_SEQNUM_RESET = b'\x40'

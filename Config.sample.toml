@@ -551,3 +551,68 @@ TERRAIN_MISTY = "たちこめた"
 
 # Sentence used to detect that the terrain is now psychic.
 TERRAIN_PSYCHIC = "ふしぎなかんじ"
+
+#
+[Italian]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "ita"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "it"
+
+# Sentence used to detect that the bot met the scientist.
+# Avete incontrato una Scienziata!
+# A qualcuno interessa sostituire un suo Pokémon?
+
+SCIENTIST = "sostituire"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+# Quale cammino volete prendere?
+PATH = "cammino"
+
+# Sentence used to detect that we lost a live (storm is raging).
+# La tempesta che imperversa in cielo si fa più intensa!
+# La tempesta si fa ancora più intensa!
+# La tempesta è troppo forte
+FAINT = "La tempesta"
+
+# Sentence used to detect the scientist asking us to join a DA.
+# Vuoi partire per un'Avventura Dynamax?
+START_PHRASE = "Vuoi partire"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "La luce solare torna normale!|Smette di piovere!|La tempesta di sabbia cessa!|Smette di grandinare!"
+
+# Sentence used to detect that the weather is now sunny.
+#La luce solare diventa intensa!
+WEATHER_SUNLIGHT = "solare"
+# Sentence used to detect that the weather is now rainy.
+# Inizia a piovere!
+WEATHER_RAIN = "piovere"
+
+# Sentence used to detect that the sandstorm is raging.
+# Inizia una tempesta di sabbia!
+WEATHER_SANDSTORM = "sabbia"
+
+# Sentence used to detect that the hailstorm is raging.
+# Inizia a grandinare!
+WEATHER_HAIL = "grandinare"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "L'elettricità svanisce|L'erba sparisce|La nebbia si dissolve|La strana sensazione nel campo è svanita"
+
+# Sentence used to detect that the terrain is now electrified.
+# Ai piedi dei Pokémon si accumula dell'elettricità.
+TERRAIN_ELECTRIC = "accumula dell'elettricità"
+
+# Sentence used to detect that the terrain is now grassy.
+# Ai piedi dei Pokémon cresce rigogliosa l'erba.
+TERRAIN_GRASSY = "cresce rigogliosa"
+
+# Sentence used to detect that the terrain is now misty.
+# Ai piedi dei Pokémon si addensa la nebbia.
+TERRAIN_MISTY = "addensa la nebbia"
+
+# Sentence used to detect that the terrain is now psychic.
+# Nel campo si avverte una strana sensazione..
+TERRAIN_PSYCHIC = "strana sensazione"
