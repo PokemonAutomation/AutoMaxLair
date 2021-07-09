@@ -501,7 +501,7 @@ class DAController(SwitchController):
             if types != '':
                 for i, type_name_dict in enumerate(pokemon.types):
                     string_to_match += type_name_dict.get(
-                        self.lang, self.type_ids[i])
+                        self.lang, pokemon.type_ids[i])
             if moves != '':
                 for move in pokemon.moves:
                     string_to_match += move.names.get(self.lang, move.name_id)
