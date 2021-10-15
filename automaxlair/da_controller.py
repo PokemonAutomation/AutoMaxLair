@@ -125,7 +125,8 @@ class DAController(SwitchController):
         self.team_HP_rect_7 = ((0.225, 0.518), (0.34, 0.525))
         self.team_HP_rect_8 = ((0.225, 0.606), (0.34, 0.614))
         # Poke ball rectangles.
-        self.ball_num_rect = ((0.915, 0.63), (0.95, 0.68))
+        # Fixed rec location to make sure detect all three number correctly
+        self.ball_num_rect = ((0.910, 0.63), (0.95, 0.68))
         self.ball_sprite_rect = ((0.66, 0.63), (0.675, 0.68))
         # Backpacker item rectangles.
         self.backpacker_blue_rect = ((0.75, 0.2), (0.95, 0.6))
@@ -358,8 +359,9 @@ class DAController(SwitchController):
         for type_id in (
             'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting',
             'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
-            'dragon', 'steel', 'dark', 'fairy'
+            'dragon', 'dark', 'steel', 'fairy'
         ):
+
             result = self.match_template(
                 img_thresholded, self.type_icons[type_id])
             # If the result is a better match than the previous type, store it.
@@ -477,7 +479,7 @@ class DAController(SwitchController):
         # types to make a composite identifying string.
         text = (name + ability + types + moves).replace('\n', '')
 
-        # Then, initialize the matched text variable in case it is somehow not
+        # Then, initialize the matched text variable in if type_id == it is somehow not
         # assigned later.
         matched_text = ''
 
@@ -500,8 +502,47 @@ class DAController(SwitchController):
                     self.lang, pokemon.ability_name_id)
             if types != '':
                 for i, type_name_dict in enumerate(pokemon.types):
-                    string_to_match += type_name_dict.get(
+                    type_id = type_name_dict.get(
                         self.lang, pokemon.type_ids[i])
+                    #changed type showed name for compared
+                    if self.phrases['TESSERACT_LANG_NAME'] == 'ch_tra':
+                        if type_id == 'normal':
+                            type_id = '一般'
+                        if type_id == 'fire':
+                            type_id = '火'
+                        if type_id == 'water':
+                            type_id = '水'
+                        if type_id == 'electric':
+                            type_id = '電'
+                        if type_id == 'grass':
+                            type_id = '草'
+                        if type_id == 'ice':
+                            type_id = '冰'
+                        if type_id == 'fighting':
+                            type_id = '格鬥'
+                        if type_id == 'poison':
+                            type_id = '毒'
+                        if type_id == 'ground':
+                            type_id = '地面'
+                        if type_id == 'flying':
+                            type_id = '飛行'
+                        if type_id == 'psychic':
+                            type_id = '超能力'
+                        if type_id == 'bug':
+                            type_id = '蟲'
+                        if type_id == 'rock':
+                            type_id = '岩石'
+                        if type_id == 'ghost':
+                            type_id = '幽靈'
+                        if type_id == 'dragon':
+                            type_id = '龍'
+                        if type_id == 'dark':
+                            type_id = '鋼'
+                        if type_id == 'steel':
+                            type_id = '惡'
+                        if type_id == 'fairy':
+                            type_id = '妖精'
+                    string_to_match += type_id
             if moves != '':
                 for move in pokemon.moves:
                     string_to_match += move.names.get(self.lang, move.name_id)

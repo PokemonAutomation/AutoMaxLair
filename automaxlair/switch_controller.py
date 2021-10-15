@@ -19,6 +19,8 @@ from datetime import datetime
 from typing import Tuple, TypeVar, Iterable, Optional
 
 import cv2
+#new ocr
+import easyocr
 import pytesseract
 import serial
 import threading
@@ -28,12 +30,31 @@ from .PABotBase_controller import PABotBaseController
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
+"""
+EasyOCR need to run this for initial
 
+latin_lang_list = ['af','az','bs','cs','cy','da','de','en','es','et','fr','ga',\
+                   'hr','hu','id','is','it','ku','la','lt','lv','mi','ms','mt',\
+                   'nl','no','oc','pi','pl','pt','ro','rs_latin','sk','sl','sq',\
+                   'sv','sw','tl','tr','uz','vi']
+arabic_lang_list = ['ar','fa','ug','ur']
+bengali_lang_list = ['bn','as','mni']
+cyrillic_lang_list = ['ru','rs_cyrillic','be','bg','uk','mn','abq','ady','kbd',\
+                      'ava','dar','inh','che','lbe','lez','tab','tjk']
+devanagari_lang_list = ['hi','mr','ne','bh','mai','ang','bho','mah','sck','new',\
+                        'gom','sa','bgc']
+other_lang_list = ['th','ch_sim','ch_tra','ja','ko','ta','te','kn']
+
+checking list for your language:
+https://github.com/JaidedAI/EasyOCR/tree/master/easyocr/character
+
+"""
+#initial must and only run after import once
+reader = easyocr.Reader(['ch_tra'])
 class SwitchController:
     """Generic class for an object that controls a Nintendo Switch through
     incoming video and an outgoing serial connection.
     """
-
     def __init__(self, config, log_name: str, actions):
         # Zero the start time and fetch the logger.
         self.window_name = 'SwitchController Output'
@@ -48,7 +69,6 @@ class SwitchController:
         self.tesseract_language = self.phrases['TESSERACT_LANG_NAME']
         self.lang = self.phrases['DATA_LANG_NAME']
         self.enable_debug_logs = config['advanced']['ENABLE_DEBUG_LOGS']
-
         self.webhook_id = config['discord']['WEBHOOK_ID']
         self.webhook_token = config['discord']['WEBHOOK_TOKEN']
         self.user_id = config['discord']['USER_ID']
@@ -239,9 +259,12 @@ class SwitchController:
         # We release the lock so that the display thread can continue while
         # Tesseract processes the image.
         self.lock.release()
-        text = pytesseract.image_to_string(
-            img, lang=self.tesseract_language, config=segmentation_mode
-        ).replace('\n', '').strip()
+        #new ocr detect return list
+        textlist = reader.readtext(img, detail = 0)
+        text = ''.join(textlist).replace('\n', '').strip()
+        # text = pytesseract.image_to_string(
+            # img, lang=self.tesseract_language, config=segmentation_mode
+        # ).replace('\n', '').strip()
         if text:
             self.log(f'Read text from screen: {text}', 'DEBUG')
         self.lock.acquire()
