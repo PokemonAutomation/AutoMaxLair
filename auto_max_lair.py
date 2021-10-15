@@ -59,6 +59,7 @@ def initialize(ctrlr) -> str:
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
     ctrlr.push_buttons(
+
         (b'a', 2), (b'h', 2.0), (b'h', 2.0), (b'b', 1.5), (b'b', 1.5)
     )
 
@@ -416,6 +417,11 @@ def catch(ctrlr) -> str:
         )
         ctrlr.log(f'HP of current team: {[x.HP for x in team]}.', 'DEBUG')
         for potential_team in potential_teams:
+            #Changed ditto name from deteced language to english
+            if potential_team[0].name_id == '百變怪':
+                potential_team[0].name_id = 'ditto'
+            if run.boss_pokemon[run.boss].name_id == '百變怪':
+                run.potential_boss_pokemon.values().name_id = 'ditto'
             score = matchup_scoring.get_weighted_score(
                 matchup_scoring.evaluate_average_matchup(
                     potential_team[0], run.potential_boss_pokemon.values(),

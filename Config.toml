@@ -1,0 +1,663 @@
+# ========== Configuration file for AutoMaxLair ==========
+# What follows is the set of configurations for the AutoMaxLair program.
+# Please be sure to read carefully the descriptions of the settings and
+# adjust them as necessary for your circumstances.
+# 
+# PLEASE NOTE that you will need to review the settings after each run.
+# 
+# TOML also has specific formatting (useful so that the program runs properly!)
+# so please be sure to not add or remove decimal points or quotes
+# and do not modify the style in this file. Also, `true` and `false`
+# should ALWAYS be lower case!
+# ========================================================
+
+# === BOSS ===
+# This is the boss that you are resetting for. This is a string for the name.
+# NOTE: this allows the program to properly select Pokémon and Moves throughout the run.
+# IMPORTANT: Use entirely lower case letters and replace all spaces with hyphens.
+# e.g. "moltres" "kyurem" "tapu-koko" "tapu-lele"
+# The boss name also needs to be its English name due to internal storage.
+# Bosses with multiple formes need to have the forme specified.
+# This includes the following:
+# "giratina-altered", "thundurus-incarnate", "tornadus-incarnate", "landorus-incarnate", "zygarde-50"
+BOSS = "kyurem"
+
+# === BASE_BALL ===
+# This is the Pokéball that should be used for all Pokémon except for the boss.
+# This is the id of the ball to use (in English)
+BASE_BALL = "poke-ball"
+
+# === LEGENDARY_BALL ===
+# This is the Pokéball that should be used for just the legendary boss Pokémon.
+# This is the id of the ball to use (in English)
+LEGENDARY_BALL = "premier-ball"
+
+# === MODE ===
+# This is the mode that the program should use.
+# These are the options:
+# "DEFAULT" - The default mode of the script.
+# This will never reset the game. This is perfect if you have many legendary Pokéballs
+# and would like to accumulate Dynite Ore.
+# "BALL SAVER" - Resets the game if the legendary is caught and it isn't shiny.
+# It will also keep track of your Dynite Ore so that if you cannot pay the fee
+# for multiple resets, it will skip catching the legendary. Use this if you have
+# a small number of Pokéballs to use with the legendary.
+# "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
+# This mode is useful for locking on a seed that is capable of beating the boss, but will
+# still take non-legendary shinies.
+# "KEEP PATH" - Will force the game to always reset on a pre-saved path.
+# Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
+# This will deplete your Ore quickly.
+# "FIND PATH" - Will run like BALL SAVER mode but will stop when it consecutively wins the
+# number of times inputted into "FIND PATH WINS".
+# It can be used alongside KEEP PATH to find a winning path. Don't forget to update the
+# CONSECUTIVE_RESETS section below, before starting KEEP PATH.
+# It's up to the user to check if the path found was good or not.
+MODE = "DEFAULT"
+
+# 
+FIND_PATH_WINS = 1
+
+# === COM_PORT ===
+# The COM Port is how your system internally connects to your Serial connection.
+# On Windows it will be of the form `COMX` where X is some number.
+# View your available devices for the exact string.
+# On Mac and Linux, it will be a path that begins with `/dev/`. See the documenation for more information.
+COM_PORT = "COM5"
+
+# === VIDEO_INDEX ===
+# The video index is which index OpenCV uses in your input devices to read from your capture card.
+# For most users this number will be either 0 or 1 depending on the number of cameras you have plugged in.
+VIDEO_INDEX = 2
+
+# === TESSERACT_PATH ===
+# This is the path to the Tesseract executable. This is NOT where the pytesseract
+# package is installed but where tesseract is installed.
+# On Windows this is likely inside Program Files\\Tesseract-OCR.
+# On Mac and Linux, it will likely be in a place like /usr/bin (run `which tesseract` in your terminal to get the path)
+TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+
+
+# ==========
+# === ADVANCED SETTINGS
+[advanced]
+# === VIDEO_SCALE ===
+# The scaling for the live display of the script.
+# Set to less than 1 if you want the image smaller than the default size (1920x1080).
+# Please make sure there's always a decimal at the end of this value even if setting to 1 (e.g. 1.0).
+VIDEO_SCALE = 1.0
+
+# === VIDEO_EXTRA_DELAY ===
+# Input a time (in seconds) if your capture card has any significant delay.
+# Most configurations can leave this value at 0 but people using
+# OBS virtual camera may have to increase this value to 1 or 2 (seconds).
+# Please make sure there's always a decimal at the end of this value.
+VIDEO_EXTRA_DELAY = 0
+
+# === PABOTBASE_HEX ==
+# Denote whether your microcontroller is using the PABotBase hex.
+# If false, RemoteControl_xxxx.hex is assumed
+PABOTBASE_HEX = true
+
+# === BOSS_INDEX ===
+# The position of the boss you're hunting on the menu.
+# 0 is the top, 1 is the middle, and 2 is the bottom.
+BOSS_INDEX = 0
+
+# === DYNITE_ORE ===
+# The current amount of Dynite Ore you're willing to lose by resetting.
+# If this value is negative, the bot will first collect ore before spending any.
+# Not necessary if using DEFAULT mode.
+DYNITE_ORE = 0
+
+# === CONSECUTIVE_RESETS ===
+# If you had to stop the script and have not reset your reset counter by clearing
+# an adventure, set this number to how many you previously had.
+CONSECUTIVE_RESETS = 0
+
+# === NON_LEGEND ==
+# This setting will reset any completed run in which the pokemon listed was caught in. It will
+# continue to reset and use ore in this manner until it either finds a shiny of some type or
+# does not have enough ore to afford another reset.
+NON_LEGEND = "default"
+
+# === MAXIMUM_ORE_COST ===
+# The maximum ore cost you're willing to pay in order to reset once.
+MAXIMUM_ORE_COST = 10
+
+# === ENABLE_DEBUG_LOGS ===
+# This enables the debug logs in your Python console. This can be very useful when
+# you're running into problems and need to report to the developers what's happening.
+ENABLE_DEBUG_LOGS = true
+
+# ==========
+# === POKEMON STAT FINDING SETTINGS
+# The following settings are to enable the program to check for specific stats
+# on the boss. If these are met, it ends the program.
+[stats]
+# === CHECK_ATTACK_STAT ===
+# Enables checking the Attack stat
+CHECK_ATTACK_STAT = false
+
+# === CHECK_SPEED_STAT ===
+# Enables checking the Speed stat
+CHECK_SPEED_STAT = false
+
+
+# === ATTACK_STATS ===
+# Enter the values for Attack stats you want to search for.
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
+# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
+[stats.ATTACK_STATS]
+positive = [ 160, 161 ]
+neutral = [ 146, 147 ]
+negative = [ 131, 132 ]
+# === SPEED_STATS ===
+# Enter the values for Speed stats you want to search for.
+# These are divided up by how the nature affects the stats.
+# These should remain in the brakets even if only one value is searched for.
+# Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
+[stats.SPEED_STATS]
+positive = [ 99, 100 ]
+neutral = [ 90, 91 ]
+negative = [ 81, 82 ]
+# ==========
+# === DISCORD SETTINGS
+# Fill out these values to enable Discord notifications to webhooks
+[discord]
+# If you're willing to setup the ping system (be warned when you found a shiny, etc). You'll need some setup
+# Set WEBHOOK_ID and WEBHOOK_TOKEN as explained here https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
+# Set USER_ID as explained here https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+# === WEBHOOK_ID and WEBHOOK_TOKEN ===
+# Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
+WEBHOOK_ID = "888703865501909032"
+# 
+WEBHOOK_TOKEN = "Ea7DKHvYcpala9G1PEzXel0w27R29RemHk7p9d-8wsn0pjnk3FCN6nUTnUZrQKhc0h7o"
+
+# === USER_ID ===
+# This is your Discord User ID for mentioning you.
+# More info: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+USER_ID = "278814888825061376"
+
+# === USER_SHORT_NAME ===
+# To personalize your messages, please include a name for the webhooks to use.
+# Could be your actual name.
+USER_SHORT_NAME = "\"Leon\""
+
+# === UPDATE_LEVELS ===
+# There are multiple types of levels that can be sent via the Discord Webhook to inform
+# your progress,
+# "all" - gives all notifications, pings you on *ALL* shinies found
+# "all_ping_legendary" - gives all notifications, pings you only when legendary is found
+# "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
+# "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
+# "none" - ignores all discord messages
+UPDATE_LEVELS = "only_shiny"
+
+# ==========
+# === LANGUAGE SETTINGS
+[language]
+# === LANGUAGE ===
+# Set the language of your game here.
+# Currently we support English, Spanish, French, Korean, German and Japanese, Chinese_Tra
+LANGUAGE = "Chinese_Tra"
+
+# ==========
+# === POKEMON DATA SETTINGS
+# These paths are if you are not using the pre-calculated values included with the program
+# and should not be modfied unless you know what you are doing.
+[pokemon_data_paths]
+# File containing the pickled data about bosses.
+Boss_Pokemon = "data/boss_pokemon.json"
+
+# File containing the pickled data about rental.
+Rental_Pokemon = "data/rental_pokemon.json"
+
+# File containing the pickled data about matchup vs bosses.
+Boss_Matchup_LUT = "data/boss_matchup_LUT.json"
+
+# File containing the pickled data about matchup vs rental.
+Rental_Matchup_LUT = "data/rental_matchup_LUT.json"
+
+# File containing the pickled data about the score of every rental pokemon.
+Rental_Pokemon_Scores = "data/rental_pokemon_scores.json"
+
+# File containing the pickled data about the score of every type versus every boss.
+path_tree_path = "data/path_tree.json"
+
+# File containing the pickled data about the type icons.
+type_icon_path = "data/type_icons.pickle"
+
+# File containing the pickled data about the pokemon sprites.
+pokemon_sprite_path = "data/pokemon_sprites.pickle"
+
+# File containing the pickled ball sprites
+ball_sprite_path = "data/ball_sprites.pickle"
+
+# File containing the pickled data about other icons (cheer, fight).
+misc_icon_dir = "data/misc_icons/"
+
+# 
+boss_colors = "data/boss_colors.json"
+
+# ==========
+# === OTHER LANGUAGE SETTINGS
+# What follows are how to set the various phrases that allow
+# the program to detect what is currently happening in your game.
+# These may need to be modified if your capture card adds extra noise,
+# modifies your colors, or other weird things. Feel free to reach out to
+# a developer if you're having issues.
+[Chinese_Tra]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "ch_tra"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "zh-Hant"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "交換"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "路"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "暴風變|暴風了"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "您要出發前往"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "日照復原|雨停|沙暴停止|冰雹不下"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "日照變強"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "開始下雨"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "刮沙暴"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "下冰雹"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "消失了|消失了|消失了|消失了"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "電流飛閃"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "青草如茵"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "霧氣繚繞"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "了奇妙"
+
+# 
+[English]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "eng"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "en"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "swapping"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "path"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "The storm"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "Would you like to embark"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "sunlight faded|rain stopped|sandstorm subsided|hail stopped"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "sunlight turned"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "started to rain"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "sandstorm kicked"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "started to hail"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "electricity disappeared|grass disappeared|mist disappeared|weirdness disappeared"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "electric current ran"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "Grass grew"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "Mist swirled"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "got weird"
+
+# 
+[Spanish]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "spa"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "es"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "préstamo"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "quieres seguir"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "tormenta reinante|Aguantar"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "emprender"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "sol vuelve|dejado de|amainado"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "sol pega"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "a llover"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "desatado"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "a granizar"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "ha desaparecido|niebla se"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "campo de corriente"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "de hierba"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "niebla ha envuelto"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "muy extraño"
+
+# 
+[French]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "fra"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "fr"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "intéresse"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "Quel chemin"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "au-dessus|intenable"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "vous lancer"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "affaiblissent|est arrêtée|sable se calme"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "soleil brillent"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "pleuvoir"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "de sable se pr"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "gr.{1,2}ler"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "parcourant le terrain|gazon disparaît|brume qui recouvrait|redevient normal"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "électricité parcourt"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "beau gazon"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "couvre de brume"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "réagir de"
+
+# 
+[Korean]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "kor"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "ko"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "교환하|교핟하 "
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "길로"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "폭풍이|폭풍을|폭품이|폭품을"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "시작하시겠습니까"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "PLACEHOLDER"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "PLACEHOLDER"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "PLACEHOLDER"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "PLACEHOLDER"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "PLACEHOLDER"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "PLACEHOLDER"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "PLACEHOLDER"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "PLACEHOLDER"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "PLACEHOLDER"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "PLACEHOLDER"
+
+# 
+[German]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "deu"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "de"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "austauschen"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "Weg"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "Der Sturm"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "Möchtest du zu einem"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "Sonnenlicht verliert|auf zu regnen|Sandsturm legt sich|auf zu hageln"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "Sonnenlicht wird"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "an zu regnen"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "Sandsturm kommt auf"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "an zu hageln"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "feld ist wieder"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "Elektrische Energie"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "Dichtes Gras"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "Nebel aus"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "seltsam an"
+
+# 
+[Japanese]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "jpn"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "ja-Hrkt"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "レンタル"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "みちに"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "じょうくうの　あらしが"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "ダイマックスアドベンチャーに"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "sunlight faded|rain stopped|sandstorm subsided|hail stopped"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "ひざしが"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "あめが"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "ふきはじめた"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "ふりはじめた"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "electricity disappeared|grass disappeared|mist disappeared|weirdness disappeared"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "あしもとに"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "おいしげった"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "たちこめた"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "ふしぎなかんじ"
+
+# 
+[Italian]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "ita"
+
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "it"
+
+# Sentence used to detect that the bot met the scientist.
+# Avete incontrato una Scienziata!
+# A qualcuno interessa sostituire un suo Pokémon?
+SCIENTIST = "sostituire"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+# Quale cammino volete prendere?
+PATH = "cammino"
+
+# Sentence used to detect that we lost a live (storm is raging).
+# La tempesta che imperversa in cielo si fa più intensa!
+# La tempesta si fa ancora più intensa!
+# La tempesta è troppo forte
+FAINT = "La tempesta"
+
+# Sentence used to detect the scientist asking us to join a DA.
+# Vuoi partire per un'Avventura Dynamax?
+START_PHRASE = "Vuoi partire"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "La luce solare torna normale!|Smette di piovere!|La tempesta di sabbia cessa!|Smette di grandinare!"
+
+# Sentence used to detect that the weather is now sunny.
+# La luce solare diventa intensa!
+WEATHER_SUNLIGHT = "solare"
+
+# Sentence used to detect that the weather is now rainy.
+# Inizia a piovere!
+WEATHER_RAIN = "piovere"
+
+# Sentence used to detect that the sandstorm is raging.
+# Inizia una tempesta di sabbia!
+WEATHER_SANDSTORM = "sabbia"
+
+# Sentence used to detect that the hailstorm is raging.
+# Inizia a grandinare!
+WEATHER_HAIL = "grandinare"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "L'elettricità svanisce|L'erba sparisce|La nebbia si dissolve|La strana sensazione nel campo è svanita"
+
+# Sentence used to detect that the terrain is now electrified.
+# Ai piedi dei Pokémon si accumula dell'elettricità.
+TERRAIN_ELECTRIC = "accumula dell'elettricità"
+
+# Sentence used to detect that the terrain is now grassy.
+# Ai piedi dei Pokémon cresce rigogliosa l'erba.
+TERRAIN_GRASSY = "cresce rigogliosa"
+
+# Sentence used to detect that the terrain is now misty.
+# Ai piedi dei Pokémon si addensa la nebbia.
+TERRAIN_MISTY = "addensa la nebbia"
+
+# Sentence used to detect that the terrain is now psychic.
+# Nel campo si avverte una strana sensazione..
+TERRAIN_PSYCHIC = "strana sensazione"
