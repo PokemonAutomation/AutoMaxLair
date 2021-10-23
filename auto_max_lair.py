@@ -59,7 +59,6 @@ def initialize(ctrlr) -> str:
     # assume we're starting from the select controller menu, connect, then
     # press home twice to return to the game
     ctrlr.push_buttons(
-
         (b'a', 2), (b'h', 2.0), (b'h', 2.0), (b'b', 1.5), (b'b', 1.5)
     )
 
@@ -622,26 +621,6 @@ def select_pokemon(ctrlr) -> str:
     take_pokemon = False  # Set to True if a non-legendary shiny is found.
     reset_game = False  # Set to True in some cases in non-default modes.
 
-    if run.num_caught == 4 and (
-        ctrlr.check_attack_stat or ctrlr.check_speed_stat
-    ):
-        ctrlr.push_button(b'>', 1)
-        if ctrlr.check_stats():
-            ctrlr.log('******************************')
-            ctrlr.log('****Matching stats found!*****')
-            ctrlr.log('******************************')
-            ctrlr.display_results(screenshot=True)
-            ctrlr.send_discord_message(
-                f"Matching stats found for {ctrlr.boss}!",
-                path_to_picture=f'logs/{ctrlr.log_name}_cap_'
-                f'{ctrlr.num_saved_images}.png',
-                embed_fields=ctrlr.get_stats_for_discord(),
-                level="legendary"
-            )
-            return None  # End whenever a matching stats legendary is found
-
-        ctrlr.push_button(b'<', 1)
-
     for i in range(run.num_caught):
         # First check if we need to reset immediately.
         # Note that "keep path" mode resets always unless a shiny legendary.
@@ -677,19 +656,45 @@ def select_pokemon(ctrlr) -> str:
             )
             ctrlr.shinies_found += 1
             ctrlr.log("Sending off to save a screenshot", "DEBUG")
-            ctrlr.display_results(screenshot=True)
-            ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
             if run.num_caught == 4 and i == 0:
                 # NOTE: this is when we found a legendary!
-                ctrlr.send_discord_message(
-                    f'Found a shiny {run.caught_pokemon[3]}!',
-                    path_to_picture=f'logs/{ctrlr.log_name}_cap_'
-                    f'{ctrlr.num_saved_images}.png',
-                    embed_fields=ctrlr.get_stats_for_discord(),
-                    level="legendary"
-                )
-                return None  # End whenever a shiny legendary is found.
+                if ctrlr.check_attack_stat or ctrlr.check_speed_stat:
+                    ctrlr.push_button(b'>', 1)
+                    ctrlr.log('check stat start')
+                    if ctrlr.check_stats():
+                        ctrlr.log('*******************************')
+                        ctrlr.log('**Matching shiny stats found!**')
+                        ctrlr.log('*******************************')
+                        ctrlr.display_results(screenshot=True)
+                        ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
+                        ctrlr.send_discord_message(
+                            f"Matching stats found for shiny {ctrlr.boss}!",
+                            path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                            f'{ctrlr.num_saved_images}.png',
+                            embed_fields=ctrlr.get_stats_for_discord(),
+                            level="legendary"
+                        )
+                        return None  # End whenever a matching stats legendary is found
+                    ctrlr.push_buttons((b'<', 1),(b'^', 3 + VIDEO_EXTRA_DELAY))
+                    ctrlr.send_discord_message(
+                            f"Found Non-Matching Stat for shiny {ctrlr.boss} will countinun",
+                            embed_fields=ctrlr.get_stats_for_discord(),
+                            level="legendary"
+                    )
+                if not ctrlr.check_attack_stat and not ctrlr.check_speed_stat:
+                    ctrlr.display_results(screenshot=True)
+                    ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
+                    ctrlr.send_discord_message(
+                        f'Found a shiny {run.caught_pokemon[3]}!',
+                        path_to_picture=f'logs/{ctrlr.log_name}_cap_'
+                        f'{ctrlr.num_saved_images}.png',
+                        embed_fields=ctrlr.get_stats_for_discord(),
+                        level="legendary"
+                    )
+                    return None  # End whenever a shiny legendary is found.
             else:
+                ctrlr.display_results(screenshot=True)
+                ctrlr.push_buttons((b'p', 1), (b'b', 3), (b'p', 1))
                 ctrlr.send_discord_message(
                     f'Found a shiny '
                     f'{run.caught_pokemon[run.num_caught - 1 - i]}!',
