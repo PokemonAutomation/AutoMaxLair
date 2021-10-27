@@ -26,7 +26,7 @@ import serial
 import threading
 import discord
 from .PABotBase_controller import PABotBaseController
-
+import toml
 Image = TypeVar('cv2 image')
 Rectangle = Tuple[Tuple[float, float], Tuple[float, float]]
 
@@ -49,8 +49,12 @@ checking list for your language:
 https://github.com/JaidedAI/EasyOCR/tree/master/easyocr/character
 
 """
+config_local = toml.load("Config.toml")
+phrases_local = config_local[config_local['language']['LANGUAGE']]
+EASYOCR_language = phrases_local['EASYOCR_LANG_NAME']
+print(EASYOCR_language)
 #initial must and only run after import once
-reader = easyocr.Reader(['ch_tra'])
+reader = easyocr.Reader([EASYOCR_language])
 class SwitchController:
     """Generic class for an object that controls a Nintendo Switch through
     incoming video and an outgoing serial connection.
