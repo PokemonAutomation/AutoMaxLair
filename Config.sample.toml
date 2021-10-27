@@ -2,9 +2,9 @@
 # What follows is the set of configurations for the AutoMaxLair program.
 # Please be sure to read carefully the descriptions of the settings and
 # adjust them as necessary for your circumstances.
-#
+# 
 # PLEASE NOTE that you will need to review the settings after each run.
-#
+# 
 # TOML also has specific formatting (useful so that the program runs properly!)
 # so please be sure to not add or remove decimal points or quotes
 # and do not modify the style in this file. Also, `true` and `false`
@@ -13,69 +13,69 @@
 
 # === BOSS ===
 # This is the boss that you are resetting for. This is a string for the name.
-#   NOTE: this allows the program to properly select Pokémon and Moves throughout the run.
-#   IMPORTANT: Use entirely lower case letters and replace all spaces with hyphens.
-#       e.g. "moltres" "kyurem" "tapu-koko" "tapu-lele"
-#   The boss name also needs to be its English name due to internal storage.
-#   Bosses with multiple formes need to have the forme specified.
-#   This includes the following:
-#       "giratina-altered", "thundurus-incarnate", "tornadus-incarnate", "landorus-incarnate", "zygarde-50"
-BOSS = "suicune"
+# NOTE: this allows the program to properly select Pokémon and Moves throughout the run.
+# IMPORTANT: Use entirely lower case letters and replace all spaces with hyphens.
+# e.g. "moltres" "kyurem" "tapu-koko" "tapu-lele"
+# The boss name also needs to be its English name due to internal storage.
+# Bosses with multiple formes need to have the forme specified.
+# This includes the following:
+# "giratina-altered", "thundurus-incarnate", "tornadus-incarnate", "landorus-incarnate", "zygarde-50"
+BOSS = ""
 
 # === BASE_BALL ===
 # This is the Pokéball that should be used for all Pokémon except for the boss.
-#   This is the id of the ball to use (in English)
-BASE_BALL = "poke-ball"
+# This is the id of the ball to use (in English)
+BASE_BALL = ""
 
 # === LEGENDARY_BALL ===
 # This is the Pokéball that should be used for just the legendary boss Pokémon.
-#   This is the id of the ball to use (in English)
-LEGENDARY_BALL = "premier-ball"
+# This is the id of the ball to use (in English)
+LEGENDARY_BALL = ""
 
 # === MODE ===
 # This is the mode that the program should use.
 # These are the options:
-#   "DEFAULT" - The default mode of the script.
-#       This will never reset the game. This is perfect if you have many legendary Pokéballs
-#       and would like to accumulate Dynite Ore.
-#   "BALL SAVER" - Resets the game if the legendary is caught and it isn't shiny.
-#       It will also keep track of your Dynite Ore so that if you cannot pay the fee
-#       for multiple resets, it will skip catching the legendary. Use this if you have
-#       a small number of Pokéballs to use with the legendary.
-#   "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
-#       This mode is useful for locking on a seed that is capable of beating the boss, but will
-#       still take non-legendary shinies.
-#   "KEEP PATH" - Will force the game to always reset on a pre-saved path.
-#       Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
-#       This will deplete your Ore quickly.
-#   "FIND PATH" - Will run like BALL SAVER mode but will stop when it consecutively wins the
-#       number of times inputted into "FIND PATH WINS".
-#       It can be used alongside KEEP PATH to find a winning path. Don't forget to update the  
-#       CONSECUTIVE_RESETS section below, before starting KEEP PATH.
-#       It's up to the user to check if the path found was good or not.
-MODE = "DEFAULT"
+# "DEFAULT" - The default mode of the script.
+# This will never reset the game. This is perfect if you have many legendary Pokéballs
+# and would like to accumulate Dynite Ore.
+# "BALL SAVER" - Resets the game if the legendary is caught and it isn't shiny.
+# It will also keep track of your Dynite Ore so that if you cannot pay the fee
+# for multiple resets, it will skip catching the legendary. Use this if you have
+# a small number of Pokéballs to use with the legendary.
+# "STRONG BOSS" - Similar to "BALL SAVER" but also checks other Pokémon for shinies.
+# This mode is useful for locking on a seed that is capable of beating the boss, but will
+# still take non-legendary shinies.
+# "KEEP PATH" - Will force the game to always reset on a pre-saved path.
+# Similar to "BALL SAVER" and "STRONG BOSS" but will always use the same path if it fails.
+# This will deplete your Ore quickly.
+# "FIND PATH" - Will run like BALL SAVER mode but will stop when it consecutively wins the
+# number of times inputted into "FIND PATH WINS".
+# It can be used alongside KEEP PATH to find a winning path. Don't forget to update the
+# CONSECUTIVE_RESETS section below, before starting KEEP PATH.
+# It's up to the user to check if the path found was good or not.
+MODE = ""
 
 # 
 FIND_PATH_WINS = 1
 
 # === COM_PORT ===
 # The COM Port is how your system internally connects to your Serial connection.
-#   On Windows it will be of the form `COMX` where X is some number. 
-#       View your available devices for the exact string.
-#   On Mac and Linux, it will be a path that begins with `/dev/`. See the documenation for more information.
-COM_PORT = "COM4"
+# On Windows it will be of the form `COMX` where X is some number.
+# View your available devices for the exact string.
+# On Mac and Linux, it will be a path that begins with `/dev/`. See the documenation for more information.
+COM_PORT = ""
 
 # === VIDEO_INDEX ===
 # The video index is which index OpenCV uses in your input devices to read from your capture card.
-#   For most users this number will be either 0 or 1 depending on the number of cameras you have plugged in.
-VIDEO_INDEX = 1
+# For most users this number will be either 0 or 1 depending on the number of cameras you have plugged in.
+VIDEO_INDEX = 
 
 # === TESSERACT_PATH ===
 # This is the path to the Tesseract executable. This is NOT where the pytesseract
 # package is installed but where tesseract is installed.
 # On Windows this is likely inside Program Files\\Tesseract-OCR.
 # On Mac and Linux, it will likely be in a place like /usr/bin (run `which tesseract` in your terminal to get the path)
-TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+TESSERACT_PATH = ""
 
 
 # ==========
@@ -83,25 +83,25 @@ TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 [advanced]
 # === VIDEO_SCALE ===
 # The scaling for the live display of the script.
-#   Set to less than 1 if you want the image smaller than the default size (1920x1080).
-#   Please make sure there's always a decimal at the end of this value even if setting to 1 (e.g. 1.0).
+# Set to less than 1 if you want the image smaller than the default size (1920x1080).
+# Please make sure there's always a decimal at the end of this value even if setting to 1 (e.g. 1.0).
 VIDEO_SCALE = 0.5
 
 # === VIDEO_EXTRA_DELAY ===
 # Input a time (in seconds) if your capture card has any significant delay.
-#   Most configurations can leave this value at 0 but people using 
-#   OBS virtual camera may have to increase this value to 1 or 2 (seconds).
-#   Please make sure there's always a decimal at the end of this value.
-VIDEO_EXTRA_DELAY = 0.0
+# Most configurations can leave this value at 0 but people using
+# OBS virtual camera may have to increase this value to 1 or 2 (seconds).
+# Please make sure there's always a decimal at the end of this value.
+VIDEO_EXTRA_DELAY = 0
 
 # === PABOTBASE_HEX ==
 # Denote whether your microcontroller is using the PABotBase hex.
-#   If false, RemoteControl_xxxx.hex is assumed
+# If false, RemoteControl_xxxx.hex is assumed
 PABOTBASE_HEX = true
 
 # === BOSS_INDEX ===
-# The position of the boss you're hunting on the menu. 
-#   0 is the top, 1 is the middle, and 2 is the bottom.
+# The position of the boss you're hunting on the menu.
+# 0 is the top, 1 is the middle, and 2 is the bottom.
 BOSS_INDEX = 0
 
 # === DYNITE_ORE ===
@@ -116,8 +116,8 @@ DYNITE_ORE = 0
 CONSECUTIVE_RESETS = 0
 
 # === NON_LEGEND ==
-# This setting will reset any completed run in which the pokemon listed was caught in. It will 
-# continue to reset and use ore in this manner until it either finds a shiny of some type or 
+# This setting will reset any completed run in which the pokemon listed was caught in. It will
+# continue to reset and use ore in this manner until it either finds a shiny of some type or
 # does not have enough ore to afford another reset.
 NON_LEGEND = "default"
 
@@ -129,7 +129,6 @@ MAXIMUM_ORE_COST = 10
 # This enables the debug logs in your Python console. This can be very useful when
 # you're running into problems and need to report to the developers what's happening.
 ENABLE_DEBUG_LOGS = true
-
 
 # ==========
 # === POKEMON STAT FINDING SETTINGS
@@ -144,27 +143,25 @@ CHECK_ATTACK_STAT = false
 # Enables checking the Speed stat
 CHECK_SPEED_STAT = false
 
+
 # === ATTACK_STATS ===
 # Enter the values for Attack stats you want to search for.
 # These are divided up by how the nature affects the stats.
 # These should remain in the brakets even if only one value is searched for.
 # Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
 [stats.ATTACK_STATS]
-positive = [160, 161]
-neutral = [146, 147]
-negative = [131, 132]
-
+positive = [ 160, 161 ]
+neutral = [ 146, 147 ]
+negative = [ 131, 132 ]
 # === SPEED_STATS ===
-# Enter the values for Speed stats you want to search for. 
+# Enter the values for Speed stats you want to search for.
 # These are divided up by how the nature affects the stats.
 # These should remain in the brakets even if only one value is searched for.
 # Use a stat calculator for the boss at level 70 based on your IVs to find them for your boss.
 [stats.SPEED_STATS]
-positive = [99, 100]
-neutral = [90, 91]
-negative = [81, 82]
-
-
+positive = [ 160, 161 ]
+neutral = [ 146, 147 ]
+negative = [ 131, 132 ]
 # ==========
 # === DISCORD SETTINGS
 # Fill out these values to enable Discord notifications to webhooks
@@ -174,38 +171,37 @@ negative = [81, 82]
 # Set USER_ID as explained here https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
 # === WEBHOOK_ID and WEBHOOK_TOKEN ===
 # Follow the steps here: https://hackaday.com/2018/02/15/creating-a-discord-webhook-in-python/
-WEBHOOK_ID = "PLACE_ID_WITHIN_QUOTES"
-
+WEBHOOK_ID = ""
 # 
-WEBHOOK_TOKEN = "PLACE_TOKEN_WITHIN_QUOTES"
+WEBHOOK_TOKEN = ""
 
 # === USER_ID ===
 # This is your Discord User ID for mentioning you.
 # More info: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-USER_ID = "PLACE_ID_WITHIN_QUOTES"
+USER_ID = ""
 
 # === USER_SHORT_NAME ===
 # To personalize your messages, please include a name for the webhooks to use.
 # Could be your actual name.
-USER_SHORT_NAME = "YOUR_SHORT_NAME_WITHIN_QUOTES"
+USER_SHORT_NAME = ""
 
 # === UPDATE_LEVELS ===
 # There are multiple types of levels that can be sent via the Discord Webhook to inform
 # your progress,
-#   "all" - gives all notifications, pings you on *ALL* shinies found
-#   "all_ping_legendary" - gives all notifications, pings you only when legendary is found
-#   "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
-#   "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
-#   "none" - ignores all discord messages
-UPDATE_LEVELS = "none"
+# "all" - gives all notifications, pings you on *ALL* shinies found
+# "all_ping_legendary" - gives all notifications, pings you only when legendary is found
+# "only_shiny" - only notifies you when you find a shiny, pings on *ALL* shinies found
+# "only_shiny_ping_legendary" - only notifies you when you find a shiny, pings only on legendary
+# "none" - ignores all discord messages
+UPDATE_LEVELS = "only_shiny"
 
 # ==========
 # === LANGUAGE SETTINGS
 [language]
 # === LANGUAGE ===
 # Set the language of your game here.
-# Currently we support English, Spanish, French, Korean, German and Japanese
-LANGUAGE = "English"
+# Currently we support English, Spanish, French, Korean, German and Japanese, Chinese_Tra
+LANGUAGE = "Chinese_Tra"
 
 # ==========
 # === POKEMON DATA SETTINGS
@@ -245,7 +241,6 @@ misc_icon_dir = "data/misc_icons/"
 # 
 boss_colors = "data/boss_colors.json"
 
-
 # ==========
 # === OTHER LANGUAGE SETTINGS
 # What follows are how to set the various phrases that allow
@@ -253,6 +248,56 @@ boss_colors = "data/boss_colors.json"
 # These may need to be modified if your capture card adds extra noise,
 # modifies your colors, or other weird things. Feel free to reach out to
 # a developer if you're having issues.
+[Chinese_Tra]
+# Code used to select the right trained data for tesseract.
+TESSERACT_LANG_NAME = "ch_tra"
+EASYOCR_LANG_NAME = "ch_tra"
+# Code used by auto max lair to read the names in the right language.
+DATA_LANG_NAME = "zh-Hant"
+
+# Sentence used to detect that the bot met the scientist.
+SCIENTIST = "交換"
+
+# Sentence used to detect that the bot have to choose a path in the den.
+PATH = "路"
+
+# Sentence used to detect that we lost a live (storm is raging).
+FAINT = "暴風變|暴風了"
+
+# Sentence used to detect the scientist asking us to join a DA.
+START_PHRASE = "您要出發前往"
+
+# Sentence used to detect that the weather is now normal.
+WEATHER_CLEAR = "日照復原|雨停|沙暴停止|冰雹不下"
+
+# Sentence used to detect that the weather is now sunny.
+WEATHER_SUNLIGHT = "日照變強"
+
+# Sentence used to detect that the weather is now rainy.
+WEATHER_RAIN = "開始下雨"
+
+# Sentence used to detect that the sandstorm is raging.
+WEATHER_SANDSTORM = "刮沙暴"
+
+# Sentence used to detect that the hailstorm is raging.
+WEATHER_HAIL = "下冰雹"
+
+# Sentence used to detect that the terrain is now normal.
+TERRAIN_CLEAR = "消失了|消失了|消失了|消失了"
+
+# Sentence used to detect that the terrain is now electrified.
+TERRAIN_ELECTRIC = "電流飛閃"
+
+# Sentence used to detect that the terrain is now grassy.
+TERRAIN_GRASSY = "青草如茵"
+
+# Sentence used to detect that the terrain is now misty.
+TERRAIN_MISTY = "霧氣繚繞"
+
+# Sentence used to detect that the terrain is now psychic.
+TERRAIN_PSYCHIC = "了奇妙"
+
+# 
 [English]
 # Code used to select the right trained data for tesseract.
 TESSERACT_LANG_NAME = "eng"
@@ -502,10 +547,10 @@ TERRAIN_MISTY = "Nebel aus"
 # Sentence used to detect that the terrain is now psychic.
 TERRAIN_PSYCHIC = "seltsam an"
 
-#
+# 
 [Japanese]
 # Code used to select the right trained data for tesseract.
-TESSERACT_LANG_NAME = "jpn"
+TESSERACT_LANG_NAME = "ja"
 
 # Code used by auto max lair to read the names in the right language.
 DATA_LANG_NAME = "ja-Hrkt"
@@ -552,7 +597,7 @@ TERRAIN_MISTY = "たちこめた"
 # Sentence used to detect that the terrain is now psychic.
 TERRAIN_PSYCHIC = "ふしぎなかんじ"
 
-#
+# 
 [Italian]
 # Code used to select the right trained data for tesseract.
 TESSERACT_LANG_NAME = "ita"
@@ -563,7 +608,6 @@ DATA_LANG_NAME = "it"
 # Sentence used to detect that the bot met the scientist.
 # Avete incontrato una Scienziata!
 # A qualcuno interessa sostituire un suo Pokémon?
-
 SCIENTIST = "sostituire"
 
 # Sentence used to detect that the bot have to choose a path in the den.
@@ -584,8 +628,9 @@ START_PHRASE = "Vuoi partire"
 WEATHER_CLEAR = "La luce solare torna normale!|Smette di piovere!|La tempesta di sabbia cessa!|Smette di grandinare!"
 
 # Sentence used to detect that the weather is now sunny.
-#La luce solare diventa intensa!
+# La luce solare diventa intensa!
 WEATHER_SUNLIGHT = "solare"
+
 # Sentence used to detect that the weather is now rainy.
 # Inizia a piovere!
 WEATHER_RAIN = "piovere"
