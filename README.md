@@ -1,6 +1,7 @@
 # AutoMaxLair
 **NOTE: the functionality of AutoMaxLair has now been implemented in the user-friendly [ComputerControl program suite](https://github.com/PokemonAutomation/ComputerControl).**
 We advise using the Python version only if:
+* You are a Mac user,
 * You want to modify the code yourself, or
 * You want to hunt bosses with certain IV distributions.
 
